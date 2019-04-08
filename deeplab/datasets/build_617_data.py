@@ -120,7 +120,8 @@ def _convert_dataset(db_name):
             image = imread(image_filename)
             height, width, _ = image.shape
             dummy_label = np.zeros((height, width), dtype=np.uint8)
-            imsave(os.path.join(labels_path, os.path.basename(image_filename)), dummy_label)
+            out_fname =  os.path.splitext(os.path.basename(image_filename))[0] + '.{}'.format(FLAGS.label_format)
+            imsave(os.path.join(labels_path,out_fname), dummy_label)
         print('Done')
 
     labels = os.path.join(FLAGS.db_root_dir, db_name, 'labels', '*.{}'.format(FLAGS.label_format))
