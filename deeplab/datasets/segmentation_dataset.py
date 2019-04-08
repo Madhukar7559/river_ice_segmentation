@@ -168,6 +168,7 @@ _ACAMP_INFORMATION = DatasetDescriptor(
     splits_to_sizes={
         'bear_1_1_masks_448x448_ar_1p0': 100,
         'bear_1_1_500x500_10': 100,
+        'bear_1_1_to_1_6_500x500_10_test': 1536,
     },
     num_classes=2,
     ignore_label=128,
