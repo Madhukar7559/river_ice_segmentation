@@ -206,8 +206,17 @@ for img_id in range(start_id, end_id + 1):
             except ValueError as e:
                 print('fw_sum: {}'.format(fw_sum))
                 print('_fw: {}'.format(_fw))
+
+                eval_cl, _ = eval.extract_classes(seg_img)
+                gt_cl, _ = eval.extract_classes(labels_img_orig)
+                cl = np.union1d(eval_cl, gt_cl)
+                
+                print('cl: {}'.format(cl))
+                print('eval_cl: {}'.format(eval_cl))
+                print('gt_cl: {}'.format(gt_cl))
+
                 raise ValueError(e)
-            
+
             _fw_total = np.sum(_fw)
 
             # print('_fw: {}'.format(_fw))
