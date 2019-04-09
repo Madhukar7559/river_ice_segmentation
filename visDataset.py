@@ -187,6 +187,12 @@ for img_id in range(start_id, end_id + 1):
             if len(seg_img.shape) == 3:
                 seg_img = np.squeeze(seg_img[:, :, 0])
 
+            eval_cl, _ = eval.extract_classes(seg_img)
+            gt_cl, _ = eval.extract_classes(labels_img_orig)
+
+            if eval_cl != gt_cl:
+                seg_img = (seg_img.astype(np.float64) / label_diff).astype(np.uint8)
+
             seg_height, seg_width = seg_img.shape
 
             if seg_width == 2 * src_width or seg_width == 3 * src_width:
@@ -210,7 +216,7 @@ for img_id in range(start_id, end_id + 1):
                 eval_cl, _ = eval.extract_classes(seg_img)
                 gt_cl, _ = eval.extract_classes(labels_img_orig)
                 cl = np.union1d(eval_cl, gt_cl)
-                
+
                 print('cl: {}'.format(cl))
                 print('eval_cl: {}'.format(eval_cl))
                 print('gt_cl: {}'.format(gt_cl))
