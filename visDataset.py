@@ -114,7 +114,7 @@ mean_IU = np.zeros((n_frames,))
 fw_IU = np.zeros((n_frames,))
 fw_sum = np.zeros((n_classes,))
 
-print_diff = int(n_frames * 0.01)
+print_diff = max(1, int(n_frames * 0.01))
 
 avg_mean_acc_ice = avg_mean_acc_ice_1 = avg_mean_acc_ice_2 = 0
 avg_mean_IU_ice = avg_mean_IU_ice_1 = avg_mean_IU_ice_2 = 0
