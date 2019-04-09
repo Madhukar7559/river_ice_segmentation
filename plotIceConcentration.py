@@ -8,6 +8,7 @@ from matplotlib.figure import Figure
 
 import densenet.evaluation.eval_segm as eval
 from densenet.utils import readData, getDateTime, print_and_write, resizeAR
+from dictances import bhattacharyya
 
 
 def getPlotImage(data, cols, title):
@@ -29,6 +30,12 @@ def getPlotImage(data, cols, title):
     return plot_img
 
 
+def str_to_list(_str, _type=str, _sep=','):
+    if _sep not in _str:
+        _str += _sep
+    return [k for k in list(map(_type, _str.split(_sep))) if k]
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--log_dir", type=str)
@@ -37,8 +44,9 @@ def main():
     parser.add_argument("--images_ext", type=str, default='png')
     parser.add_argument("--labels_path", type=str, default='')
     parser.add_argument("--labels_ext", type=str, default='png')
-    parser.add_argument("--seg_path", type=str, default='')
+    parser.add_argument("--seg_paths", type=str_to_list, default=[])
     parser.add_argument("--seg_ext", type=str, default='png')
+    parser.add_argument("--seg_root", type=str, default='')
 
     parser.add_argument("--out_path", type=str, default='')
 
@@ -69,8 +77,9 @@ def main():
 
     out_path = args.out_path
 
-    seg_path = args.seg_path
+    seg_paths = args.seg_paths
     seg_ext = args.seg_ext
+    seg_root = args.seg_root
 
     out_ext = args.out_ext
 
@@ -94,15 +103,7 @@ def main():
     if end_id < start_id:
         end_id = total_frames - 1
 
-    eval_mode = False
-    if labels_path and seg_path and seg_ext:
-        _, seg_labels_list, seg_total_frames = readData(labels_path=seg_path, labels_ext=seg_ext, labels_type='seg')
-        if seg_total_frames != total_frames:
-            raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
-                total_frames, seg_total_frames))
-        eval_mode = True
-    else:
-        stitch = save_stitched = 1
+    cols = [(1, 0, 0), (0, 0, 1), (1, 1, 0), (1, 0, 1), (0, 1, 1)]
 
     if not out_path:
         out_path = labels_path + '_conc'
@@ -135,6 +136,8 @@ def main():
 
     _pause = 1
     labels_img = None
+
+    n_cols = len(cols)
 
     for img_id in range(start_id, end_id + 1):
 
@@ -185,7 +188,6 @@ def main():
 
             if len(labels_img.shape) == 3:
                 labels_img = labels_img[:, :, 0].squeeze()
-                # labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
 
             conc_data_x = np.asarray(range(src_width), dtype=np.float64)
             conc_data_y = np.zeros((src_width,), dtype=np.float64)
@@ -199,10 +201,50 @@ def main():
             conc_data[:, 0] = conc_data_x
             conc_data[:, 1] = conc_data_y
 
+            plot_data_y = [conc_data_y, ]
+            plot_cols_y = [(0, 1, 0), ]
+
+            for seg_id, seg_path in enumerate(seg_paths):
+                seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
+                seg_img_orig = imread(seg_img_fname)
+                if seg_img_orig is None:
+                    raise SystemError('Seg image could not be read from: {}'.format(seg_img_fname))
+                _, src_width = seg_img_orig.shape[:2]
+
+                if len(seg_img_orig.shape) == 3:
+                    seg_img_orig = np.squeeze(seg_img_orig[:, :, 0])
+
+                if show_img:
+                    cv2.imshow('seg_img_orig', seg_img_orig)
+
+                if normalize_labels:
+                    if selective_mode:
+                        selective_idx = (seg_img_orig == 255)
+                        print('seg_img_orig.shape: {}'.format(seg_img_orig.shape))
+                        print('selective_idx count: {}'.format(np.count_nonzero(selective_idx)))
+                        seg_img_orig[selective_idx] = n_classes
+                        if show_img:
+                            cv2.imshow('seg_img_orig norm', seg_img_orig)
+                    seg_img = (seg_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
+                else:
+                    seg_img = np.copy(seg_img_orig)
+
+                if len(seg_img.shape) == 3:
+                    seg_img = seg_img[:, :, 0].squeeze()
+
+                conc_data_x = np.asarray(range(src_width), dtype=np.float64)
+                conc_data_y = np.zeros((src_width,), dtype=np.float64)
+                for i in range(src_width):
+                    curr_pix = np.squeeze(seg_img[:, i])
+                    ice_pix = curr_pix[curr_pix != 0]
+                    conc_data_y[i] = len(ice_pix) / float(src_height)
+
+                plot_cols_y.append(cols[seg_id % n_cols])
+                plot_data_y.append(conc_data_y)
+
             # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
 
-            plot_img = getPlotImage([conc_data_y, ], [(0, 1, 0), ], 'conc_data')
-
+            plot_img = getPlotImage(plot_data_y, plot_cols_y, 'conc_data')
             plot_img = resizeAR(plot_img, src_width, src_height, bkg_col=255)
 
             # plt.plot(conc_data_x, conc_data_y)
@@ -216,9 +258,11 @@ def main():
             stitched = resizeAR(stitched, 1280, 0)
 
             cv2.imshow('stitched', stitched)
-            k = cv2.waitKey(1)
+            k = cv2.waitKey(1-_pause)
             if k == 27:
                 break
+            elif k == 32:
+                _pause = 1- _pause
 
 
 if __name__ == '__main__':
