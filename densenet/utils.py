@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 
 
-
 def processArguments(args, params):
     # arguments specified as 'arg_name=argv_val'
     no_of_args = len(args)
@@ -45,14 +44,54 @@ def processArguments(args, params):
             params[arg[0]] = type(params[arg[0]])(arg[1])
 
 
+def resizeAR(src_img, width, height, return_factors=False):
+    src_height, src_width, n_channels = src_img.shape
+    src_aspect_ratio = float(src_width) / float(src_height)
+
+    if width <= 0 and height <= 0:
+        raise AssertionError('Both width and height cannot be zero')
+    elif height <= 0:
+        height = int(width / src_aspect_ratio)
+    elif width <= 0:
+        width = int(height * src_aspect_ratio)
+
+    aspect_ratio = float(width) / float(height)
+
+    if src_aspect_ratio == aspect_ratio:
+        dst_width = src_width
+        dst_height = src_height
+        start_row = start_col = 0
+    elif src_aspect_ratio > aspect_ratio:
+        dst_width = src_width
+        dst_height = int(src_width / aspect_ratio)
+        start_row = int((dst_height - src_height) / 2.0)
+        start_col = 0
+    else:
+        dst_height = src_height
+        dst_width = int(src_height * aspect_ratio)
+        start_col = int((dst_width - src_width) / 2.0)
+        start_row = 0
+
+    dst_img = np.zeros((dst_height, dst_width, n_channels), dtype=np.uint8)
+
+    dst_img[start_row:start_row + src_height, start_col:start_col + src_width, :] = src_img
+    dst_img = cv2.resize(dst_img, (width, height))
+    if return_factors:
+        resize_factor = float(height) / float(dst_height)
+        return dst_img, resize_factor, start_row, start_col
+    else:
+        return dst_img
+
+
 class LogWriter:
     def __init__(self, fname):
-        self.fname=fname
+        self.fname = fname
 
     def _print(self, _str):
         print(_str + '\n')
         with open(self.fname, 'a') as fid:
             fid.write(_str + '\n')
+
 
 def print_and_write(_str, fname=None):
     sys.stdout.write(_str + '\n')
@@ -89,11 +128,19 @@ def sortKey(fname):
     return key
 
 
-def resizeAR(src_img, width, height, return_factors=False):
-    aspect_ratio = float(width) / float(height)
+def resizeAR(src_img, width, height, return_factors=False, bkg_col=0):
 
     src_height, src_width, n_channels = src_img.shape
     src_aspect_ratio = float(src_width) / float(src_height)
+
+    if height == 0 and width == 0:
+        raise IOError('Both height and width cannot be zero')
+    elif height == 0:
+        height = int(width / src_aspect_ratio)
+    elif width == 0:
+        width = int(height * src_aspect_ratio)
+
+    aspect_ratio = float(width) / float(height)
 
     if src_aspect_ratio == aspect_ratio:
         dst_width = src_width
@@ -110,7 +157,7 @@ def resizeAR(src_img, width, height, return_factors=False):
         start_col = int((dst_width - src_width) / 2.0)
         start_row = 0
 
-    dst_img = np.zeros((dst_height, dst_width, n_channels), dtype=np.uint8)
+    dst_img = np.full((dst_height, dst_width, n_channels), bkg_col, dtype=np.uint8)
 
     dst_img[start_row:start_row + src_height, start_col:start_col + src_width, :] = src_img
     dst_img = cv2.resize(dst_img, (width, height))

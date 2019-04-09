@@ -201,7 +201,13 @@ for img_id in range(start_id, end_id + 1):
             _IU, mean_IU[img_id] = eval.mean_IU(seg_img, labels_img_orig, return_iu=1)
             fw_IU[img_id], _fw = eval.frequency_weighted_IU(seg_img, labels_img_orig, return_freq=1)
 
-            fw_sum += _fw
+            try:
+                fw_sum += _fw
+            except ValueError as e:
+                print('fw_sum: {}'.format(fw_sum))
+                print('_fw: {}'.format(_fw))
+                raise ValueError(e)
+            
             _fw_total = np.sum(_fw)
 
             # print('_fw: {}'.format(_fw))
