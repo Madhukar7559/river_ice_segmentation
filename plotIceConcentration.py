@@ -67,6 +67,7 @@ def main():
 
     parser.add_argument("--normalize_labels", type=int, default=1)
     parser.add_argument("--selective_mode", type=int, default=0)
+    parser.add_argument("--ice_type", type=int, default=0, help='0: combined, 1: anchor, 2: frazil')
 
     args = parser.parse_args()
 
@@ -97,6 +98,8 @@ def main():
 
     normalize_labels = args.normalize_labels
     selective_mode = args.selective_mode
+
+    ice_type = args.ice_type
 
     src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
                                                         labels_ext)
@@ -175,13 +178,6 @@ def main():
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
             if normalize_labels:
-                if selective_mode:
-                    selective_idx = (labels_img_orig == 255)
-                    print('labels_img_orig.shape: {}'.format(labels_img_orig.shape))
-                    print('selective_idx count: {}'.format(np.count_nonzero(selective_idx)))
-                    labels_img_orig[selective_idx] = n_classes
-                    if show_img:
-                        cv2.imshow('labels_img_orig norm', labels_img_orig)
                 labels_img = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
             else:
                 labels_img = np.copy(labels_img_orig)
@@ -193,7 +189,10 @@ def main():
             conc_data_y = np.zeros((src_width,), dtype=np.float64)
             for i in range(src_width):
                 curr_pix = np.squeeze(labels_img[:, i])
-                ice_pix = curr_pix[curr_pix != 0]
+                if ice_type == 0:
+                    ice_pix = curr_pix[curr_pix != 0]
+                else:
+                    ice_pix = curr_pix[curr_pix == ice_type]
 
                 conc_data_y[i] = len(ice_pix) / float(src_height)
 
@@ -214,20 +213,13 @@ def main():
                 if len(seg_img_orig.shape) == 3:
                     seg_img_orig = np.squeeze(seg_img_orig[:, :, 0])
 
+                if seg_img_orig.max() > n_classes - 1:
+                    seg_img = (seg_img_orig.astype(np.float64) / label_diff).astype(np.uint8)
+                else:
+                    seg_img = seg_img_orig
+
                 if show_img:
                     cv2.imshow('seg_img_orig', seg_img_orig)
-
-                if normalize_labels:
-                    if selective_mode:
-                        selective_idx = (seg_img_orig == 255)
-                        print('seg_img_orig.shape: {}'.format(seg_img_orig.shape))
-                        print('selective_idx count: {}'.format(np.count_nonzero(selective_idx)))
-                        seg_img_orig[selective_idx] = n_classes
-                        if show_img:
-                            cv2.imshow('seg_img_orig norm', seg_img_orig)
-                    seg_img = (seg_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
-                else:
-                    seg_img = np.copy(seg_img_orig)
 
                 if len(seg_img.shape) == 3:
                     seg_img = seg_img[:, :, 0].squeeze()
@@ -236,7 +228,10 @@ def main():
                 conc_data_y = np.zeros((src_width,), dtype=np.float64)
                 for i in range(src_width):
                     curr_pix = np.squeeze(seg_img[:, i])
-                    ice_pix = curr_pix[curr_pix != 0]
+                    if ice_type == 0:
+                        ice_pix = curr_pix[curr_pix != 0]
+                    else:
+                        ice_pix = curr_pix[curr_pix == ice_type]
                     conc_data_y[i] = len(ice_pix) / float(src_height)
 
                 plot_cols_y.append(cols[seg_id % n_cols])
@@ -258,11 +253,11 @@ def main():
             stitched = resizeAR(stitched, 1280, 0)
 
             cv2.imshow('stitched', stitched)
-            k = cv2.waitKey(1-_pause)
+            k = cv2.waitKey(1 - _pause)
             if k == 27:
                 break
             elif k == 32:
-                _pause = 1- _pause
+                _pause = 1 - _pause
 
 
 if __name__ == '__main__':
