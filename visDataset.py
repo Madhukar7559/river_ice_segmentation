@@ -190,7 +190,7 @@ for img_id in range(start_id, end_id + 1):
             eval_cl, _ = eval.extract_classes(seg_img)
             gt_cl, _ = eval.extract_classes(labels_img_orig)
 
-            if eval_cl != gt_cl:
+            if (eval_cl != gt_cl).any():
                 seg_img = (seg_img.astype(np.float64) / label_diff).astype(np.uint8)
 
             seg_height, seg_width = seg_img.shape
