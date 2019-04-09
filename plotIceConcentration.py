@@ -11,16 +11,18 @@ from densenet.utils import readData, getDateTime, print_and_write, resizeAR
 from dictances import bhattacharyya
 
 
-def getPlotImage(data, cols, title):
+def getPlotImage(data, cols, title, labels):
     fig = Figure()
     canvas = FigureCanvas(fig)
     ax = fig.gca()
 
-    for datum, col in zip(data, cols):
-        ax.plot(datum, color=col)
-
+    n_data = len(data)
+    for i in range(n_data):
+        ax.plot(data[i], color=cols[i], label=labels[i])
     ax.set_title(title)
+    ax.legend()
     ax.grid(1)
+    ax.set_ylim(0, 1)
 
     canvas.draw()
     width, height = fig.get_size_inches() * fig.get_dpi()
@@ -252,7 +254,9 @@ def main():
 
             # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
 
-            plot_img = getPlotImage(plot_data_y, plot_cols_y, 'conc_data')
+            plot_title = 'ice concentration'
+            plot_labels = ['GT', ] + seg_labels
+            plot_img = getPlotImage(plot_data_y, plot_cols_y, plot_title, plot_labels)
             plot_img = resizeAR(plot_img, src_width, src_height, bkg_col=255)
 
             # plt.plot(conc_data_x, conc_data_y)
