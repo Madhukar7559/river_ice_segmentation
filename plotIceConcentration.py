@@ -25,7 +25,7 @@ def getPlotImage(data, cols, title, line_labels, x_label, y_label):
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
 
-    ax.set_ylim(0, 1)
+    ax.set_ylim(0, 100)
 
     canvas.draw()
     width, height = fig.get_size_inches() * fig.get_dpi()
@@ -216,8 +216,9 @@ def main():
 
             conc_data_x = np.asarray(range(src_width), dtype=np.float64)
             conc_data_y = np.zeros((src_width,), dtype=np.float64)
+
             for i in range(src_width):
-                curr_pix = np.squeeze(labels_img[:, i])
+                curr_pix = np.squeeze(labels_img_orig[:, i])
                 if ice_type == 0:
                     ice_pix = curr_pix[curr_pix != 0]
                 else:
@@ -235,12 +236,15 @@ def main():
             gt_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
 
             dists = {
-                'bhattacharyya': [],
+                # 'bhattacharyya': [],
                 'euclidean': [],
                 'mae': [],
                 'mse': [],
-                'frobenius': [],
+                # 'frobenius': [],
             }
+
+            gt_cl, _ = eval.extract_classes(labels_img_orig)
+            print('gt_cl: {}'.format(gt_cl))
 
             for seg_id, seg_path in enumerate(seg_paths):
                 seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
@@ -256,6 +260,9 @@ def main():
                     seg_img = (seg_img_orig.astype(np.float64) / label_diff).astype(np.uint8)
                 else:
                     seg_img = seg_img_orig
+
+                eval_cl, _ = eval.extract_classes(seg_img)
+                print('eval_cl: {}'.format(eval_cl))
 
                 if show_img:
                     cv2.imshow('seg_img_orig', seg_img_orig)
@@ -278,11 +285,11 @@ def main():
 
                 seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
 
-                dists['bhattacharyya'].append(bhattacharyya(gt_dict, seg_dict))
+                # dists['bhattacharyya'].append(bhattacharyya(gt_dict, seg_dict))
                 dists['euclidean'].append(euclidean(gt_dict, seg_dict))
                 dists['mse'].append(mse(gt_dict, seg_dict))
                 dists['mae'].append(mae(gt_dict, seg_dict))
-                dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
+                # dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
 
             # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
 
@@ -310,7 +317,9 @@ def main():
                 break
             elif k == 32:
                 _pause = 1 - _pause
-
+                
+    mean_dists = {k:np.mean(dists[k]) for k in dists}
+    print('mean_dists: {}'.format(mean_dists))
 
 if __name__ == '__main__':
     main()
