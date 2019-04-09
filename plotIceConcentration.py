@@ -8,20 +8,23 @@ from matplotlib.figure import Figure
 
 import densenet.evaluation.eval_segm as eval
 from densenet.utils import readData, getDateTime, print_and_write, resizeAR
-from dictances import bhattacharyya
+from dictances import bhattacharyya, euclidean, mae, mse
 
 
-def getPlotImage(data, cols, title, labels):
+def getPlotImage(data, cols, title, line_labels, x_label, y_label):
     fig = Figure()
     canvas = FigureCanvas(fig)
     ax = fig.gca()
 
     n_data = len(data)
     for i in range(n_data):
-        ax.plot(data[i], color=cols[i], label=labels[i])
+        ax.plot(data[i], color=cols[i], label=line_labels[i])
     ax.set_title(title)
     ax.legend()
     ax.grid(1)
+    ax.set_xlabel(x_label)
+    ax.set_ylabel(y_label)
+
     ax.set_ylim(0, 1)
 
     canvas.draw()
@@ -107,6 +110,14 @@ def main():
 
     ice_type = args.ice_type
 
+    ice_types = {
+        0: 'combined ice',
+        1: 'anchor ice',
+        2: 'frazil ice',
+    }
+
+    ice_type_str = ice_types[ice_type]
+
     src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
                                                         labels_ext)
     if end_id < start_id:
@@ -156,6 +167,9 @@ def main():
     labels_img = None
 
     n_cols = len(cols)
+
+    plot_y_label = '{} concentration (%)'.format(ice_type_str)
+    plot_x_label = 'distance in pixels from left edge'
 
     for img_id in range(start_id, end_id + 1):
 
@@ -209,7 +223,7 @@ def main():
                 else:
                     ice_pix = curr_pix[curr_pix == ice_type]
 
-                conc_data_y[i] = len(ice_pix) / float(src_height)
+                conc_data_y[i] = (len(ice_pix) / float(src_height))*100.0
 
             conc_data = np.zeros((src_width, 2), dtype=np.float64)
             conc_data[:, 0] = conc_data_x
@@ -218,7 +232,15 @@ def main():
             plot_data_y = [conc_data_y, ]
             plot_cols_y = [(0, 1, 0), ]
 
-            bhattacharyya_dist = []
+            gt_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
+
+            dists = {
+                'bhattacharyya': [],
+                'euclidean': [],
+                'mae': [],
+                'mse': [],
+                'frobenius': [],
+            }
 
             for seg_id, seg_path in enumerate(seg_paths):
                 seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
@@ -249,20 +271,25 @@ def main():
                         ice_pix = curr_pix[curr_pix != 0]
                     else:
                         ice_pix = curr_pix[curr_pix == ice_type]
-                    conc_data_y[i] = len(ice_pix) / float(src_height)
+                    conc_data_y[i] = (len(ice_pix) / float(src_height)) * 100.0
 
                 plot_cols_y.append(cols[seg_id % n_cols])
                 plot_data_y.append(conc_data_y)
 
-                curr_bhattacharyya_dist = bhattacharyya(plot_data_y[0], plot_data_y[-1])
-                bhattacharyya_dist.append(curr_bhattacharyya_dist)
+                seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
+
+                dists['bhattacharyya'].append(bhattacharyya(gt_dict, seg_dict))
+                dists['euclidean'].append(euclidean(gt_dict, seg_dict))
+                dists['mse'].append(mse(gt_dict, seg_dict))
+                dists['mae'].append(mae(gt_dict, seg_dict))
+                dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
 
             # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
 
-
             plot_title = 'ice concentration'
             plot_labels = ['GT', ] + seg_labels
-            plot_img = getPlotImage(plot_data_y, plot_cols_y, plot_title, plot_labels)
+            plot_img = getPlotImage(plot_data_y, plot_cols_y, plot_title, plot_labels,
+                                    plot_x_label, plot_y_label)
             plot_img = resizeAR(plot_img, src_width, src_height, bkg_col=255)
 
             # plt.plot(conc_data_x, conc_data_y)
@@ -275,7 +302,7 @@ def main():
 
             stitched = resizeAR(stitched, width=1280)
 
-            print('bhattacharyya_dist: {}'.format(bhattacharyya_dist))
+            print('dists: {}'.format(dists))
 
             cv2.imshow('stitched', stitched)
             k = cv2.waitKey(1 - _pause)
