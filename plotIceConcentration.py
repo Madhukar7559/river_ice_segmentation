@@ -48,6 +48,8 @@ def main():
     parser.add_argument("--seg_ext", type=str, default='png')
     parser.add_argument("--seg_root", type=str, default='')
 
+    parser.add_argument("--seg_labels", type=str_to_list, default=[])
+
     parser.add_argument("--out_path", type=str, default='')
 
     parser.add_argument("--out_ext", type=str, default='png')
@@ -99,6 +101,8 @@ def main():
     normalize_labels = args.normalize_labels
     selective_mode = args.selective_mode
 
+    seg_labels = args.seg_labels
+
     ice_type = args.ice_type
 
     src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
@@ -113,6 +117,15 @@ def main():
         if not os.path.isdir(out_path):
             os.makedirs(out_path)
         print('Writing concentration data to {}'.format(out_path))
+
+    if seg_paths:
+        n_seg_paths = len(seg_paths)
+        n_seg_labels = len(seg_labels)
+
+        if n_seg_paths != n_seg_labels:
+            raise IOError('Mismatch between n_seg_labels: {} and n_seg_paths: {}'.format(
+                n_seg_labels, n_seg_paths
+            ))
 
     if not save_path:
         save_path = os.path.join(os.path.dirname(images_path), 'ice_concentration')
