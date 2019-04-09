@@ -218,6 +218,8 @@ def main():
             plot_data_y = [conc_data_y, ]
             plot_cols_y = [(0, 1, 0), ]
 
+            bhattacharyya_dist = []
+
             for seg_id, seg_path in enumerate(seg_paths):
                 seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
                 seg_img_orig = imread(seg_img_fname)
@@ -252,7 +254,11 @@ def main():
                 plot_cols_y.append(cols[seg_id % n_cols])
                 plot_data_y.append(conc_data_y)
 
+                curr_bhattacharyya_dist = bhattacharyya(plot_data_y[0], plot_data_y[-1])
+                bhattacharyya_dist.append(curr_bhattacharyya_dist)
+
             # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
+
 
             plot_title = 'ice concentration'
             plot_labels = ['GT', ] + seg_labels
@@ -267,7 +273,9 @@ def main():
 
             stitched = np.concatenate((src_img, plot_img), axis=1)
 
-            stitched = resizeAR(stitched, 1280, 0)
+            stitched = resizeAR(stitched, width=1280)
+
+            print('bhattacharyya_dist: {}'.format(bhattacharyya_dist))
 
             cv2.imshow('stitched', stitched)
             k = cv2.waitKey(1 - _pause)

@@ -128,7 +128,7 @@ def sortKey(fname):
     return key
 
 
-def resizeAR(src_img, width, height, return_factors=False, bkg_col=0):
+def resizeAR(src_img, width=0, height=0, return_factors=False, bkg_col=0):
 
     src_height, src_width, n_channels = src_img.shape
     src_aspect_ratio = float(src_width) / float(src_height)
