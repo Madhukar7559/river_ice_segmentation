@@ -5,6 +5,8 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
 - [plotIceConcentration](#ploticeconcentration)
    - [deeplab       @ plotIceConcentration](#deeplab__ploticeconcentration)
       - [anchor       @ deeplab/plotIceConcentration](#anchor__deeplabploticeconcentration)
+   - [svm       @ plotIceConcentration](#svm__ploticeconcentration)
+      - [anchor       @ svm/plotIceConcentration](#anchor__svmploticeconcentration)
 - [videoToImgSeq](#videotoimgseq)
    - [1920x1080       @ videoToImgSeq](#1920x1080__videotoimgseq)
    - [4k       @ videoToImgSeq](#4k__videotoimgseq)
@@ -122,6 +124,19 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/im
 
 python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab --ice_type=1
 
+<a id="svm__ploticeconcentration"></a>
+## svm       @ plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_1 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_1
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2
+
+
+<a id="anchor__svmploticeconcentration"></a>
+### anchor       @ svm/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=1
+
 <a id="videotoimgseq"></a>
 # videoToImgSeq
 
@@ -130,7 +145,7 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/im
 
 python3 videoToImgSeq.py db_root_dir=/data/617/videos actor=20160121 seq_name=YUN00001 vid_fmt=mp4 n_frames=1800 resize_factor=0.50 dst_dir=/data/617/images/YUN00001_1920x1080/images
 
-python3 videoToImgSeq.py db_root_dir=/data/617/videos actor=20160121 seq_name=YUN00002 vid_fmt=mp4 n_frames=1800 resize_factor=0.50 dst_dir=/data/617/images/YUN00002_1920x1080/images
+python3 videoToImgSeq.py db_root_dir=/data/617/videos actor=20160121 seq_name=YUN00002 vid_fmt=mp4 n_frames=1800 resize_fa ctor=0.50 dst_dir=/data/617/images/YUN00002_1920x1080/images
 
 <a id="4k__videotoimgseq"></a>
 ## 4k       @ videoToImgSeq

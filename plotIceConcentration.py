@@ -5,6 +5,7 @@ from matplotlib import pyplot as plt
 import cv2
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
+from pprint import pprint
 
 import densenet.evaluation.eval_segm as eval
 from densenet.utils import readData, getDateTime, print_and_write, resizeAR
@@ -171,6 +172,17 @@ def main():
     plot_y_label = '{} concentration (%)'.format(ice_type_str)
     plot_x_label = 'distance in pixels from left edge'
 
+    dists = {}
+
+    for _label in seg_labels:
+        dists[_label] = {
+            # 'bhattacharyya': [],
+            'euclidean': [],
+            'mae': [],
+            'mse': [],
+            # 'frobenius': [],
+        }
+
     for img_id in range(start_id, end_id + 1):
 
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
@@ -235,20 +247,15 @@ def main():
 
             gt_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
 
-            dists = {
-                # 'bhattacharyya': [],
-                'euclidean': [],
-                'mae': [],
-                'mse': [],
-                # 'frobenius': [],
-            }
-
-            gt_cl, _ = eval.extract_classes(labels_img_orig)
-            print('gt_cl: {}'.format(gt_cl))
+            # gt_cl, _ = eval.extract_classes(labels_img_orig)
+            # print('gt_cl: {}'.format(gt_cl))
 
             for seg_id, seg_path in enumerate(seg_paths):
                 seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
                 seg_img_orig = imread(seg_img_fname)
+
+                _label = seg_labels[seg_id]
+
                 if seg_img_orig is None:
                     raise SystemError('Seg image could not be read from: {}'.format(seg_img_fname))
                 _, src_width = seg_img_orig.shape[:2]
@@ -261,8 +268,8 @@ def main():
                 else:
                     seg_img = seg_img_orig
 
-                eval_cl, _ = eval.extract_classes(seg_img)
-                print('eval_cl: {}'.format(eval_cl))
+                # eval_cl, _ = eval.extract_classes(seg_img)
+                # print('eval_cl: {}'.format(eval_cl))
 
                 if show_img:
                     cv2.imshow('seg_img_orig', seg_img_orig)
@@ -286,9 +293,9 @@ def main():
                 seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
 
                 # dists['bhattacharyya'].append(bhattacharyya(gt_dict, seg_dict))
-                dists['euclidean'].append(euclidean(gt_dict, seg_dict))
-                dists['mse'].append(mse(gt_dict, seg_dict))
-                dists['mae'].append(mae(gt_dict, seg_dict))
+                dists[_label]['euclidean'].append(euclidean(gt_dict, seg_dict))
+                dists[_label]['mse'].append(mse(gt_dict, seg_dict))
+                dists[_label]['mae'].append(mae(gt_dict, seg_dict))
                 # dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
 
             # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
@@ -309,7 +316,7 @@ def main():
 
             stitched = resizeAR(stitched, width=1280)
 
-            print('dists: {}'.format(dists))
+            # print('dists: {}'.format(dists))
 
             cv2.imshow('stitched', stitched)
             k = cv2.waitKey(1 - _pause)
@@ -317,9 +324,21 @@ def main():
                 break
             elif k == 32:
                 _pause = 1 - _pause
-                
-    mean_dists = {k:np.mean(dists[k]) for k in dists}
+
+    mean_dists = {}
+    mae_data = []
+    for _label in dists:
+        _dists = dists[_label]
+        mae_data.append(_dists['mae'])
+        mean_dists[_label]= {k:np.mean(_dists[k]) for k in _dists}
+
     print('mean_dists: {}'.format(mean_dists))
+    pprint(mean_dists)
+
+
+    plot_img = getPlotImage(plot_data_y, plot_cols_y, plot_title, plot_labels,
+                            plot_x_label, plot_y_label)
+    plt.show()
 
 if __name__ == '__main__':
     main()
