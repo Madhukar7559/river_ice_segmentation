@@ -332,7 +332,7 @@ def main():
         mae_data.append(_dists['mae'])
         mean_dists[_label]= {k:np.mean(_dists[k]) for k in _dists}
 
-    print('mean_dists: {}'.format(mean_dists))
+    print('mean_dists:')
     pprint(mean_dists)
 
     mae_img = getPlotImage(mae_data, plot_cols_y, 'MAE', seg_labels,
