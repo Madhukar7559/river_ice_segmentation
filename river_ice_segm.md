@@ -7,6 +7,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
       - [anchor       @ deeplab/plotIceConcentration](#anchor__deeplabploticeconcentration)
    - [svm       @ plotIceConcentration](#svm__ploticeconcentration)
       - [anchor       @ svm/plotIceConcentration](#anchor__svmploticeconcentration)
+   - [svm_and_deeplab       @ plotIceConcentration](#svm_and_deeplab__ploticeconcentration)
 - [videoToImgSeq](#videotoimgseq)
    - [1920x1080       @ videoToImgSeq](#1920x1080__videotoimgseq)
    - [4k       @ videoToImgSeq](#4k__videotoimgseq)
@@ -136,6 +137,12 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/im
 ### anchor       @ svm/plotIceConcentration
 
 python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=1
+
+<a id="svm_and_deeplab__ploticeconcentration"></a>
+## svm_and_deeplab       @ plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2,H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
+
 
 <a id="videotoimgseq"></a>
 # videoToImgSeq

@@ -335,10 +335,11 @@ def main():
     print('mean_dists: {}'.format(mean_dists))
     pprint(mean_dists)
 
-
-    plot_img = getPlotImage(plot_data_y, plot_cols_y, plot_title, plot_labels,
-                            plot_x_label, plot_y_label)
-    plt.show()
+    mae_img = getPlotImage(mae_data, plot_cols_y, 'MAE', seg_labels,
+                            'test image', 'Mean Absolute Error')
+    # plt.show()
+    cv2.imshow('MAE', mae_img)
+    k = cv2.waitKey(0)
 
 if __name__ == '__main__':
     main()
