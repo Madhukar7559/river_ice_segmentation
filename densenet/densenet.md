@@ -105,31 +105,31 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/indicator_learning/
          - [loss_1       @ vis_no_aug/4/800_retraining](#loss_1__vis_no_aug4800_retraining)
       - [vis_stitched       @ 4/800_retraining](#vis_stitched__4800_retraining)
       - [vis_no_aug__4_49       @ 4/800_retraining](#vis_no_aug_449__4800_retraining)
-- [8](#8)
-- [loss_1](#loss_1)
-      - [vis       @ loss_1/](#vis__loss_1)
-      - [vis_no_aug       @ loss_1/](#vis_no_aug__loss_1)
-      - [vis_stitched       @ loss_1/](#vis_stitched__loss_1)
-   - [16       @ loss_1](#16__loss_1)
-      - [vis       @ 16/loss_1](#vis__16loss_1)
-      - [vis_no_aug       @ 16/loss_1](#vis_no_aug__16loss_1)
-      - [vis_stitched       @ 16/loss_1](#vis_stitched__16loss_1)
-   - [24       @ loss_1](#24__loss_1)
-      - [vis       @ 24/loss_1](#vis__24loss_1)
-      - [vis_no_aug       @ 24/loss_1](#vis_no_aug__24loss_1)
-      - [vis_stitched       @ 24/loss_1](#vis_stitched__24loss_1)
-   - [32       @ loss_1](#32__loss_1)
-   - [fixed_lr       @ loss_1](#fixed_lr__loss_1)
-   - [loss_1       @ loss_1](#loss_1__loss_1)
-   - [18_layers       @ loss_1](#18_layers__loss_1)
-   - [21_layers       @ loss_1](#21_layers__loss_1)
-   - [21_layers__640       @ loss_1](#21_layers__640__loss_1)
-   - [24_layers__640       @ loss_1](#24_layers__640__loss_1)
-      - [vis       @ 24_layers__640/loss_1](#vis__24_layers__640loss_1)
-      - [vis_no_aug       @ 24_layers__640/loss_1](#vis_no_aug__24_layers__640loss_1)
-      - [vis_stitched       @ 24_layers__640/loss_1](#vis_stitched__24_layers__640loss_1)
-      - [YUN00001       @ 24_layers__640/loss_1](#yun00001__24_layers__640loss_1)
-      - [YUN00001_3600       @ 24_layers__640/loss_1](#yun00001_3600__24_layers__640loss_1)
+   - [8       @ 800_retraining](#8__800_retraining)
+      - [loss_1       @ 8/800_retraining](#loss_1__8800_retraining)
+         - [vis       @ loss_1/8/800_retraining](#vis__loss_18800_retraining)
+         - [vis_no_aug       @ loss_1/8/800_retraining](#vis_no_aug__loss_18800_retraining)
+         - [vis_stitched       @ loss_1/8/800_retraining](#vis_stitched__loss_18800_retraining)
+   - [16       @ 800_retraining](#16__800_retraining)
+      - [vis       @ 16/800_retraining](#vis__16800_retraining)
+      - [vis_no_aug       @ 16/800_retraining](#vis_no_aug__16800_retraining)
+      - [vis_stitched       @ 16/800_retraining](#vis_stitched__16800_retraining)
+   - [24       @ 800_retraining](#24__800_retraining)
+      - [vis       @ 24/800_retraining](#vis__24800_retraining)
+      - [vis_no_aug       @ 24/800_retraining](#vis_no_aug__24800_retraining)
+      - [vis_stitched       @ 24/800_retraining](#vis_stitched__24800_retraining)
+   - [32       @ 800_retraining](#32__800_retraining)
+      - [vis       @ 32/800_retraining](#vis__32800_retraining)
+      - [vis_no_aug       @ 32/800_retraining](#vis_no_aug__32800_retraining)
+      - [vis_stitched       @ 32/800_retraining](#vis_stitched__32800_retraining)
+      - [YUN00001       @ 32/800_retraining](#yun00001__32800_retraining)
+      - [YUN00001_3600       @ 32/800_retraining](#yun00001_3600__32800_retraining)
+      - [fixed_lr       @ 32/800_retraining](#fixed_lr__32800_retraining)
+      - [loss_1       @ 32/800_retraining](#loss_1__32800_retraining)
+      - [18_layers       @ 32/800_retraining](#18_layers__32800_retraining)
+      - [21_layers       @ 32/800_retraining](#21_layers__32800_retraining)
+      - [21_layers__640       @ 32/800_retraining](#21_layers__640__32800_retraining)
+      - [24_layers__640       @ 32/800_retraining](#24_layers__640__32800_retraining)
 - [800_retraining_fixed_indices](#800_retraining_fixed_indices)
    - [4__non_aug       @ 800_retraining_fixed_indices](#4__non_aug__800_retraining_fixed_indices)
       - [2       @ 4__non_aug/800_retraining_fixed_indices](#2__4__non_aug800_retraining_fixed_indices)
@@ -798,141 +798,142 @@ CUDA_VISIBLE_DEVICES=1 python3 densenet_predict.py --images_path=/data/617/image
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images labels_path=/data/617/images/training_4_49/labels patch_seq_path=log/rt2_training_0_3_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_320_4_elu/predict_acc/training_4_49_800_800_800_800 stitched_seq_path=log/rt2_training_0_3_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_320_4_elu/predict_acc/training_4_49/raw patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png del_patch_seq=0
 
 
-<a id="8"></a>
-# 8
+<a id="8__800_retraining"></a>
+## 8       @ 800_retraining
 
 CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_7_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_7_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_7_800_800_80_320_rot_15_345_4_flip_95_10 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1
 
-<a id="loss_1"></a>
-# loss_1
+<a id="loss_1__8800_retraining"></a>
+### loss_1       @ 8/800_retraining
 
 CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_7_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_7_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=1 --eval_every=1 --load_weights=1 --log_dir=log/training_0_7_800_800_80_320_rot_15_345_4_flip --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1
 
-<a id="vis__loss_1"></a>
-### vis       @ loss_1/
+<a id="vis__loss_18800_retraining"></a>
+#### vis       @ loss_1/8/800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_7_800_800_80_320_rot_15_345_4_flip_95_10_50_10000_10000_800_0_581_4/weights_acc/ --save_path=log/rt2_training_0_7_800_800_80_320_rot_15_345_4_flip_95_10_50_10000_10000_800_0_581_4/predict_acc/training_32_49_800_800_80_320_rot_15_345_4_flip --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels --save_seg=0 --psi_act_type=1
 
-<a id="vis_no_aug__loss_1"></a>
-### vis_no_aug       @ loss_1/
+<a id="vis_no_aug__loss_18800_retraining"></a>
+#### vis_no_aug       @ loss_1/8/800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_7_800_800_80_320_rot_15_345_4_flip_95_10_50_10000_10000_800_0_581_4/weights_acc/ --save_path=log/rt2_training_0_7_800_800_80_320_rot_15_345_4_flip_95_10_50_10000_10000_800_0_581_4/predict_acc/training_32_49_800_800_800_800 --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_800_800/labels --psi_act_type=1
 
-<a id="vis_stitched__loss_1"></a>
-### vis_stitched       @ loss_1/
+<a id="vis_stitched__loss_18800_retraining"></a>
+#### vis_stitched       @ loss_1/8/800_retraining
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels patch_seq_path=log/rt2_training_0_7_800_800_80_320_rot_15_345_4_flip_95_10_50_10000_10000_800_0_581_4/predict_acc/training_32_49_800_800_800_800 stitched_seq_path=log/rt2_training_0_7_800_800_80_320_rot_15_345_4_flip_95_10_50_10000_10000_800_0_581_4/predict_acc/training_32_49/raw patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=1 method=1 normalize_patches=0 img_ext=png del_patch_seq=0
 
 
-<a id="16__loss_1"></a>
-## 16       @ loss_1
+<a id="16__800_retraining"></a>
+## 16       @ 800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_train.py --train_images=/data/617/images/training_0_15_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_15_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_15_800_800_80_320_rot_15_345_4_flip --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1
 
-<a id="vis__16loss_1"></a>
-### vis       @ 16/loss_1
+<a id="vis__16800_retraining"></a>
+### vis       @ 16/800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_15_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_10_4/weights_acc/ --save_path=log/rt2_training_0_15_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_10_4/predict_acc/training_32_49_800_800_80_320_rot_15_345_4_flip --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels --save_seg=0 --psi_act_type=1
 
-<a id="vis_no_aug__16loss_1"></a>
-### vis_no_aug       @ 16/loss_1
+<a id="vis_no_aug__16800_retraining"></a>
+### vis_no_aug       @ 16/800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_15_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_10_4/weights_acc/ --save_path=log/rt2_training_0_15_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_10_4/predict_acc/training_32_49_800_800_800_800 --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_800_800/labels --psi_act_type=1
 
-<a id="vis_stitched__16loss_1"></a>
-### vis_stitched       @ 16/loss_1
+<a id="vis_stitched__16800_retraining"></a>
+### vis_stitched       @ 16/800_retraining
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels patch_seq_path=log/rt2_training_0_15_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_10_4/predict_acc/training_32_49_800_800_800_800 stitched_seq_path=log/rt2_training_0_15_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_10_4/predict_acc/training_32_49/raw patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=1 method=1 normalize_patches=0 img_ext=png del_patch_seq=0
 
 
-<a id="24__loss_1"></a>
-## 24       @ loss_1
+<a id="24__800_retraining"></a>
+## 24       @ 800_retraining
 
 CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_23_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_23_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_23_800_800_80_320_rot_15_345_4_flip --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1
 
 
-<a id="vis__24loss_1"></a>
-### vis       @ 24/loss_1
+<a id="vis__24800_retraining"></a>
+### vis       @ 24/800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_23_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1274_4_elu/weights_acc/ --save_path=log/rt2_training_0_23_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1274_4_elu/predict_acc/training_32_49_800_800_80_320_rot_15_345_4_flip --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels --save_seg=0 --psi_act_type=1
 
-<a id="vis_no_aug__24loss_1"></a>
-### vis_no_aug       @ 24/loss_1
+<a id="vis_no_aug__24800_retraining"></a>
+### vis_no_aug       @ 24/800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_23_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1274_4_elu/weights_acc/ --save_path=log/rt2_training_0_23_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1274_4_elu/predict_acc/training_32_49_800_800_800_800 --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_800_800/labels --psi_act_type=1
 
-<a id="vis_stitched__24loss_1"></a>
-### vis_stitched       @ 24/loss_1
+<a id="vis_stitched__24800_retraining"></a>
+### vis_stitched       @ 24/800_retraining
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels patch_seq_path=log/rt2_training_0_23_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1274_4_elu/predict_acc/training_32_49_800_800_800_800 stitched_seq_path=log/rt2_training_0_23_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1274_4_elu/predict_acc/training_32_49/raw patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=1 method=1 normalize_patches=0 img_ext=png del_patch_seq=0
 
-<a id="32__loss_1"></a>
-## 32       @ loss_1
+<a id="32__800_retraining"></a>
+## 32       @ 800_retraining
 
 CUDA_VISIBLE_DEVICES=1 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1
 
-<a id="fixed_lr__loss_1"></a>
-## fixed_lr       @ loss_1
-
-CUDA_VISIBLE_DEVICES=2 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/flr_training_0_31_800_800_80_320_rot_15_345_4_flip --lr_dec_rate=1.00 --lr_dec_epochs=0 --psi_act_type=1
-
-<a id="loss_1__loss_1"></a>
-## loss_1       @ loss_1
-
-CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=1 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_95_10 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1
-
-<a id="18_layers__loss_1"></a>
-## 18_layers       @ loss_1
-
-CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_800_800/images --test_labels=/data/617/images/training_32_49_800_800_800_800/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_18 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=18 --preload_images=0
-
-<a id="21_layers__loss_1"></a>
-## 21_layers       @ loss_1
-
-CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_800_800/images --test_labels=/data/617/images/training_32_49_800_800_800_800/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=10 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_21 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=21 --preload_images=0
-
-
-<a id="21_layers__640__loss_1"></a>
-## 21_layers__640       @ loss_1
-
-
-CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_640_640_640_640/images --test_labels=/data/617/images/training_32_49_640_640_640_640/labels  --height=640 --width=640 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=64000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_640_640_64_256_rot_15_345_4_flip_21 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=21 --preload_images=0
-
-<a id="24_layers__640__loss_1"></a>
-## 24_layers__640       @ loss_1
-
-
-CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_640_640_640_640/images --test_labels=/data/617/images/training_32_49_640_640_640_640/labels  --height=640 --width=640 --index_percent=50 --n_classes=3 --start_id=0 --end_id=10 --n_epochs=64000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_640_640_64_256_rot_15_345_4_flip_24 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=24 --preload_images=0
-
-
-<a id="vis__24_layers__640loss_1"></a>
-### vis       @ 24_layers__640/loss_1
+<a id="vis__32800_retraining"></a>
+### vis       @ 32/800_retraining
 
 CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/weights_acc/ --save_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/training_32_49_800_800_80_320_rot_15_345_4_flip --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels --save_seg=0 --psi_act_type=1
 
-<a id="vis_no_aug__24_layers__640loss_1"></a>
-### vis_no_aug       @ 24_layers__640/loss_1
+<a id="vis_no_aug__32800_retraining"></a>
+### vis_no_aug       @ 32/800_retraining
 
-CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/weights_acc/ --save_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/training_32_49_800_800_800_800 --save_stitched=1 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_800_800/labels --psi_act_type=1
+CUDA_VISIBLE_DEVICES=2 python3 densenet_predict.py --images_path=/data/617/images/training_32_49_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/weights_acc/ --save_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/training_32_49_800_800_800_800 --save_stitched=0 --gpu_id=2 --loss_type=4 --labels_path=/data/617/images/training_32_49_800_800_800_800/labels --psi_act_type=1
 
-<a id="vis_stitched__24_layers__640loss_1"></a>
-### vis_stitched       @ 24_layers__640/loss_1
+<a id="vis_stitched__32800_retraining"></a>
+### vis_stitched       @ 32/800_retraining
 
-python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/training_32_49_800_800_800_800 stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/training_32_49/raw patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=1 method=1 normalize_patches=0 img_ext=png del_patch_seq=0
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/training_32_49_800_800_800_800 stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/training_32_49/raw patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=1 img_ext=png del_patch_seq=0
 
-<a id="yun00001__24_layers__640loss_1"></a>
-### YUN00001       @ 24_layers__640/loss_1
+
+<a id="yun00001__32800_retraining"></a>
+### YUN00001       @ 32/800_retraining
 
 CUDA_VISIBLE_DEVICES=1 python3 densenet_predict.py --images_path=/data/617/images/YUN00001_0_8999_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/weights_acc/ --save_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_0_8999_800_800_800_800 --save_stitched=1 --gpu_id=2 --loss_type=4 --psi_act_type=1
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_0_8999_800_800_800_800 stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=1 method=1 normalize_patches=0 img_ext=png del_patch_seq=1 out_ext=mkv width=1920 height=1080
 
-<a id="yun00001_3600__24_layers__640loss_1"></a>
-### YUN00001_3600       @ 24_layers__640/loss_1
+<a id="yun00001_3600__32800_retraining"></a>
+### YUN00001_3600       @ 32/800_retraining
 
 CUDA_VISIBLE_DEVICES=1 python3 densenet_predict.py --images_path=/data/617/images/YUN00001_3600_0_3599_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/weights_acc/ --save_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600_0_3599_800_800_800_800 --save_stitched=0 --save_seg=1 --gpu_id=2 --loss_type=4 --psi_act_type=1
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600_0_3599_800_800_800_800 stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=mkv width=1920 height=1080
+
+
+<a id="fixed_lr__32800_retraining"></a>
+### fixed_lr       @ 32/800_retraining
+
+CUDA_VISIBLE_DEVICES=2 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/flr_training_0_31_800_800_80_320_rot_15_345_4_flip --lr_dec_rate=1.00 --lr_dec_epochs=0 --psi_act_type=1
+
+<a id="loss_1__32800_retraining"></a>
+### loss_1       @ 32/800_retraining
+
+CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images --test_labels=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=1 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_95_10 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1
+
+<a id="18_layers__32800_retraining"></a>
+### 18_layers       @ 32/800_retraining
+
+CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_800_800/images --test_labels=/data/617/images/training_32_49_800_800_800_800/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_18 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=18 --preload_images=0
+
+<a id="21_layers__32800_retraining"></a>
+### 21_layers       @ 32/800_retraining
+
+CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_800_800_80_320_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_800_800_800_800/images --test_labels=/data/617/images/training_32_49_800_800_800_800/labels  --height=800 --width=800 --index_percent=50 --n_classes=3 --start_id=0 --end_id=10 --n_epochs=80000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_21 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=21 --preload_images=0
+
+
+<a id="21_layers__640__32800_retraining"></a>
+### 21_layers__640       @ 32/800_retraining
+
+
+CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_640_640_640_640/images --test_labels=/data/617/images/training_32_49_640_640_640_640/labels  --height=640 --width=640 --index_percent=50 --n_classes=3 --start_id=0 --end_id=-1 --n_epochs=64000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_640_640_64_256_rot_15_345_4_flip_21 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=21 --preload_images=0
+
+<a id="24_layers__640__32800_retraining"></a>
+### 24_layers__640       @ 32/800_retraining
+
+
+CUDA_VISIBLE_DEVICES=0 python3 densenet_train.py --train_images=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/images --train_labels=/data/617/images/training_0_31_640_640_64_256_rot_15_345_4_flip/labels --test_images=/data/617/images/training_32_49_640_640_640_640/images --test_labels=/data/617/images/training_32_49_640_640_640_640/labels  --height=640 --width=640 --index_percent=50 --n_classes=3 --start_id=0 --end_id=10 --n_epochs=64000 --gpu_id=2 --max_indices=10000 --min_indices=10000 --test_start_id=0 --test_end_id=-1 --save_stitched=1 --loss_type=4 --eval_every=1 --load_weights=1 --log_dir=log/rt2_training_0_31_640_640_64_256_rot_15_345_4_flip_24 --lr_dec_rate=0.95 --lr_dec_epochs=10 --psi_act_type=1 --n_layers=24 --preload_images=0
 
 <a id="800_retraining_fixed_indices"></a>
 # 800_retraining_fixed_indices

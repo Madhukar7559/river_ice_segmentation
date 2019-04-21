@@ -1,8 +1,8 @@
-Precision (%)				
-Precision on augmented 30% and 70% 3 class test sets				
-class	aug_30_on_70	1K_static_on_70	aug_70_on_30	1K_static_on_30
-bear	97.51	94.66	97.7	91.4
-coyote	84.54	90.57	75.49	85.33
-deer	95.72	81.71	96.34	97.01
-overall	92.59	88.98	89.84	91.25
-weighted	92.86	88.92	90.38	91.48
+Precision (%)		
+20K 4 class / Faster RCNN vs RetinaNet		
+class	FRCNN	RetinaNet
+bear	64.01	95.46
+coyote	71.77	97.38
+deer	71.4	91.09
+moose	59.62	99.08
+avg	65.65	95.75

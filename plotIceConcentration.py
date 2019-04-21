@@ -12,21 +12,25 @@ from densenet.utils import readData, getDateTime, print_and_write, resizeAR
 from dictances import bhattacharyya, euclidean, mae, mse
 
 
-def getPlotImage(data, cols, title, line_labels, x_label, y_label):
+def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, ylim=None):
     fig = Figure()
     canvas = FigureCanvas(fig)
     ax = fig.gca()
 
-    n_data = len(data)
+    n_data = len(data_y)
     for i in range(n_data):
-        ax.plot(data[i], color=cols[i], label=line_labels[i])
+        datum_y = data_y[i]
+        line_label = line_labels[i]
+        col = cols[i]
+        ax.plot(data_x, datum_y, color=col, label=line_label)
     ax.set_title(title)
     ax.legend()
     ax.grid(1)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
 
-    ax.set_ylim(0, 100)
+    if ylim is not None:
+        ax.set_ylim(*ylim)
 
     canvas.draw()
     width, height = fig.get_size_inches() * fig.get_dpi()
@@ -73,7 +77,7 @@ def main():
     parser.add_argument("--stitch", type=int, default=0)
     parser.add_argument("--stitch_seg", type=int, default=1)
 
-    parser.add_argument("--normalize_labels", type=int, default=1)
+    parser.add_argument("--normalize_labels", type=int, default=0)
     parser.add_argument("--selective_mode", type=int, default=0)
     parser.add_argument("--ice_type", type=int, default=0, help='0: combined, 1: anchor, 2: frazil')
 
@@ -183,6 +187,12 @@ def main():
             # 'frobenius': [],
         }
 
+    plot_title = '{} concentration'.format(ice_type_str)
+
+    prev_img = {}
+
+    changed_seg_count = {}
+
     for img_id in range(start_id, end_id + 1):
 
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
@@ -203,14 +213,25 @@ def main():
             print('error: {}'.format(e))
             sys.exit(1)
 
-        if not labels_path:
-            stitched = src_img
-        else:
+        conc_data_x = np.asarray(range(src_width), dtype=np.float64)
+        plot_data_x = conc_data_x
+
+        plot_data_y = []
+        plot_cols_y = []
+
+        stitched_img = src_img
+
+        if labels_path:
             labels_img_fname = os.path.join(labels_path, img_fname_no_ext + '.{}'.format(labels_ext))
             labels_img_orig = imread(labels_img_fname)
             if labels_img_orig is None:
                 raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
-            _, src_width = labels_img_orig.shape[:2]
+            labels_height, labels_width = labels_img_orig.shape[:2]
+
+            if labels_height != src_height or labels_width != src_width:
+                raise AssertionError('Mismatch between dimensions of source: {} and label: {}'.format(
+                    (src_height, src_width), (seg_height, seg_width)
+                ))
 
             if len(labels_img_orig.shape) == 3:
                 labels_img_orig = np.squeeze(labels_img_orig[:, :, 0])
@@ -219,127 +240,159 @@ def main():
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
             if normalize_labels:
-                labels_img = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
+                labels_img = (labels_img_orig.astype(np.float64) / label_diff).astype(np.uint8)
             else:
                 labels_img = np.copy(labels_img_orig)
 
             if len(labels_img.shape) == 3:
                 labels_img = labels_img[:, :, 0].squeeze()
 
-            conc_data_x = np.asarray(range(src_width), dtype=np.float64)
-            conc_data_y = np.zeros((src_width,), dtype=np.float64)
+            conc_data_y = np.zeros((labels_width,), dtype=np.float64)
 
-            for i in range(src_width):
-                curr_pix = np.squeeze(labels_img_orig[:, i])
+            for i in range(labels_width):
+                curr_pix = np.squeeze(labels_img[:, i])
                 if ice_type == 0:
                     ice_pix = curr_pix[curr_pix != 0]
                 else:
                     ice_pix = curr_pix[curr_pix == ice_type]
 
-                conc_data_y[i] = (len(ice_pix) / float(src_height))*100.0
+                conc_data_y[i] = (len(ice_pix) / float(src_height)) * 100.0
 
-            conc_data = np.zeros((src_width, 2), dtype=np.float64)
+            conc_data = np.zeros((labels_width, 2), dtype=np.float64)
             conc_data[:, 0] = conc_data_x
             conc_data[:, 1] = conc_data_y
 
-            plot_data_y = [conc_data_y, ]
-            plot_cols_y = [(0, 1, 0), ]
+            plot_data_y.append(conc_data_y)
+            plot_cols_y.append((0, 1, 0))
 
-            gt_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
+            gt_dict = {conc_data_x[i]: conc_data_y[i] for i in range(labels_width)}
+
+            if not normalize_labels:
+                labels_img_orig = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
+
+            if len(labels_img_orig.shape) == 2:
+                labels_img_orig = np.stack((labels_img_orig, labels_img_orig, labels_img_orig), axis=2)
+
+            stitched_img = np.concatenate((stitched_img, labels_img_orig), axis=1)
 
             # gt_cl, _ = eval.extract_classes(labels_img_orig)
             # print('gt_cl: {}'.format(gt_cl))
 
-            for seg_id, seg_path in enumerate(seg_paths):
-                seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
-                seg_img_orig = imread(seg_img_fname)
+        for seg_id, seg_path in enumerate(seg_paths):
+            seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
+            seg_img_orig = imread(seg_img_fname)
 
-                _label = seg_labels[seg_id]
+            _label = seg_labels[seg_id]
 
-                if seg_img_orig is None:
-                    raise SystemError('Seg image could not be read from: {}'.format(seg_img_fname))
-                _, src_width = seg_img_orig.shape[:2]
+            if seg_img_orig is None:
+                raise SystemError('Seg image could not be read from: {}'.format(seg_img_fname))
+            seg_height, seg_width = seg_img_orig.shape[:2]
 
-                if len(seg_img_orig.shape) == 3:
-                    seg_img_orig = np.squeeze(seg_img_orig[:, :, 0])
+            if seg_height != src_height or seg_width != src_width:
+                raise AssertionError('Mismatch between dimensions of source: {} and seg: {}'.format(
+                    (src_height, src_width), (seg_height, seg_width)
+                ))
 
-                if seg_img_orig.max() > n_classes - 1:
-                    seg_img = (seg_img_orig.astype(np.float64) / label_diff).astype(np.uint8)
+            if len(seg_img_orig.shape) == 3:
+                seg_img_orig = np.squeeze(seg_img_orig[:, :, 0])
+
+            if seg_img_orig.max() > n_classes - 1:
+                seg_img = (seg_img_orig.astype(np.float64) / label_diff).astype(np.uint8)
+                seg_img_disp = seg_img_orig
+            else:
+                seg_img = seg_img_orig
+                seg_img_disp = (seg_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
+
+            if img_id > 0:
+                changed_seg_count[seg_id].append(np.count_nonzero(np.not_equal(seg_img, prev_img[seg_id])))
+            else:
+                changed_seg_count[seg_id] = []
+
+            prev_img[seg_id] = seg_img
+
+            # eval_cl, _ = eval.extract_classes(seg_img)
+            # print('eval_cl: {}'.format(eval_cl))
+
+            if show_img:
+                cv2.imshow('seg_img_orig', seg_img_orig)
+
+            if len(seg_img.shape) == 3:
+                seg_img = seg_img[:, :, 0].squeeze()
+
+            conc_data_y = np.zeros((seg_width,), dtype=np.float64)
+            for i in range(seg_width):
+                curr_pix = np.squeeze(seg_img[:, i])
+                if ice_type == 0:
+                    ice_pix = curr_pix[curr_pix != 0]
                 else:
-                    seg_img = seg_img_orig
+                    ice_pix = curr_pix[curr_pix == ice_type]
+                conc_data_y[i] = (len(ice_pix) / float(src_height)) * 100.0
 
-                # eval_cl, _ = eval.extract_classes(seg_img)
-                # print('eval_cl: {}'.format(eval_cl))
+            plot_cols_y.append(cols[seg_id % n_cols])
+            plot_data_y.append(conc_data_y)
 
-                if show_img:
-                    cv2.imshow('seg_img_orig', seg_img_orig)
+            seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(seg_width)}
 
-                if len(seg_img.shape) == 3:
-                    seg_img = seg_img[:, :, 0].squeeze()
-
-                conc_data_x = np.asarray(range(src_width), dtype=np.float64)
-                conc_data_y = np.zeros((src_width,), dtype=np.float64)
-                for i in range(src_width):
-                    curr_pix = np.squeeze(seg_img[:, i])
-                    if ice_type == 0:
-                        ice_pix = curr_pix[curr_pix != 0]
-                    else:
-                        ice_pix = curr_pix[curr_pix == ice_type]
-                    conc_data_y[i] = (len(ice_pix) / float(src_height)) * 100.0
-
-                plot_cols_y.append(cols[seg_id % n_cols])
-                plot_data_y.append(conc_data_y)
-
-                seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(src_width)}
-
+            if labels_path:
                 # dists['bhattacharyya'].append(bhattacharyya(gt_dict, seg_dict))
                 dists[_label]['euclidean'].append(euclidean(gt_dict, seg_dict))
                 dists[_label]['mse'].append(mse(gt_dict, seg_dict))
                 dists[_label]['mae'].append(mae(gt_dict, seg_dict))
                 # dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
 
-            # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
+        # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
 
-            plot_title = 'ice concentration'
-            plot_labels = ['GT', ] + seg_labels
-            plot_img = getPlotImage(plot_data_y, plot_cols_y, plot_title, plot_labels,
-                                    plot_x_label, plot_y_label)
-            plot_img = resizeAR(plot_img, src_width, src_height, bkg_col=255)
+        plot_labels = ['GT', ] + seg_labels
+        plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols_y, plot_title, plot_labels,
+                                plot_x_label, plot_y_label,
+                                # ylim=(0, 100)
+                                )
 
-            # plt.plot(conc_data_x, conc_data_y)
-            # plt.show()
+        plot_img = resizeAR(plot_img, seg_width, src_height, bkg_col=255)
 
-            # conc_data_fname = os.path.join(out_path, img_fname_no_ext + '.txt')
-            # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
+        # plt.plot(conc_data_x, conc_data_y)
+        # plt.show()
 
-            stitched = np.concatenate((src_img, plot_img), axis=1)
+        # conc_data_fname = os.path.join(out_path, img_fname_no_ext + '.txt')
+        # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
 
-            stitched = resizeAR(stitched, width=1280)
+        if len(seg_img_disp.shape) == 2:
+            seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
 
-            # print('dists: {}'.format(dists))
+        stitched_seg_img = np.concatenate((seg_img_disp, plot_img), axis=1)
+        stitched_img = np.concatenate((stitched_img, stitched_seg_img), axis=0)
 
-            cv2.imshow('stitched', stitched)
-            k = cv2.waitKey(1 - _pause)
-            if k == 27:
-                break
-            elif k == 32:
-                _pause = 1 - _pause
+        stitched_img = resizeAR(stitched_img, width=1280)
 
-    mean_dists = {}
-    mae_data = []
-    for _label in dists:
-        _dists = dists[_label]
-        mae_data.append(_dists['mae'])
-        mean_dists[_label]= {k:np.mean(_dists[k]) for k in _dists}
+        # print('dists: {}'.format(dists))
 
-    print('mean_dists:')
-    pprint(mean_dists)
+        cv2.imshow('stitched_img', stitched_img)
+        k = cv2.waitKey(1 - _pause)
+        if k == 27:
+            break
+        elif k == 32:
+            _pause = 1 - _pause
 
-    mae_img = getPlotImage(mae_data, plot_cols_y, 'MAE', seg_labels,
-                            'test image', 'Mean Absolute Error')
-    # plt.show()
-    cv2.imshow('MAE', mae_img)
-    k = cv2.waitKey(0)
+    if labels_path:
+        mean_dists = {}
+        mae_data_y = []
+        for _label in dists:
+            _dists = dists[_label]
+            mae_data_y.append(_dists['mae'])
+            mean_dists[_label] = {k: np.mean(_dists[k]) for k in _dists}
+
+        print('mean_dists:')
+        pprint(mean_dists)
+        n_test_images = len(mae_data_y[0])
+
+        mae_data_x = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+
+        mae_img = getPlotImage(mae_data_x, mae_data_y, plot_cols_y, 'MAE', seg_labels,
+                               'test image', 'Mean Absolute Error')
+        # plt.show()
+        cv2.imshow('MAE', mae_img)
+        k = cv2.waitKey(0)
+
 
 if __name__ == '__main__':
     main()

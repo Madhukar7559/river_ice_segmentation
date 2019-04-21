@@ -5,8 +5,13 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
 - [plotIceConcentration](#ploticeconcentration)
    - [deeplab       @ plotIceConcentration](#deeplab__ploticeconcentration)
       - [anchor       @ deeplab/plotIceConcentration](#anchor__deeplabploticeconcentration)
+      - [frazil       @ deeplab/plotIceConcentration](#frazil__deeplabploticeconcentration)
+   - [densenet       @ plotIceConcentration](#densenet__ploticeconcentration)
+      - [anchor       @ densenet/plotIceConcentration](#anchor__densenetploticeconcentration)
+      - [frazil       @ densenet/plotIceConcentration](#frazil__densenetploticeconcentration)
    - [svm       @ plotIceConcentration](#svm__ploticeconcentration)
       - [anchor       @ svm/plotIceConcentration](#anchor__svmploticeconcentration)
+      - [frazil       @ svm/plotIceConcentration](#frazil__svmploticeconcentration)
    - [svm_and_deeplab       @ plotIceConcentration](#svm_and_deeplab__ploticeconcentration)
 - [videoToImgSeq](#videotoimgseq)
    - [1920x1080       @ videoToImgSeq](#1920x1080__videotoimgseq)
@@ -17,7 +22,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
       - [20161201_YUN00002_1800       @ 4k/videoToImgSeq](#20161201_yun00002_1800__4kvideotoimgseq)
       - [20160122_YUN00002_700_2500       @ 4k/videoToImgSeq](#20160122_yun00002_700_2500__4kvideotoimgseq)
       - [20160122_YUN00020_2000_3800       @ 4k/videoToImgSeq](#20160122_yun00020_2000_3800__4kvideotoimgseq)
-      - [20160122_YUN00020_2000_3800_-_win_pc       @ 4k/videoToImgSeq](#20160122_yun00020_2000_3800-win_pc__4kvideotoimgseq)
+      - [20160122_YUN00020_2000_3800__win_pc       @ 4k/videoToImgSeq](#20160122_yun00020_2000_3800__win_pc__4kvideotoimgseq)
       - [20161203_Deployment_1_YUN00001_900_2700       @ 4k/videoToImgSeq](#20161203_deployment1yun00001_900_2700__4kvideotoimgseq)
       - [20161203_Deployment_1_YUN00001_900_1200_-_win_pc       @ 4k/videoToImgSeq](#20161203_deployment1yun00001_900_1200-win_pc__4kvideotoimgseq)
       - [20161203_Deployment_1_YUN00002_1800       @ 4k/videoToImgSeq](#20161203_deployment1yun00002_1800__4kvideotoimgseq)
@@ -125,6 +130,26 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/im
 
 python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab --ice_type=1
 
+<a id="frazil__deeplabploticeconcentration"></a>
+### frazil       @ deeplab/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab --ice_type=2
+
+<a id="densenet__ploticeconcentration"></a>
+## densenet       @ plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet
+
+<a id="anchor__densenetploticeconcentration"></a>
+### anchor       @ densenet/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet --ice_type=1
+
+<a id="frazil__densenetploticeconcentration"></a>
+### frazil       @ densenet/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet --ice_type=2
+
 <a id="svm__ploticeconcentration"></a>
 ## svm       @ plotIceConcentration
 
@@ -137,6 +162,11 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/im
 ### anchor       @ svm/plotIceConcentration
 
 python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=1
+
+<a id="frazil__svmploticeconcentration"></a>
+### frazil       @ svm/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=2
 
 <a id="svm_and_deeplab__ploticeconcentration"></a>
 ## svm_and_deeplab       @ plotIceConcentration
@@ -191,8 +221,8 @@ python3 videoToImgSeq.py db_root_dir=/data/617/videos actor=20160122 seq_name=YU
 
 python3 videoToImgSeq.py db_root_dir=/data/617/videos actor=20160122 seq_name=YUN00020 vid_fmt=mp4 n_frames=1800 resize_factor=1.0 start_id=2000 dst_dir=/data/617/images/20160122_YUN00020_2000_3800/images
 
-<a id="20160122_yun00020_2000_3800-win_pc__4kvideotoimgseq"></a>
-### 20160122_YUN00020_2000_3800_-_win_pc       @ 4k/videoToImgSeq
+<a id="20160122_yun00020_2000_3800__win_pc__4kvideotoimgseq"></a>
+### 20160122_YUN00020_2000_3800__win_pc       @ 4k/videoToImgSeq
 
 python3 videoToImgSeq.py db_root_dir=E:\Datasets\617\videos actor=20160122 seq_name=YUN00020 vid_fmt=mp4 n_frames=300 resize_factor=1 start_id=2000 dst_dir=P:\Datasets\617\images\20160122_YUN00020_2000_300\images
 

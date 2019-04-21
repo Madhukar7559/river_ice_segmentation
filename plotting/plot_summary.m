@@ -1,4 +1,7 @@
-clear all;
+% clear all;
+
+colRGBDefs;
+
 % plot_title='UNet';
 % k=importdata('unet_summary.txt');
 
@@ -25,12 +28,30 @@ k=importdata('combined_summary.txt');
 
 line_width = 3;
 transparent_bkg = 1;
+transparent_legend = 1;
+vertcal_x_label = 0;
+        
+% line_cols = {'red', 'blue', 'forest_green', 'magenta'};
+line_cols = {'red', 'forest_green', 'blue', 'blue'};
+
+
+
+% line_styles = {'--', '-', '-', '-', '-'};
+% line_styles = {'-', '-', '--', '--', '--'};
+line_styles = {'-', '-', '--', '-'};
+
+
 
 % line_specs = {'-og', '-+r'};
 % line_specs = {'--or', '-+g', '--xm', '-xm'};
 
 % line_specs = {'-or', '-+g', '-*b', '--xm'};
-line_specs = {'-or', ':+r', '-*b', ':xb'};
+
+% line_specs = {'-or', ':+r', '-*b', ':xb'};
+% line_specs = {'-or', '--+r', '-*b', '--xb'};
+
+% line_specs = {'-or', '-+g', '--*b', '--xm'};
+line_specs = {'--or', '-+b', '-*g', '-xm'};
 
 % line_specs = {'--or', '-+g', '-*b', '-xm', '-sc', '-pk'};
 
@@ -92,7 +113,10 @@ end
 figure
 
 for i = 1:n_lines
-    plot(patch_sizes, plot_data(:, i), line_specs{i},...
+    plot(patch_sizes, plot_data(:, i),...
+        line_specs{i},...
+        'Color', col_rgb{strcmp(col_names,line_cols{i})},...
+        'LineStyle', line_styles{i},...
         'LineWidth', line_width);
 %         'GridAlpha', 1);
     hold on
@@ -127,15 +151,18 @@ ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
 
 x_label = strtrim(x_label);
 xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
-xticklabel_rotate([],90,[], 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
-
+if vertcal_x_label
+    xticklabel_rotate([],90,[], 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+end
 % ylim([0.60, 0.90]);
 % ylim([0.65, 0.90]);
 plot_title = strtrim(plot_title);
 title(plot_title, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
 if transparent_bkg
     set(gca,'color','none')
-    set(h_legend,'color','none');
+    if transparent_legend
+        set(h_legend,'color','none');
+    end
 end
 
 
