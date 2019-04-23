@@ -342,7 +342,7 @@ def main():
                 else:
                     changed_seg_count[_label] = []
                     ice_concentration_diff[_label] = []
-                    
+
             prev_seg_img[_label] = seg_img
             prev_conc_data_y[_label] = conc_data_y
 
@@ -397,7 +397,6 @@ def main():
         n_test_images = len(mae_data_y[0])
 
         mae_data_x = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
-
         mae_img = getPlotImage(mae_data_x, mae_data_y, plot_cols_y, 'MAE', seg_labels,
                                'test image', 'Mean Absolute Error')
         # plt.show()
@@ -427,10 +426,14 @@ def main():
 
         seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
 
-        seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'MAE', seg_labels,
+        seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
                                'test image', 'Changed Label Count')
-        # plt.show()
         cv2.imshow('seg_count_img', seg_count_img)
+
+        conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y, 'Difference', seg_labels,
+                               'test image', 'Concentration Difference')
+        cv2.imshow('conc_diff_img', conc_diff_img)
+
         k = cv2.waitKey(0)
 
 if __name__ == '__main__':
