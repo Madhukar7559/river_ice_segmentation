@@ -280,6 +280,12 @@ def main():
             # gt_cl, _ = eval.extract_classes(labels_img_orig)
             # print('gt_cl: {}'.format(gt_cl))
 
+        mean_seg_counts = {}
+        seg_count_data_y = []
+
+        mean_conc_diff = {}
+        conc_diff_data_y = []
+
         for seg_id, seg_path in enumerate(seg_paths):
             seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
             seg_img_orig = imread(seg_img_fname)
@@ -343,10 +349,27 @@ def main():
                     changed_seg_count[_label] = []
                     ice_concentration_diff[_label] = []
 
+                if img_id > 0:
+                    seg_count_data_y.append(changed_seg_count[_label])
+                    mean_seg_counts[_label] = np.mean(changed_seg_count[_label])
+
+                    conc_diff_data_y.append(ice_concentration_diff[_label])
+                    mean_conc_diff[_label] = np.mean(ice_concentration_diff[_label])
+
             prev_seg_img[_label] = seg_img
             prev_conc_data_y[_label] = conc_data_y
 
         # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
+
+        if img_id > 0:
+            n_test_images = img_id
+            seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+            seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
+                                   'test image', 'Changed Label Count')
+            cv2.imshow('seg_count_img', seg_count_img)
+            conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y, 'Difference', seg_labels,
+                                   'test image', 'Concentration Difference')
+            cv2.imshow('conc_diff_img', conc_diff_img)
 
         plot_labels = ['GT', ] + seg_labels
         plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols_y, plot_title, plot_labels,
