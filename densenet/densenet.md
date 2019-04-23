@@ -124,6 +124,9 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/indicator_learning/
       - [vis_stitched       @ 32/800_retraining](#vis_stitched__32800_retraining)
       - [YUN00001       @ 32/800_retraining](#yun00001__32800_retraining)
       - [YUN00001_3600       @ 32/800_retraining](#yun00001_3600__32800_retraining)
+      - [vis_png       @ 32/800_retraining](#vis_png__32800_retraining)
+         - [20160122_YUN00002_700_2500       @ vis_png/32/800_retraining](#20160122_yun00002_700_2500__vis_png32800_retraining)
+         - [20160122_YUN00020_2000_3800       @ vis_png/32/800_retraining](#20160122_yun00020_2000_3800__vis_png32800_retraining)
       - [fixed_lr       @ 32/800_retraining](#fixed_lr__32800_retraining)
       - [loss_1       @ 32/800_retraining](#loss_1__32800_retraining)
       - [18_layers       @ 32/800_retraining](#18_layers__32800_retraining)
@@ -900,6 +903,20 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001/images pa
 CUDA_VISIBLE_DEVICES=1 python3 densenet_predict.py --images_path=/data/617/images/YUN00001_3600_0_3599_800_800_800_800/images --height=800 --width=800 --n_classes=3 --start_id=0 --end_id=-1 --weights_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/weights_acc/ --save_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600_0_3599_800_800_800_800 --save_stitched=0 --save_seg=1 --gpu_id=2 --loss_type=4 --psi_act_type=1
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600_0_3599_800_800_800_800 stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=mkv width=1920 height=1080
+
+<a id="vis_png__32800_retraining"></a>
+### vis_png       @ 32/800_retraining
+
+<a id="20160122_yun00002_700_2500__vis_png32800_retraining"></a>
+#### 20160122_YUN00002_700_2500       @ vis_png/32/800_retraining
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00002_700_2500/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20160122_YUN00002_700_2500_0_1799_800_800_800_800/raw stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20160122_YUN00002_700_2500 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=png
+
+<a id="20160122_yun00020_2000_3800__vis_png32800_retraining"></a>
+#### 20160122_YUN00020_2000_3800       @ vis_png/32/800_retraining
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00020_2000_3800/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20160122_YUN00020_2000_3800_0_1799_800_800_800_800/raw stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20160122_YUN00020_2000_3800 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=png
+
 
 
 <a id="fixed_lr__32800_retraining"></a>

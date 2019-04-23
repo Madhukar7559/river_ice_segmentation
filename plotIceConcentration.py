@@ -189,9 +189,11 @@ def main():
 
     plot_title = '{} concentration'.format(ice_type_str)
 
-    prev_img = {}
+    prev_seg_img = {}
+    prev_conc_data_y = {}
 
     changed_seg_count = {}
+    ice_concentration_diff = {}
 
     for img_id in range(start_id, end_id + 1):
 
@@ -303,21 +305,15 @@ def main():
                 seg_img = seg_img_orig
                 seg_img_disp = (seg_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
 
-            if img_id > 0:
-                changed_seg_count[seg_id].append(np.count_nonzero(np.not_equal(seg_img, prev_img[seg_id])))
-            else:
-                changed_seg_count[seg_id] = []
-
-            prev_img[seg_id] = seg_img
-
             # eval_cl, _ = eval.extract_classes(seg_img)
             # print('eval_cl: {}'.format(eval_cl))
+
 
             if show_img:
                 cv2.imshow('seg_img_orig', seg_img_orig)
 
             if len(seg_img.shape) == 3:
-                seg_img = seg_img[:, :, 0].squeeze()
+                seg_img = seg_img[:, :, 0].squeeze()                
 
             conc_data_y = np.zeros((seg_width,), dtype=np.float64)
             for i in range(seg_width):
@@ -339,6 +335,16 @@ def main():
                 dists[_label]['mse'].append(mse(gt_dict, seg_dict))
                 dists[_label]['mae'].append(mae(gt_dict, seg_dict))
                 # dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
+            else:
+                if img_id > 0:
+                    changed_seg_count[_label].append(np.count_nonzero(np.not_equal(seg_img, prev_seg_img[_label])))
+                    ice_concentration_diff[_label].append(np.linalg.norm(conc_data_y - prev_conc_data_y[_label]))
+                else:
+                    changed_seg_count[_label] = []
+                    ice_concentration_diff[_label] = []
+                    
+            prev_seg_img[_label] = seg_img
+            prev_conc_data_y[_label] = conc_data_y
 
         # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
 
@@ -359,8 +365,13 @@ def main():
         if len(seg_img_disp.shape) == 2:
             seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
 
+        print('seg_img_disp: {}'.format(seg_img_disp.shape))
+        print('plot_img: {}'.format(plot_img.shape))
         stitched_seg_img = np.concatenate((seg_img_disp, plot_img), axis=1)
-        stitched_img = np.concatenate((stitched_img, stitched_seg_img), axis=0)
+
+        print('stitched_seg_img: {}'.format(stitched_seg_img.shape))
+        print('stitched_img: {}'.format(stitched_img.shape))
+        stitched_img = np.concatenate((stitched_img, stitched_seg_img), axis=0 if labels_path else 1)
 
         stitched_img = resizeAR(stitched_img, width=1280)
 
@@ -392,7 +403,35 @@ def main():
         # plt.show()
         cv2.imshow('MAE', mae_img)
         k = cv2.waitKey(0)
+    else:
+        mean_seg_counts = {}
+        seg_count_data_y = []
 
+        mean_conc_diff = {}
+        conc_diff_data_y = []
+
+        for seg_id in changed_seg_count:
+            seg_count_data_y.append(changed_seg_count[seg_id])
+            mean_seg_counts[seg_id] = np.mean(changed_seg_count[seg_id])
+
+            conc_diff_data_y.append(ice_concentration_diff[seg_id])
+            mean_conc_diff[seg_id] = np.mean(ice_concentration_diff[seg_id])
+
+        print('mean_seg_counts:')
+        pprint(mean_seg_counts)
+
+        print('mean_conc_diff:')
+        pprint(mean_conc_diff)
+
+        n_test_images = len(seg_count_data_y[0])
+
+        seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+
+        seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'MAE', seg_labels,
+                               'test image', 'Changed Label Count')
+        # plt.show()
+        cv2.imshow('seg_count_img', seg_count_img)
+        k = cv2.waitKey(0)
 
 if __name__ == '__main__':
     main()
