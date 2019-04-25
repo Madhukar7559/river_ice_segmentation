@@ -224,6 +224,9 @@ def main():
         plot_data_y = []
         plot_cols_y = []
 
+        plot_labels = []
+
+
         stitched_img = src_img
 
         if labels_path:
@@ -279,6 +282,8 @@ def main():
                 labels_img_orig = np.stack((labels_img_orig, labels_img_orig, labels_img_orig), axis=2)
 
             stitched_img = np.concatenate((stitched_img, labels_img_orig), axis=1)
+
+            plot_labels.append('GT')
 
             # gt_cl, _ = eval.extract_classes(labels_img_orig)
             # print('gt_cl: {}'.format(gt_cl))
@@ -374,7 +379,7 @@ def main():
                                    'test image', 'Concentration Difference')
             cv2.imshow('conc_diff_img', conc_diff_img)
 
-        plot_labels = ['GT', ] + seg_labels
+        plot_labels += seg_labels
         plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols_y, plot_title, plot_labels,
                                 plot_x_label, plot_y_label,
                                 # ylim=(0, 100)
