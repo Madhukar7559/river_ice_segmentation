@@ -127,6 +127,10 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/indicator_learning/
       - [vis_png       @ 32/800_retraining](#vis_png__32800_retraining)
          - [20160122_YUN00002_700_2500       @ vis_png/32/800_retraining](#20160122_yun00002_700_2500__vis_png32800_retraining)
          - [20160122_YUN00020_2000_3800       @ vis_png/32/800_retraining](#20160122_yun00020_2000_3800__vis_png32800_retraining)
+         - [20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/800_retraining](#20161203_deployment1yun00001_900_2700__vis_png32800_retraining)
+         - [20161203_Deployment_1_YUN00002_1800       @ vis_png/32/800_retraining](#20161203_deployment1yun00002_1800__vis_png32800_retraining)
+         - [20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/800_retraining](#20161203_deployment1yun00001_900_2700__vis_png32800_retraining-1)
+         - [20161203_Deployment_1_YUN00002_1800       @ vis_png/32/800_retraining](#20161203_deployment1yun00002_1800__vis_png32800_retraining-1)
       - [fixed_lr       @ 32/800_retraining](#fixed_lr__32800_retraining)
       - [loss_1       @ 32/800_retraining](#loss_1__32800_retraining)
       - [18_layers       @ 32/800_retraining](#18_layers__32800_retraining)
@@ -916,6 +920,28 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00002_
 #### 20160122_YUN00020_2000_3800       @ vis_png/32/800_retraining
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00020_2000_3800/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20160122_YUN00020_2000_3800_0_1799_800_800_800_800/raw stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20160122_YUN00020_2000_3800 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=png
+
+
+<a id="20161203_deployment1yun00001_900_2700__vis_png32800_retraining"></a>
+#### 20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/800_retraining
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00001_900_2700/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20161203_Deployment_1_YUN00001_900_2700_0_1799_800_800_800_800/raw stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20161203_Deployment_1_YUN00001_900_2700 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=png
+
+
+<a id="20161203_deployment1yun00002_1800__vis_png32800_retraining"></a>
+#### 20161203_Deployment_1_YUN00002_1800       @ vis_png/32/800_retraining
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00002_1800/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20161203_Deployment_1_YUN00002_1800_0_1799_800_800_800_800/raw stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20161203_Deployment_1_YUN00002_1800 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=png
+
+<a id="20161203_deployment1yun00001_900_2700__vis_png32800_retraining-1"></a>
+#### 20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/800_retraining
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00001_900_2700/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/20161203_Deployment_1_YUN00001_900_2700_0_1799_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/20161203_Deployment_1_YUN00001_900_2700_max_val_acc patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png
+
+<a id="20161203_deployment1yun00002_1800__vis_png32800_retraining-1"></a>
+#### 20161203_Deployment_1_YUN00002_1800       @ vis_png/32/800_retraining
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00002_1800/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/20161203_Deployment_1_YUN00002_1800_0_1799_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/20161203_Deployment_1_YUN00002_1800_max_val_acc patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png
 
 
 

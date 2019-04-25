@@ -56,7 +56,7 @@ def main():
     parser.add_argument("--labels_ext", type=str, default='png')
     parser.add_argument("--seg_paths", type=str_to_list, default=[])
     parser.add_argument("--seg_ext", type=str, default='png')
-    parser.add_argument("--seg_root", type=str, default='')
+    parser.add_argument("--seg_root_dir", type=str, default='')
 
     parser.add_argument("--seg_labels", type=str_to_list, default=[])
 
@@ -91,8 +91,8 @@ def main():
     out_path = args.out_path
 
     seg_paths = args.seg_paths
+    seg_root_dir = args.seg_root_dir
     seg_ext = args.seg_ext
-    seg_root = args.seg_root
 
     out_ext = args.out_ext
 
@@ -144,6 +144,9 @@ def main():
             raise IOError('Mismatch between n_seg_labels: {} and n_seg_paths: {}'.format(
                 n_seg_labels, n_seg_paths
             ))
+        if seg_root_dir:
+            seg_paths = [os.path.join(seg_root_dir, name) for name in seg_paths]
+
 
     if not save_path:
         save_path = os.path.join(os.path.dirname(images_path), 'ice_concentration')
