@@ -116,9 +116,9 @@ def main():
     ice_type = args.ice_type
 
     ice_types = {
-        0: 'combined ice',
-        1: 'anchor ice',
-        2: 'frazil ice',
+        0: 'Combined Ice',
+        1: 'Anchor Ice',
+        2: 'Frazil Ice',
     }
 
     ice_type_str = ice_types[ice_type]
@@ -354,7 +354,7 @@ def main():
             else:
                 if img_id > 0:
                     changed_seg_count[_label].append(np.count_nonzero(np.not_equal(seg_img, prev_seg_img[_label])))
-                    ice_concentration_diff[_label].append(np.linalg.norm(conc_data_y - prev_conc_data_y[_label]))
+                    ice_concentration_diff[_label].append(np.mean(np.abs(conc_data_y - prev_conc_data_y[_label])))
                 else:
                     changed_seg_count[_label] = []
                     ice_concentration_diff[_label] = []
@@ -377,8 +377,9 @@ def main():
             seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
                                          'test image', 'Changed Label Count')
             cv2.imshow('seg_count_img', seg_count_img)
-            conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y, 'Difference', seg_labels,
-                                         'test image', 'Concentration Difference')
+            conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y,
+                                         'Mean {} Ice Concentration Difference', seg_labels,
+                                         'test image', 'Concentration Difference (%)')
             cv2.imshow('conc_diff_img', conc_diff_img)
             conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
         else:
@@ -417,7 +418,7 @@ def main():
                 np.concatenate(seg_img_disp_list, axis=1),
             ), axis=0)
 
-        stitched_img = resizeAR(stitched_img, width=1440)
+        stitched_img = resizeAR(stitched_img, width=1920)
 
         # print('dists: {}'.format(dists))
 
