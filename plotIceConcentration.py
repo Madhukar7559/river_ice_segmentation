@@ -147,7 +147,6 @@ def main():
         if seg_root_dir:
             seg_paths = [os.path.join(seg_root_dir, name) for name in seg_paths]
 
-
     if not save_path:
         save_path = os.path.join(os.path.dirname(images_path), 'ice_concentration')
 
@@ -226,7 +225,6 @@ def main():
 
         plot_labels = []
 
-
         stitched_img = src_img
 
         if labels_path:
@@ -293,6 +291,7 @@ def main():
 
         mean_conc_diff = {}
         conc_diff_data_y = []
+        seg_img_disp_list = []
 
         for seg_id, seg_path in enumerate(seg_paths):
             seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
@@ -319,15 +318,18 @@ def main():
                 seg_img = seg_img_orig
                 seg_img_disp = (seg_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
 
+            if len(seg_img_disp.shape) == 2:
+                seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
+
+            seg_img_disp_list.append(seg_img_disp)
             # eval_cl, _ = eval.extract_classes(seg_img)
             # print('eval_cl: {}'.format(eval_cl))
-
 
             if show_img:
                 cv2.imshow('seg_img_orig', seg_img_orig)
 
             if len(seg_img.shape) == 3:
-                seg_img = seg_img[:, :, 0].squeeze()                
+                seg_img = seg_img[:, :, 0].squeeze()
 
             conc_data_y = np.zeros((seg_width,), dtype=np.float64)
             for i in range(seg_width):
@@ -373,11 +375,14 @@ def main():
             n_test_images = img_id
             seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
             seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
-                                   'test image', 'Changed Label Count')
+                                         'test image', 'Changed Label Count')
             cv2.imshow('seg_count_img', seg_count_img)
             conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y, 'Difference', seg_labels,
-                                   'test image', 'Concentration Difference')
+                                         'test image', 'Concentration Difference')
             cv2.imshow('conc_diff_img', conc_diff_img)
+            conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
+        else:
+            conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
 
         plot_labels += seg_labels
         plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols_y, plot_title, plot_labels,
@@ -393,18 +398,26 @@ def main():
         # conc_data_fname = os.path.join(out_path, img_fname_no_ext + '.txt')
         # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
 
-        if len(seg_img_disp.shape) == 2:
-            seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
+        if n_seg_paths == 1:
+            print('seg_img_disp: {}'.format(seg_img_disp.shape))
+            print('plot_img: {}'.format(plot_img.shape))
+            stitched_seg_img = np.concatenate((seg_img_disp, plot_img), axis=1)
 
-        print('seg_img_disp: {}'.format(seg_img_disp.shape))
-        print('plot_img: {}'.format(plot_img.shape))
-        stitched_seg_img = np.concatenate((seg_img_disp, plot_img), axis=1)
+            print('stitched_seg_img: {}'.format(stitched_seg_img.shape))
+            print('stitched_img: {}'.format(stitched_img.shape))
+            stitched_img = np.concatenate((stitched_img, stitched_seg_img), axis=0 if labels_path else 1)
+        elif n_seg_paths == 2:
+            stitched_img = np.concatenate((
+                np.concatenate((src_img, conc_diff_img), axis=1),
+                np.concatenate(seg_img_disp_list, axis=1),
+            ), axis=0)
+        elif n_seg_paths == 3:
+            stitched_img = np.concatenate((
+                np.concatenate((src_img, plot_img, conc_diff_img), axis=1),
+                np.concatenate(seg_img_disp_list, axis=1),
+            ), axis=0)
 
-        print('stitched_seg_img: {}'.format(stitched_seg_img.shape))
-        print('stitched_img: {}'.format(stitched_img.shape))
-        stitched_img = np.concatenate((stitched_img, stitched_seg_img), axis=0 if labels_path else 1)
-
-        stitched_img = resizeAR(stitched_img, width=1280)
+        stitched_img = resizeAR(stitched_img, width=1440)
 
         # print('dists: {}'.format(dists))
 
@@ -458,14 +471,15 @@ def main():
         seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
 
         seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
-                               'test image', 'Changed Label Count')
+                                     'test image', 'Changed Label Count')
         cv2.imshow('seg_count_img', seg_count_img)
 
         conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y, 'Difference', seg_labels,
-                               'test image', 'Concentration Difference')
+                                     'test image', 'Concentration Difference')
         cv2.imshow('conc_diff_img', conc_diff_img)
 
         k = cv2.waitKey(0)
+
 
 if __name__ == '__main__':
     main()

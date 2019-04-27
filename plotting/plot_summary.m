@@ -33,6 +33,7 @@ vertcal_x_label = 0;
         
 % line_cols = {'red', 'blue', 'forest_green', 'magenta'};
 line_cols = {'red', 'forest_green', 'blue', 'blue'};
+line_cols = {'forest_green', 'red'};
 
 
 

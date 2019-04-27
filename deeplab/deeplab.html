@@ -841,7 +841,7 @@ body .markdown-body
     inset 0 -12px 0 rgba(0, 0, 0, .05);
 }
 
-/* Multimarkdown Critic Blocks */
+/* MultiMarkdown Critic Blocks */
 .markdown-body .critic_mark {
   background: #ff0;
 }
@@ -992,7 +992,7 @@ body .markdown-body
     page-break-after: avoid;
   }
 }
-</style><style>/*github*/
+</style><style>/*GitHub*/
 .codehilite {background-color:#fff;color:#333333;}
 .codehilite .hll {background-color:#ffffcc;}
 .codehilite .c{color:#999988;font-style:italic}
@@ -1055,485 +1055,660 @@ body .markdown-body
 .codehilite .vi{color:teal}
 .codehilite .il{color:#009999}
 .codehilite .gc{color:#999;background-color:#EAF2F5}
-</style><title>deeplab</title></head><body><article class="markdown-body"><!--ts-->
+</style><title>deeplab</title></head><body><article class="markdown-body"><!-- MarkdownTOC -->
 
 <ul>
-<li><a href="#256">256</a><ul>
-<li><a href="#build-data">build data</a></li>
-<li><a href="#50">50</a><ul>
-<li><a href="#output_stride-16">output_stride 16</a><ul>
-<li><a href="#eval">eval</a></li>
-<li><a href="#vis">vis</a></li>
-<li><a href="#validation">validation</a></li>
-<li><a href="#stitching">stitching</a></li>
+<li><a href="#setup">setup</a></li>
+<li><a href="#256">256</a></li>
+<li><a href="#build_data__256">build_data       @ 256</a></li>
+<li><a href="#50__256">50       @ 256</a><ul>
+<li><a href="#output_stride_16__50256">output_stride_16       @ 50/256</a><ul>
+<li><a href="#eval__output_stride_1650256">eval       @ output_stride_16/50/256</a></li>
+<li><a href="#vis__output_stride_1650256">vis       @ output_stride_16/50/256</a></li>
+<li><a href="#validation__output_stride_1650256">validation       @ output_stride_16/50/256</a></li>
+<li><a href="#stitching__output_stride_1650256">stitching       @ output_stride_16/50/256</a></li>
 </ul>
 </li>
-<li><a href="#output_stride-8">output_stride 8</a><ul>
-<li><a href="#eval-1">eval</a></li>
-<li><a href="#vis-1">vis</a></li>
-<li><a href="#validation-1">validation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#32">32</a><ul>
-<li><a href="#eval-2">eval</a></li>
-<li><a href="#vis-2">vis</a></li>
-<li><a href="#validation-2">validation</a></li>
+<li><a href="#output_stride_8__50256">output_stride_8       @ 50/256</a><ul>
+<li><a href="#eval__output_stride_850256">eval       @ output_stride_8/50/256</a></li>
+<li><a href="#vis__output_stride_850256">vis       @ output_stride_8/50/256</a></li>
+<li><a href="#validation__output_stride_850256">validation       @ output_stride_8/50/256</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#384">384</a><ul>
-<li><a href="#build-data-1">build data</a></li>
-<li><a href="#50-1">50</a><ul>
-<li><a href="#batch-size-6">batch size 6</a><ul>
-<li><a href="#eval-3">eval</a></li>
-<li><a href="#vis-3">vis</a></li>
-<li><a href="#validation-3">validation</a></li>
+<li><a href="#32__256">32       @ 256</a><ul>
+<li><a href="#eval__32256">eval       @ 32/256</a></li>
+<li><a href="#vis__32256">vis       @ 32/256</a></li>
+<li><a href="#validation__32256">validation       @ 32/256</a></li>
 </ul>
 </li>
-<li><a href="#batch-size-8">batch size 8</a><ul>
-<li><a href="#eval-4">eval</a></li>
-<li><a href="#vis-4">vis</a></li>
+<li><a href="#384">384</a></li>
+<li><a href="#build_data__384">build_data       @ 384</a></li>
+<li><a href="#50__384">50       @ 384</a><ul>
+<li><a href="#batch_size_6__50384">batch_size_6       @ 50/384</a><ul>
+<li><a href="#eval__batch_size_650384">eval       @ batch_size_6/50/384</a></li>
+<li><a href="#vis__batch_size_650384">vis       @ batch_size_6/50/384</a></li>
+<li><a href="#validation__batch_size_650384">validation       @ batch_size_6/50/384</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#stride-8">stride 8</a></li>
-<li><a href="#32-1">32</a><ul>
-<li><a href="#eval-5">eval</a></li>
-<li><a href="#vis-5">vis</a></li>
-<li><a href="#validation-4">validation</a></li>
+<li><a href="#batch_size_8__50384">batch_size_8       @ 50/384</a><ul>
+<li><a href="#eval__batch_size_850384">eval       @ batch_size_8/50/384</a></li>
+<li><a href="#vis__batch_size_850384">vis       @ batch_size_8/50/384</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#512">512</a><ul>
-<li><a href="#build-data-2">build data</a></li>
-<li><a href="#50-2">50</a><ul>
-<li><a href="#batch-size-6-1">batch size 6</a><ul>
-<li><a href="#eval-6">eval</a></li>
-<li><a href="#vis-6">vis</a></li>
-<li><a href="#validation-5">validation</a></li>
+<li><a href="#stride_8__384">stride_8       @ 384</a></li>
+<li><a href="#32__384">32       @ 384</a><ul>
+<li><a href="#eval__32384">eval       @ 32/384</a></li>
+<li><a href="#vis__32384">vis       @ 32/384</a></li>
+<li><a href="#validation__32384">validation       @ 32/384</a></li>
 </ul>
 </li>
-<li><a href="#batch-size-2">batch size 2</a><ul>
-<li><a href="#vis-7">vis</a></li>
-<li><a href="#validation-6">validation</a></li>
+<li><a href="#512">512</a></li>
+<li><a href="#build_data__512">build_data       @ 512</a></li>
+<li><a href="#50__512">50       @ 512</a><ul>
+<li><a href="#batch_size_6__50512">batch_size_6       @ 50/512</a><ul>
+<li><a href="#eval__batch_size_650512">eval       @ batch_size_6/50/512</a></li>
+<li><a href="#vis__batch_size_650512">vis       @ batch_size_6/50/512</a></li>
+<li><a href="#validation__batch_size_650512">validation       @ batch_size_6/50/512</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#32-2">32</a><ul>
-<li><a href="#eval-7">eval</a></li>
-<li><a href="#vis-8">vis</a></li>
-<li><a href="#validation-7">validation</a></li>
-</ul>
-</li>
-</ul>
-</li>
-<li><a href="#640">640</a><ul>
-<li><a href="#build-data-3">build data</a><ul>
-<li><a href="#0_3">0_3</a></li>
-<li><a href="#0_7">0_7</a></li>
-<li><a href="#0_15">0_15</a></li>
-<li><a href="#0_23">0_23</a></li>
-<li><a href="#0_31">0_31</a></li>
-<li><a href="#0_49">0_49</a></li>
-<li><a href="#32_49">32_49</a></li>
-<li><a href="#32_49_no_aug">32_49_no_aug</a></li>
-<li><a href="#validation_0_20">validation_0_20</a></li>
-<li><a href="#yun00001_0_239">YUN00001_0_239</a></li>
-</ul>
-</li>
-<li><a href="#50-3">50</a><ul>
-<li><a href="#eval-8">eval</a></li>
-<li><a href="#vis-9">vis</a><ul>
-<li><a href="#stitching-1">stitching</a></li>
-</ul>
-</li>
-<li><a href="#validation-8">validation</a><ul>
-<li><a href="#stitching-2">stitching</a></li>
-<li><a href="#vis-10">vis</a></li>
-<li><a href="#zip">zip</a></li>
-</ul>
-</li>
-<li><a href="#video">video</a><ul>
-<li><a href="#stitching-3">stitching</a></li>
+<li><a href="#batch_size_2__50512">batch_size_2       @ 50/512</a><ul>
+<li><a href="#vis__batch_size_250512">vis       @ batch_size_2/50/512</a></li>
+<li><a href="#validation__batch_size_250512">validation       @ batch_size_2/50/512</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#32-3">32</a></li>
-<li><a href="#4">4</a><ul>
-<li><a href="#continue-40787">continue 40787</a></li>
-<li><a href="#vis-11">vis</a></li>
-<li><a href="#no_aug">no_aug</a><ul>
-<li><a href="#stitched">stitched</a></li>
+<li><a href="#32__512">32       @ 512</a><ul>
+<li><a href="#eval__32512">eval       @ 32/512</a></li>
+<li><a href="#vis__32512">vis       @ 32/512</a></li>
+<li><a href="#validation__32512">validation       @ 32/512</a></li>
+</ul>
+</li>
+<li><a href="#640">640</a></li>
+<li><a href="#build_data__640">build_data       @ 640</a><ul>
+<li><a href="#0_3__build_data640">0_3       @ build_data/640</a></li>
+<li><a href="#03non_aug__build_data640">0_3_non_aug       @ build_data/640</a><ul>
+<li><a href="#sel_2__03non_augbuild_data640">sel_2       @ 0_3_non_aug/build_data/640</a></li>
+<li><a href="#sel_10__03non_augbuild_data640">sel_10       @ 0_3_non_aug/build_data/640</a></li>
+<li><a href="#sel_100__03non_augbuild_data640">sel_100       @ 0_3_non_aug/build_data/640</a></li>
+<li><a href="#sel_1000__03non_augbuild_data640">sel_1000       @ 0_3_non_aug/build_data/640</a></li>
+</ul>
+</li>
+<li><a href="#0_7__build_data640">0_7       @ build_data/640</a></li>
+<li><a href="#0_15__build_data640">0_15       @ build_data/640</a></li>
+<li><a href="#0_23__build_data640">0_23       @ build_data/640</a></li>
+<li><a href="#0_31__build_data640">0_31       @ build_data/640</a></li>
+<li><a href="#0_49__build_data640">0_49       @ build_data/640</a></li>
+<li><a href="#32_49__build_data640">32_49       @ build_data/640</a></li>
+<li><a href="#4_49_no_aug__build_data640">4_49_no_aug       @ build_data/640</a></li>
+<li><a href="#32_49_no_aug__build_data640">32_49_no_aug       @ build_data/640</a></li>
+<li><a href="#validation020__build_data640">validation_0_20       @ build_data/640</a></li>
+<li><a href="#yun000010239__build_data640">YUN00001_0_239       @ build_data/640</a></li>
+<li><a href="#yun00001_3600__build_data640">YUN00001_3600       @ build_data/640</a></li>
+<li><a href="#yun0000108999__build_data640">YUN00001_0_8999       @ build_data/640</a></li>
+<li><a href="#20160122_yun00002_700_2500__build_data640">20160122_YUN00002_700_2500       @ build_data/640</a></li>
+<li><a href="#20160122_yun00020_2000_3800__build_data640">20160122_YUN00020_2000_3800       @ build_data/640</a></li>
+<li><a href="#20161203_deployment1yun00001_900_2700__build_data640">20161203_Deployment_1_YUN00001_900_2700       @ build_data/640</a></li>
+<li><a href="#20161203_deployment1yun00002_1800__build_data640">20161203_Deployment_1_YUN00002_1800       @ build_data/640</a></li>
+</ul>
+</li>
+<li><a href="#50__640">50       @ 640</a><ul>
+<li><a href="#eval__50640">eval       @ 50/640</a></li>
+<li><a href="#vis__50640">vis       @ 50/640</a><ul>
+<li><a href="#stitching__vis50640">stitching       @ vis/50/640</a></li>
+</ul>
+</li>
+<li><a href="#validation__50640">validation       @ 50/640</a><ul>
+<li><a href="#stitching__validation50640">stitching       @ validation/50/640</a></li>
+<li><a href="#vis__validation50640">vis       @ validation/50/640</a></li>
+<li><a href="#zip__validation50640">zip       @ validation/50/640</a></li>
+</ul>
+</li>
+<li><a href="#video__50640">video       @ 50/640</a><ul>
+<li><a href="#stitching__video50640">stitching       @ video/50/640</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#8">8</a><ul>
-<li><a href="#vis-12">vis</a></li>
-<li><a href="#no_aug-1">no_aug</a><ul>
-<li><a href="#stitched-1">stitched</a></li>
+<li><a href="#32__640">32       @ 640</a><ul>
+<li><a href="#vis_png__32640">vis_png       @ 32/640</a><ul>
+<li><a href="#20160122_yun00002_700_2500__vis_png32640">20160122_YUN00002_700_2500       @ vis_png/32/640</a></li>
+<li><a href="#20160122_yun00020_2000_3800__vis_png32640">20160122_YUN00020_2000_3800       @ vis_png/32/640</a></li>
+<li><a href="#20161203_deployment1yun00001_900_2700__vis_png32640">20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/640</a></li>
+<li><a href="#20161203_deployment1yun00002_1800__vis_png32640">20161203_Deployment_1_YUN00002_1800       @ vis_png/32/640</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#16">16</a><ul>
-<li><a href="#vis-13">vis</a></li>
-<li><a href="#no_aug-2">no_aug</a><ul>
-<li><a href="#stitched-2">stitched</a></li>
+<li><a href="#4__640">4       @ 640</a><ul>
+<li><a href="#continue_40787__4640">continue_40787       @ 4/640</a></li>
+<li><a href="#vis__4640">vis       @ 4/640</a></li>
+<li><a href="#no_aug__4640">no_aug       @ 4/640</a><ul>
+<li><a href="#stitched__no_aug4640">stitched       @ no_aug/4/640</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#24">24</a><ul>
-<li><a href="#vis-14">vis</a></li>
-<li><a href="#no_aug-3">no_aug</a><ul>
-<li><a href="#stitched-3">stitched</a></li>
+<li><a href="#8__640">8       @ 640</a><ul>
+<li><a href="#vis__8640">vis       @ 8/640</a></li>
+<li><a href="#no_aug__8640">no_aug       @ 8/640</a><ul>
+<li><a href="#stitched__no_aug8640">stitched       @ no_aug/8/640</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#32-4">32</a><ul>
-<li><a href="#vis-15">vis</a></li>
-<li><a href="#no_aug-4">no_aug</a><ul>
-<li><a href="#stitched-4">stitched</a></li>
+<li><a href="#16__640">16       @ 640</a><ul>
+<li><a href="#vis__16640">vis       @ 16/640</a></li>
+<li><a href="#no_aug__16640">no_aug       @ 16/640</a><ul>
+<li><a href="#stitched__no_aug16640">stitched       @ no_aug/16/640</a></li>
 </ul>
 </li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#800">800</a><ul>
-<li><a href="#build-data-4">build data</a><ul>
-<li><a href="#50-4">50</a></li>
-<li><a href="#32-5">32</a></li>
-<li><a href="#18---test">18 - test</a></li>
-<li><a href="#validation_0_20_800_800_800_800">validation_0_20_800_800_800_800</a></li>
-<li><a href="#yun00001_0_239_800_800_800_800">YUN00001_0_239_800_800_800_800</a></li>
-<li><a href="#4-1">4</a></li>
-</ul>
-</li>
-<li><a href="#50-5">50</a><ul>
-<li><a href="#eval-9">eval</a></li>
-<li><a href="#vis-16">vis</a><ul>
-<li><a href="#stitching-4">stitching</a></li>
-</ul>
-</li>
-<li><a href="#validation-9">validation</a><ul>
-<li><a href="#stitching-5">stitching</a></li>
-<li><a href="#vis-17">vis</a></li>
+<li><a href="#24__640">24       @ 640</a><ul>
+<li><a href="#vis__24640">vis       @ 24/640</a></li>
+<li><a href="#no_aug__24640">no_aug       @ 24/640</a><ul>
+<li><a href="#stitched__no_aug24640">stitched       @ no_aug/24/640</a></li>
 </ul>
 </li>
 </ul>
 </li>
-<li><a href="#4-2">4</a></li>
+<li><a href="#32__640-1">32       @ 640</a><ul>
+<li><a href="#vis__32640">vis       @ 32/640</a></li>
+<li><a href="#no_aug__32640">no_aug       @ 32/640</a><ul>
+<li><a href="#stitched__no_aug32640">stitched       @ no_aug/32/640</a></li>
+</ul>
+</li>
+<li><a href="#yun00001__32640">YUN00001       @ 32/640</a></li>
+<li><a href="#yun00001_3600__32640">YUN00001_3600       @ 32/640</a></li>
+</ul>
+</li>
+<li><a href="#4-non_aug__640">4_-_non_aug       @ 640</a><ul>
+<li><a href="#sel_2__4-non_aug640">sel_2       @ 4_-_non_aug/640</a></li>
+<li><a href="#sel_10__4-non_aug640">sel_10       @ 4_-_non_aug/640</a></li>
+<li><a href="#sel_100__4-non_aug640">sel_100       @ 4_-_non_aug/640</a></li>
+<li><a href="#sel_1000__4-non_aug640">sel_1000       @ 4_-_non_aug/640</a><ul>
+<li><a href="#rt__sel_10004-non_aug640">rt       @ sel_1000/4_-_non_aug/640</a></li>
+<li><a href="#rt2__sel_10004-non_aug640">rt2       @ sel_1000/4_-_non_aug/640</a></li>
 </ul>
 </li>
 </ul>
-<!-- Added by: Tommy, at: 2018-10-05T12:51-06:00 -->
+</li>
+<li><a href="#800">800</a></li>
+<li><a href="#build_data__800">build_data       @ 800</a><ul>
+<li><a href="#50__build_data800">50       @ build_data/800</a></li>
+<li><a href="#32__build_data800">32       @ build_data/800</a></li>
+<li><a href="#18-test__build_data800">18_-_test       @ build_data/800</a></li>
+<li><a href="#validation020_800_800_800_800__build_data800">validation_0_20_800_800_800_800       @ build_data/800</a></li>
+<li><a href="#yun000010239_800_800_800_800__build_data800">YUN00001_0_239_800_800_800_800       @ build_data/800</a></li>
+<li><a href="#4__build_data800">4       @ build_data/800</a></li>
+</ul>
+</li>
+<li><a href="#50__800">50       @ 800</a><ul>
+<li><a href="#eval__50800">eval       @ 50/800</a></li>
+<li><a href="#vis__50800">vis       @ 50/800</a><ul>
+<li><a href="#stitching__vis50800">stitching       @ vis/50/800</a></li>
+</ul>
+</li>
+<li><a href="#validation__50800">validation       @ 50/800</a><ul>
+<li><a href="#stitching__validation50800">stitching       @ validation/50/800</a></li>
+<li><a href="#vis__validation50800">vis       @ validation/50/800</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#4__800">4       @ 800</a></li>
+</ul>
+<!-- /MarkdownTOC -->
 
-<!--te-->
-
+<p><a id="setup"></a></p>
+<h1 id="setup">setup<a class="headerlink" href="#setup" title="Permanent link"></a></h1>
 <p>pip3 install &ndash;upgrade <a href="https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.6.0-cp35-cp35m-linux_x86_64.whl">https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.6.0-cp35-cp35m-linux_x86_64.whl</a>
 pip2 install &ndash;upgrade <a href="https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.6.0-cp27-none-linux_x86_64.whl">https://storage.googleapis.com/tensorflow/linux/gpu/tensorflow_gpu-1.6.0-cp27-none-linux_x86_64.whl</a>
 python remove_gt_colormap.py &ndash;original_gt_folder=&rdquo;/home/abhineet/N/Datasets/617/images/training_256_256_25_100_rot_15_90_flip/labels&rdquo; &ndash;output_dir=&rdquo;/home/abhineet/N/Datasets/617/images/training_256_256_25_100_rot_15_90_flip/labels_raw&rdquo;</p>
 <p>lftp -e &ldquo;cls -1 &gt; _list; exit&rdquo; &ldquo;<a href="http://download.tensorflow.org/models">http://download.tensorflow.org/models</a>&ldquo;</p>
+<p><a id="256"></a></p>
 <h1 id="256">256<a class="headerlink" href="#256" title="Permanent link"></a></h1>
-<h2 id="build-data">build data<a class="headerlink" href="#build-data" title="Permanent link"></a></h2>
+<p><a id="build_data__256"></a></p>
+<h2 id="build_data-256">build_data       @ 256<a class="headerlink" href="#build_data-256" title="Permanent link"></a></h2>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_49_256_256_25_100_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_31_256_256_25_100_rot_15_125_235_345_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=validation_0_20_256_256_256_256 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_0_239_256_256_256_256 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip &ndash;create_dummy_labels=1</p>
-<h2 id="50">50<a class="headerlink" href="#50" title="Permanent link"></a></h2>
-<h3 id="output_stride-16">output_stride 16<a class="headerlink" href="#output_stride-16" title="Permanent link"></a></h3>
+<p><a id="50__256"></a></p>
+<h2 id="50-256">50       @ 256<a class="headerlink" href="#50-256" title="Permanent link"></a></h2>
+<p><a id="output_stride_16__50256"></a></p>
+<h3 id="output_stride_16-50256">output_stride_16       @ 50/256<a class="headerlink" href="#output_stride_16-50256" title="Permanent link"></a></h3>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=256 &ndash;train_crop_size=256 &ndash;train_batch_size=10 &ndash;dataset=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49 &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;train_split=training_0_49_256_256_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
-<h4 id="eval">eval<a class="headerlink" href="#eval" title="Permanent link"></a></h4>
+<p><a id="eval__output_stride_1650256"></a></p>
+<h4 id="eval-output_stride_1650256">eval       @ output_stride_16/50/256<a class="headerlink" href="#eval-output_stride_1650256" title="Permanent link"></a></h4>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=256 &ndash;eval_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49 &ndash;eval_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;eval_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip</p>
 <p>miou_1.0[0.802874804]</p>
-<h4 id="vis">vis<a class="headerlink" href="#vis" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/images &ndash;labels_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/labels &ndash;seg_path=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="validation">validation<a class="headerlink" href="#validation" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=256 &ndash;vis_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=validation_0_20_256_256_256_256 &ndash;vis_batch_size=10 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h4 id="stitching">stitching<a class="headerlink" href="#stitching" title="Permanent link"></a></h4>
+<p><a id="vis__output_stride_1650256"></a></p>
+<h4 id="vis-output_stride_1650256">vis       @ output_stride_16/50/256<a class="headerlink" href="#vis-output_stride_1650256" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/images &ndash;labels_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/labels &ndash;seg_path=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip/raw &ndash;save_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__output_stride_1650256"></a></p>
+<h4 id="validation-output_stride_1650256">validation       @ output_stride_16/50/256<a class="headerlink" href="#validation-output_stride_1650256" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=256 &ndash;vis_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=validation_0_20_256_256_256_256 &ndash;vis_batch_size=10 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="stitching__output_stride_1650256"></a></p>
+<h4 id="stitching-output_stride_1650256">stitching       @ output_stride_16/50/256<a class="headerlink" href="#stitching-output_stride_1650256" title="Permanent link"></a></h4>
 <p>python3 stitchSubPatchDataset.py db_root_dir=/data/617/images seq_name=validation patch_seq_name=validation_0_20_256_256_256_256 patch_height=256 patch_width=256 start_id=0 end_id=10 patch_seq_type=labels_deeplab_xception show_img=0 stacked=1 method=1</p>
 <p>python3 stitchSubPatchDataset.py db_root_dir=/data/617/images seq_name=validation patch_seq_name=validation_0_20_256_256_256_256 patch_height=256 patch_width=256 start_id=0 end_id=10 patch_seq_type=images show_img=0 stacked=1 method=1</p>
-<h3 id="output_stride-8">output_stride 8<a class="headerlink" href="#output_stride-8" title="Permanent link"></a></h3>
+<p><a id="output_stride_8__50256"></a></p>
+<h3 id="output_stride_8-50256">output_stride_8       @ 50/256<a class="headerlink" href="#output_stride_8-50256" title="Permanent link"></a></h3>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=12 &ndash;atrous_rates=24 &ndash;atrous_rates=36 &ndash;output_stride=8 &ndash;decoder_output_stride=4 &ndash;train_crop_size=256 &ndash;train_crop_size=256 &ndash;train_batch_size=10 &ndash;dataset=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8 &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;train_split=training_0_49_256_256_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
-<h4 id="eval_1">eval<a class="headerlink" href="#eval_1" title="Permanent link"></a></h4>
+<p><a id="eval__output_stride_850256"></a></p>
+<h4 id="eval-output_stride_850256">eval       @ output_stride_8/50/256<a class="headerlink" href="#eval-output_stride_850256" title="Permanent link"></a></h4>
 <p>CUDA_VISIBLE_DEVICES=0 python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=12 &ndash;atrous_rates=24 &ndash;atrous_rates=36 &ndash;output_stride=8 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=256 &ndash;eval_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8 &ndash;eval_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;eval_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip</p>
 <p>miou_1.0[0.799446404]
 miou_1.0[0.799446404]</p>
-<h4 id="vis_1">vis<a class="headerlink" href="#vis_1" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="vis__output_stride_850256"></a></p>
+<h4 id="vis-output_stride_850256">vis       @ output_stride_8/50/256<a class="headerlink" href="#vis-output_stride_850256" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
 <p>zr vis_xception_0_49_stride8_training_32_49_256_256_25_100_rot_15_125_235_345_flip log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/images &ndash;labels_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/labels &ndash;seg_path=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/vis_xception_0_49_stride8 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="validation_1">validation<a class="headerlink" href="#validation_1" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=12 &ndash;atrous_rates=24 &ndash;atrous_rates=36 &ndash;output_stride=8 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=256 &ndash;vis_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=validation_0_20_256_256_256_256 &ndash;vis_batch_size=10 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h2 id="32">32<a class="headerlink" href="#32" title="Permanent link"></a></h2>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/images &ndash;labels_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/labels &ndash;seg_path=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip/raw &ndash;save_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/vis_xception_0_49_stride8 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__output_stride_850256"></a></p>
+<h4 id="validation-output_stride_850256">validation       @ output_stride_8/50/256<a class="headerlink" href="#validation-output_stride_850256" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=12 &ndash;atrous_rates=24 &ndash;atrous_rates=36 &ndash;output_stride=8 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=256 &ndash;vis_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_49_stride8/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=validation_0_20_256_256_256_256 &ndash;vis_batch_size=10 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="32__256"></a></p>
+<h2 id="32-256">32       @ 256<a class="headerlink" href="#32-256" title="Permanent link"></a></h2>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=256 &ndash;train_crop_size=256 &ndash;train_batch_size=10 &ndash;dataset=training_0_31_49_256_256_25_100_rot_15_125_235_345_flip &ndash;tf_initial_checkpoint=pre_trained/xception_0_31/model.ckpt &ndash;train_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31 &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;train_split=training_0_31_256_256_25_100_rot_15_125_235_345_flip</p>
-<h3 id="eval_2">eval<a class="headerlink" href="#eval_2" title="Permanent link"></a></h3>
+<p><a id="eval__32256"></a></p>
+<h3 id="eval-32256">eval       @ 32/256<a class="headerlink" href="#eval-32256" title="Permanent link"></a></h3>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=256 &ndash;eval_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31 &ndash;eval_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;eval_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip</p>
-<h3 id="vis_2">vis<a class="headerlink" href="#vis_2" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/images &ndash;labels_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/labels &ndash;seg_path=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/vis_xception_0_31 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="validation_2">validation<a class="headerlink" href="#validation_2" title="Permanent link"></a></h3>
-<p>python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=256 &ndash;vis_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=validation_0_20_256_256_256_256 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="vis__32256"></a></p>
+<h3 id="vis-32256">vis       @ 32/256<a class="headerlink" href="#vis-32256" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=training_32_49_256_256_25_100_rot_15_125_235_345_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/images &ndash;labels_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/labels &ndash;seg_path=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31/vis/training_32_49_256_256_25_100_rot_15_125_235_345_flip/raw &ndash;save_path=/data/617/images/training_32_49_256_256_25_100_rot_15_125_235_345_flip/vis_xception_0_31 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__32256"></a></p>
+<h3 id="validation-32256">validation       @ 32/256<a class="headerlink" href="#validation-32256" title="Permanent link"></a></h3>
+<p>python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=256 &ndash;vis_crop_size=256 &ndash;dataset=&rdquo;training_0_31_49_256_256_25_100_rot_15_125_235_345_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_256_256_25_100_rot_15_125_235_345_flip/tfrecord &ndash;vis_split=validation_0_20_256_256_256_256 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
 <p>miou_1.0[0.735878468]</p>
+<p><a id="384"></a></p>
 <h1 id="384">384<a class="headerlink" href="#384" title="Permanent link"></a></h1>
-<h2 id="build-data_1">build data<a class="headerlink" href="#build-data_1" title="Permanent link"></a></h2>
+<p><a id="build_data__384"></a></p>
+<h2 id="build_data-384">build_data       @ 384<a class="headerlink" href="#build_data-384" title="Permanent link"></a></h2>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_49_384_384_25_100_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_384_384_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_31_384_384_25_100_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_384_384_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_384_384_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=validation_0_20_384_384_384_384 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_384_384_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_0_239_384_384_384_384 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_384_384_25_100_rot_15_345_4_flip &ndash;create_dummy_labels=1</p>
-<h2 id="50_1">50<a class="headerlink" href="#50_1" title="Permanent link"></a></h2>
-<h3 id="batch-size-6">batch size 6<a class="headerlink" href="#batch-size-6" title="Permanent link"></a></h3>
+<p><a id="50__384"></a></p>
+<h2 id="50-384">50       @ 384<a class="headerlink" href="#50-384" title="Permanent link"></a></h2>
+<p><a id="batch_size_6__50384"></a></p>
+<h3 id="batch_size_6-50384">batch_size_6       @ 50/384<a class="headerlink" href="#batch_size_6-50384" title="Permanent link"></a></h3>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=384 &ndash;train_crop_size=384 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_384_384_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49 &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_384_384_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=384 &ndash;train_crop_size=384 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_384_384_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_attempt_2 &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_384_384_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
-<h4 id="eval_3">eval<a class="headerlink" href="#eval_3" title="Permanent link"></a></h4>
+<p><a id="eval__batch_size_650384"></a></p>
+<h4 id="eval-batch_size_650384">eval       @ batch_size_6/50/384<a class="headerlink" href="#eval-batch_size_650384" title="Permanent link"></a></h4>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=384 &ndash;eval_crop_size=384 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49 &ndash;eval_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
-<h4 id="vis_3">vis<a class="headerlink" href="#vis_3" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_384_384_25_100_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="validation_3">validation<a class="headerlink" href="#validation_3" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=384 &ndash;vis_crop_size=384 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_384_384_384_384 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h3 id="batch-size-8">batch size 8<a class="headerlink" href="#batch-size-8" title="Permanent link"></a></h3>
+<p><a id="vis__batch_size_650384"></a></p>
+<h4 id="vis-batch_size_650384">vis       @ batch_size_6/50/384<a class="headerlink" href="#vis-batch_size_650384" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_384_384_25_100_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__batch_size_650384"></a></p>
+<h4 id="validation-batch_size_650384">validation       @ batch_size_6/50/384<a class="headerlink" href="#validation-batch_size_650384" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=384 &ndash;vis_crop_size=384 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_384_384_384_384 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="batch_size_8__50384"></a></p>
+<h3 id="batch_size_8-50384">batch_size_8       @ 50/384<a class="headerlink" href="#batch_size_8-50384" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=384 &ndash;train_crop_size=384 &ndash;train_batch_size=8 &ndash;dataset=training_0_31_49_384_384_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8 &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_384_384_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
-<h4 id="eval_4">eval<a class="headerlink" href="#eval_4" title="Permanent link"></a></h4>
+<p><a id="eval__batch_size_850384"></a></p>
+<h4 id="eval-batch_size_850384">eval       @ batch_size_8/50/384<a class="headerlink" href="#eval-batch_size_850384" title="Permanent link"></a></h4>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=384 &ndash;eval_crop_size=384 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8 &ndash;eval_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
-<h4 id="vis_4">vis<a class="headerlink" href="#vis_4" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8/vis/training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="vis__batch_size_850384"></a></p>
+<h4 id="vis-batch_size_850384">vis       @ batch_size_8/50/384<a class="headerlink" href="#vis-batch_size_850384" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8/vis/training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
 <p>zrq xception_0_49_batch_8_training_32_49_384_384_25_100_rot_15_345_4_flip log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8/vis/training_32_49_384_384_25_100_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/vis_xception_0_49_batch_8 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h2 id="stride-8">stride 8<a class="headerlink" href="#stride-8" title="Permanent link"></a></h2>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_batch_8/vis/training_32_49_384_384_25_100_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/vis_xception_0_49_batch_8 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stride_8__384"></a></p>
+<h2 id="stride_8-384">stride_8       @ 384<a class="headerlink" href="#stride_8-384" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=1 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=12 &ndash;atrous_rates=24 &ndash;atrous_rates=36 &ndash;output_stride=8 &ndash;decoder_output_stride=4 &ndash;train_crop_size=384 &ndash;train_crop_size=384 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_384_384_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_49_stride_8 &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_384_384_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
-<h2 id="32_1">32<a class="headerlink" href="#32_1" title="Permanent link"></a></h2>
+<p><a id="32__384"></a></p>
+<h2 id="32-384">32       @ 384<a class="headerlink" href="#32-384" title="Permanent link"></a></h2>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=384 &ndash;train_crop_size=384 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_384_384_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31 &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_31_384_384_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=384 &ndash;train_crop_size=384 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_384_384_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31_attempt2 &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_31_384_384_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
-<h3 id="eval_5">eval<a class="headerlink" href="#eval_5" title="Permanent link"></a></h3>
+<p><a id="eval__32384"></a></p>
+<h3 id="eval-32384">eval       @ 32/384<a class="headerlink" href="#eval-32384" title="Permanent link"></a></h3>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=384 &ndash;eval_crop_size=384 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31 &ndash;eval_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
-<h3 id="vis_5">vis<a class="headerlink" href="#vis_5" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_384_384_25_100_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/vis_xception_0_31 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="validation_4">validation<a class="headerlink" href="#validation_4" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=384 &ndash;vis_crop_size=384 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_384_384_384_384 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="vis__32384"></a></p>
+<h3 id="vis-32384">vis       @ 32/384<a class="headerlink" href="#vis-32384" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_384_384_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_384_384_25_100_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_384_384_25_100_rot_15_345_4_flip/vis_xception_0_31 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__32384"></a></p>
+<h3 id="validation-32384">validation       @ 32/384<a class="headerlink" href="#validation-32384" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=384 &ndash;vis_crop_size=384 &ndash;dataset=&rdquo;training_0_31_49_384_384_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_384_384_25_100_rot_15_345_4_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_384_384_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_384_384_384_384 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="512"></a></p>
 <h1 id="512">512<a class="headerlink" href="#512" title="Permanent link"></a></h1>
-<h2 id="build-data_2">build data<a class="headerlink" href="#build-data_2" title="Permanent link"></a></h2>
+<p><a id="build_data__512"></a></p>
+<h2 id="build_data-512">build_data       @ 512<a class="headerlink" href="#build_data-512" title="Permanent link"></a></h2>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_49_512_512_25_100_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_512_512_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_31_512_512_25_100_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_512_512_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_512_512_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=validation_0_20_512_512_512_512 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_512_512_25_100_rot_15_345_4_flip</p>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_0_239_512_512_512_512 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_512_512_25_100_rot_15_345_4_flip &ndash;create_dummy_labels=1</p>
-<h2 id="50_2">50<a class="headerlink" href="#50_2" title="Permanent link"></a></h2>
-<h3 id="batch-size-6_1">batch size 6<a class="headerlink" href="#batch-size-6_1" title="Permanent link"></a></h3>
+<p><a id="50__512"></a></p>
+<h2 id="50-512">50       @ 512<a class="headerlink" href="#50-512" title="Permanent link"></a></h2>
+<p><a id="batch_size_6__50512"></a></p>
+<h3 id="batch_size_6-50512">batch_size_6       @ 50/512<a class="headerlink" href="#batch_size_6-50512" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=1 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=512 &ndash;train_crop_size=512 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_512_512_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49 &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_512_512_25_100_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h4 id="eval_6">eval<a class="headerlink" href="#eval_6" title="Permanent link"></a></h4>
+<p><a id="eval__batch_size_650512"></a></p>
+<h4 id="eval-batch_size_650512">eval       @ batch_size_6/50/512<a class="headerlink" href="#eval-batch_size_650512" title="Permanent link"></a></h4>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=512 &ndash;eval_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49 &ndash;eval_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
 <p>miou_1.0[0.723538] </p>
-<h4 id="vis_6">vis<a class="headerlink" href="#vis_6" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_512_512_25_100_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="validation_5">validation<a class="headerlink" href="#validation_5" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=512 &ndash;vis_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_512_512_512_512 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h3 id="batch-size-2">batch size 2<a class="headerlink" href="#batch-size-2" title="Permanent link"></a></h3>
+<p><a id="vis__batch_size_650512"></a></p>
+<h4 id="vis-batch_size_650512">vis       @ batch_size_6/50/512<a class="headerlink" href="#vis-batch_size_650512" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49/vis/training_32_49_512_512_25_100_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__batch_size_650512"></a></p>
+<h4 id="validation-batch_size_650512">validation       @ batch_size_6/50/512<a class="headerlink" href="#validation-batch_size_650512" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=512 &ndash;vis_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_512_512_512_512 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="batch_size_2__50512"></a></p>
+<h3 id="batch_size_2-50512">batch_size_2       @ 50/512<a class="headerlink" href="#batch_size_2-50512" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=1 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=512 &ndash;train_crop_size=512 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_512_512_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2 &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_512_512_25_100_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h4 id="vis_7">vis<a class="headerlink" href="#vis_7" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=1 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2/vis/training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;vis_batch_size=10 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2/vis/training_32_49_512_512_25_100_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/vis_xception_0_49_batch_2 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="validation_6">validation<a class="headerlink" href="#validation_6" title="Permanent link"></a></h4>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=512 &ndash;vis_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_512_512_512_512 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h2 id="32_2">32<a class="headerlink" href="#32_2" title="Permanent link"></a></h2>
+<p><a id="vis__batch_size_250512"></a></p>
+<h4 id="vis-batch_size_250512">vis       @ batch_size_2/50/512<a class="headerlink" href="#vis-batch_size_250512" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=1 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2/vis/training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;vis_batch_size=10 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2/vis/training_32_49_512_512_25_100_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/vis_xception_0_49_batch_2 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__batch_size_250512"></a></p>
+<h4 id="validation-batch_size_250512">validation       @ batch_size_2/50/512<a class="headerlink" href="#validation-batch_size_250512" title="Permanent link"></a></h4>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=512 &ndash;vis_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_49_batch_2/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_512_512_512_512 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="32__512"></a></p>
+<h2 id="32-512">32       @ 512<a class="headerlink" href="#32-512" title="Permanent link"></a></h2>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=512 &ndash;train_crop_size=512 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_512_512_25_100_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31 &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_31_512_512_25_100_rot_15_345_4_flip &ndash;num_clones=2</p>
-<h3 id="eval_7">eval<a class="headerlink" href="#eval_7" title="Permanent link"></a></h3>
+<p><a id="eval__32512"></a></p>
+<h3 id="eval-32512">eval       @ 32/512<a class="headerlink" href="#eval-32512" title="Permanent link"></a></h3>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=512 &ndash;eval_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31 &ndash;eval_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
-<h3 id="vis_8">vis<a class="headerlink" href="#vis_8" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_512_512_25_100_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/vis_xception_0_31 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="validation_7">validation<a class="headerlink" href="#validation_7" title="Permanent link"></a></h3>
-<p>python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=512 &ndash;vis_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_512_512_512_512 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="vis__32512"></a></p>
+<h3 id="vis-32512">vis       @ 32/512<a class="headerlink" href="#vis-32512" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_512_512_25_100_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31/vis/training_32_49_512_512_25_100_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_512_512_25_100_rot_15_345_4_flip/vis_xception_0_31 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="validation__32512"></a></p>
+<h3 id="validation-32512">validation       @ 32/512<a class="headerlink" href="#validation-32512" title="Permanent link"></a></h3>
+<p>python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=512 &ndash;vis_crop_size=512 &ndash;dataset=&rdquo;training_0_31_49_512_512_25_100_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_512_512_25_100_rot_15_345_4_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_512_512_25_100_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_512_512_512_512 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="640"></a></p>
 <h1 id="640">640<a class="headerlink" href="#640" title="Permanent link"></a></h1>
-<h2 id="build-data_3">build data<a class="headerlink" href="#build-data_3" title="Permanent link"></a></h2>
-<h3 id="0_3">0_3<a class="headerlink" href="#0_3" title="Permanent link"></a></h3>
+<p><a id="build_data__640"></a></p>
+<h2 id="build_data-640">build_data       @ 640<a class="headerlink" href="#build_data-640" title="Permanent link"></a></h2>
+<p><a id="0_3__build_data640"></a></p>
+<h3 id="0_3-build_data640">0_3       @ build_data/640<a class="headerlink" href="#0_3-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_3_640_640_64_256_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="0_3_non_aug">0_3_non_aug<a class="headerlink" href="#0_3_non_aug" title="Permanent link"></a></h3>
+<p><a id="03non_aug__build_data640"></a></p>
+<h3 id="0_3_non_aug-build_data640">0_3_non_aug       @ build_data/640<a class="headerlink" href="#0_3_non_aug-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_3_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h4 id="sel-2">sel-2<a class="headerlink" href="#sel-2" title="Permanent link"></a></h4>
+<p><a id="sel_2__03non_augbuild_data640"></a></p>
+<h4 id="sel_2-0_3_non_augbuild_data640">sel_2       @ 0_3_non_aug/build_data/640<a class="headerlink" href="#sel_2-0_3_non_augbuild_data640" title="Permanent link"></a></h4>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_3_640_640_640_640_sel_2 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h4 id="sel-10">sel-10<a class="headerlink" href="#sel-10" title="Permanent link"></a></h4>
+<p><a id="sel_10__03non_augbuild_data640"></a></p>
+<h4 id="sel_10-0_3_non_augbuild_data640">sel_10       @ 0_3_non_aug/build_data/640<a class="headerlink" href="#sel_10-0_3_non_augbuild_data640" title="Permanent link"></a></h4>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_3_640_640_640_640_sel_10 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h4 id="sel-100">sel-100<a class="headerlink" href="#sel-100" title="Permanent link"></a></h4>
+<p><a id="sel_100__03non_augbuild_data640"></a></p>
+<h4 id="sel_100-0_3_non_augbuild_data640">sel_100       @ 0_3_non_aug/build_data/640<a class="headerlink" href="#sel_100-0_3_non_augbuild_data640" title="Permanent link"></a></h4>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_3_640_640_640_640_sel_100 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h4 id="sel-1000">sel-1000<a class="headerlink" href="#sel-1000" title="Permanent link"></a></h4>
+<p><a id="sel_1000__03non_augbuild_data640"></a></p>
+<h4 id="sel_1000-0_3_non_augbuild_data640">sel_1000       @ 0_3_non_aug/build_data/640<a class="headerlink" href="#sel_1000-0_3_non_augbuild_data640" title="Permanent link"></a></h4>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_3_640_640_640_640_sel_1000 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="0_7">0_7<a class="headerlink" href="#0_7" title="Permanent link"></a></h3>
+<p><a id="0_7__build_data640"></a></p>
+<h3 id="0_7-build_data640">0_7       @ build_data/640<a class="headerlink" href="#0_7-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_7_640_640_64_256_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="0_15">0_15<a class="headerlink" href="#0_15" title="Permanent link"></a></h3>
+<p><a id="0_15__build_data640"></a></p>
+<h3 id="0_15-build_data640">0_15       @ build_data/640<a class="headerlink" href="#0_15-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_15_640_640_64_256_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="0_23">0_23<a class="headerlink" href="#0_23" title="Permanent link"></a></h3>
+<p><a id="0_23__build_data640"></a></p>
+<h3 id="0_23-build_data640">0_23       @ build_data/640<a class="headerlink" href="#0_23-build_data640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=2 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_23_640_640_64_256_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="0_31">0_31<a class="headerlink" href="#0_31" title="Permanent link"></a></h3>
+<p><a id="0_31__build_data640"></a></p>
+<h3 id="0_31-build_data640">0_31       @ build_data/640<a class="headerlink" href="#0_31-build_data640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=1 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_31_640_640_64_256_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="0_49">0_49<a class="headerlink" href="#0_49" title="Permanent link"></a></h3>
+<p><a id="0_49__build_data640"></a></p>
+<h3 id="0_49-build_data640">0_49       @ build_data/640<a class="headerlink" href="#0_49-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_49_640_640_64_256_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="32_49">32_49<a class="headerlink" href="#32_49" title="Permanent link"></a></h3>
+<p><a id="32_49__build_data640"></a></p>
+<h3 id="32_49-build_data640">32_49       @ build_data/640<a class="headerlink" href="#32_49-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="4_49_no_aug">4_49_no_aug<a class="headerlink" href="#4_49_no_aug" title="Permanent link"></a></h3>
+<p><a id="4_49_no_aug__build_data640"></a></p>
+<h3 id="4_49_no_aug-build_data640">4_49_no_aug       @ build_data/640<a class="headerlink" href="#4_49_no_aug-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_4_49_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="32_49_no_aug">32_49_no_aug<a class="headerlink" href="#32_49_no_aug" title="Permanent link"></a></h3>
+<p><a id="32_49_no_aug__build_data640"></a></p>
+<h3 id="32_49_no_aug-build_data640">32_49_no_aug       @ build_data/640<a class="headerlink" href="#32_49_no_aug-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_32_49_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="validation_0_20">validation_0_20<a class="headerlink" href="#validation_0_20" title="Permanent link"></a></h3>
+<p><a id="validation020__build_data640"></a></p>
+<h3 id="validation_0_20-build_data640">validation_0_20       @ build_data/640<a class="headerlink" href="#validation_0_20-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=validation_0_20_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip</p>
-<h3 id="yun00001_0_239">YUN00001_0_239<a class="headerlink" href="#yun00001_0_239" title="Permanent link"></a></h3>
+<p><a id="yun000010239__build_data640"></a></p>
+<h3 id="yun00001_0_239-build_data640">YUN00001_0_239       @ build_data/640<a class="headerlink" href="#yun00001_0_239-build_data640" title="Permanent link"></a></h3>
 <p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_0_239_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=1</p>
-<h3 id="yun00001_3600">YUN00001_3600<a class="headerlink" href="#yun00001_3600" title="Permanent link"></a></h3>
-<p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_3600_0_3599_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=1</p>
-<h3 id="yun00001_0_8999">YUN00001_0_8999<a class="headerlink" href="#yun00001_0_8999" title="Permanent link"></a></h3>
-<p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_0_8999_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=1</p>
-<h2 id="50_3">50<a class="headerlink" href="#50_3" title="Permanent link"></a></h2>
+<p><a id="yun00001_3600__build_data640"></a></p>
+<h3 id="yun00001_3600-build_data640">YUN00001_3600       @ build_data/640<a class="headerlink" href="#yun00001_3600-build_data640" title="Permanent link"></a></h3>
+<p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_3600_0_3599_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=0</p>
+<p><a id="yun0000108999__build_data640"></a></p>
+<h3 id="yun00001_0_8999-build_data640">YUN00001_0_8999       @ build_data/640<a class="headerlink" href="#yun00001_0_8999-build_data640" title="Permanent link"></a></h3>
+<p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_0_8999_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=0</p>
+<p><a id="20160122_yun00002_700_2500__build_data640"></a></p>
+<h3 id="20160122_yun00002_700_2500-build_data640">20160122_YUN00002_700_2500       @ build_data/640<a class="headerlink" href="#20160122_yun00002_700_2500-build_data640" title="Permanent link"></a></h3>
+<p>python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=20160122_YUN00002_700_2500_0_1799_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=0</p>
+<p><a id="20160122_yun00020_2000_3800__build_data640"></a></p>
+<h3 id="20160122_yun00020_2000_3800-build_data640">20160122_YUN00020_2000_3800       @ build_data/640<a class="headerlink" href="#20160122_yun00020_2000_3800-build_data640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES= python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=20160122_YUN00020_2000_3800_0_1799_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=0</p>
+<p><a id="20161203_deployment1yun00001_900_2700__build_data640"></a></p>
+<h3 id="20161203_deployment_1_yun00001_900_2700-build_data640">20161203_Deployment_1_YUN00001_900_2700       @ build_data/640<a class="headerlink" href="#20161203_deployment_1_yun00001_900_2700-build_data640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES= python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=20161203_Deployment_1_YUN00001_900_2700_0_1799_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=0</p>
+<p><a id="20161203_deployment1yun00002_1800__build_data640"></a></p>
+<h3 id="20161203_deployment_1_yun00002_1800-build_data640">20161203_Deployment_1_YUN00002_1800       @ build_data/640<a class="headerlink" href="#20161203_deployment_1_yun00002_1800-build_data640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES= python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=20161203_Deployment_1_YUN00002_1800_0_1799_640_640_640_640 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;create_dummy_labels=0</p>
+<p><a id="50__640"></a></p>
+<h2 id="50-640">50       @ 640<a class="headerlink" href="#50-640" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=1 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="eval_8">eval<a class="headerlink" href="#eval_8" title="Permanent link"></a></h3>
+<p><a id="eval__50640"></a></p>
+<h3 id="eval-50640">eval       @ 50/640<a class="headerlink" href="#eval-50640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=1 python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=640 &ndash;eval_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;eval_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
 <p>miou_1.0[0.739234447]</p>
-<h3 id="vis_9">vis<a class="headerlink" href="#vis_9" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="stitching_1">stitching<a class="headerlink" href="#stitching_1" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/training_32_49_640_640_64_256_rot_15_345_4_flip patch_height=640 patch_width=640 start_id=32 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=1</p>
-<h3 id="validation_8">validation<a class="headerlink" href="#validation_8" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h4 id="stitching_2">stitching<a class="headerlink" href="#stitching_2" title="Permanent link"></a></h4>
+<p><a id="vis__50640"></a></p>
+<h3 id="vis-50640">vis       @ 50/640<a class="headerlink" href="#vis-50640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stitching__vis50640"></a></p>
+<h4 id="stitching-vis50640">stitching       @ vis/50/640<a class="headerlink" href="#stitching-vis50640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/training_32_49_640_640_64_256_rot_15_345_4_flip patch_height=640 patch_width=640 start_id=32 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=1</p>
+<p><a id="validation__50640"></a></p>
+<h3 id="validation-50640">validation       @ 50/640<a class="headerlink" href="#validation-50640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="stitching__validation50640"></a></p>
+<h4 id="stitching-validation50640">stitching       @ validation/50/640<a class="headerlink" href="#stitching-validation50640" title="Permanent link"></a></h4>
 <p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_563_640_640_640_640/segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/validation_0_20_640_640_640_640 patch_height=640 patch_width=640 start_id=0 end_id=20  show_img=0 stacked=1 method=1</p>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_563_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/validation_0_20_640_640_640_640/raw patch_height=640 patch_width=640 start_id=0 end_id=20  show_img=0 stacked=1 method=1 normalize_patches=1</p>
-<h4 id="vis_10">vis<a class="headerlink" href="#vis_10" title="Permanent link"></a></h4>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="zip">zip<a class="headerlink" href="#zip" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_563_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/validation_0_20_640_640_640_640/raw patch_height=640 patch_width=640 start_id=0 end_id=20  show_img=0 stacked=1 method=1 normalize_patches=1</p>
+<p><a id="vis__validation50640"></a></p>
+<h4 id="vis-validation50640">vis       @ validation/50/640<a class="headerlink" href="#vis-validation50640" title="Permanent link"></a></h4>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="zip__validation50640"></a></p>
+<h4 id="zip-validation50640">zip       @ validation/50/640<a class="headerlink" href="#zip-validation50640" title="Permanent link"></a></h4>
 <p>zrb training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_49_validation_0_20_640_640_640_640_1_25 log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640/segmentation_results/img_XXX_* 1 25</p>
 <p>training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_49_validation_0_20_640_640_640_640_1_25_grs_201804221134.zip</p>
-<p>zrb training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_49_validation_0_20_640_640_640_640_raw_1_25 log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640/raw_segmentation_results/img_XXX_* 1 25</p>
+<p>zrb training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_49_validation_0_20_640_640_640_640_raw_1_25 log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640/raw/img_XXX_* 1 25</p>
 <p>training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_49_validation_0_20_640_640_640_640_raw_1_25_grs_201804221136.zip </p>
 <p>zrb nazio deeplab/results/log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640/segmentation_results/img_XXX_* 1 10 -j</p>
-<h3 id="video">video<a class="headerlink" href="#video" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=1 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/YUN00001_0_239_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=YUN00001_0_239_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h4 id="stitching_3">stitching<a class="headerlink" href="#stitching_3" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/YUN00001_0_239_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/YUN00001_0_239_640_640_640_640/raw_segmentation_results patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=1</p>
+<p><a id="video__50640"></a></p>
+<h3 id="video-50640">video       @ 50/640<a class="headerlink" href="#video-50640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=1 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/YUN00001_0_239_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=YUN00001_0_239_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="stitching__video50640"></a></p>
+<h4 id="stitching-video50640">stitching       @ video/50/640<a class="headerlink" href="#stitching-video50640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/YUN00001_0_239_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/YUN00001_0_239_640_640_640_640/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=1</p>
 <p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_563_640_640_640_640/segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/validation_0_20_640_640_640_640 patch_height=640 patch_width=640 start_id=0 end_id=20  show_img=0 stacked=1 method=1</p>
-<h2 id="32_3">32<a class="headerlink" href="#32_3" title="Permanent link"></a></h2>
+<p><a id="32__640"></a></p>
+<h2 id="32-640">32       @ 640<a class="headerlink" href="#32-640" title="Permanent link"></a></h2>
 <p>python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=6 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_31_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=2</p>
 <p>python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=640 &ndash;eval_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;eval_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
-<p>python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h2 id="4">4<a class="headerlink" href="#4" title="Permanent link"></a></h2>
+<p>python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/vis &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="vis_png__32640"></a></p>
+<h3 id="vis_png-32640">vis_png       @ 32/640<a class="headerlink" href="#vis_png-32640" title="Permanent link"></a></h3>
+<p><a id="20160122_yun00002_700_2500__vis_png32640"></a></p>
+<h4 id="20160122_yun00002_700_2500-vis_png32640">20160122_YUN00002_700_2500       @ vis_png/32/640<a class="headerlink" href="#20160122_yun00002_700_2500-vis_png32640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00002_700_2500/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20160122_YUN00002_700_2500_0_1799_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20160122_YUN00002_700_2500 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png</p>
+<p><a id="20160122_yun00020_2000_3800__vis_png32640"></a></p>
+<h4 id="20160122_yun00020_2000_3800-vis_png32640">20160122_YUN00020_2000_3800       @ vis_png/32/640<a class="headerlink" href="#20160122_yun00020_2000_3800-vis_png32640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00020_2000_3800/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20160122_YUN00020_2000_3800_0_1799_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20160122_YUN00020_2000_3800 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png</p>
+<p><a id="20161203_deployment1yun00001_900_2700__vis_png32640"></a></p>
+<h4 id="20161203_deployment_1_yun00001_900_2700-vis_png32640">20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/640<a class="headerlink" href="#20161203_deployment_1_yun00001_900_2700-vis_png32640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00001_900_2700/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20161203_Deployment_1_YUN00001_900_2700_0_1799_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20161203_Deployment_1_YUN00001_900_2700 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png</p>
+<p><a id="20161203_deployment1yun00002_1800__vis_png32640"></a></p>
+<h4 id="20161203_deployment_1_yun00002_1800-vis_png32640">20161203_Deployment_1_YUN00002_1800       @ vis_png/32/640<a class="headerlink" href="#20161203_deployment_1_yun00002_1800-vis_png32640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00002_1800/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20161203_Deployment_1_YUN00002_1800_0_1799_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20161203_Deployment_1_YUN00002_1800 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png</p>
+<p><a id="4__640"></a></p>
+<h2 id="4-640">4       @ 640<a class="headerlink" href="#4-640" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=2 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="continue-40787">continue 40787<a class="headerlink" href="#continue-40787" title="Permanent link"></a></h3>
+<p><a id="continue_40787__4640"></a></p>
+<h3 id="continue_40787-4640">continue_40787       @ 4/640<a class="headerlink" href="#continue_40787-4640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/model.ckpt-40787 &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="vis_11">vis<a class="headerlink" href="#vis_11" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="no_aug">no_aug<a class="headerlink" href="#no_aug" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="stitched">stitched<a class="headerlink" href="#stitched" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/raw_segmentation_results patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h2 id="8">8<a class="headerlink" href="#8" title="Permanent link"></a></h2>
+<p><a id="vis__4640"></a></p>
+<h3 id="vis-4640">vis       @ 4/640<a class="headerlink" href="#vis-4640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="no_aug__4640"></a></p>
+<h3 id="no_aug-4640">no_aug       @ 4/640<a class="headerlink" href="#no_aug-4640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stitched__no_aug4640"></a></p>
+<h4 id="stitched-no_aug4640">stitched       @ no_aug/4/640<a class="headerlink" href="#stitched-no_aug4640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="8__640"></a></p>
+<h2 id="8-640">8       @ 640<a class="headerlink" href="#8-640" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_7_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="vis_12">vis<a class="headerlink" href="#vis_12" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="no_aug_1">no_aug<a class="headerlink" href="#no_aug_1" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="stitched_1">stitched<a class="headerlink" href="#stitched_1" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49/raw_segmentation_results patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png &ndash;labels_path=/data/617/images/training_32_49/labels</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h2 id="16">16<a class="headerlink" href="#16" title="Permanent link"></a></h2>
+<p><a id="vis__8640"></a></p>
+<h3 id="vis-8640">vis       @ 8/640<a class="headerlink" href="#vis-8640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="no_aug__8640"></a></p>
+<h3 id="no_aug-8640">no_aug       @ 8/640<a class="headerlink" href="#no_aug-8640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stitched__no_aug8640"></a></p>
+<h4 id="stitched-no_aug8640">stitched       @ no_aug/8/640<a class="headerlink" href="#stitched-no_aug8640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png &ndash;labels_path=/data/617/images/training_32_49/labels</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_7/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="16__640"></a></p>
+<h2 id="16-640">16       @ 640<a class="headerlink" href="#16-640" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=2 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_15_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="vis_13">vis<a class="headerlink" href="#vis_13" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=2 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="no_aug_2">no_aug<a class="headerlink" href="#no_aug_2" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="stitched_2">stitched<a class="headerlink" href="#stitched_2" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/raw_segmentation_results patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png labels_path=/data/617/images/training_32_49/labels</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h2 id="24">24<a class="headerlink" href="#24" title="Permanent link"></a></h2>
+<p><a id="vis__16640"></a></p>
+<h3 id="vis-16640">vis       @ 16/640<a class="headerlink" href="#vis-16640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=2 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="no_aug__16640"></a></p>
+<h3 id="no_aug-16640">no_aug       @ 16/640<a class="headerlink" href="#no_aug-16640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stitched__no_aug16640"></a></p>
+<h4 id="stitched-no_aug16640">stitched       @ no_aug/16/640<a class="headerlink" href="#stitched-no_aug16640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png labels_path=/data/617/images/training_32_49/labels</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="24__640"></a></p>
+<h2 id="24-640">24       @ 640<a class="headerlink" href="#24-640" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_23_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="vis_14">vis<a class="headerlink" href="#vis_14" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=2 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="no_aug_3">no_aug<a class="headerlink" href="#no_aug_3" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="stitched_3">stitched<a class="headerlink" href="#stitched_3" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49/raw_segmentation_results patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h2 id="32_4">32<a class="headerlink" href="#32_4" title="Permanent link"></a></h2>
+<p><a id="vis__24640"></a></p>
+<h3 id="vis-24640">vis       @ 24/640<a class="headerlink" href="#vis-24640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=2 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="no_aug__24640"></a></p>
+<h3 id="no_aug-24640">no_aug       @ 24/640<a class="headerlink" href="#no_aug-24640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stitched__no_aug24640"></a></p>
+<h4 id="stitched-no_aug24640">stitched       @ no_aug/24/640<a class="headerlink" href="#stitched-no_aug24640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_23/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="32__640-1"></a></p>
+<h2 id="32-640_1">32       @ 640<a class="headerlink" href="#32-640_1" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=1 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_31_640_640_64_256_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="vis_15">vis<a class="headerlink" href="#vis_15" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="no_aug_4">no_aug<a class="headerlink" href="#no_aug_4" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="stitched_4">stitched<a class="headerlink" href="#stitched_4" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49/raw_segmentation_results patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49/raw_segmentation_results &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h3 id="yun00001">YUN00001<a class="headerlink" href="#yun00001" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_0_8999_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=YUN00001_0_8999_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_0_8999_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png out_ext=mkv width=1920 height=1080</p>
-<h3 id="yun00001_3601">YUN00001_3600<a class="headerlink" href="#yun00001_3601" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600_0_3599_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=YUN00001_3600_0_3599_640_640_640_640 &ndash;vis_batch_size=25 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600_0_3599_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=0 img_ext=jpg out_ext=mkv width=1920 height=1080</p>
-<h2 id="4-non_aug">4 - non_aug<a class="headerlink" href="#4-non_aug" title="Permanent link"></a></h2>
-<h3 id="sel-2_1">sel-2<a class="headerlink" href="#sel-2_1" title="Permanent link"></a></h3>
+<p><a id="vis__32640"></a></p>
+<h3 id="vis-32640">vis       @ 32/640<a class="headerlink" href="#vis-32640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_64_256_rot_15_345_4_flip &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_64_256_rot_15_345_4_flip/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="no_aug__32640"></a></p>
+<h3 id="no_aug-32640">no_aug       @ 32/640<a class="headerlink" href="#no_aug-32640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_640_640/images &ndash;labels_path=/data/617/images/training_32_49_640_640_640_640/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stitched__no_aug32640"></a></p>
+<h4 id="stitched-no_aug32640">stitched       @ no_aug/32/640<a class="headerlink" href="#stitched-no_aug32640" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49/images &ndash;labels_path=/data/617/images/training_32_49/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49/raw &ndash;save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/training_32_49/vis &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1 &ndash;normalize_labels=1</p>
+<p><a id="yun00001__32640"></a></p>
+<h3 id="yun00001-32640">YUN00001       @ 32/640<a class="headerlink" href="#yun00001-32640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_0_8999_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=YUN00001_0_8999_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_0_8999_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png out_ext=mkv width=1920 height=1080</p>
+<p><a id="yun00001_3600__32640"></a></p>
+<h3 id="yun00001_3600-32640">YUN00001_3600       @ 32/640<a class="headerlink" href="#yun00001_3600-32640" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600_0_3599_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=YUN00001_3600_0_3599_640_640_640_640 &ndash;vis_batch_size=25 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600_0_3599_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=mkv width=1920 height=1080</p>
+<p><a id="4-non_aug__640"></a></p>
+<h2 id="4_-_non_aug-640">4_-_non_aug       @ 640<a class="headerlink" href="#4_-_non_aug-640" title="Permanent link"></a></h2>
+<p><a id="sel_2__4-non_aug640"></a></p>
+<h3 id="sel_2-4_-_non_aug640">sel_2       @ 4_-_non_aug/640<a class="headerlink" href="#sel_2-4_-_non_aug640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_2 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_640_640_sel_2 &ndash;num_clones=1</p>
-<h3 id="sel-10_1">sel-10<a class="headerlink" href="#sel-10_1" title="Permanent link"></a></h3>
+<p><a id="sel_10__4-non_aug640"></a></p>
+<h3 id="sel_10-4_-_non_aug640">sel_10       @ 4_-_non_aug/640<a class="headerlink" href="#sel_10-4_-_non_aug640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_10 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_640_640_sel_10 &ndash;num_clones=1</p>
-<h3 id="sel-100_1">sel-100<a class="headerlink" href="#sel-100_1" title="Permanent link"></a></h3>
+<p><a id="sel_100__4-non_aug640"></a></p>
+<h3 id="sel_100-4_-_non_aug640">sel_100       @ 4_-_non_aug/640<a class="headerlink" href="#sel_100-4_-_non_aug640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_100 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_640_640_sel_100 &ndash;num_clones=1</p>
-<h3 id="sel-1000_1">sel-1000<a class="headerlink" href="#sel-1000_1" title="Permanent link"></a></h3>
+<p><a id="sel_1000__4-non_aug640"></a></p>
+<h3 id="sel_1000-4_-_non_aug640">sel_1000       @ 4_-_non_aug/640<a class="headerlink" href="#sel_1000-4_-_non_aug640" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_1000 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_640_640_sel_1000 &ndash;num_clones=1</p>
-<h4 id="rt">rt<a class="headerlink" href="#rt" title="Permanent link"></a></h4>
+<p><a id="rt__sel_10004-non_aug640"></a></p>
+<h4 id="rt-sel_10004_-_non_aug640">rt       @ sel_1000/4_-_non_aug/640<a class="headerlink" href="#rt-sel_10004_-_non_aug640" title="Permanent link"></a></h4>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_1000_rt &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_640_640_sel_1000 &ndash;num_clones=1</p>
-<h4 id="rt2">rt2<a class="headerlink" href="#rt2" title="Permanent link"></a></h4>
+<p><a id="rt2__sel_10004-non_aug640"></a></p>
+<h4 id="rt2-sel_10004_-_non_aug640">rt2       @ sel_1000/4_-_non_aug/640<a class="headerlink" href="#rt2-sel_10004_-_non_aug640" title="Permanent link"></a></h4>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=1000000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=640 &ndash;train_crop_size=640 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_1000_rt2 &ndash;dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_640_640_640_640_sel_1000 &ndash;num_clones=1</p>
+<p><a id="800"></a></p>
 <h1 id="800">800<a class="headerlink" href="#800" title="Permanent link"></a></h1>
-<h2 id="build-data_4">build data<a class="headerlink" href="#build-data_4" title="Permanent link"></a></h2>
-<h3 id="50_4">50<a class="headerlink" href="#50_4" title="Permanent link"></a></h3>
+<p><a id="build_data__800"></a></p>
+<h2 id="build_data-800">build_data       @ 800<a class="headerlink" href="#build_data-800" title="Permanent link"></a></h2>
+<p><a id="50__build_data800"></a></p>
+<h3 id="50-build_data800">50       @ build_data/800<a class="headerlink" href="#50-build_data800" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_49_800_800_80_320_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_800_800_80_320_rot_15_345_4_flip</p>
-<h3 id="32_5">32<a class="headerlink" href="#32_5" title="Permanent link"></a></h3>
+<p><a id="32__build_data800"></a></p>
+<h3 id="32-build_data800">32       @ build_data/800<a class="headerlink" href="#32-build_data800" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_31_800_800_80_320_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_800_800_80_320_rot_15_345_4_flip</p>
-<h3 id="18-test">18 - test<a class="headerlink" href="#18-test" title="Permanent link"></a></h3>
+<p><a id="18-test__build_data800"></a></p>
+<h3 id="18_-_test-build_data800">18_-_test       @ build_data/800<a class="headerlink" href="#18_-_test-build_data800" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_32_49_800_800_80_320_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_800_800_80_320_rot_15_345_4_flip</p>
-<h3 id="validation_0_20_800_800_800_800">validation_0_20_800_800_800_800<a class="headerlink" href="#validation_0_20_800_800_800_800" title="Permanent link"></a></h3>
+<p><a id="validation020_800_800_800_800__build_data800"></a></p>
+<h3 id="validation_0_20_800_800_800_800-build_data800">validation_0_20_800_800_800_800       @ build_data/800<a class="headerlink" href="#validation_0_20_800_800_800_800-build_data800" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=validation_0_20_800_800_800_800 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_800_800_80_320_rot_15_345_4_flip</p>
-<h3 id="yun00001_0_239_800_800_800_800">YUN00001_0_239_800_800_800_800<a class="headerlink" href="#yun00001_0_239_800_800_800_800" title="Permanent link"></a></h3>
+<p><a id="yun000010239_800_800_800_800__build_data800"></a></p>
+<h3 id="yun00001_0_239_800_800_800_800-build_data800">YUN00001_0_239_800_800_800_800       @ build_data/800<a class="headerlink" href="#yun00001_0_239_800_800_800_800-build_data800" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=YUN00001_0_239_800_800_800_800 &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_800_800_80_320_rot_15_345_4_flip &ndash;create_dummy_labels=1</p>
-<h3 id="4_1">4<a class="headerlink" href="#4_1" title="Permanent link"></a></h3>
+<p><a id="4__build_data800"></a></p>
+<h3 id="4-build_data800">4       @ build_data/800<a class="headerlink" href="#4-build_data800" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=0 python datasets/build_617_data.py &ndash;db_root_dir=/data/617/images/ &ndash;db_dir=training_0_3_800_800_80_320_rot_15_345_4_flip &ndash;image_format=png &ndash;label_format=png &ndash;output_dir=training_0_31_49_800_800_80_320_rot_15_345_4_flip</p>
-<h2 id="50_5">50<a class="headerlink" href="#50_5" title="Permanent link"></a></h2>
+<p><a id="50__800"></a></p>
+<h2 id="50-800">50       @ 800<a class="headerlink" href="#50-800" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=1 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=800 &ndash;train_crop_size=800 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_800_800_80_320_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49 &ndash;dataset_dir=/data/617/images/training_0_31_49_800_800_80_320_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_49_800_800_80_320_rot_15_345_4_flip &ndash;num_clones=1</p>
-<h3 id="eval_9">eval<a class="headerlink" href="#eval_9" title="Permanent link"></a></h3>
+<p><a id="eval__50800"></a></p>
+<h3 id="eval-50800">eval       @ 50/800<a class="headerlink" href="#eval-50800" title="Permanent link"></a></h3>
 <p>CUDA_VISIBLE_DEVICES=1 python eval.py &ndash;logtostderr  &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;eval_crop_size=800 &ndash;eval_crop_size=800 &ndash;dataset=&rdquo;training_0_31_49_800_800_80_320_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49 &ndash;eval_logdir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49/eval &ndash;dataset_dir=/data/617/images/training_0_31_49_800_800_80_320_rot_15_345_4_flip/tfrecord &ndash;eval_split=training_32_49_800_800_80_320_rot_15_345_4_flip &ndash;eval_batch_size=5</p>
-<h3 id="vis_16">vis<a class="headerlink" href="#vis_16" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=800 &ndash;vis_crop_size=800 &ndash;dataset=&rdquo;training_0_31_49_800_800_80_320_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49/vis/training_32_49_800_800_80_320_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_800_800_80_320_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_800_800_80_320_rot_15_345_4_flip &ndash;vis_batch_size=10 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49/vis/training_32_49_800_800_80_320_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h4 id="stitching_4">stitching<a class="headerlink" href="#stitching_4" title="Permanent link"></a></h4>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/training_32_49_640_640_64_256_rot_15_345_4_flip patch_height=640 patch_width=640 start_id=32 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=1</p>
-<h3 id="validation_9">validation<a class="headerlink" href="#validation_9" title="Permanent link"></a></h3>
-<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_raw_predictions=1 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
-<h4 id="stitching_5">stitching<a class="headerlink" href="#stitching_5" title="Permanent link"></a></h4>
+<p><a id="vis__50800"></a></p>
+<h3 id="vis-50800">vis       @ 50/800<a class="headerlink" href="#vis-50800" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=800 &ndash;vis_crop_size=800 &ndash;dataset=&rdquo;training_0_31_49_800_800_80_320_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49/vis/training_32_49_800_800_80_320_rot_15_345_4_flip &ndash;dataset_dir=/data/617/images/training_0_31_49_800_800_80_320_rot_15_345_4_flip/tfrecord &ndash;vis_split=training_32_49_800_800_80_320_rot_15_345_4_flip &ndash;vis_batch_size=10 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49/vis/training_32_49_800_800_80_320_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_800_800_80_320_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="stitching__vis50800"></a></p>
+<h4 id="stitching-vis50800">stitching       @ vis/50/800<a class="headerlink" href="#stitching-vis50800" title="Permanent link"></a></h4>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/training_32_49_640_640_64_256_rot_15_345_4_flip patch_height=640 patch_width=640 start_id=32 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=1</p>
+<p><a id="validation__50800"></a></p>
+<h3 id="validation-50800">validation       @ 50/800<a class="headerlink" href="#validation-50800" title="Permanent link"></a></h3>
+<p>CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py &ndash;logtostderr &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;vis_crop_size=640 &ndash;vis_crop_size=640 &ndash;dataset=&rdquo;training_0_31_49_640_640_64_256_rot_15_345_4_flip&rdquo; &ndash;checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49 &ndash;vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_20_640_640_640_640 &ndash;dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord &ndash;vis_split=validation_0_20_640_640_640_640 &ndash;vis_batch_size=50 &ndash;also_save_vis_predictions=0 &ndash;max_number_of_iterations=1 &ndash;eval_interval_secs=0</p>
+<p><a id="stitching__validation50800"></a></p>
+<h4 id="stitching-validation50800">stitching       @ validation/50/800<a class="headerlink" href="#stitching-validation50800" title="Permanent link"></a></h4>
 <p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_563_640_640_640_640/segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/validation_0_20_640_640_640_640 patch_height=640 patch_width=640 start_id=0 end_id=20  show_img=0 stacked=1 method=1</p>
-<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_563_640_640_640_640/raw_segmentation_results stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/validation_0_20_640_640_640_640/raw patch_height=640 patch_width=640 start_id=0 end_id=20  show_img=0 stacked=1 method=1 normalize_patches=1</p>
-<h4 id="vis_17">vis<a class="headerlink" href="#vis_17" title="Permanent link"></a></h4>
-<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw_segmentation_results &ndash;save_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
-<h2 id="4_2">4<a class="headerlink" href="#4_2" title="Permanent link"></a></h2>
+<p>python3 ../stitchSubPatchDataset.py src_path=/data/617/images/validation/images  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/validation_0_563_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/stitched/validation_0_20_640_640_640_640/raw patch_height=640 patch_width=640 start_id=0 end_id=20  show_img=0 stacked=1 method=1 normalize_patches=1</p>
+<p><a id="vis__validation50800"></a></p>
+<h4 id="vis-validation50800">vis       @ validation/50/800<a class="headerlink" href="#vis-validation50800" title="Permanent link"></a></h4>
+<p>python3 ../visDataset.py &ndash;images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images &ndash;labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels &ndash;seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_49/vis/training_32_49_640_640_64_256_rot_15_345_4_flip/raw &ndash;save_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/vis_xception_0_49 &ndash;n_classes=3 &ndash;start_id=0 &ndash;end_id=-1</p>
+<p><a id="4__800"></a></p>
+<h2 id="4-800">4       @ 800<a class="headerlink" href="#4-800" title="Permanent link"></a></h2>
 <p>CUDA_VISIBLE_DEVICES=0 python deeplab_train.py &ndash;logtostderr &ndash;training_number_of_steps=100000 &ndash;model_variant=&rdquo;xception_65&rdquo; &ndash;atrous_rates=6 &ndash;atrous_rates=12 &ndash;atrous_rates=18 &ndash;output_stride=16 &ndash;decoder_output_stride=4 &ndash;train_crop_size=800 &ndash;train_crop_size=800 &ndash;train_batch_size=2 &ndash;dataset=training_0_31_49_800_800_80_320_rot_15_345_4_flip &ndash;tf_initial_checkpoint=pre_trained/xception/model.ckpt &ndash;train_logdir=log/training_0_31_49_800_800_80_320_rot_15_345_4_flip/xception_0_49 &ndash;dataset_dir=/data/617/images/training_0_31_49_800_800_80_320_rot_15_345_4_flip/tfrecord &ndash;train_split=training_0_3_800_800_80_320_rot_15_345_4_flip &ndash;num_clones=1</p></article></body></html>

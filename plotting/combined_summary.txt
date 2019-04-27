@@ -1,8 +1,11 @@
-Precision (%)		
-20K 4 class / Faster RCNN vs RetinaNet		
-class	FRCNN	RetinaNet
-bear	64.01	95.46
-coyote	71.77	97.38
-deer	71.4	91.09
-moose	59.62	99.08
-avg	65.65	95.75
+Recall 		
+Aug/30 vs 20K		
+class	75	20K
+bear/20k4	96.02	94.03
+coyote/20k4	96.7	72.53
+deer/20k4	85.15	76.24
+moose/20k4	97.8	80.22
+overall/20k4	93.92	80.75
+coyote/1K3	96.15	79.12
+deer/1K3	88.61	70.79
+overall	94.09	82.31
