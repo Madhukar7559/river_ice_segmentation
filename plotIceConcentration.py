@@ -500,9 +500,15 @@ def main():
                 np.concatenate(seg_img_disp_list, axis=1),
             ), axis=0)
 
-        stitched_img = resizeAR(stitched_img, width=1920)
+        stitched_img = resizeAR(stitched_img, width=width, height=height)
 
         # print('dists: {}'.format(dists))
+
+        if write_to_video:
+            video_out.write(stitched_img)
+        else:
+            stacked_img_path = os.path.join(stitched_seq_path, '{}.{}'.format(img_fname_no_ext, out_ext))
+            cv2.imwrite(stacked_img_path, stitched_img)
 
         cv2.imshow('stitched_img', stitched_img)
         k = cv2.waitKey(1 - _pause)
