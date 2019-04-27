@@ -587,7 +587,7 @@ def main():
         #                              'test image', 'Concentration Difference')
         # cv2.imshow('conc_diff_img', conc_diff_img)
 
-        k = cv2.waitKey(0)
+        # k = cv2.waitKey(0)
 
 
 if __name__ == '__main__':
