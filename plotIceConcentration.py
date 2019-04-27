@@ -3,17 +3,32 @@ import numpy as np
 from scipy.misc.pilutil import imread, imsave
 from matplotlib import pyplot as plt
 import cv2
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
 from pprint import pprint
 
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import matplotlib.pyplot as plt
+
+# plt.style.use('presentation')
+
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import readData, getDateTime, print_and_write, resizeAR
+from densenet.utils import readData, getDateTime, print_and_write, resizeAR, putTextWithBackground, col_rgb
 from dictances import bhattacharyya, euclidean, mae, mse
 
 
 def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, ylim=None):
-    fig = Figure(figsize=(9.6, 5.4), dpi=200, edgecolor='b')
+    fig = Figure(
+        # figsize=(6.4, 3.6), dpi=300,
+        figsize=(4.8, 2.7), dpi=400,
+        # edgecolor='k',
+        # facecolor ='k'
+    )
+    # fig.tight_layout()
+    # fig.set_tight_layout(True)
+    fig.subplots_adjust(
+        bottom=0.17,
+        right=0.95,
+    )
     canvas = FigureCanvas(fig)
     ax = fig.gca()
 
@@ -23,7 +38,15 @@ def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, yli
         line_label = line_labels[i]
         col = cols[i]
         ax.plot(data_x, datum_y, color=col, label=line_label)
-    ax.set_title(title)
+    plt.rcParams['axes.titlesize'] = 10
+    # fontdict = {'fontsize': plt.rcParams['axes.titlesize'],
+    #             'fontweight': plt.rcParams['axes.titleweight'],
+                # 'verticalalignment': 'baseline',
+                # 'horizontalalignment': plt.loc
+                # }
+    ax.set_title(title,
+                 # fontdict=fontdict
+                 )
     ax.legend()
     ax.grid(1)
     ax.set_xlabel(x_label)
@@ -54,11 +77,13 @@ def main():
     parser.add_argument("--images_ext", type=str, default='png')
     parser.add_argument("--labels_path", type=str, default='')
     parser.add_argument("--labels_ext", type=str, default='png')
+    parser.add_argument("--labels_col", type=str, default='green')
     parser.add_argument("--seg_paths", type=str_to_list, default=[])
     parser.add_argument("--seg_ext", type=str, default='png')
     parser.add_argument("--seg_root_dir", type=str, default='')
 
     parser.add_argument("--seg_labels", type=str_to_list, default=[])
+    parser.add_argument("--seg_cols", type=str_to_list, default=['blue', 'forest_green', 'magenta', 'cyan', 'red'])
 
     parser.add_argument("--out_path", type=str, default='')
 
@@ -88,6 +113,7 @@ def main():
     images_ext = args.images_ext
     labels_path = args.labels_path
     labels_ext = args.labels_ext
+    labels_col = args.labels_col
 
     out_path = args.out_path
 
@@ -113,15 +139,19 @@ def main():
     selective_mode = args.selective_mode
 
     seg_labels = args.seg_labels
+    seg_cols = args.seg_cols
 
     ice_type = args.ice_type
     plot_changed_seg_count = args.plot_changed_seg_count
 
     ice_types = {
-        0: 'Combined Ice',
+        0: 'Ice',
         1: 'Anchor Ice',
         2: 'Frazil Ice',
     }
+    labels_col_rgb = col_rgb[labels_col]
+    seg_cols_rgb = [col_rgb[seg_col] for seg_col in seg_cols]
+
 
     ice_type_str = ice_types[ice_type]
 
@@ -130,7 +160,7 @@ def main():
     if end_id < start_id:
         end_id = total_frames - 1
 
-    cols = [(1, 0, 0), (0, 0, 1), (1, 1, 0), (1, 0, 1), (0, 1, 1)]
+    # cols = [(1, 0, 0), (0, 0, 1), (1, 1, 0), (1, 0, 1), (0, 1, 1)]
 
     if not out_path:
         out_path = labels_path + '_conc'
@@ -175,7 +205,7 @@ def main():
     _pause = 1
     labels_img = None
 
-    n_cols = len(cols)
+    n_cols = len(seg_cols_rgb)
 
     plot_y_label = '{} concentration (%)'.format(ice_type_str)
     plot_x_label = 'distance in pixels from left edge'
@@ -223,7 +253,7 @@ def main():
         plot_data_x = conc_data_x
 
         plot_data_y = []
-        plot_cols_y = []
+        plot_cols = []
 
         plot_labels = []
 
@@ -271,7 +301,7 @@ def main():
             conc_data[:, 1] = conc_data_y
 
             plot_data_y.append(conc_data_y)
-            plot_cols_y.append((0, 1, 0))
+            plot_cols.append(labels_col_rgb)
 
             gt_dict = {conc_data_x[i]: conc_data_y[i] for i in range(labels_width)}
 
@@ -342,7 +372,7 @@ def main():
                     ice_pix = curr_pix[curr_pix == ice_type]
                 conc_data_y[i] = (len(ice_pix) / float(src_height)) * 100.0
 
-            plot_cols_y.append(cols[seg_id % n_cols])
+            plot_cols.append(seg_cols_rgb[seg_id % n_cols])
             plot_data_y.append(conc_data_y)
 
             seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(seg_width)}
@@ -368,7 +398,6 @@ def main():
                         changed_seg_count[_label] = []
                     ice_concentration_diff[_label] = []
 
-
             prev_seg_img[_label] = seg_img
             prev_conc_data_y[_label] = conc_data_y
 
@@ -379,12 +408,13 @@ def main():
             seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
 
             if plot_changed_seg_count:
-                seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
+                seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
                                              'frame', 'Changed Label Count')
                 cv2.imshow('seg_count_img', seg_count_img)
 
-            conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y,
-                                         'Mean {} concentration difference between consecutive frames'.format(ice_type_str),
+            conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols,
+                                         'Mean concentration difference between consecutive frames'.format(
+                                             ice_type_str),
                                          seg_labels, 'frame', 'Concentration Difference (%)')
             cv2.imshow('conc_diff_img', conc_diff_img)
             conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
@@ -392,7 +422,7 @@ def main():
             conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
 
         plot_labels += seg_labels
-        plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols_y, plot_title, plot_labels,
+        plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols, plot_title, plot_labels,
                                 plot_x_label, plot_y_label,
                                 # ylim=(0, 100)
                                 )
@@ -448,7 +478,7 @@ def main():
         n_test_images = len(mae_data_y[0])
 
         mae_data_x = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
-        mae_img = getPlotImage(mae_data_x, mae_data_y, plot_cols_y, 'MAE', seg_labels,
+        mae_img = getPlotImage(mae_data_x, mae_data_y, plot_cols, 'MAE', seg_labels,
                                'test image', 'Mean Absolute Error')
         # plt.show()
         cv2.imshow('MAE', mae_img)
@@ -477,11 +507,11 @@ def main():
 
         seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
 
-        seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
+        seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
                                      'test image', 'Changed Label Count')
         cv2.imshow('seg_count_img', seg_count_img)
 
-        conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y, 'Difference', seg_labels,
+        conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols, 'Difference', seg_labels,
                                      'test image', 'Concentration Difference')
         cv2.imshow('conc_diff_img', conc_diff_img)
 
