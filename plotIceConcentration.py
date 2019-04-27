@@ -77,6 +77,7 @@ def main():
     parser.add_argument("--stitch", type=int, default=0)
     parser.add_argument("--stitch_seg", type=int, default=1)
 
+    parser.add_argument("--plot_changed_seg_count", type=int, default=0)
     parser.add_argument("--normalize_labels", type=int, default=0)
     parser.add_argument("--selective_mode", type=int, default=0)
     parser.add_argument("--ice_type", type=int, default=0, help='0: combined, 1: anchor, 2: frazil')
@@ -114,6 +115,7 @@ def main():
     seg_labels = args.seg_labels
 
     ice_type = args.ice_type
+    plot_changed_seg_count = args.plot_changed_seg_count
 
     ice_types = {
         0: 'Combined Ice',
@@ -353,18 +355,19 @@ def main():
                 # dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
             else:
                 if img_id > 0:
-                    changed_seg_count[_label].append(np.count_nonzero(np.not_equal(seg_img, prev_seg_img[_label])))
+                    if plot_changed_seg_count:
+                        changed_seg_count[_label].append(np.count_nonzero(np.not_equal(seg_img, prev_seg_img[_label])))
+                        seg_count_data_y.append(changed_seg_count[_label])
+                        mean_seg_counts[_label] = np.mean(changed_seg_count[_label])
+
                     ice_concentration_diff[_label].append(np.mean(np.abs(conc_data_y - prev_conc_data_y[_label])))
-                else:
-                    changed_seg_count[_label] = []
-                    ice_concentration_diff[_label] = []
-
-                if img_id > 0:
-                    seg_count_data_y.append(changed_seg_count[_label])
-                    mean_seg_counts[_label] = np.mean(changed_seg_count[_label])
-
                     conc_diff_data_y.append(ice_concentration_diff[_label])
                     mean_conc_diff[_label] = np.mean(ice_concentration_diff[_label])
+                else:
+                    if plot_changed_seg_count:
+                        changed_seg_count[_label] = []
+                    ice_concentration_diff[_label] = []
+
 
             prev_seg_img[_label] = seg_img
             prev_conc_data_y[_label] = conc_data_y
@@ -373,13 +376,16 @@ def main():
 
         if img_id > 0:
             n_test_images = img_id
-            seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
-            seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
-                                         'test image', 'Changed Label Count')
-            cv2.imshow('seg_count_img', seg_count_img)
+
+            if plot_changed_seg_count:
+                seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+                seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
+                                             'frame', 'Changed Label Count')
+                cv2.imshow('seg_count_img', seg_count_img)
+
             conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols_y,
-                                         'Mean {} Ice Concentration Difference', seg_labels,
-                                         'test image', 'Concentration Difference (%)')
+                                         'Mean {} concentration difference between consecutive frames'.format(ice_type_str),
+                                         seg_labels, 'frame', 'Concentration Difference (%)')
             cv2.imshow('conc_diff_img', conc_diff_img)
             conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
         else:
