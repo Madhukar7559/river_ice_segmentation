@@ -17,6 +17,8 @@ from dictances import bhattacharyya, euclidean, mae, mse
 
 
 def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, ylim=None):
+    cols = [col/255.0 for col in cols]
+
     fig = Figure(
         # figsize=(6.4, 3.6), dpi=300,
         figsize=(4.8, 2.7), dpi=400,
@@ -352,6 +354,9 @@ def main():
 
             if len(seg_img_disp.shape) == 2:
                 seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
+
+            ann_fmt = (0, 5, 15, 1, 1, 255, 255, 255, 0, 0, 0)
+            putTextWithBackground(seg_img_disp, seg_labels[seg_id], fmt=ann_fmt)
 
             seg_img_disp_list.append(seg_img_disp)
             # eval_cl, _ = eval.extract_classes(seg_img)
