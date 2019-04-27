@@ -90,8 +90,8 @@ def main():
     parser.add_argument("--out_path", type=str, default='')
     parser.add_argument("--out_ext", type=str, default='mkv')
     parser.add_argument("--out_size", type=str, default='1920x1080')
-    parser.add_argument("--out_fps", type=int, default=30)
-    parser.add_argument("--out_codec", type=str, default='H264')
+    parser.add_argument("--fps", type=int, default=30)
+    parser.add_argument("--codec", type=str, default='H264')
 
     parser.add_argument("--save_path", type=str, default='')
 
@@ -127,6 +127,8 @@ def main():
     out_path = args.out_path
     out_ext = args.out_ext
     out_size = args.out_size
+    fps = args.fps
+    codec = args.codec
 
     # save_path = args.save_path
 
@@ -162,6 +164,7 @@ def main():
     bgr_col = (0, 0, 0)
     font_id = 0
 
+    video_exts = ['mp4', 'mkv', 'avi', 'mpg', 'mpeg', 'mjpg']
 
     labels_col_rgb = col_rgb[labels_col]
     seg_cols_rgb = [col_rgb[seg_col] for seg_col in seg_cols]
@@ -241,15 +244,18 @@ def main():
     out_size = [int(x) for x in out_size.split('x')]
 
     write_to_video = out_ext in video_exts
+    width, height = out_size
     if write_to_video:
-        stitched_seq_path = '{}.{}'.format(stitched_seq_path, out_ext)
+        stitched_seq_path = 'stitched.{}'.format(out_ext)
         print('Writing {}x{} output video to: {}'.format(width, height, stitched_seq_path))
         save_dir = os.path.dirname(stitched_seq_path)
 
         fourcc = cv2.VideoWriter_fourcc(*codec)
-        video_out = cv2.VideoWriter(stitched_seq_path, fourcc, out_fps, out_size)
+        video_out = cv2.VideoWriter(stitched_seq_path, fourcc, fps, out_size)
     else:
-        print('Writing output images to: {}'.format(stitched_seq_path))
+        stitched_seq_path = 'stitched'
+        print('Writing {}x{} output images of type to: {}'.format(
+            width, height, out_ext, stitched_seq_path))
         save_dir = stitched_seq_path
 
     if save_dir and not os.path.isdir(save_dir):
