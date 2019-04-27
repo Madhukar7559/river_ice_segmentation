@@ -60,6 +60,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/image-segmentation-
       - [vis_png       @ 32/640](#vis_png__32640)
          - [20160122_YUN00002_700_2500       @ vis_png/32/640](#20160122_yun00002_700_2500__vis_png32640)
          - [20160122_YUN00020_2000_3800       @ vis_png/32/640](#20160122_yun00020_2000_3800__vis_png32640)
+         - [YUN00001_3600       @ vis_png/32/640](#yun00001_3600__vis_png32640)
 - [640_selective](#640_selective)
    - [4__non_aug       @ 640_selective](#4__non_aug__640_selective)
       - [2       @ 4__non_aug/640_selective](#2__4__non_aug640_selective)
@@ -589,6 +590,10 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00002_
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20160122_YUN00020_2000_3800/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/20160122_YUN00020_2000_3800_0_1799_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/20160122_YUN00020_2000_3800_max_val_acc patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png
 
+<a id="yun00001_3600__vis_png32640"></a>
+#### YUN00001_3600       @ vis_png/32/640
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/YUN00001_3600_0_3599_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip/YUN00001_3600_max_val_acc patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png
 
 
 <a id="640_selective"></a>

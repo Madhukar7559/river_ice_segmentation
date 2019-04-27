@@ -129,6 +129,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/indicator_learning/
          - [20160122_YUN00020_2000_3800       @ vis_png/32/800_retraining](#20160122_yun00020_2000_3800__vis_png32800_retraining)
          - [20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/800_retraining](#20161203_deployment1yun00001_900_2700__vis_png32800_retraining)
          - [20161203_Deployment_1_YUN00002_1800       @ vis_png/32/800_retraining](#20161203_deployment1yun00002_1800__vis_png32800_retraining)
+         - [YUN00001_3600       @ vis_png/32/800_retraining](#yun00001_3600__vis_png32800_retraining)
          - [20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/800_retraining](#20161203_deployment1yun00001_900_2700__vis_png32800_retraining-1)
          - [20161203_Deployment_1_YUN00002_1800       @ vis_png/32/800_retraining](#20161203_deployment1yun00002_1800__vis_png32800_retraining-1)
       - [fixed_lr       @ 32/800_retraining](#fixed_lr__32800_retraining)
@@ -932,6 +933,11 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deploymen
 #### 20161203_Deployment_1_YUN00002_1800       @ vis_png/32/800_retraining
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00002_1800/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20161203_Deployment_1_YUN00002_1800_0_1799_800_800_800_800/raw stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/20161203_Deployment_1_YUN00002_1800 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=png
+
+<a id="yun00001_3600__vis_png32800_retraining"></a>
+#### YUN00001_3600       @ vis_png/32/800_retraining
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images patch_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600_0_3599_800_800_800_800/raw stitched_seq_path=log/rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu/predict_acc/YUN00001_3600 patch_height=800 patch_width=800 start_id=0 end_id=-1 show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg del_patch_seq=0 out_ext=png
 
 <a id="20161203_deployment1yun00001_900_2700__vis_png32800_retraining-1"></a>
 #### 20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/800_retraining

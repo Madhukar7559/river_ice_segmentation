@@ -87,6 +87,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/deeplab/deeplab.md
          - [20160122_YUN00020_2000_3800       @ vis_png/32/640](#20160122_yun00020_2000_3800__vis_png32640)
          - [20161203_Deployment_1_YUN00001_900_2700       @ vis_png/32/640](#20161203_deployment1yun00001_900_2700__vis_png32640)
          - [20161203_Deployment_1_YUN00002_1800       @ vis_png/32/640](#20161203_deployment1yun00002_1800__vis_png32640)
+         - [YUN00001_3600       @ vis_png/32/640](#yun00001_3600__vis_png32640)
    - [4       @ 640](#4__640)
       - [continue_40787       @ 4/640](#continue_40787__4640)
       - [vis       @ 4/640](#vis__4640)
@@ -656,6 +657,11 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deploymen
 #### 20161203_Deployment_1_YUN00002_1800       @ vis_png/32/640
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/20161203_Deployment_1_YUN00002_1800/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20161203_Deployment_1_YUN00002_1800_0_1799_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/20161203_Deployment_1_YUN00002_1800 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png
+
+<a id="yun00001_3600__vis_png32640"></a>
+#### YUN00001_3600       @ vis_png/32/640
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600_0_3599_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=png
 
 
 <a id="4__640"></a>

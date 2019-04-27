@@ -28,18 +28,18 @@ k=importdata('combined_summary.txt');
 
 line_width = 3;
 transparent_bkg = 1;
-transparent_legend = 1;
+transparent_legend = 0;
 vertcal_x_label = 0;
         
-% line_cols = {'red', 'blue', 'forest_green', 'magenta'};
-line_cols = {'red', 'forest_green', 'blue', 'blue'};
-line_cols = {'forest_green', 'red'};
+line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+% line_cols = {'red', 'forest_green', 'blue', 'blue'};
+% line_cols = {'forest_green', 'red'};
 
 
 
-% line_styles = {'--', '-', '-', '-', '-'};
+line_styles = {'--', '-', '-', '-', '-'};
 % line_styles = {'-', '-', '--', '--', '--'};
-line_styles = {'-', '-', '--', '-'};
+% line_styles = {'-', '-', '--', '-'};
 
 
 
@@ -52,7 +52,7 @@ line_styles = {'-', '-', '--', '-'};
 % line_specs = {'-or', '--+r', '-*b', '--xb'};
 
 % line_specs = {'-or', '-+g', '--*b', '--xm'};
-line_specs = {'--or', '-+b', '-*g', '-xm'};
+% line_specs = {'--or', '-+b', '-*g', '-xm'};
 
 % line_specs = {'--or', '-+g', '-*b', '-xm', '-sc', '-pk'};
 
@@ -112,12 +112,17 @@ else
         
 end
 figure
-
+plot_data
+line_cols
+line_styles
 for i = 1:n_lines
-    plot(patch_sizes, plot_data(:, i),...
-        line_specs{i},...
-        'Color', col_rgb{strcmp(col_names,line_cols{i})},...
-        'LineStyle', line_styles{i},...
+    plot_datum = plot_data(:, i);
+    line_col = line_cols{i};
+    line_style = line_styles{i};
+%     line_spec = line_specs{i};
+    plot(patch_sizes, plot_datum,...
+        'Color', col_rgb{strcmp(col_names,line_col)},...
+        'LineStyle', line_style,...
         'LineWidth', line_width);
 %         'GridAlpha', 1);
     hold on
