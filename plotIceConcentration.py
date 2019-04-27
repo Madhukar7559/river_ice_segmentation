@@ -88,8 +88,10 @@ def main():
     parser.add_argument("--seg_cols", type=str_to_list, default=['blue', 'forest_green', 'magenta', 'cyan', 'red'])
 
     parser.add_argument("--out_path", type=str, default='')
-
-    parser.add_argument("--out_ext", type=str, default='png')
+    parser.add_argument("--out_ext", type=str, default='mkv')
+    parser.add_argument("--out_size", type=str, default='1920x1080')
+    parser.add_argument("--out_fps", type=int, default=30)
+    parser.add_argument("--out_codec", type=str, default='H264')
 
     parser.add_argument("--save_path", type=str, default='')
 
@@ -117,15 +119,16 @@ def main():
     labels_ext = args.labels_ext
     labels_col = args.labels_col
 
-    out_path = args.out_path
 
     seg_paths = args.seg_paths
     seg_root_dir = args.seg_root_dir
     seg_ext = args.seg_ext
 
+    out_path = args.out_path
     out_ext = args.out_ext
+    out_size = args.out_size
 
-    save_path = args.save_path
+    # save_path = args.save_path
 
     n_classes = args.n_classes
 
@@ -151,6 +154,15 @@ def main():
         1: 'Anchor Ice',
         2: 'Frazil Ice',
     }
+
+    loc = (5, 120)
+    size = 8
+    thickness = 6
+    fgr_col = (255, 255, 255)
+    bgr_col = (0, 0, 0)
+    font_id = 0
+
+
     labels_col_rgb = col_rgb[labels_col]
     seg_cols_rgb = [col_rgb[seg_col] for seg_col in seg_cols]
 
@@ -160,14 +172,6 @@ def main():
                                                         labels_ext)
     if end_id < start_id:
         end_id = total_frames - 1
-
-    # cols = [(1, 0, 0), (0, 0, 1), (1, 1, 0), (1, 0, 1), (0, 1, 1)]
-
-    if not out_path:
-        out_path = labels_path + '_conc'
-        if not os.path.isdir(out_path):
-            os.makedirs(out_path)
-        print('Writing concentration data to {}'.format(out_path))
 
     if seg_paths:
         n_seg_paths = len(seg_paths)
@@ -180,17 +184,27 @@ def main():
         if seg_root_dir:
             seg_paths = [os.path.join(seg_root_dir, name) for name in seg_paths]
 
-    if not save_path:
-        save_path = os.path.join(os.path.dirname(images_path), 'ice_concentration')
+    if not out_path:
+        if labels_path:
+            out_path = labels_path + '_conc'
+        elif seg_paths:
+            out_path = seg_paths[0] + '_conc'
 
-    if not os.path.isdir(save_path):
-        os.makedirs(save_path)
+        if not os.path.isdir(out_path):
+            os.makedirs(out_path)
 
-    if stitch and save_stitched:
-        print('Saving ice_concentration plots to: {}'.format(save_path))
+    print('Saving results data to {}'.format(out_path))
 
-    log_fname = os.path.join(save_path, 'vis_log_{:s}.txt'.format(getDateTime()))
-    print('Saving log to: {}'.format(log_fname))
+    # if not save_path:
+    #     save_path = os.path.join(os.path.dirname(images_path), 'ice_concentration')
+    # if not os.path.isdir(save_path):
+    #     os.makedirs(save_path)
+
+    # if stitch and save_stitched:
+    #     print('Saving ice_concentration plots to: {}'.format(save_path))
+
+    # log_fname = os.path.join(out_path, 'vis_log_{:s}.txt'.format(getDateTime()))
+    # print('Saving log to: {}'.format(log_fname))
 
     if selective_mode:
         label_diff = int(255.0 / n_classes)
@@ -224,17 +238,28 @@ def main():
 
     plot_title = '{} concentration'.format(ice_type_str)
 
+    out_size = [int(x) for x in out_size.split('x')]
+
+    write_to_video = out_ext in video_exts
+    if write_to_video:
+        stitched_seq_path = '{}.{}'.format(stitched_seq_path, out_ext)
+        print('Writing {}x{} output video to: {}'.format(width, height, stitched_seq_path))
+        save_dir = os.path.dirname(stitched_seq_path)
+
+        fourcc = cv2.VideoWriter_fourcc(*codec)
+        video_out = cv2.VideoWriter(stitched_seq_path, fourcc, out_fps, out_size)
+    else:
+        print('Writing output images to: {}'.format(stitched_seq_path))
+        save_dir = stitched_seq_path
+
+    if save_dir and not os.path.isdir(save_dir):
+        os.makedirs(save_dir)
+
     prev_seg_img = {}
     prev_conc_data_y = {}
 
     changed_seg_count = {}
     ice_concentration_diff = {}
-
-    loc = (5, 15)
-    size = 2
-    thickness = 2
-    bgr_col = (0, 0, 0)
-    font_id = 0
 
     for img_id in range(start_id, end_id + 1):
 
@@ -362,7 +387,7 @@ def main():
             if len(seg_img_disp.shape) == 2:
                 seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
 
-            ann_fmt = (font_id, loc[0], loc[1], size, thickness) + col + bgr_col
+            ann_fmt = (font_id, loc[0], loc[1], size, thickness) + fgr_col + bgr_col
             putTextWithBackground(seg_img_disp, seg_labels[seg_id], fmt=ann_fmt)
 
             seg_img_disp_list.append(seg_img_disp)
@@ -446,6 +471,8 @@ def main():
 
         # conc_data_fname = os.path.join(out_path, img_fname_no_ext + '.txt')
         # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
+        ann_fmt = (font_id, loc[0], loc[1], size, thickness) + labels_col_rgb + bgr_col
+
         putTextWithBackground(src_img, 'frame {}'.format(img_id + 1), fmt=ann_fmt)
 
         if n_seg_paths == 1:
