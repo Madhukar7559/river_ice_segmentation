@@ -526,7 +526,7 @@ def main():
             _pause = 1 - _pause
 
     print()
-    
+
     if write_to_video:
         video_out.release()
 
@@ -560,11 +560,12 @@ def main():
                 seg_count_data_y.append(changed_seg_count[seg_id])
                 mean_seg_counts[seg_id] = np.mean(changed_seg_count[seg_id])
 
-            conc_diff_data_y.append(ice_concentration_diff[seg_id])
-            mean_conc_diff[seg_id] = np.mean(ice_concentration_diff[seg_id])
+            _ice_concentration_diff = ice_concentration_diff[seg_id]
+            conc_diff_data_y.append(_ice_concentration_diff)
+            mean_conc_diff[seg_id] = np.mean(_ice_concentration_diff)
 
             np.savetxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
-                       ice_concentration_diff[seg_id], fmt='%8.4f', delimiter='\t')
+                       _ice_concentration_diff, fmt='%8.4f', delimiter='\t')
 
         if plot_changed_seg_count:
             print('mean_seg_counts:')
@@ -573,13 +574,14 @@ def main():
         print('mean_conc_diff:')
         pprint(mean_conc_diff)
 
-        n_test_images = len(seg_count_data_y[0])
+        n_test_images = len(ice_concentration_diff[0])
 
         seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
 
-        seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
-                                     'test image', 'Changed Label Count')
-        cv2.imshow('seg_count_img', seg_count_img)
+        if plot_changed_seg_count:
+            seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
+                                         'test image', 'Changed Label Count')
+            cv2.imshow('seg_count_img', seg_count_img)
 
         conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols, 'Difference', seg_labels,
                                      'test image', 'Concentration Difference')
