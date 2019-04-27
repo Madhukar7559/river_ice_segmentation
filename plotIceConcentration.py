@@ -3,6 +3,7 @@ import numpy as np
 from scipy.misc.pilutil import imread, imsave
 from matplotlib import pyplot as plt
 import cv2
+import time
 from pprint import pprint
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
@@ -196,7 +197,7 @@ def main():
         if not os.path.isdir(out_path):
             os.makedirs(out_path)
 
-    print('Saving results data to {}'.format(out_path))
+    # print('Saving results data to {}'.format(out_path))
 
     # if not save_path:
     #     save_path = os.path.join(os.path.dirname(images_path), 'ice_concentration')
@@ -242,9 +243,9 @@ def main():
     plot_title = '{} concentration'.format(ice_type_str)
 
     out_size = tuple([int(x) for x in out_size.split('x')])
-
     write_to_video = out_ext in video_exts
     out_width, out_height = out_size
+
     if write_to_video:
         stitched_seq_path = os.path.join(out_path, 'stitched.{}'.format(out_ext))
         print('Writing {}x{} output video to: {}'.format(out_width, out_height, stitched_seq_path))
@@ -255,7 +256,7 @@ def main():
     else:
         stitched_seq_path = os.path.join(out_path, 'stitched')
         print('Writing {}x{} output images of type to: {}'.format(
-            width, height, out_ext, stitched_seq_path))
+            out_width, out_height, out_ext, stitched_seq_path))
         save_dir = stitched_seq_path
 
     if save_dir and not os.path.isdir(save_dir):
@@ -268,6 +269,8 @@ def main():
     ice_concentration_diff = {}
 
     for img_id in range(start_id, end_id + 1):
+
+        start_t = time.time()
 
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
         img_fname = src_files[img_id]
@@ -510,6 +513,11 @@ def main():
             stacked_img_path = os.path.join(stitched_seq_path, '{}.{}'.format(img_fname_no_ext, out_ext))
             cv2.imwrite(stacked_img_path, stitched_img)
 
+        end_t = time.time()
+        sys.stdout.write('\rDone {:d}/{:d} frames. fps: {}'.format(
+            img_id + 1 - start_id, n_frames, 1.0/(end_t - start_t)))
+        sys.stdout.flush()
+
         cv2.imshow('stitched_img', stitched_img)
         k = cv2.waitKey(1 - _pause)
         if k == 27:
@@ -517,6 +525,8 @@ def main():
         elif k == 32:
             _pause = 1 - _pause
 
+    print()
+    
     if write_to_video:
         video_out.release()
 
@@ -545,15 +555,20 @@ def main():
         mean_conc_diff = {}
         conc_diff_data_y = []
 
-        for seg_id in changed_seg_count:
-            seg_count_data_y.append(changed_seg_count[seg_id])
-            mean_seg_counts[seg_id] = np.mean(changed_seg_count[seg_id])
+        for seg_id in ice_concentration_diff:
+            if plot_changed_seg_count:
+                seg_count_data_y.append(changed_seg_count[seg_id])
+                mean_seg_counts[seg_id] = np.mean(changed_seg_count[seg_id])
 
             conc_diff_data_y.append(ice_concentration_diff[seg_id])
             mean_conc_diff[seg_id] = np.mean(ice_concentration_diff[seg_id])
 
-        print('mean_seg_counts:')
-        pprint(mean_seg_counts)
+            np.savetxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
+                       ice_concentration_diff[seg_id], fmt='%8.4f', delimiter='\t')
+
+        if plot_changed_seg_count:
+            print('mean_seg_counts:')
+            pprint(mean_seg_counts)
 
         print('mean_conc_diff:')
         pprint(mean_conc_diff)
