@@ -90,7 +90,7 @@ def main():
     parser.add_argument("--out_path", type=str, default='')
     parser.add_argument("--out_ext", type=str, default='mkv')
     parser.add_argument("--out_size", type=str, default='1920x1080')
-    parser.add_argument("--fps", type=int, default=30)
+    parser.add_argument("--fps", type=float, default=30)
     parser.add_argument("--codec", type=str, default='H264')
 
     parser.add_argument("--save_path", type=str, default='')
@@ -241,19 +241,19 @@ def main():
 
     plot_title = '{} concentration'.format(ice_type_str)
 
-    out_size = [int(x) for x in out_size.split('x')]
+    out_size = tuple([int(x) for x in out_size.split('x')])
 
     write_to_video = out_ext in video_exts
-    width, height = out_size
+    out_width, out_height = out_size
     if write_to_video:
-        stitched_seq_path = 'stitched.{}'.format(out_ext)
-        print('Writing {}x{} output video to: {}'.format(width, height, stitched_seq_path))
+        stitched_seq_path = os.path.join(out_path, 'stitched.{}'.format(out_ext))
+        print('Writing {}x{} output video to: {}'.format(out_width, out_height, stitched_seq_path))
         save_dir = os.path.dirname(stitched_seq_path)
 
         fourcc = cv2.VideoWriter_fourcc(*codec)
         video_out = cv2.VideoWriter(stitched_seq_path, fourcc, fps, out_size)
     else:
-        stitched_seq_path = 'stitched'
+        stitched_seq_path = os.path.join(out_path, 'stitched')
         print('Writing {}x{} output images of type to: {}'.format(
             width, height, out_ext, stitched_seq_path))
         save_dir = stitched_seq_path
@@ -500,7 +500,7 @@ def main():
                 np.concatenate(seg_img_disp_list, axis=1),
             ), axis=0)
 
-        stitched_img = resizeAR(stitched_img, width=width, height=height)
+        stitched_img = resizeAR(stitched_img, width=out_width, height=out_height)
 
         # print('dists: {}'.format(dists))
 
@@ -519,7 +519,7 @@ def main():
 
     if write_to_video:
         video_out.release()
-        
+
     if labels_path:
         mean_dists = {}
         mae_data_y = []
