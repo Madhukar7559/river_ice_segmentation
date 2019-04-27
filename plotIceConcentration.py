@@ -13,7 +13,7 @@ from dictances import bhattacharyya, euclidean, mae, mse
 
 
 def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, ylim=None):
-    fig = Figure()
+    fig = Figure(figsize=(9.6, 5.4), dpi=200, edgecolor='b')
     canvas = FigureCanvas(fig)
     ax = fig.gca()
 
@@ -376,9 +376,9 @@ def main():
 
         if img_id > 0:
             n_test_images = img_id
+            seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
 
             if plot_changed_seg_count:
-                seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
                 seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols_y, 'Count', seg_labels,
                                              'frame', 'Changed Label Count')
                 cv2.imshow('seg_count_img', seg_count_img)
