@@ -17,7 +17,7 @@ from dictances import bhattacharyya, euclidean, mae, mse
 
 
 def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, ylim=None):
-    cols = [col/255.0 for col in cols]
+    cols = [(col[0] / 255.0, col[1] / 255.0, col[2] / 255.0) for col in cols]
 
     fig = Figure(
         # figsize=(6.4, 3.6), dpi=300,
@@ -43,9 +43,9 @@ def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, yli
     plt.rcParams['axes.titlesize'] = 10
     # fontdict = {'fontsize': plt.rcParams['axes.titlesize'],
     #             'fontweight': plt.rcParams['axes.titleweight'],
-                # 'verticalalignment': 'baseline',
-                # 'horizontalalignment': plt.loc
-                # }
+    # 'verticalalignment': 'baseline',
+    # 'horizontalalignment': plt.loc
+    # }
     ax.set_title(title,
                  # fontdict=fontdict
                  )
@@ -154,7 +154,6 @@ def main():
     labels_col_rgb = col_rgb[labels_col]
     seg_cols_rgb = [col_rgb[seg_col] for seg_col in seg_cols]
 
-
     ice_type_str = ice_types[ice_type]
 
     src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
@@ -230,6 +229,12 @@ def main():
 
     changed_seg_count = {}
     ice_concentration_diff = {}
+
+    loc = (5, 15)
+    size = 2
+    thickness = 2
+    bgr_col = (0, 0, 0)
+    font_id = 0
 
     for img_id in range(start_id, end_id + 1):
 
@@ -331,6 +336,8 @@ def main():
             seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
             seg_img_orig = imread(seg_img_fname)
 
+            col = seg_cols_rgb[seg_id % n_cols]
+
             _label = seg_labels[seg_id]
 
             if seg_img_orig is None:
@@ -355,7 +362,7 @@ def main():
             if len(seg_img_disp.shape) == 2:
                 seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
 
-            ann_fmt = (0, 5, 15, 1, 1, 255, 255, 255, 0, 0, 0)
+            ann_fmt = (font_id, loc[0], loc[1], size, thickness) + col + bgr_col
             putTextWithBackground(seg_img_disp, seg_labels[seg_id], fmt=ann_fmt)
 
             seg_img_disp_list.append(seg_img_disp)
@@ -377,7 +384,7 @@ def main():
                     ice_pix = curr_pix[curr_pix == ice_type]
                 conc_data_y[i] = (len(ice_pix) / float(src_height)) * 100.0
 
-            plot_cols.append(seg_cols_rgb[seg_id % n_cols])
+            plot_cols.append(col)
             plot_data_y.append(conc_data_y)
 
             seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(seg_width)}
@@ -421,7 +428,7 @@ def main():
                                          'Mean concentration difference between consecutive frames'.format(
                                              ice_type_str),
                                          seg_labels, 'frame', 'Concentration Difference (%)')
-            cv2.imshow('conc_diff_img', conc_diff_img)
+            # cv2.imshow('conc_diff_img', conc_diff_img)
             conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
         else:
             conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
@@ -439,6 +446,7 @@ def main():
 
         # conc_data_fname = os.path.join(out_path, img_fname_no_ext + '.txt')
         # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
+        putTextWithBackground(src_img, 'frame {}'.format(img_id + 1), fmt=ann_fmt)
 
         if n_seg_paths == 1:
             print('seg_img_disp: {}'.format(seg_img_disp.shape))

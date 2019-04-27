@@ -334,6 +334,8 @@ def putTextWithBackground(img, text, fmt=None):
         cv2.rectangle(img, box_coords[0], box_coords[1], bgr_col, cv2.FILLED)
     cv2.putText(img, text, loc, font, size, col, thickness)
 
+    cv2.imshow('putTextWithBackground', img)
+
 
 def resizeAR(src_img, width=0, height=0, return_factors=False, bkg_col=0):
 
