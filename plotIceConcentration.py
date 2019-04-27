@@ -517,6 +517,9 @@ def main():
         elif k == 32:
             _pause = 1 - _pause
 
+    if write_to_video:
+        video_out.release()
+        
     if labels_path:
         mean_dists = {}
         mae_data_y = []
