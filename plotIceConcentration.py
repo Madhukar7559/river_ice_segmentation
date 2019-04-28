@@ -221,7 +221,6 @@ def main():
 
     print_diff = int(n_frames * 0.01)
 
-    _pause = 1
     labels_img = None
 
     n_cols = len(seg_cols_rgb)
@@ -267,6 +266,8 @@ def main():
 
     changed_seg_count = {}
     ice_concentration_diff = {}
+
+    _pause = 0
 
     for img_id in range(start_id, end_id + 1):
 
