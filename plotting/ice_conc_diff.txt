@@ -18,25 +18,69 @@
  'densenet'	0.6226407195205326
  'unet'	0.5417991723368263
  
- log/frazil_ice_concentration/20160122_YUN00002_700_2500\stitched.mkv
+YUN00001_3600 
+densenet        0.92539776566879
+deeplab 1.4617734433154443
+unet    0.96573967345932
+
+# frazil_ice_concentration
+
+ frazil_ice_concentration/20161203_Deployment_1_YUN00002_1800
+'deeplab'	2.8450692597460696
+ 'densenet'	0.8100144598186407
+ 'unet'	1.2697443702112456
+ 
+ frazil_ice_concentration/20160122_YUN00002_700_2500
 'deeplab'	2.8446595054629973
  'densenet'	1.704198703390601
  'unet'	1.901353495962263
  
-log/frazil_ice_concentration/20160122_YUN00020_2000_3800\stitched.mkv
+frazil_ice_concentration/20160122_YUN00020_2000_3800
 'deeplab'	1.657606815975868
  'densenet'	0.8172515600445034
  'unet'	1.2432031668185
  
- log/frazil_ice_concentration/20161203_Deployment_1_YUN00001_900_2700\stitched.mkv
+ frazil_ice_concentration/20161203_Deployment_1_YUN00001_900_2700
 'deeplab'	2.5426949259469427
  'densenet'	0.6984020494389029
  'unet'	1.2320490000767745
  
- log/frazil_ice_concentration/20161203_Deployment_1_YUN00002_1800\stitched.mkv
-'deeplab'	2.8450692597460696
- 'densenet'	0.8100144598186407
- 'unet'	1.2697443702112456
+ frazil_ice_concentration/YUN00001_3600
+deeplab 2.0011688069696643
+unet    1.2733159046692606
+densenet        1.0150481057506229
+
+
+# anchor_ice_concentration
+
+ anchor_ice_concentration/20161203_Deployment_1_YUN00002_1800
+unet    1.308443752938018
+densenet        0.8522825153849188
+deeplab 2.78505026958993
+
+anchor_ice_concentration/20160122_YUN00002_700_2500
+deeplab 2.9676932518666064
+unet    2.1121583964685455
+densenet        2.151995215588307
+
+anchor_ice_concentration/20160122_YUN00020_2000_3800
+deeplab 1.5569445865201172
+unet    1.2366490216722765
+densenet        0.920087889083613
+
+anchor_ice_concentration/20161203_Deployment_1_YUN00001_900_2700
+deeplab 2.4727588192535803
+densenet        0.863314356312492
+unet    1.2563488860087737
+
+anchor_ice_concentration/YUN00001_3600
+deeplab 2.01878580172927
+densenet        1.2319600955542
+unet    1.3332516331196513
+
+
+ 
+
  
  
  

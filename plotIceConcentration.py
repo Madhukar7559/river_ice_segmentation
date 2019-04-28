@@ -89,7 +89,7 @@ def main():
     parser.add_argument("--seg_cols", type=str_to_list, default=['blue', 'forest_green', 'magenta', 'cyan', 'red'])
 
     parser.add_argument("--out_path", type=str, default='')
-    parser.add_argument("--out_ext", type=str, default='mkv')
+    parser.add_argument("--out_ext", type=str, default='jpg')
     parser.add_argument("--out_size", type=str, default='1920x1080')
     parser.add_argument("--fps", type=float, default=30)
     parser.add_argument("--codec", type=str, default='H264')
@@ -99,6 +99,7 @@ def main():
     parser.add_argument("--n_classes", type=int)
 
     parser.add_argument("--save_stitched", type=int, default=0)
+    parser.add_argument("--load_ice_conc_diff", type=int, default=0)
 
     parser.add_argument("--start_id", type=int, default=0)
     parser.add_argument("--end_id", type=int, default=-1)
@@ -151,6 +152,9 @@ def main():
 
     ice_type = args.ice_type
     plot_changed_seg_count = args.plot_changed_seg_count
+
+    load_ice_conc_diff = args.load_ice_conc_diff
+
 
     ice_types = {
         0: 'Ice',
@@ -245,16 +249,18 @@ def main():
     write_to_video = out_ext in video_exts
     out_width, out_height = out_size
 
+    out_seq_name = os.path.basename(out_path)
+
     if write_to_video:
-        stitched_seq_path = os.path.join(out_path, 'stitched.{}'.format(out_ext))
+        stitched_seq_path = os.path.join(out_path, '{}.{}'.format(out_seq_name, out_ext))
         print('Writing {}x{} output video to: {}'.format(out_width, out_height, stitched_seq_path))
         save_dir = os.path.dirname(stitched_seq_path)
 
         fourcc = cv2.VideoWriter_fourcc(*codec)
         video_out = cv2.VideoWriter(stitched_seq_path, fourcc, fps, out_size)
     else:
-        stitched_seq_path = os.path.join(out_path, 'stitched')
-        print('Writing {}x{} output images of type to: {}'.format(
+        stitched_seq_path = os.path.join(out_path, out_seq_name)
+        print('Writing {}x{} output images of type {} to: {}'.format(
             out_width, out_height, out_ext, stitched_seq_path))
         save_dir = stitched_seq_path
 
@@ -267,6 +273,10 @@ def main():
     changed_seg_count = {}
     ice_concentration_diff = {}
 
+    if load_ice_conc_diff:
+        for seg_id in seg_labels:
+            ice_concentration_diff[seg_id] = np.loadtxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
+                       dtype=np.float64)
     _pause = 0
 
     for img_id in range(start_id, end_id + 1):
