@@ -1,0 +1,44 @@
+20161203_Deployment_1_YUN00002_1800\
+{'deeplab': 2.517801565802589,
+ 'densenet': 0.638103967707111,
+ 'unet': 0.5763051513636692}
+ 
+20160122_YUN00002_700_2500
+{'deeplab': 3.607324023731034,
+ 'densenet': 2.135018231525659,
+ 'unet': 2.1653551205573742}
+ 
+ 20160122_YUN00020_2000_3800
+ {'deeplab': 1.223541388144734,
+ 'densenet': 0.6506723101268538,
+ 'unet': 0.7967718007882466}
+ 
+ 20161203_Deployment_1_YUN00001_900_2700
+ {'deeplab': 2.480614310548041,
+ 'densenet': 0.6226407195205326,
+ 'unet': 0.5417991723368263}
+ 
+ log/frazil_ice_concentration/20160122_YUN00002_700_2500\stitched.mkv
+ {'deeplab': 2.8446595054629973,
+ 'densenet': 1.704198703390601,
+ 'unet': 1.901353495962263}
+ 
+log/frazil_ice_concentration/20160122_YUN00020_2000_3800\stitched.mkv
+{'deeplab': 1.657606815975868,
+ 'densenet': 0.8172515600445034,
+ 'unet': 1.2432031668185}
+ 
+ log/frazil_ice_concentration/20161203_Deployment_1_YUN00001_900_2700\stitched.mkv
+ {'deeplab': 2.5426949259469427,
+ 'densenet': 0.6984020494389029,
+ 'unet': 1.2320490000767745}
+ 
+ log/frazil_ice_concentration/20161203_Deployment_1_YUN00002_1800\stitched.mkv
+ {'deeplab': 2.8450692597460696,
+ 'densenet': 0.8100144598186407,
+ 'unet': 1.2697443702112456}
+ 
+ 
+ 
+ 
+ 
