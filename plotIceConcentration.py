@@ -17,7 +17,7 @@ from densenet.utils import readData, getDateTime, print_and_write, resizeAR, put
 from dictances import bhattacharyya, euclidean, mae, mse
 
 
-def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, ylim=None):
+def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, ylim=None, legend=1):
     cols = [(col[0] / 255.0, col[1] / 255.0, col[2] / 255.0) for col in cols]
 
     fig = Figure(
@@ -40,7 +40,12 @@ def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, yli
         datum_y = data_y[i]
         line_label = line_labels[i]
         col = cols[i]
-        ax.plot(data_x, datum_y, color=col, label=line_label)
+        args = {
+            'color': col
+        }
+        if legend:
+            args['label'] = line_label
+        ax.plot(data_x, datum_y, **args)
     plt.rcParams['axes.titlesize'] = 10
     # fontdict = {'fontsize': plt.rcParams['axes.titlesize'],
     #             'fontweight': plt.rcParams['axes.titleweight'],
@@ -381,7 +386,7 @@ def main():
             seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
             seg_img_orig = imread(seg_img_fname)
 
-            col = seg_cols_rgb[seg_id % n_cols]
+            seg_col = seg_cols_rgb[seg_id % n_cols]
 
             _label = seg_labels[seg_id]
 
@@ -429,7 +434,7 @@ def main():
                     ice_pix = curr_pix[curr_pix == ice_type]
                 conc_data_y[i] = (len(ice_pix) / float(src_height)) * 100.0
 
-            plot_cols.append(col)
+            plot_cols.append(seg_col)
             plot_data_y.append(conc_data_y)
 
             seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(seg_width)}
@@ -481,6 +486,7 @@ def main():
         plot_labels += seg_labels
         plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols, plot_title, plot_labels,
                                 plot_x_label, plot_y_label,
+                                legend=0
                                 # ylim=(0, 100)
                                 )
 
