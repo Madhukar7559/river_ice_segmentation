@@ -30,14 +30,19 @@ line_width = 3;
 transparent_bkg = 1;
 transparent_legend = 0;
 vertcal_x_label = 0;
-        
-line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+axes_font_size = 24;
+legend_font_size = 18;
+title_font_size = 30;
+
+% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
 
 
-line_styles = {'--', '-', '-', '-', '-'};
+% line_styles = {'--', '-', '-', '-', '-'};
+line_styles = {'-', '-', '-', '-'};
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
@@ -72,7 +77,7 @@ line_styles = {'--', '-', '-', '-', '-'};
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
 % set(0,'DefaultAxesFontName', 'Times New Roman');
-set(0,'DefaultAxesFontSize', 20);
+set(0,'DefaultAxesFontSize', axes_font_size);
 set(0,'DefaultAxesFontWeight', 'bold');
 
 if isfield(k,'colheaders')
@@ -129,7 +134,7 @@ for i = 1:n_lines
 end
 hold off
 h_legend=legend(plot_legend, 'Interpreter','none');
-set(h_legend,'FontSize',18);
+set(h_legend,'FontSize',legend_font_size);
 set(h_legend,'FontWeight','bold');
 grid on;
 
@@ -163,7 +168,7 @@ end
 % ylim([0.60, 0.90]);
 % ylim([0.65, 0.90]);
 plot_title = strtrim(plot_title);
-title(plot_title, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold', 'Interpreter', 'none');
 if transparent_bkg
     set(gca,'color','none')
     if transparent_legend

@@ -55,7 +55,8 @@ def getPlotImage(data_x, data_y, cols, title, line_labels, x_label, y_label, yli
     ax.set_title(title,
                  # fontdict=fontdict
                  )
-    ax.legend()
+    if legend:
+        ax.legend(fancybox=True, framealpha=0.1)
     ax.grid(1)
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
