@@ -23,6 +23,11 @@ densenet        0.92539776566879
 deeplab 1.4617734433154443
 unet    0.96573967345932
 
+YUN00001_3600
+deeplab 1.4617734433154443
+densenet        0.92539776566879
+unet    0.96573967345932
+
 # frazil_ice_concentration
 
  frazil_ice_concentration/20161203_Deployment_1_YUN00002_1800

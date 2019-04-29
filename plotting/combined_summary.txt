@@ -1,8 +1,8 @@
-Recall			
-Selective pixel ablation recall for anchor Ice			
+Precision			
+Precision for frazil ice			
 n_pixels_per_class	deeplab	unet	densenet
-_2	0.63119	0.47465	0.47306
-_10	0.62795	0.46004	0.49721
-_100	0.67911	0.54902	0.54895
-_1000	0.70356	0.54767	0.57962
-all	0.7096	0.7061	0.57426
+_2	0.43414	0.53859	0.49303
+_10	0.57515	0.57807	0.53398
+_100	0.62159	0.60537	0.56058
+_1000	0.67498	0.62228	0.59784
+all	0.69708	0.65628	0.65462
