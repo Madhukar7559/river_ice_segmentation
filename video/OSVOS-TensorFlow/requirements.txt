@@ -1,6 +1,6 @@
-__annoying_tensor__flow_gpu__==1.1.0
+__annoying_tensor_flow_gpu__==1.1.0
 scipy==0.18.1
 matplotlib==1.5.3
 numpy==1.12.1
 Pillow==4.1.1
-tensorflow==1.1.0
+__annoying_tensor_flow__==1.1.0
