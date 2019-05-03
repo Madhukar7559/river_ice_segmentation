@@ -17,6 +17,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
    - [video       @ plotIceConcentration](#video__ploticeconcentration)
       - [20160122_YUN00002_700_2500       @ video/plotIceConcentration](#20160122_yun00002_700_2500__videoploticeconcentration)
          - [combined       @ 20160122_YUN00002_700_2500/video/plotIceConcentration](#combined__20160122_yun00002_700_2500videoploticeconcentration)
+            - [plot_changed_seg_count       @ combined/20160122_YUN00002_700_2500/video/plotIceConcentration](#plot_changed_seg_count__combined20160122_yun00002_700_2500videoploticeconcentration)
          - [frazil       @ 20160122_YUN00002_700_2500/video/plotIceConcentration](#frazil__20160122_yun00002_700_2500videoploticeconcentration)
          - [anchor       @ 20160122_YUN00002_700_2500/video/plotIceConcentration](#anchor__20160122_yun00002_700_2500videoploticeconcentration)
       - [20160122_YUN00020_2000_3800       @ video/plotIceConcentration](#20160122_yun00020_2000_3800__videoploticeconcentration)
@@ -209,6 +210,11 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/im
 #### combined       @ 20160122_YUN00002_700_2500/video/plotIceConcentration
 
 python3 plotIceConcentration.py --images_path=/data/617/images/20160122_YUN00002_700_2500/images --seg_paths=log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_20160122_YUN00002_700_2500_z370_190423_065334,log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_20160122_YUN00002_700_2500_max_val_acc_z370_190424_162012,log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_20160122_YUN00002_700_2500_z370_190421_161512 --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --images_ext=jpg --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab,unet,densenet --seg_cols=blue,forest_green,magenta --ice_type=0 --out_path=log/ice_concentration/20160122_YUN00002_700_2500  --out_size=1920x720 
+
+<a id="plot_changed_seg_count__combined20160122_yun00002_700_2500videoploticeconcentration"></a>
+##### plot_changed_seg_count       @ combined/20160122_YUN00002_700_2500/video/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/20160122_YUN00002_700_2500/images --seg_paths=log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_20160122_YUN00002_700_2500_z370_190423_065334,log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_20160122_YUN00002_700_2500_max_val_acc_z370_190424_162012,log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_20160122_YUN00002_700_2500_z370_190421_161512 --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --images_ext=jpg --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab,unet,densenet --seg_cols=blue,forest_green,magenta --ice_type=0 --out_path=log/ice_concentration/20160122_YUN00002_700_2500  --out_size=1920x720 --plot_changed_seg_count=1
 
 <a id="frazil__20160122_yun00002_700_2500videoploticeconcentration"></a>
 #### frazil       @ 20160122_YUN00002_700_2500/video/plotIceConcentration

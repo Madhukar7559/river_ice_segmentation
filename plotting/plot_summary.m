@@ -33,16 +33,17 @@ vertcal_x_label = 0;
 axes_font_size = 24;
 legend_font_size = 18;
 title_font_size = 30;
+bar_plot = 1;
 
-% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
-line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
+line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+% line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
 
 
-% line_styles = {'--', '-', '-', '-', '-'};
-line_styles = {'-', '-', '-', '-'};
+line_styles = {'--', '-', '-', '-', '-'};
+% line_styles = {'-', '-', '-', '-'};
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
@@ -80,99 +81,104 @@ line_styles = {'-', '-', '-', '-'};
 set(0,'DefaultAxesFontSize', axes_font_size);
 set(0,'DefaultAxesFontWeight', 'bold');
 
-if isfield(k,'colheaders')
-    n_lines = size(k.data, 2) - 1;
-    plot_data = k.data(:, 2:end);
-    patch_sizes = k.data(:, 1);
-    plot_legend = {k.colheaders{2:end}};
-    x_label='K';
+if bar_plot
+    figure;
+    bar(k.data);
 else
-    n_lines = size(k.data, 2)
-    n_items = size(k.data, 1)
-    plot_data = k.data;
-%     x_label='Model';
+    if isfield(k,'colheaders')
+        n_lines = size(k.data, 2) - 1;
+        plot_data = k.data(:, 2:end);
+        patch_sizes = k.data(:, 1);
+        plot_legend = {k.colheaders{2:end}};
+        x_label='K';
+    else
+        n_lines = size(k.data, 2)
+        n_items = size(k.data, 1)
+        plot_data = k.data;
+    %     x_label='Model';
 
-    n_text_lines = size(k.textdata, 2)
-    n_text_items = size(k.textdata, 1)
-    if n_text_items == n_items + 3
-        y_label = k.textdata(1, 1)
-        k.textdata = k.textdata(2:end, :);
-        n_text_items = n_text_items - 1;
-    end
-    if n_text_items == n_items + 2
-        plot_title = k.textdata(1, 1)
-        k.textdata = k.textdata(2:end, :);
-    end
-    x_label = k.textdata(1, 1)
-    plot_legend = {k.textdata{1, 2:end}}
-    xtick_labels = k.textdata(2:end, 1)
-    patch_sizes = 1:n_items;
-    
-    for j = 1:n_items        
-        if xtick_labels{j}(1)=='_'
-            xtick_labels{j} = xtick_labels{j}(2:end);
+        n_text_lines = size(k.textdata, 2)
+        n_text_items = size(k.textdata, 1)
+        if n_text_items == n_items + 3
+            y_label = k.textdata(1, 1)
+            k.textdata = k.textdata(2:end, :);
+            n_text_items = n_text_items - 1;
         end
-            
-    end
-        
-end
-figure
-plot_data
-line_cols
-line_styles
-for i = 1:n_lines
-    plot_datum = plot_data(:, i);
-    line_col = line_cols{i};
-    line_style = line_styles{i};
-%     line_spec = line_specs{i};
-    plot(patch_sizes, plot_datum,...
-        'Color', col_rgb{strcmp(col_names,line_col)},...
-        'LineStyle', line_style,...
-        'LineWidth', line_width);
-%         'GridAlpha', 1);
-    hold on
-end
-hold off
-h_legend=legend(plot_legend, 'Interpreter','none');
-set(h_legend,'FontSize',legend_font_size);
-set(h_legend,'FontWeight','bold');
-grid on;
+        if n_text_items == n_items + 2
+            plot_title = k.textdata(1, 1)
+            k.textdata = k.textdata(2:end, :);
+        end
+        x_label = k.textdata(1, 1)
+        plot_legend = {k.textdata{1, 2:end}}
+        xtick_labels = k.textdata(2:end, 1)
+        patch_sizes = 1:n_items;
 
-% ax = gca;
-% ax.GridAlpha=0.25;
-% ax.GridLineStyle=':';
-% set (gca, 'GridAlphaMode', 'manual');
-% set (gca, 'GridAlpha', 0.5);
-% set (gca, 'GridLineStyle', '-');
+        for j = 1:n_items        
+            if xtick_labels{j}(1)=='_'
+                xtick_labels{j} = xtick_labels{j}(2:end);
+            end
 
-try
-    xticks(patch_sizes);
-    if exist('xtick_labels', 'var')
-        xticklabels(xtick_labels);
-    end
-catch
-    set(gca, 'XTick', patch_sizes)    
-    if exist('xtick_labels', 'var')
-        set(gca, 'xticklabel', xtick_labels)
-    end
-end
-% ylabel('metric value');
-y_label = strtrim(y_label);
-ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+        end
 
-x_label = strtrim(x_label);
-xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
-if vertcal_x_label
-    xticklabel_rotate([],90,[], 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
-end
-% ylim([0.60, 0.90]);
-% ylim([0.65, 0.90]);
-plot_title = strtrim(plot_title);
-title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold', 'Interpreter', 'none');
-if transparent_bkg
-    set(gca,'color','none')
-    if transparent_legend
-        set(h_legend,'color','none');
+    end
+    figure
+    plot_data
+    line_cols
+    line_styles
+    for i = 1:n_lines
+        plot_datum = plot_data(:, i);
+        line_col = line_cols{i};
+        line_style = line_styles{i};
+    %     line_spec = line_specs{i};
+        plot(patch_sizes, plot_datum,...
+            'Color', col_rgb{strcmp(col_names,line_col)},...
+            'LineStyle', line_style,...
+            'LineWidth', line_width);
+    %         'GridAlpha', 1);
+        hold on
+    end
+    hold off
+    h_legend=legend(plot_legend, 'Interpreter','none');
+    set(h_legend,'FontSize',legend_font_size);
+    set(h_legend,'FontWeight','bold');
+    grid on;
+
+    % ax = gca;
+    % ax.GridAlpha=0.25;
+    % ax.GridLineStyle=':';
+    % set (gca, 'GridAlphaMode', 'manual');
+    % set (gca, 'GridAlpha', 0.5);
+    % set (gca, 'GridLineStyle', '-');
+
+    try
+        xticks(patch_sizes);
+        if exist('xtick_labels', 'var')
+            xticklabels(xtick_labels);
+        end
+    catch
+        set(gca, 'XTick', patch_sizes)    
+        if exist('xtick_labels', 'var')
+            set(gca, 'xticklabel', xtick_labels)
+        end
+    end
+    % ylabel('metric value');
+    y_label = strtrim(y_label);
+    ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+
+    x_label = strtrim(x_label);
+    xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+    if vertcal_x_label
+        xticklabel_rotate([],90,[], 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+    end
+    % ylim([0.60, 0.90]);
+    % ylim([0.65, 0.90]);
+    plot_title = strtrim(plot_title);
+    title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold', 'Interpreter', 'none');
+    if transparent_bkg
+        set(gca,'color','none')
+        if transparent_legend
+            set(h_legend,'color','none');
+        end
     end
 end
 

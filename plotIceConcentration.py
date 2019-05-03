@@ -449,17 +449,33 @@ def main():
             else:
                 if img_id > 0:
                     if plot_changed_seg_count:
+                        flow = cv2.calcOpticalFlowFarneback(prev_seg_img[_label], seg_img, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+
+                        # Obtain the flow magnitude and direction angle
+                        mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1])
+
+                        hsvImg = np.zeros_like(seg_img)
+                        hsvImg[..., 1] = 255
+
+                        # Update the color image
+                        hsvImg[..., 0] = 0.5 * ang * 180 / np.pi
+                        hsvImg[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
+                        rgbImg = cv2.cvtColor(hsvImg, cv2.COLOR_HSV2BGR)
+
+                        # Display the resulting frame
+                        cv2.imshow('dense optical flow', np.hstack((frame, rgbImg)))
                         changed_seg_count[_label].append(np.count_nonzero(np.not_equal(seg_img, prev_seg_img[_label])))
                         seg_count_data_y.append(changed_seg_count[_label])
                         mean_seg_counts[_label] = np.mean(changed_seg_count[_label])
-
-                    ice_concentration_diff[_label].append(np.mean(np.abs(conc_data_y - prev_conc_data_y[_label])))
-                    conc_diff_data_y.append(ice_concentration_diff[_label])
-                    mean_conc_diff[_label] = np.mean(ice_concentration_diff[_label])
+                    else:
+                        ice_concentration_diff[_label].append(np.mean(np.abs(conc_data_y - prev_conc_data_y[_label])))
+                        conc_diff_data_y.append(ice_concentration_diff[_label])
+                        mean_conc_diff[_label] = np.mean(ice_concentration_diff[_label])
                 else:
                     if plot_changed_seg_count:
                         changed_seg_count[_label] = []
-                    ice_concentration_diff[_label] = []
+                    else:
+                        ice_concentration_diff[_label] = []
 
             prev_seg_img[_label] = seg_img
             prev_conc_data_y[_label] = conc_data_y
@@ -474,13 +490,13 @@ def main():
                 seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
                                              'frame', 'Changed Label Count')
                 cv2.imshow('seg_count_img', seg_count_img)
-
-            conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols,
-                                         'Mean concentration difference between consecutive frames'.format(
-                                             ice_type_str),
-                                         seg_labels, 'frame', 'Concentration Difference (%)')
-            # cv2.imshow('conc_diff_img', conc_diff_img)
-            conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
+            else:
+                conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols,
+                                             'Mean concentration difference between consecutive frames'.format(
+                                                 ice_type_str),
+                                             seg_labels, 'frame', 'Concentration Difference (%)')
+                # cv2.imshow('conc_diff_img', conc_diff_img)
+                conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
         else:
             conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
 
@@ -577,37 +593,37 @@ def main():
             if plot_changed_seg_count:
                 seg_count_data_y.append(changed_seg_count[seg_id])
                 mean_seg_counts[seg_id] = np.mean(changed_seg_count[seg_id])
+            else:
+                _ice_concentration_diff = ice_concentration_diff[seg_id]
+                n_test_images = len(_ice_concentration_diff)
 
-            _ice_concentration_diff = ice_concentration_diff[seg_id]
-            n_test_images = len(_ice_concentration_diff)
-
-            conc_diff_data_y.append(_ice_concentration_diff)
-            mean_conc_diff[seg_id] = np.mean(_ice_concentration_diff)
+                conc_diff_data_y.append(_ice_concentration_diff)
+                mean_conc_diff[seg_id] = np.mean(_ice_concentration_diff)
 
 
-            np.savetxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
-                       _ice_concentration_diff, fmt='%8.4f', delimiter='\t')
+                np.savetxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
+                           _ice_concentration_diff, fmt='%8.4f', delimiter='\t')
 
         if plot_changed_seg_count:
             print('mean_seg_counts:')
             pprint(mean_seg_counts)
+        else:
+            print('mean_conc_diff:')
+            for seg_id in mean_conc_diff:
+                print('{}\t{}'.format(seg_id,  mean_conc_diff[seg_id]))
 
-        print('mean_conc_diff:')
-        for seg_id in mean_conc_diff:
-            print('{}\t{}'.format(seg_id,  mean_conc_diff[seg_id]))
+            # seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+            #
+            # if plot_changed_seg_count:
+            #     seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
+            #                                  'test image', 'Changed Label Count')
+            #     cv2.imshow('seg_count_img', seg_count_img)
+            #
+            # conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols, 'Difference', seg_labels,
+            #                              'test image', 'Concentration Difference')
+            # cv2.imshow('conc_diff_img', conc_diff_img)
 
-        # seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
-        #
-        # if plot_changed_seg_count:
-        #     seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
-        #                                  'test image', 'Changed Label Count')
-        #     cv2.imshow('seg_count_img', seg_count_img)
-        #
-        # conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols, 'Difference', seg_labels,
-        #                              'test image', 'Concentration Difference')
-        # cv2.imshow('conc_diff_img', conc_diff_img)
-
-        # k = cv2.waitKey(0)
+            # k = cv2.waitKey(0)
 
 
 if __name__ == '__main__':
