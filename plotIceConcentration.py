@@ -127,7 +127,6 @@ def main():
     labels_ext = args.labels_ext
     labels_col = args.labels_col
 
-
     seg_paths = args.seg_paths
     seg_root_dir = args.seg_root_dir
     seg_ext = args.seg_ext
@@ -160,7 +159,6 @@ def main():
     plot_changed_seg_count = args.plot_changed_seg_count
 
     load_ice_conc_diff = args.load_ice_conc_diff
-
 
     ice_types = {
         0: 'Ice',
@@ -281,8 +279,9 @@ def main():
 
     if load_ice_conc_diff:
         for seg_id in seg_labels:
-            ice_concentration_diff[seg_id] = np.loadtxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
-                       dtype=np.float64)
+            ice_concentration_diff[seg_id] = np.loadtxt(
+                os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
+                dtype=np.float64)
     _pause = 0
 
     for img_id in range(start_id, end_id + 1):
@@ -438,9 +437,8 @@ def main():
             plot_cols.append(seg_col)
             plot_data_y.append(conc_data_y)
 
-            seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(seg_width)}
-
             if labels_path:
+                seg_dict = {conc_data_x[i]: conc_data_y[i] for i in range(seg_width)}
                 # dists['bhattacharyya'].append(bhattacharyya(gt_dict, seg_dict))
                 dists[_label]['euclidean'].append(euclidean(gt_dict, seg_dict))
                 dists[_label]['mse'].append(mse(gt_dict, seg_dict))
@@ -449,21 +447,28 @@ def main():
             else:
                 if img_id > 0:
                     if plot_changed_seg_count:
-                        flow = cv2.calcOpticalFlowFarneback(prev_seg_img[_label], seg_img, None, 0.5, 3, 15, 3, 5, 1.2, 0)
+                        flow = cv2.calcOpticalFlowFarneback(prev_seg_img[_label], seg_img, None, 0.5, 3, 15, 3, 5, 1.2,
+                                                            0)
 
-                        # Obtain the flow magnitude and direction angle
-                        mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1])
+                        print('flow: {}'.format(flow.shape))
 
-                        hsvImg = np.zeros_like(seg_img)
-                        hsvImg[..., 1] = 255
+                        # # Obtain the flow magnitude and direction angle
+                        # mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1])
+                        # hsvImg = np.zeros((2160, 3840, 3), dtype=np.uint8)
+                        # hsvImg[..., 1] = 255
+                        # # Update the color image
+                        # hsvImg[..., 0] = 0.5 * ang * 180 / np.pi
+                        # hsvImg[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
+                        # rgbImg = cv2.cvtColor(hsvImg, cv2.COLOR_HSV2BGR)
+                        # rgbImg = resizeAR(rgbImg, width=out_width, height=out_height)
+                        # # Display the resulting frame
+                        # cv2.imshow('dense optical flow', rgbImg)
+                        # k = cv2.waitKey(0)
 
-                        # Update the color image
-                        hsvImg[..., 0] = 0.5 * ang * 180 / np.pi
-                        hsvImg[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX)
-                        rgbImg = cv2.cvtColor(hsvImg, cv2.COLOR_HSV2BGR)
+                        curr_x, curr_y = (prev_x + flow[..., 0]).astype(np.int32), (prev_y + flow[..., 1]).astype(np.int32)
 
-                        # Display the resulting frame
-                        cv2.imshow('dense optical flow', np.hstack((frame, rgbImg)))
+                        seg_img_flow = seg_img[curr_y, curr_x]
+
                         changed_seg_count[_label].append(np.count_nonzero(np.not_equal(seg_img, prev_seg_img[_label])))
                         seg_count_data_y.append(changed_seg_count[_label])
                         mean_seg_counts[_label] = np.mean(changed_seg_count[_label])
@@ -473,6 +478,7 @@ def main():
                         mean_conc_diff[_label] = np.mean(ice_concentration_diff[_label])
                 else:
                     if plot_changed_seg_count:
+                        prev_x, prev_y = np.meshgrid(range(seg_width), range(seg_height), sparse=False, indexing='xy')
                         changed_seg_count[_label] = []
                     else:
                         ice_concentration_diff[_label] = []
@@ -549,7 +555,7 @@ def main():
 
         end_t = time.time()
         sys.stdout.write('\rDone {:d}/{:d} frames. fps: {}'.format(
-            img_id + 1 - start_id, n_frames, 1.0/(end_t - start_t)))
+            img_id + 1 - start_id, n_frames, 1.0 / (end_t - start_t)))
         sys.stdout.flush()
 
         cv2.imshow('stitched_img', stitched_img)
@@ -600,7 +606,6 @@ def main():
                 conc_diff_data_y.append(_ice_concentration_diff)
                 mean_conc_diff[seg_id] = np.mean(_ice_concentration_diff)
 
-
                 np.savetxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
                            _ice_concentration_diff, fmt='%8.4f', delimiter='\t')
 
@@ -610,7 +615,7 @@ def main():
         else:
             print('mean_conc_diff:')
             for seg_id in mean_conc_diff:
-                print('{}\t{}'.format(seg_id,  mean_conc_diff[seg_id]))
+                print('{}\t{}'.format(seg_id, mean_conc_diff[seg_id]))
 
             # seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
             #
