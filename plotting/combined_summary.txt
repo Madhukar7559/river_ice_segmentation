@@ -1,7 +1,8 @@
-Recall					
-Recall for Anchor and Frazil Ice and Ice+Water					
-model	svm	deeplab	unet	densenet	segnet
-anchor_ice	0.61538	0.74462	0.73752	0.76958	0.8231
-frazil_ice	0.75411	0.87512	0.84271	0.71062	0.68992
-ice+water	0.78121	0.8638	0.85129	0.81421	0.8306
-ice+water(weighted)	0.8493	0.90871	0.88688	0.85023	0.85896
+Precision			
+(d) Frazil Ice Precision			
+n_pixels_per_class	deeplab	unet	densenet
+_2	0.43414	0.53859	0.49303
+_10	0.57515	0.57807	0.53398
+_100	0.62159	0.60537	0.56058
+_1000	0.67498	0.62228	0.59784
+all	0.69708	0.65628	0.65462

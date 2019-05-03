@@ -31,19 +31,19 @@ transparent_bkg = 1;
 transparent_legend = 0;
 vertcal_x_label = 0;
 axes_font_size = 24;
-legend_font_size = 18;
+legend_font_size = 24;
 title_font_size = 30;
-bar_plot = 1;
+bar_plot = 0;
 
-line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
-% line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
+% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
 
 
-line_styles = {'--', '-', '-', '-', '-'};
-% line_styles = {'-', '-', '-', '-'};
+% line_styles = {'--', '-', '-', '-', '-'};
+line_styles = {'-', '-', '-', '-'};
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
