@@ -29,9 +29,9 @@ k=importdata('combined_summary.txt');
 line_width = 3;
 transparent_bkg = 1;
 transparent_legend = 0;
-vertcal_x_label = 1;
-axes_font_size = 18;
-legend_font_size = 18;
+vertcal_x_label = 0;
+axes_font_size = 24;
+legend_font_size = 24;
 title_font_size = 30;
 bar_plot = 0;
 
@@ -39,17 +39,17 @@ markers = {'o', '+', '*', 'x', 'p', 'd'};
 
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
-% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
-line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
+line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+% line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
 % line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
 
 
-% line_styles = {'--', '-', '-', '-', '-'};
+line_styles = {'--', '-', '-', '-', '-'};
 % line_styles = {'-', '-', '-', '-'};
-line_styles = {'-', '-', '--', '--', '--'};
+% line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
 

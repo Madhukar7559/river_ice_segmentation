@@ -1,8 +1,8 @@
 Precision				
-Precision for Anchor and Frazil Ice and Ice+Water				
-model	anchor_ice	frazil_ice	ice+water	ice+water(fw)
-svm	0.43318	0.63066	0.65837	0.76844
-deeplab	0.62389	0.77142	0.77245	0.84317
-unet	0.54891	0.71165	0.73194	0.81733
-densenet	0.48978	0.60974	0.67692	0.7749
-segnet	0.52803	0.62604	0.69601	0.78457
+(d) Frazil Ice Precision				
+n_training_images	svm	deeplab	unet	densenet
+_4	0.6243	0.69708	0.65628	0.65462
+_8	0.64132	0.74801	0.68098	0.648
+_16	0.65622	0.72586	0.70894	0.63865
+_24	0.63395	0.73675	0.70867	0.64681
+_32	0.63066	0.77142	0.71165	0.60974

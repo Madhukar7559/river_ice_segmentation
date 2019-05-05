@@ -6,7 +6,10 @@ CUDA_VISIBLE_DEVICES=0 CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-9.0 CUDNN_PATH="/us
 
 python3 ../visDataset.py --images_path=/data/617/images/YUN00001_3600_0_3599_640_640_640_640/images --seg_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_0_3599_640_640_640_640_max_val_acc/raw --save_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_0_3599_640_640_640_640_max_val_acc/vis --n_classes=3 --start_id=0 --end_id=-1
 
-python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_0_3599_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_3600_max_val_acc/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=0 img_ext=png out_ext=mkv width=1920 height=1080
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_0_3599_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_3600_max_val_acc patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=1 method=1 normalize_patches=0 out_ext=mkv width=1920 height=1080
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_0_3599_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_15_640_640_64_256_rot_15_345_4_flip/YUN00001_3600_max_val_acc patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=mkv width=1920 height=1080
+
 
 # 20160122_YUN00002_700_2500
 
