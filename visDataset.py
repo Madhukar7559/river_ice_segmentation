@@ -269,9 +269,11 @@ for img_id in range(start_id, end_id + 1):
 
                 gt_cl, _ = eval.extract_classes(labels_img_orig)
                 print('gt_cl: {}'.format(gt_cl))
+                for k in range(n_classes):
+                    if k not in gt_cl:
+                        _fw.insert(k, 0)
 
-                raise ValueError(e)
-
+                fw_sum += _fw
 
         _fw_total = np.sum(_fw)
 
