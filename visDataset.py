@@ -223,15 +223,6 @@ for img_id in range(start_id, end_id + 1):
 
                 raise ValueError(e)
 
-            _fw_total = np.sum(_fw)
-
-            # print('_fw: {}'.format(_fw))
-            # print('_fw_total: {}'.format(_fw_total))
-
-            _fw_frac = np.array(_fw) / float(_fw_total)
-
-            print('_fw_frac: {}'.format(_fw_frac))
-
             mean_acc_ice = np.mean(list(_acc.values())[1:])
             avg_mean_acc_ice += (mean_acc_ice - avg_mean_acc_ice) / (img_id + 1)
             try:
@@ -270,7 +261,18 @@ for img_id in range(start_id, end_id + 1):
                 stitched = np.concatenate((stitched, seg_img), axis=1)
             if not stitch and show_img:
                 cv2.imshow('seg_img', seg_img)
+        else:
+            _, _fw = eval.frequency_weighted_IU(labels_img_orig, labels_img_orig, return_freq=1)
 
+        _fw_total = np.sum(_fw)
+
+        # print('_fw: {}'.format(_fw))
+        # print('_fw_total: {}'.format(_fw_total))
+
+        _fw_frac = np.array(_fw) / float(_fw_total)
+
+        print('_fw_frac: {}'.format(_fw_frac))
+        
     if stitch:
         if save_stitched:
             seg_save_path = os.path.join(save_path, '{}.{}'.format(img_fname_no_ext, out_ext))
