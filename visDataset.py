@@ -272,7 +272,7 @@ for img_id in range(start_id, end_id + 1):
         _fw_frac = np.array(_fw) / float(_fw_total)
 
         print('_fw_frac: {}'.format(_fw_frac))
-        
+
     if stitch:
         if save_stitched:
             seg_save_path = os.path.join(save_path, '{}.{}'.format(img_fname_no_ext, out_ext))
@@ -316,8 +316,8 @@ if eval_mode:
         avg_mean_IU_ice, avg_mean_IU_ice_1, avg_mean_IU_ice_2)
     print_and_write(log_txt, log_fname)
 
-    fw_sum_total = np.sum(fw_sum)
-    fw_sum_frac = fw_sum / float(fw_sum_total)
+fw_sum_total = np.sum(fw_sum)
+fw_sum_frac = fw_sum / float(fw_sum_total)
 
-    print('fw_sum_total: {}'.format(fw_sum_total))
-    print('fw_sum_frac: {}'.format(fw_sum_frac))
+print('fw_sum_total: {}'.format(fw_sum_total))
+print('fw_sum_frac: {}'.format(fw_sum_frac))
