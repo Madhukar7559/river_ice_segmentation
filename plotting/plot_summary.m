@@ -29,22 +29,27 @@ k=importdata('combined_summary.txt');
 line_width = 3;
 transparent_bkg = 1;
 transparent_legend = 0;
-vertcal_x_label = 0;
-axes_font_size = 24;
-legend_font_size = 24;
+vertcal_x_label = 1;
+axes_font_size = 18;
+legend_font_size = 18;
 title_font_size = 30;
 bar_plot = 0;
 
-line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+markers = {'o', '+', '*', 'x', 'p', 'd'};
+
+% line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
+
+% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
 % line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
 
 
-line_styles = {'--', '-', '-', '-', '-'};
+% line_styles = {'--', '-', '-', '-', '-'};
 % line_styles = {'-', '-', '-', '-'};
-% line_styles = {'-', '-', '--', '--', '--'};
+line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
 
@@ -129,12 +134,13 @@ else
         plot_datum = plot_data(:, i);
         line_col = line_cols{i};
         line_style = line_styles{i};
+        marker = markers{i};
     %     line_spec = line_specs{i};
         plot(patch_sizes, plot_datum,...
             'Color', col_rgb{strcmp(col_names,line_col)},...
             'LineStyle', line_style,...
-            'LineWidth', line_width);
-    %         'GridAlpha', 1);
+            'LineWidth', line_width,...
+            'Marker', marker);
         hold on
     end
     hold off
@@ -168,7 +174,7 @@ else
     x_label = strtrim(x_label);
     xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
     if vertcal_x_label
-        xticklabel_rotate([],90,[], 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+        xticklabel_rotate([],0,[], 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
     end
     % ylim([0.60, 0.90]);
     % ylim([0.65, 0.90]);

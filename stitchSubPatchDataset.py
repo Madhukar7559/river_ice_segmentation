@@ -419,3 +419,6 @@ if __name__ == '__main__':
         log_txt += "mean_IU_ice\t mean_IU_ice_1\t mean_IU_ice_2\n{:.5f}\t{:.5f}\t{:.5f}\n".format(
             avg_mean_IU_ice, avg_mean_IU_ice_1, avg_mean_IU_ice_2)
         print_and_write(log_txt, log_fname)
+
+        print_and_write('Saved log to: {}'.format(log_fname), log_fname)
+        print_and_write('Read patch images from: {}'.format(patch_seq_path), log_fname)

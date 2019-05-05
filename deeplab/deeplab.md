@@ -93,6 +93,8 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/deeplab/deeplab.md
       - [vis       @ 4/640](#vis__4640)
       - [no_aug       @ 4/640](#no_aug__4640)
          - [stitched       @ no_aug/4/640](#stitched__no_aug4640)
+      - [no_aug_4_49       @ 4/640](#no_aug449__4640)
+         - [stitched       @ no_aug_4_49/4/640](#stitched__no_aug4494640)
    - [8       @ 640](#8__640)
       - [vis       @ 8/640](#vis__8640)
       - [no_aug       @ 8/640](#no_aug__8640)
@@ -101,6 +103,12 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/deeplab/deeplab.md
       - [vis       @ 16/640](#vis__16640)
       - [no_aug       @ 16/640](#no_aug__16640)
          - [stitched       @ no_aug/16/640](#stitched__no_aug16640)
+   - [16_rt       @ 640](#16_rt__640)
+      - [no_aug       @ 16_rt/640](#no_aug__16_rt640)
+         - [stitched       @ no_aug/16_rt/640](#stitched__no_aug16_rt640)
+   - [16_rt_3       @ 640](#16_rt_3__640)
+      - [no_aug       @ 16_rt_3/640](#no_aug__16_rt_3640)
+         - [stitched       @ no_aug/16_rt_3/640](#stitched__no_aug16_rt_3640)
    - [24       @ 640](#24__640)
       - [vis       @ 24/640](#vis__24640)
       - [no_aug       @ 24/640](#no_aug__24640)
@@ -111,13 +119,13 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/deeplab/deeplab.md
          - [stitched       @ no_aug/32/640](#stitched__no_aug32640)
       - [YUN00001       @ 32/640](#yun00001__32640)
       - [YUN00001_3600       @ 32/640](#yun00001_3600__32640)
-   - [4_-_non_aug       @ 640](#4-non_aug__640)
-      - [sel_2       @ 4_-_non_aug/640](#sel_2__4-non_aug640)
-      - [sel_10       @ 4_-_non_aug/640](#sel_10__4-non_aug640)
-      - [sel_100       @ 4_-_non_aug/640](#sel_100__4-non_aug640)
-      - [sel_1000       @ 4_-_non_aug/640](#sel_1000__4-non_aug640)
-         - [rt       @ sel_1000/4_-_non_aug/640](#rt__sel_10004-non_aug640)
-         - [rt2       @ sel_1000/4_-_non_aug/640](#rt2__sel_10004-non_aug640)
+   - [4__non_aug       @ 640](#4__non_aug__640)
+      - [sel_2       @ 4__non_aug/640](#sel_2__4__non_aug640)
+      - [sel_10       @ 4__non_aug/640](#sel_10__4__non_aug640)
+      - [sel_100       @ 4__non_aug/640](#sel_100__4__non_aug640)
+      - [sel_1000       @ 4__non_aug/640](#sel_1000__4__non_aug640)
+         - [rt       @ sel_1000/4__non_aug/640](#rt__sel_10004__non_aug640)
+         - [rt2       @ sel_1000/4__non_aug/640](#rt2__sel_10004__non_aug640)
 - [800](#800)
    - [build_data       @ 800](#build_data__800)
       - [50       @ build_data/800](#50__build_data800)
@@ -695,6 +703,20 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/ima
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1
 
+<a id="no_aug449__4640"></a>
+### no_aug_4_49       @ 4/640
+
+CUDA_VISIBLE_DEVICES=1 python deeplab_vis.py --logtostderr --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640 --vis_crop_size=640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_4_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_4_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
+
+python3 ../visDataset.py --images_path=/data/617/images/training_4_49_640_640_640_640/images --labels_path=/data/617/images/training_4_49_640_640_640_640/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_4_49_640_640_640_640/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_4_49_640_640_640_640/vis --n_classes=3 --start_id=0 --end_id=-1
+
+<a id="stitched__no_aug4494640"></a>
+#### stitched       @ no_aug_4_49/4/640
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images labels_path=/data/617/images/training_4_49/labels img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_4_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_4_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
+
+python3 ../visDataset.py --images_path=/data/617/images/training_4_49/images --labels_path=/data/617/images/training_4_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_4_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_3/training_4_49/vis --n_classes=3 --start_id=0 --end_id=-1
+
 <a id="8__640"></a>
 ## 8       @ 640
 
@@ -726,6 +748,7 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 
 CUDA_VISIBLE_DEVICES=2 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_15_640_640_64_256_rot_15_345_4_flip --num_clones=1
 
+
 <a id="vis__16640"></a>
 ### vis       @ 16/640
 
@@ -746,6 +769,46 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_6
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png labels_path=/data/617/images/training_32_49/labels
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1
+
+
+<a id="16_rt__640"></a>
+## 16_rt       @ 640
+
+CUDA_VISIBLE_DEVICES=2 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=3 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_15_640_640_64_256_rot_15_345_4_flip --num_clones=1
+
+<a id="no_aug__16_rt640"></a>
+### no_aug       @ 16_rt/640
+
+CUDA_VISIBLE_DEVICES=1 python deeplab_vis.py --logtostderr --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640 --vis_crop_size=640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
+
+python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_640_640/images --labels_path=/data/617/images/training_32_49_640_640_640_640/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt/training_32_49_640_640_640_640/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt/training_32_49_640_640_640_640/vis --n_classes=3 --start_id=0 --end_id=-1
+
+<a id="stitched__no_aug16_rt640"></a>
+#### stitched       @ no_aug/16_rt/640
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png labels_path=/data/617/images/training_32_49/labels
+
+python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1
+
+
+<a id="16_rt_3__640"></a>
+## 16_rt_3       @ 640
+
+CUDA_VISIBLE_DEVICES=2 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=3 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_15_640_640_64_256_rot_15_345_4_flip --num_clones=1
+
+<a id="no_aug__16_rt_3640"></a>
+### no_aug       @ 16_rt_3/640
+
+CUDA_VISIBLE_DEVICES=1 python deeplab_vis.py --logtostderr --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640 --vis_crop_size=640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
+
+python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_640_640/images --labels_path=/data/617/images/training_32_49_640_640_640_640/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3/training_32_49_640_640_640_640/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3/training_32_49_640_640_640_640/vis --n_classes=3 --start_id=0 --end_id=-1
+
+<a id="stitched__no_aug16_rt_3640"></a>
+#### stitched       @ no_aug/16_rt_3/640
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png labels_path=/data/617/images/training_32_49/labels
+
+python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_15_rt_3/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1
 
 <a id="24__640"></a>
 ## 24       @ 640
@@ -813,36 +876,36 @@ CUDA_VISIBLE_DEVICES=0 python deeplab_vis.py --logtostderr --model_variant="xcep
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/YUN00001_3600/images patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600_0_3599_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_0_31/YUN00001_3600 patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=jpg out_ext=mkv width=1920 height=1080
 
-<a id="4-non_aug__640"></a>
-## 4_-_non_aug       @ 640
+<a id="4__non_aug__640"></a>
+## 4__non_aug       @ 640
 
-<a id="sel_2__4-non_aug640"></a>
-### sel_2       @ 4_-_non_aug/640
+<a id="sel_2__4__non_aug640"></a>
+### sel_2       @ 4__non_aug/640
 
 CUDA_VISIBLE_DEVICES=0 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_2 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_3_640_640_640_640_sel_2 --num_clones=1
 
-<a id="sel_10__4-non_aug640"></a>
-### sel_10       @ 4_-_non_aug/640
+<a id="sel_10__4__non_aug640"></a>
+### sel_10       @ 4__non_aug/640
 
 CUDA_VISIBLE_DEVICES=0 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_10 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_3_640_640_640_640_sel_10 --num_clones=1
 
-<a id="sel_100__4-non_aug640"></a>
-### sel_100       @ 4_-_non_aug/640
+<a id="sel_100__4__non_aug640"></a>
+### sel_100       @ 4__non_aug/640
 
 CUDA_VISIBLE_DEVICES=0 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_100 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_3_640_640_640_640_sel_100 --num_clones=1
 
-<a id="sel_1000__4-non_aug640"></a>
-### sel_1000       @ 4_-_non_aug/640
+<a id="sel_1000__4__non_aug640"></a>
+### sel_1000       @ 4__non_aug/640
 
 CUDA_VISIBLE_DEVICES=0 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_1000 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_3_640_640_640_640_sel_1000 --num_clones=1
 
-<a id="rt__sel_10004-non_aug640"></a>
-#### rt       @ sel_1000/4_-_non_aug/640
+<a id="rt__sel_10004__non_aug640"></a>
+#### rt       @ sel_1000/4__non_aug/640
 
 CUDA_VISIBLE_DEVICES=0 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_1000_rt --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_3_640_640_640_640_sel_1000 --num_clones=1
 
-<a id="rt2__sel_10004-non_aug640"></a>
-#### rt2       @ sel_1000/4_-_non_aug/640
+<a id="rt2__sel_10004__non_aug640"></a>
+#### rt2       @ sel_1000/4__non_aug/640
 
 CUDA_VISIBLE_DEVICES=0 python deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="xception_65" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size=640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/xception/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/xception_training_0_3_640_640_640_640_sel_1000_rt2 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_3_640_640_640_640_sel_1000 --num_clones=1
 
