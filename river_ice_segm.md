@@ -53,7 +53,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
    - [1920x1080       @ videoToImgSeq](#1920x1080__videotoimgseq)
    - [4k       @ videoToImgSeq](#4k__videotoimgseq)
       - [YUN00001_3600       @ 4k/videoToImgSeq](#yun00001_3600__4kvideotoimgseq)
-      - [YUN00001_3600_-_win       @ 4k/videoToImgSeq](#yun00001_3600-win__4kvideotoimgseq)
+      - [YUN00001_3600__win       @ 4k/videoToImgSeq](#yun00001_3600__win__4kvideotoimgseq)
       - [20160121_YUN00002_2000       @ 4k/videoToImgSeq](#20160121_yun00002_2000__4kvideotoimgseq)
       - [20161201_YUN00002_1800       @ 4k/videoToImgSeq](#20161201_yun00002_1800__4kvideotoimgseq)
       - [20160122_YUN00002_700_2500       @ 4k/videoToImgSeq](#20160122_yun00002_700_2500__4kvideotoimgseq)
@@ -100,20 +100,25 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
 - [640](#640)
    - [64/256       @ 640](#64256__640)
    - [non_aug       @ 640](#non_aug__640)
-      - [0_-_3       @ non_aug/640](#0-3__non_aug640)
-         - [sel-2       @ 0_-_3/non_aug/640](#sel-2__0-3non_aug640)
-         - [sel-10       @ 0_-_3/non_aug/640](#sel-10__0-3non_aug640)
-         - [sel-100       @ 0_-_3/non_aug/640](#sel-100__0-3non_aug640)
-         - [sel-1000       @ 0_-_3/non_aug/640](#sel-1000__0-3non_aug640)
-         - [sel-5000       @ 0_-_3/non_aug/640](#sel-5000__0-3non_aug640)
+      - [0__3       @ non_aug/640](#0__3__non_aug640)
+         - [sel-2       @ 0__3/non_aug/640](#sel-2__0__3non_aug640)
+         - [sel-10       @ 0__3/non_aug/640](#sel-10__0__3non_aug640)
+         - [sel-100       @ 0__3/non_aug/640](#sel-100__0__3non_aug640)
+         - [sel-1000       @ 0__3/non_aug/640](#sel-1000__0__3non_aug640)
+         - [sel-5000       @ 0__3/non_aug/640](#sel-5000__0__3non_aug640)
       - [32_-49       @ non_aug/640](#32_-49__non_aug640)
-      - [0_-_49       @ non_aug/640](#0-49__non_aug640)
-      - [4_-_49       @ non_aug/640](#4-49__non_aug640)
+      - [0__49       @ non_aug/640](#0__49__non_aug640)
+      - [4__49       @ non_aug/640](#4__49__non_aug640)
       - [entire_image       @ non_aug/640](#entire_image__non_aug640)
+         - [0-3       @ entire_image/non_aug/640](#0-3__entire_imagenon_aug640)
+         - [0-7       @ entire_image/non_aug/640](#0-7__entire_imagenon_aug640)
+         - [0-15       @ entire_image/non_aug/640](#0-15__entire_imagenon_aug640)
+         - [0-23       @ entire_image/non_aug/640](#0-23__entire_imagenon_aug640)
+         - [0-31       @ entire_image/non_aug/640](#0-31__entire_imagenon_aug640)
          - [32-49       @ entire_image/non_aug/640](#32-49__entire_imagenon_aug640)
          - [4-49       @ entire_image/non_aug/640](#4-49__entire_imagenon_aug640)
       - [ablation       @ non_aug/640](#ablation__non_aug640)
-         - [0_-_3       @ ablation/non_aug/640](#0-3__ablationnon_aug640)
+         - [0__3       @ ablation/non_aug/640](#0__3__ablationnon_aug640)
          - [sel-2       @ ablation/non_aug/640](#sel-2__ablationnon_aug640)
          - [sel-2       @ ablation/non_aug/640](#sel-2__ablationnon_aug640-1)
          - [sel-10       @ ablation/non_aug/640](#sel-10__ablationnon_aug640)
@@ -128,10 +133,10 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
 - [800](#800)
    - [80/320       @ 800](#80320__800)
    - [non_aug       @ 800](#non_aug__800)
-      - [0_-_3       @ non_aug/800](#0-3__non_aug800)
-      - [32_-_49       @ non_aug/800](#32-49__non_aug800)
-      - [0_-_49       @ non_aug/800](#0-49__non_aug800)
-      - [4_-_49       @ non_aug/800](#4-49__non_aug800)
+      - [0__3       @ non_aug/800](#0__3__non_aug800)
+      - [32__49       @ non_aug/800](#32__49__non_aug800)
+      - [0__49       @ non_aug/800](#0__49__non_aug800)
+      - [4__49       @ non_aug/800](#4__49__non_aug800)
       - [entire_image       @ non_aug/800](#entire_image__non_aug800)
          - [32-49       @ entire_image/non_aug/800](#32-49__entire_imagenon_aug800)
          - [4-49       @ entire_image/non_aug/800](#4-49__entire_imagenon_aug800)
@@ -431,8 +436,8 @@ python3 videoToImgSeq.py db_root_dir=/data/617/videos actor=20160121 seq_name=YU
 
 python3 videoToImgSeq.py db_root_dir=/data/617/videos actor=20160121 seq_name=YUN00001 vid_fmt=mp4 n_frames=3600 resize_factor=1 dst_dir=/data/617/images/YUN00001_3600/images
 
-<a id="yun00001_3600-win__4kvideotoimgseq"></a>
-### YUN00001_3600_-_win       @ 4k/videoToImgSeq
+<a id="yun00001_3600__win__4kvideotoimgseq"></a>
+### YUN00001_3600__win       @ 4k/videoToImgSeq
 
 python3 videoToImgSeq.py db_root_dir=E:\Datasets\617\videos actor=20160121 seq_name=YUN00001 vid_fmt=mp4 n_frames=3600 resize_factor=1 dst_dir=E:\Datasets\617\images\YUN00001_3600\images
 
@@ -748,33 +753,33 @@ python3 subPatchBatch.py db_root_dir=/data/617/images seq_name=training patch_he
 <a id="non_aug__640"></a>
 ## non_aug       @ 640
 
-<a id="0-3__non_aug640"></a>
-### 0_-_3       @ non_aug/640
+<a id="0__3__non_aug640"></a>
+### 0__3       @ non_aug/640
 
 python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=640 patch_width=640 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=0 end_id=3 img_ext=tif
 
-<a id="sel-2__0-3non_aug640"></a>
-#### sel-2       @ 0_-_3/non_aug/640
+<a id="sel-2__0__3non_aug640"></a>
+#### sel-2       @ 0__3/non_aug/640
 
 python3 selectiveDataset.py db_root_dir=/data/617/images src_dir=training_0_3_640_640_640_640 n_indices=2
 
-<a id="sel-10__0-3non_aug640"></a>
-#### sel-10       @ 0_-_3/non_aug/640
+<a id="sel-10__0__3non_aug640"></a>
+#### sel-10       @ 0__3/non_aug/640
 
 python3 selectiveDataset.py db_root_dir=/data/617/images src_dir=training_0_3_640_640_640_640 n_indices=10
 
-<a id="sel-100__0-3non_aug640"></a>
-#### sel-100       @ 0_-_3/non_aug/640
+<a id="sel-100__0__3non_aug640"></a>
+#### sel-100       @ 0__3/non_aug/640
 
 python3 selectiveDataset.py db_root_dir=/data/617/images src_dir=training_0_3_640_640_640_640 n_indices=100
 
-<a id="sel-1000__0-3non_aug640"></a>
-#### sel-1000       @ 0_-_3/non_aug/640
+<a id="sel-1000__0__3non_aug640"></a>
+#### sel-1000       @ 0__3/non_aug/640
 
 python3 selectiveDataset.py db_root_dir=/data/617/images src_dir=training_0_3_640_640_640_640 n_indices=1000
 
-<a id="sel-5000__0-3non_aug640"></a>
-#### sel-5000       @ 0_-_3/non_aug/640
+<a id="sel-5000__0__3non_aug640"></a>
+#### sel-5000       @ 0__3/non_aug/640
 
 python3 selectiveDataset.py db_root_dir=/data/617/images src_dir=training_0_3_640_640_640_640 n_indices=5000
 
@@ -783,18 +788,43 @@ python3 selectiveDataset.py db_root_dir=/data/617/images src_dir=training_0_3_64
 
 python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=640 patch_width=640 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=32 end_id=49 img_ext=tif
 
-<a id="0-49__non_aug640"></a>
-### 0_-_49       @ non_aug/640
+<a id="0__49__non_aug640"></a>
+### 0__49       @ non_aug/640
 
 python3 subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=640 patch_width=640 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=0 end_id=49 img_ext=tif
 
-<a id="4-49__non_aug640"></a>
-### 4_-_49       @ non_aug/640
+<a id="4__49__non_aug640"></a>
+### 4__49       @ non_aug/640
 
 python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=640 patch_width=640 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=4 end_id=49 img_ext=tif
 
 <a id="entire_image__non_aug640"></a>
 ### entire_image       @ non_aug/640
+
+<a id="0-3__entire_imagenon_aug640"></a>
+#### 0-3       @ entire_image/non_aug/640
+
+python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=0 patch_width=0 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=0 end_id=3 img_ext=tif
+
+<a id="0-7__entire_imagenon_aug640"></a>
+#### 0-7       @ entire_image/non_aug/640
+
+python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=0 patch_width=0 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=0 end_id=7 img_ext=tif
+
+<a id="0-15__entire_imagenon_aug640"></a>
+#### 0-15       @ entire_image/non_aug/640
+
+python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=0 patch_width=0 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=0 end_id=15 img_ext=tif
+
+<a id="0-23__entire_imagenon_aug640"></a>
+#### 0-23       @ entire_image/non_aug/640
+
+python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=0 patch_width=0 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=0 end_id=23 img_ext=tif
+
+<a id="0-31__entire_imagenon_aug640"></a>
+#### 0-31       @ entire_image/non_aug/640
+
+python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=0 patch_width=0 min_stride=640 max_stride=640 enable_rot=0 enable_flip=0 start_id=0 end_id=31 img_ext=tif
 
 <a id="32-49__entire_imagenon_aug640"></a>
 #### 32-49       @ entire_image/non_aug/640
@@ -809,8 +839,8 @@ python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training pat
 <a id="ablation__non_aug640"></a>
 ### ablation       @ non_aug/640
 
-<a id="0-3__ablationnon_aug640"></a>
-#### 0_-_3       @ ablation/non_aug/640
+<a id="0__3__ablationnon_aug640"></a>
+#### 0__3       @ ablation/non_aug/640
 
 python3 subPatchBatch.py db_root_dir=/data/617/images seq_name=training patch_height=640 patch_width=640 min_stride=64 max_stride=256 min_rot=15 max_rot=345 n_rot=4 enable_flip=1 start_id=0 end_id=3
 
@@ -920,23 +950,23 @@ python3 subPatchBatch.py db_root_dir=/data/617/images seq_name=training patch_he
 <a id="non_aug__800"></a>
 ## non_aug       @ 800
 
-<a id="0-3__non_aug800"></a>
-### 0_-_3       @ non_aug/800
+<a id="0__3__non_aug800"></a>
+### 0__3       @ non_aug/800
 
 python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=800 patch_width=800 min_stride=800 max_stride=800 enable_rot=0 enable_flip=0 start_id=0 end_id=3 img_ext=tif
 
-<a id="32-49__non_aug800"></a>
-### 32_-_49       @ non_aug/800
+<a id="32__49__non_aug800"></a>
+### 32__49       @ non_aug/800
 
 python3 subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=800 patch_width=800 min_stride=800 max_stride=800 enable_rot=0 enable_flip=0 start_id=32 end_id=49 img_ext=tif
 
-<a id="0-49__non_aug800"></a>
-### 0_-_49       @ non_aug/800
+<a id="0__49__non_aug800"></a>
+### 0__49       @ non_aug/800
 
 python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=800 patch_width=800 min_stride=800 max_stride=800 enable_rot=0 enable_flip=0 start_id=0 end_id=49 img_ext=tif
 
-<a id="4-49__non_aug800"></a>
-### 4_-_49       @ non_aug/800
+<a id="4__49__non_aug800"></a>
+### 4__49       @ non_aug/800
 
 python3 ../subPatchDataset.py db_root_dir=/data/617/images seq_name=training patch_height=800 patch_width=800 min_stride=800 max_stride=800 enable_rot=0 enable_flip=0 start_id=4 end_id=49 img_ext=tif
 
