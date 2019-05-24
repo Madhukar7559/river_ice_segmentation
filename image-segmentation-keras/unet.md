@@ -29,6 +29,7 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/image-segmentation-
    - [4__non_aug       @ 640](#4__non_aug__640)
    - [4       @ 640](#4__640)
       - [evaluation       @ 4/640](#evaluation__4640)
+      - [4_49       @ 4/640](#4_49__4640)
       - [no_aug       @ 4/640](#no_aug__4640)
          - [stitched       @ no_aug/4/640](#stitched__no_aug4640)
       - [no_aug__4_49       @ 4/640](#no_aug_449__4640)
@@ -116,88 +117,6 @@ KERAS_BACKEND=theano THEANO_FLAGS=device=gpu,floatX=float32  python  img_keras_t
 
 KERAS_BACKEND=theano THEANO_FLAGS<!-- MarkdownTOC -->
 
-- [evaluation       @ 256](#evaluation__256)
-   - [vis       @ evaluation/256](#vis__evaluation256)
-   - [hml       @ evaluation/256](#hml__evaluation256)
-- [vis       @ 256](#vis__256)
-      - [hml       @ vis/256](#hml__vis256)
-- [validation       @ 256](#validation__256)
-- [videos       @ 256](#videos__256)
-- [new       @ 256](#new__256)
-- [384](#384)
-- [evaluation       @ 384](#evaluation__384)
-   - [vis       @ evaluation/384](#vis__evaluation384)
-   - [hml       @ evaluation/384](#hml__evaluation384)
-- [validation       @ 384](#validation__384)
-- [videos       @ 384](#videos__384)
-- [512](#512)
-- [evaluation       @ 512](#evaluation__512)
-   - [hml       @ evaluation/512](#hml__evaluation512)
-- [vis       @ 512](#vis__512)
-      - [hml       @ vis/512](#hml__vis512)
-- [validation       @ 512](#validation__512)
-      - [stitching       @ validation/512](#stitching__validation512)
-- [videos       @ 512](#videos__512)
-- [640](#640)
-- [4__non_aug       @ 640](#4-non_aug__640)
-- [4       @ 640](#4__640)
-   - [evaluation       @ 4/640](#evaluation__4640)
-   - [no_aug       @ 4/640](#no_aug__4640)
-      - [stitched       @ no_aug/4/640](#stitched__no_aug4640)
-   - [no_aug__4_49       @ 4/640](#no_aug-4_49__4640)
-- [8       @ 640](#8__640)
-   - [evaluation       @ 8/640](#evaluation__8640)
-   - [no_aug       @ 8/640](#no_aug__8640)
-      - [stitched       @ no_aug/8/640](#stitched__no_aug8640)
-- [16       @ 640](#16__ 640)
-   - [continue_133       @ 16/640](#continue_133__16640)
-   - [continue_latest       @ 16/640](#continue_latest__16640)
-   - [evaluation       @ 16/640](#evaluation__16640)
-   - [no_aug       @ 16/640](#no_aug__16640)
-      - [stitched       @ no_aug/16/640](#stitched__no_aug16640)
-- [24       @ 640](#24__640)
-   - [continue_171       @ 24/640](#continue_171__24640)
-   - [continue_latest       @ 24/640](#continue_latest__24640)
-   - [evaluation       @ 24/640](#evaluation__24640)
-   - [no_aug       @ 24/640](#no_aug__24640)
-      - [stitched       @ no_aug/24/640](#stitched__no_aug24640)
-- [32       @ 640](#32__640)
-   - [evaluation       @ 32/640](#evaluation__32640)
-   - [vis       @ 32/640](#vis__32640)
-   - [no_aug       @ 32/640](#no_aug__32640)
-      - [stitched       @ no_aug/32/640](#stitched__no_aug32640)
-   - [validation       @ 32/640](#validation__32640)
-   - [stitching       @ 32/640](#stitching__32640)
-   - [YUN00001       @ 32/640](#yun00001__32640)
-   - [YUN00001_3600       @ 32/640](#yun00001_3600__32640)
-- [640_selective](#640__selective)
-- [4__non_aug       @ 640__selective](#4-non_aug__640-selective)
-   - [2       @ 4__non_aug/640__selective](#2__4-non_aug640-selective)
-   - [2__0_14       @ 4__non_aug/640__selective](#2-0_14__4-non_aug640-selective)
-   - [10       @ 4__non_aug/640__selective](#10__4-non_aug640-selective)
-   - [10__rt3       @ 4__non_aug/640__selective](#10-rt3__4-non_aug640-selective)
-   - [10__0_14       @ 4__non_aug/640__selective](#10-0_14__4-non_aug640-selective)
-   - [100       @ 4__non_aug/640__selective](#100__4-non_aug640-selective)
-   - [100__0_14       @ 4__non_aug/640__selective](#100-0_14__4-non_aug640-selective)
-   - [1000       @ 4__non_aug/640__selective](#1000__4-non_aug640-selective)
-   - [1000__0_14       @ 4__non_aug/640__selective](#1000-0_14__4-non_aug640-selective)
-- [4       @ 640__selective](#4__640-selective)
-   - [2       @ 4/640__selective](#2__4640-selective)
-   - [5       @ 4/640__selective](#5__4640-selective)
-   - [10       @ 4/640__selective](#10__4640-selective)
-      - [rt       @ 10/4/640__selective](#rt__104640-selective)
-   - [100       @ 4/640__selective](#100__4640-selective)
-   - [vis       @ 4/640__selective](#vis__4640-selective)
-   - [no_aug       @ 4/640__selective](#no_aug__4640-selective)
-      - [stitched       @ no_aug/4/640__selective](#stitched__no_aug4640-selective)
-   - [1K       @ 4/640__selective](#1k__4640-selective)
-   - [5K       @ 4/640__selective](#5k__4640-selective)
-- [16       @ 640__selective](#16__640-selective)
-   - [100       @ 16/640__selective](#100__16640-selective)
-- [32       @ 640__selective](#32__640-selective)
-   - [100       @ 32/640__selective](#100__32640-selective)
-
-<!-- /MarkdownTOC -->
 ="device=cuda0,floatX=float32,dnn.include_path=/usr/local/cuda-9.0/include,dnn.library_path=/usr/local/cuda-9.0/lib64/"  python  img_keras_train.py --save_weights_path=weights/vgg_unet2_256_25_100_rot_15_90_flip --train_images="/data/617/images/training_256_256_25_100_rot_15_90_flip/images/" --train_annotations="/data/617/images/training_256_256_25_100_rot_15_90_flip/labels/" --val_images="/data/617/images/training_256_256_100_200_rot_90_180_flip/images/" --val_annotations="/data/617/images/training_256_256_100_200_rot_90_180_flip/labels/" --n_classes=3 --input_height=256 --input_width=256 --model_name="vgg_unet2" --epochs=1000
 
 KERAS_BACKEND=theano THEANO_FLAGS="device=cuda0,floatX=float32,dnn.include_path=/usr/local/cuda-9.0/cuda/include,dnn.library_path=/usr/local/cuda-9.0/lib64/"  python  img_keras_train.py --save_weights_path=weights/fcn32_256_25_100_rot_15_90_flip --train_images="/data/617/images/training_256_256_25_100_rot_15_90_flip/images/" --train_annotations="/data/617/images/training_256_256_25_100_rot_15_90_flip/labels/" --val_images="/data/617/images/training_256_256_100_200_rot_90_180_flip/images/" --val_annotations="/data/617/images/training_256_256_100_200_rot_90_180_flip/labels/" --n_classes=3 --input_height=256 --input_width=256 --model_name="fcn32" --epochs=1000  
@@ -395,13 +314,20 @@ CUDA_VISIBLE_DEVICES=1 CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-9.0 CUDNN_PATH="/us
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images --labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels --seg_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_64_256_rot_15_345_4_flip_max_val_acc/raw --save_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_64_256_rot_15_345_4_flip_max_val_acc/vis --n_classes=3 --start_id=0 --end_id=-1
 
+<a id="4_49__4640"></a>
+### 4_49       @ 4/640
+
+CUDA_VISIBLE_DEVICES=1 CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-9.0 CUDNN_PATH="/usr/local/cuda-9.0/lib64/libcudnn.so.7" KERAS_BACKEND=theano THEANO_FLAGS="device=cuda0,floatX=float32,dnn.include_path=/usr/local/cuda-9.0/include,dnn.library_path=/usr/local/cuda-9.0/lib64/" python img_keras_predict.py --save_weights_path=weights/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/weights_max_val_acc --test_images="/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images/" --output_path="log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_64_256_rot_15_345_4_flip_max_val_acc/" --n_classes=3 --input_height=640 --input_width=640 --model_name="vgg_unet2" 
+
+python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/images --labels_path=/data/617/images/training_32_49_640_640_64_256_rot_15_345_4_flip/labels --seg_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_64_256_rot_15_345_4_flip_max_val_acc/raw --save_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_64_256_rot_15_345_4_flip_max_val_acc/vis --n_classes=3 --start_id=0 --end_id=-1
+
 
 <a id="no_aug__4640"></a>
 ### no_aug       @ 4/640
 
-CUDA_VISIBLE_DEVICES=1 CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-9.0 CUDNN_PATH="/usr/local/cuda-9.0/lib64/libcudnn.so.7" KERAS_BACKEND=theano THEANO_FLAGS="device=cuda0,floatX=float32,dnn.include_path=/usr/local/cuda-9.0/include,dnn.library_path=/usr/local/cuda-9.0/lib64/" python img_keras_predict.py --save_weights_path=weights/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/weights_max_val_acc --test_images="/data/617/images/training_32_49_640_640_640_640/images/" --output_path="log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_640_640_max_val_acc/" --n_classes=3 --input_height=640 --input_width=640 --model_name="vgg_unet2" 
+CUDA_VISIBLE_DEVICES=1 CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-9.0 CUDNN_PATH="/usr/local/cuda-9.0/lib64/libcudnn.so.7" KERAS_BACKEND=theano THEANO_FLAGS="device=cuda0,floatX=float32,dnn.include_path=/usr/local/cuda-9.0/include,dnn.library_path=/usr/local/cuda-9.0/lib64/" python img_keras_predict.py --save_weights_path=weights/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/weights_max_val_acc --test_images="/data/617/images/training_4_49_640_640_640_640/images/" --output_path="log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_4_49_640_640_640_640_max_val_acc/" --n_classes=3 --input_height=640 --input_width=640 --model_name="vgg_unet2" 
 
-python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_640_640/images --labels_path=/data/617/images/training_32_49_640_640_640_640/labels --seg_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_640_640_max_val_acc/raw --save_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_640_640_max_val_acc/vis --n_classes=3 --start_id=0 --end_id=-1
+python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_640_640/images --labels_path=/data/617/images/training_4_49_640_640_640_640/labels --seg_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_640_640_max_val_acc/raw --save_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_4_49_640_640_640_640_max_val_acc/vis --n_classes=3 --start_id=0 --end_id=-1
 
 <a id="stitched__no_aug4640"></a>
 #### stitched       @ no_aug/4/640
@@ -415,7 +341,7 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 
 CUDA_VISIBLE_DEVICES=1 CUDA_TOOLKIT_ROOT_DIR=/usr/local/cuda-9.0 CUDNN_PATH="/usr/local/cuda-9.0/lib64/libcudnn.so.7" KERAS_BACKEND=theano THEANO_FLAGS="device=cuda0,floatX=float32,dnn.include_path=/usr/local/cuda-9.0/include,dnn.library_path=/usr/local/cuda-9.0/lib64/" python img_keras_predict.py --save_weights_path=weights/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/weights_max_val_acc --test_images="/data/617/images/training_4_49_640_640_640_640/images/" --output_path="log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_32_49_640_640_640_640_max_val_acc/" --n_classes=3 --input_height=640 --input_width=640 --model_name="vgg_unet2" 
 
-python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images img_ext=jpg  patch_seq_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_4_49_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_4_49_max_val_acc/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images labels_path=/data/617/images/training_4_49/labels img_ext=jpg  patch_seq_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_4_49_640_640_640_640_max_val_acc/raw stitched_seq_path=log/vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip/training_4_49_max_val_acc/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
 
 
 <a id="8__640"></a>

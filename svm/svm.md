@@ -1,3 +1,7 @@
+# svm_1_4_2
+
+SVM_Predict(5, 32, 2, 1, 4, 'P:\Datasets\617\images\training_4_49', 'img_%d', 'png', 'log\training_4_49');
+
 # svm_1_32_2
 
 ## YUN00001_3600       @ svm_1_32_2

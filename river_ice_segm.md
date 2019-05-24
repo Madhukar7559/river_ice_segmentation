@@ -3,17 +3,29 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
 <!-- MarkdownTOC -->
 
 - [plotIceConcentration](#ploticeconcentration)
-   - [labeled       @ plotIceConcentration](#labeled__ploticeconcentration)
-      - [deeplab       @ labeled/plotIceConcentration](#deeplab__labeledploticeconcentration)
-         - [anchor       @ deeplab/labeled/plotIceConcentration](#anchor__deeplablabeledploticeconcentration)
-         - [frazil       @ deeplab/labeled/plotIceConcentration](#frazil__deeplablabeledploticeconcentration)
-      - [densenet       @ labeled/plotIceConcentration](#densenet__labeledploticeconcentration)
-         - [anchor       @ densenet/labeled/plotIceConcentration](#anchor__densenetlabeledploticeconcentration)
-         - [frazil       @ densenet/labeled/plotIceConcentration](#frazil__densenetlabeledploticeconcentration)
-      - [svm       @ labeled/plotIceConcentration](#svm__labeledploticeconcentration)
-         - [anchor       @ svm/labeled/plotIceConcentration](#anchor__svmlabeledploticeconcentration)
-         - [frazil       @ svm/labeled/plotIceConcentration](#frazil__svmlabeledploticeconcentration)
-      - [svm_and_deeplab       @ labeled/plotIceConcentration](#svm_and_deeplab__labeledploticeconcentration)
+   - [labeled_32       @ plotIceConcentration](#labeled_32__ploticeconcentration)
+      - [deeplab       @ labeled_32/plotIceConcentration](#deeplab__labeled_32ploticeconcentration)
+         - [anchor       @ deeplab/labeled_32/plotIceConcentration](#anchor__deeplablabeled_32ploticeconcentration)
+         - [frazil       @ deeplab/labeled_32/plotIceConcentration](#frazil__deeplablabeled_32ploticeconcentration)
+      - [segnet       @ labeled_32/plotIceConcentration](#segnet__labeled_32ploticeconcentration)
+         - [max_acc       @ segnet/labeled_32/plotIceConcentration](#max_acc__segnetlabeled_32ploticeconcentration)
+      - [unet       @ labeled_32/plotIceConcentration](#unet__labeled_32ploticeconcentration)
+      - [densenet       @ labeled_32/plotIceConcentration](#densenet__labeled_32ploticeconcentration)
+         - [anchor       @ densenet/labeled_32/plotIceConcentration](#anchor__densenetlabeled_32ploticeconcentration)
+         - [frazil       @ densenet/labeled_32/plotIceConcentration](#frazil__densenetlabeled_32ploticeconcentration)
+      - [svm       @ labeled_32/plotIceConcentration](#svm__labeled_32ploticeconcentration)
+         - [anchor       @ svm/labeled_32/plotIceConcentration](#anchor__svmlabeled_32ploticeconcentration)
+         - [frazil       @ svm/labeled_32/plotIceConcentration](#frazil__svmlabeled_32ploticeconcentration)
+      - [svm_deeplab       @ labeled_32/plotIceConcentration](#svm_deeplab__labeled_32ploticeconcentration)
+         - [no_labels       @ svm_deeplab/labeled_32/plotIceConcentration](#no_labels__svm_deeplablabeled_32ploticeconcentration)
+      - [svm_deeplab_densenet       @ labeled_32/plotIceConcentration](#svm_deeplab_densenet__labeled_32ploticeconcentration)
+      - [svm_deeplab_unet_densenet_segnet       @ labeled_32/plotIceConcentration](#svm_deeplab_unet_densenet_segnet__labeled_32ploticeconcentration)
+         - [Combined       @ svm_deeplab_unet_densenet_segnet/labeled_32/plotIceConcentration](#combined__svm_deeplab_unet_densenet_segnetlabeled_32ploticeconcentration)
+         - [anchor       @ svm_deeplab_unet_densenet_segnet/labeled_32/plotIceConcentration](#anchor__svm_deeplab_unet_densenet_segnetlabeled_32ploticeconcentration)
+         - [frazil       @ svm_deeplab_unet_densenet_segnet/labeled_32/plotIceConcentration](#frazil__svm_deeplab_unet_densenet_segnetlabeled_32ploticeconcentration)
+   - [labeled_4       @ plotIceConcentration](#labeled_4__ploticeconcentration)
+      - [svm_deeplab_unet_densenet_segnet       @ labeled_4/plotIceConcentration](#svm_deeplab_unet_densenet_segnet__labeled_4ploticeconcentration)
+         - [Combined       @ svm_deeplab_unet_densenet_segnet/labeled_4/plotIceConcentration](#combined__svm_deeplab_unet_densenet_segnetlabeled_4ploticeconcentration)
    - [video       @ plotIceConcentration](#video__ploticeconcentration)
       - [YUN00001_3600       @ video/plotIceConcentration](#yun00001_3600__videoploticeconcentration)
          - [combined       @ YUN00001_3600/video/plotIceConcentration](#combined__yun00001_3600videoploticeconcentration)
@@ -160,67 +172,119 @@ https://github.com/abhineet123/617_w18_proj_code/blob/master/proj.md
 <a id="ploticeconcentration"></a>
 # plotIceConcentration
 
-<a id="labeled__ploticeconcentration"></a>
-## labeled       @ plotIceConcentration
+<a id="labeled_32__ploticeconcentration"></a>
+## labeled_32       @ plotIceConcentration
 
 python3 plotIceConcentration.py --images_path=/data/617/images/training/images --labels_path=/data/617/images/training/labels --images_ext=tif --labels_ext=tif --n_classes=3
 
-<a id="deeplab__labeledploticeconcentration"></a>
-### deeplab       @ labeled/plotIceConcentration
+<a id="deeplab__labeled_32ploticeconcentration"></a>
+### deeplab       @ labeled_32/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab
 
-<a id="anchor__deeplablabeledploticeconcentration"></a>
-#### anchor       @ deeplab/labeled/plotIceConcentration
+<a id="anchor__deeplablabeled_32ploticeconcentration"></a>
+#### anchor       @ deeplab/labeled_32/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab --ice_type=1
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab --ice_type=1
 
-<a id="frazil__deeplablabeledploticeconcentration"></a>
-#### frazil       @ deeplab/labeled/plotIceConcentration
+<a id="frazil__deeplablabeled_32ploticeconcentration"></a>
+#### frazil       @ deeplab/labeled_32/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab --ice_type=2
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab --ice_type=2
 
-<a id="densenet__labeledploticeconcentration"></a>
-### densenet       @ labeled/plotIceConcentration
+<a id="segnet__labeled_32ploticeconcentration"></a>
+### segnet       @ labeled_32/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet
+<a id="max_acc__segnetlabeled_32ploticeconcentration"></a>
+#### max_acc       @ segnet/labeled_32/plotIceConcentration
 
-<a id="anchor__densenetlabeledploticeconcentration"></a>
-#### anchor       @ densenet/labeled/plotIceConcentration
-
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet --ice_type=1
-
-<a id="frazil__densenetlabeledploticeconcentration"></a>
-#### frazil       @ densenet/labeled/plotIceConcentration
-
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet --ice_type=2
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log\segnet --seg_paths=log_vgg_segnet_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_acc_raw_grs_190524_145647,log_vgg_segnet_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_val_acc_raw_grs_190524_154518,log_vgg_segnet_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_min_loss_raw_grs_190524_154535 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=max_acc,max_val_acc,min_loss
 
 
-<a id="svm__labeledploticeconcentration"></a>
-### svm       @ labeled/plotIceConcentration
+<a id="unet__labeled_32ploticeconcentration"></a>
+### unet       @ labeled_32/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_1 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_1
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=unet\log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_val_acc_grs_190413_102443\raw --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=unet
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2
+<a id="densenet__labeled_32ploticeconcentration"></a>
+### densenet       @ labeled_32/plotIceConcentration
 
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=densenet\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet
 
-<a id="anchor__svmlabeledploticeconcentration"></a>
-#### anchor       @ svm/labeled/plotIceConcentration
+<a id="anchor__densenetlabeled_32ploticeconcentration"></a>
+#### anchor       @ densenet/labeled_32/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=1
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=densenet\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet --ice_type=1
 
-<a id="frazil__svmlabeledploticeconcentration"></a>
-#### frazil       @ svm/labeled/plotIceConcentration
+<a id="frazil__densenetlabeled_32ploticeconcentration"></a>
+#### frazil       @ densenet/labeled_32/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=2
-
-<a id="svm_and_deeplab__labeledploticeconcentration"></a>
-### svm_and_deeplab       @ labeled/plotIceConcentration
-
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\svm\svm_1_32_2,H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=densenet\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=densenet --ice_type=2
 
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --seg_paths=H:\UofA\617\Project\617_proj_code\log\svm\svm_1_32_2,H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
+<a id="svm__labeled_32ploticeconcentration"></a>
+### svm       @ labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_1 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_1
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2
+
+
+<a id="anchor__svmlabeled_32ploticeconcentration"></a>
+#### anchor       @ svm/labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=1
+
+<a id="frazil__svmlabeled_32ploticeconcentration"></a>
+#### frazil       @ svm/labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm_2 --ice_type=2
+
+<a id="svm_deeplab__labeled_32ploticeconcentration"></a>
+### svm_deeplab       @ labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=svm\svm_1_32_2,deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
+
+<a id="no_labels__svm_deeplablabeled_32ploticeconcentration"></a>
+#### no_labels       @ svm_deeplab/labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=svm\svm_1_32_2,deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
+
+<a id="svm_deeplab_densenet__labeled_32ploticeconcentration"></a>
+### svm_deeplab_densenet       @ labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=svm\svm_1_32_2,deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424,densenet\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab,densenet --ice_type=0
+
+<a id="svm_deeplab_unet_densenet_segnet__labeled_32ploticeconcentration"></a>
+### svm_deeplab_unet_densenet_segnet       @ labeled_32/plotIceConcentration
+
+<a id="combined__svm_deeplab_unet_densenet_segnetlabeled_32ploticeconcentration"></a>
+#### Combined       @ svm_deeplab_unet_densenet_segnet/labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=svm\svm_1_32_2,deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424,unet\log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_val_acc_grs_190413_102443\raw,densenet\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638,segnet/log_vgg_segnet_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_acc_raw_grs_190524_145647 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab,unet,densenet,segnet --ice_type=0
+
+<a id="anchor__svm_deeplab_unet_densenet_segnetlabeled_32ploticeconcentration"></a>
+#### anchor       @ svm_deeplab_unet_densenet_segnet/labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=svm\svm_1_32_2,deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424,unet\log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_val_acc_grs_190413_102443\raw,densenet\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638,segnet/log_vgg_segnet_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_acc_raw_grs_190524_145647 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab,unet,densenet,segnet --ice_type=1
+
+<a id="frazil__svm_deeplab_unet_densenet_segnetlabeled_32ploticeconcentration"></a>
+#### frazil       @ svm_deeplab_unet_densenet_segnet/labeled_32/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=svm\svm_1_32_2,deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424,unet\log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_val_acc_grs_190413_102443\raw,densenet\log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_training_32_49_raw_z370_190413_084638,segnet/log_vgg_segnet_0_31_640_640_64_256_rot_15_345_4_flip_training_32_49_max_acc_raw_grs_190524_145647 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab,unet,densenet,segnet --ice_type=2
+
+<a id="labeled_4__ploticeconcentration"></a>
+## labeled_4       @ plotIceConcentration
+
+<a id="svm_deeplab_unet_densenet_segnet__labeled_4ploticeconcentration"></a>
+### svm_deeplab_unet_densenet_segnet       @ labeled_4/plotIceConcentration
+
+<a id="combined__svm_deeplab_unet_densenet_segnetlabeled_4ploticeconcentration"></a>
+#### Combined       @ svm_deeplab_unet_densenet_segnet/labeled_4/plotIceConcentration
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --seg_paths=svm\svm_1_4_2,deeplab\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_3_training_4_49_raw_grs_190524_173504,unet\log_vgg_unet2_0_3_640_640_64_256_rot_15_345_4_flip_training_4_49_max_val_acc_raw_grs_190524_172038\raw,densenet\log_rt2_training_0_3_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_320_4_elu_predict_acc_training_4_49_raw_z370_190524_173744,segnet/log_vgg_segnet_0_3_640_640_64_256_rot_15_345_4_flip_training_4_49_max_acc_raw_grs_190524_173006 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab,unet,densenet,segnet --ice_type=0
+
+
 
 <a id="video__ploticeconcentration"></a>
 ## video       @ plotIceConcentration

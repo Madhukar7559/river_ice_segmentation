@@ -1,10 +1,12 @@
 import argparse, os, sys
 import numpy as np
+import pandas as pd
 from scipy.misc.pilutil import imread, imsave
 from matplotlib import pyplot as plt
 import cv2
 import time
 from pprint import pprint, pformat
+from tabulate import tabulate
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -179,6 +181,8 @@ def main():
     seg_cols_rgb = [col_rgb[seg_col] for seg_col in seg_cols]
 
     ice_type_str = ice_types[ice_type]
+
+    print('ice_type_str: {}'.format(ice_type_str))
 
     src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
                                                         labels_ext)
@@ -471,7 +475,8 @@ def main():
                         # cv2.imshow('dense optical flow', rgbImg)
                         # k = cv2.waitKey(0)
 
-                        curr_x, curr_y = (prev_x + flow[..., 0]).astype(np.int32), (prev_y + flow[..., 1]).astype(np.int32)
+                        curr_x, curr_y = (prev_x + flow[..., 0]).astype(np.int32), (prev_y + flow[..., 1]).astype(
+                            np.int32)
 
                         seg_img_flow = seg_img[curr_y, curr_x]
 
@@ -500,13 +505,20 @@ def main():
             n_test_images = img_id + 1
             mae_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
             print('')
-            print('mae_data_X: {}'.format(pformat(mae_data_X)))
-            print('mae_data_y: {}'.format(pformat(mae_data_y)))
+            # print('mae_data_X:\n {}'.format(pformat(mae_data_X)))
+            # print('mae_data_y:\n {}'.format(pformat(np.array(mae_data_y).transpose())))
 
-            seg_count_img = getPlotImage(mae_data_X, mae_data_y, plot_cols, 'MAE', seg_labels,
-                                         'frame', 'MAE')
-            cv2.imshow('seg_count_img', seg_count_img)
-            conc_diff_img = resizeAR(seg_count_img, seg_width, src_height, bkg_col=255)
+            if img_id == end_id:
+                mae_data_y_arr = np.array(mae_data_y).transpose()
+                print('mae_data_y:\n {}'.format(tabulate(mae_data_y_arr,
+                                                         headers=seg_labels, tablefmt='plain')))
+
+                pd.DataFrame(data=mae_data_y_arr, columns=seg_labels).to_clipboard(excel=True)
+
+            mae_img = getPlotImage(mae_data_X, mae_data_y, plot_cols, 'MAE', seg_labels,
+                                   'frame', 'MAE')
+            cv2.imshow('mae_img', mae_img)
+            conc_diff_img = resizeAR(mae_img, seg_width, src_height, bkg_col=255)
         else:
             if img_id > 0:
                 n_test_images = img_id
@@ -518,8 +530,8 @@ def main():
                     cv2.imshow('seg_count_img', seg_count_img)
                 else:
 
-                    print('seg_count_data_X: {}'.format(pformat(seg_count_data_X)))
-                    print('conc_diff_data_y: {}'.format(pformat(conc_diff_data_y)))
+                    print('seg_count_data_X:\n {}'.format(pformat(seg_count_data_X)))
+                    print('conc_diff_data_y:\n {}'.format(pformat(conc_diff_data_y)))
 
                     conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols,
                                                  'Mean concentration difference between consecutive frames'.format(
@@ -597,7 +609,7 @@ def main():
     if labels_path:
         mean_dists = {}
         mae_data_y = []
-        for _label in dists:
+        for _label in seg_labels:
             _dists = dists[_label]
             mae_data_y.append(_dists['mae'])
             mean_dists[_label] = {k: np.mean(_dists[k]) for k in _dists}
