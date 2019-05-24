@@ -217,7 +217,10 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/im
 <a id="svm_and_deeplab__labeledploticeconcentration"></a>
 ### svm_and_deeplab       @ labeled/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\svm\log\svm_1_32_2,H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_paths=H:\UofA\617\Project\617_proj_code\log\svm\svm_1_32_2,H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
+
+
+python3 plotIceConcentration.py --images_path=/data/617/images/training_32_49/images --seg_paths=H:\UofA\617\Project\617_proj_code\log\svm\svm_1_32_2,H:\UofA\617\Project\617_proj_code\log\log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_training_32_49_raw_z370_190408_200424 --images_ext=png --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=svm,deeplab --ice_type=1
 
 <a id="video__ploticeconcentration"></a>
 ## video       @ plotIceConcentration

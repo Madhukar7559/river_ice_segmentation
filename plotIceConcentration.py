@@ -4,7 +4,7 @@ from scipy.misc.pilutil import imread, imsave
 from matplotlib import pyplot as plt
 import cv2
 import time
-from pprint import pprint
+from pprint import pprint, pformat
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
@@ -284,6 +284,10 @@ def main():
                 dtype=np.float64)
     _pause = 0
 
+    mae_data_y = []
+    for seg_id, _ in enumerate(seg_paths):
+        mae_data_y.append([])
+
     for img_id in range(start_id, end_id + 1):
 
         start_t = time.time()
@@ -377,6 +381,7 @@ def main():
 
         mean_seg_counts = {}
         seg_count_data_y = []
+        curr_mae_data_y = []
 
         mean_conc_diff = {}
         conc_diff_data_y = []
@@ -444,6 +449,7 @@ def main():
                 dists[_label]['mse'].append(mse(gt_dict, seg_dict))
                 dists[_label]['mae'].append(mae(gt_dict, seg_dict))
                 # dists['frobenius'].append(np.linalg.norm(conc_data_y - plot_data_y[0]))
+                curr_mae_data_y.append(dists[_label]['mae'][-1])
             else:
                 if img_id > 0:
                     if plot_changed_seg_count:
@@ -487,24 +493,42 @@ def main():
             prev_conc_data_y[_label] = conc_data_y
 
         # conc_data = np.concatenate([conc_data_x, conc_data_y], axis=1)
+        if labels_path:
+            for i, k in enumerate(curr_mae_data_y):
+                mae_data_y[i].append(k)
 
-        if img_id > 0:
-            n_test_images = img_id
-            seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+            n_test_images = img_id + 1
+            mae_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+            print('')
+            print('mae_data_X: {}'.format(pformat(mae_data_X)))
+            print('mae_data_y: {}'.format(pformat(mae_data_y)))
 
-            if plot_changed_seg_count:
-                seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
-                                             'frame', 'Changed Label Count')
-                cv2.imshow('seg_count_img', seg_count_img)
-            else:
-                conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols,
-                                             'Mean concentration difference between consecutive frames'.format(
-                                                 ice_type_str),
-                                             seg_labels, 'frame', 'Concentration Difference (%)')
-                # cv2.imshow('conc_diff_img', conc_diff_img)
-                conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
+            seg_count_img = getPlotImage(mae_data_X, mae_data_y, plot_cols, 'MAE', seg_labels,
+                                         'frame', 'MAE')
+            cv2.imshow('seg_count_img', seg_count_img)
+            conc_diff_img = resizeAR(seg_count_img, seg_width, src_height, bkg_col=255)
         else:
-            conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
+            if img_id > 0:
+                n_test_images = img_id
+                seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
+
+                if plot_changed_seg_count:
+                    seg_count_img = getPlotImage(seg_count_data_X, seg_count_data_y, plot_cols, 'Count', seg_labels,
+                                                 'frame', 'Changed Label Count')
+                    cv2.imshow('seg_count_img', seg_count_img)
+                else:
+
+                    print('seg_count_data_X: {}'.format(pformat(seg_count_data_X)))
+                    print('conc_diff_data_y: {}'.format(pformat(conc_diff_data_y)))
+
+                    conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols,
+                                                 'Mean concentration difference between consecutive frames'.format(
+                                                     ice_type_str),
+                                                 seg_labels, 'frame', 'Concentration Difference (%)')
+                    # cv2.imshow('conc_diff_img', conc_diff_img)
+                    conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
+            else:
+                conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
 
         plot_labels += seg_labels
         plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols, plot_title, plot_labels,

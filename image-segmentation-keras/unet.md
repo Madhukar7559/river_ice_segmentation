@@ -149,7 +149,7 @@ KERAS_BACKEND=theano THEANO_FLAGS<!-- MarkdownTOC -->
    - [evaluation       @ 8/640](#evaluation__8640)
    - [no_aug       @ 8/640](#no_aug__8640)
       - [stitched       @ no_aug/8/640](#stitched__no_aug8640)
-- [16       @ 640](#16__640)
+- [16       @ 640](#16__ 640)
    - [continue_133       @ 16/640](#continue_133__16640)
    - [continue_latest       @ 16/640](#continue_latest__16640)
    - [evaluation       @ 16/640](#evaluation__16640)
