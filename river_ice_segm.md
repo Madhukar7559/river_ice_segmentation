@@ -300,7 +300,7 @@ python3 plotIceConcentration.py --images_path=/data/617/images/training_4_49/ima
 <a id="combined__yun00001_3600videoploticeconcentration"></a>
 #### combined       @ YUN00001_3600/video/plotIceConcentration
 
-python3 plotIceConcentration.py --images_path=/data/617/images/YUN00001_3600/images --seg_paths=log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_YUN00001_3600_z370_190427_174853,log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_YUN00001_3600_max_val_acc_z370_190427_173056,log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_YUN00001_3600_z370_190427_173049 --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --images_ext=jpg --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab,unet,densenet --seg_cols=blue,forest_green,magenta --ice_type=0 --out_path=log/ice_concentration/YUN00001_3600  --out_size=1920x720 
+python3 plotIceConcentration.py --images_path=/data/617/images/YUN00001_3600/images --seg_paths=log_training_0_31_49_640_640_64_256_rot_15_345_4_flip_xception_0_31_YUN00001_3600_z370_190427_174853,log_vgg_unet2_0_31_640_640_64_256_rot_15_345_4_flip_YUN00001_3600_max_val_acc_z370_190427_173056,log_rt2_training_0_31_800_800_80_320_rot_15_345_4_flip_50_10000_10000_800_0_1586_4_elu_predict_acc_YUN00001_3600_z370_190427_173049 --seg_root_dir=H:\UofA\617\Project\617_proj_code\log --images_ext=jpg --labels_ext=png --seg_ext=png --n_classes=3 --seg_labels=deeplab,unet,densenet --seg_cols=blue,forest_green,magenta --ice_type=0 --out_path=log/ice_concentration/YUN00001_3600  --out_size=1920x720 --enable_plotting=0
 
 <a id="svm__combinedyun00001_3600videoploticeconcentration"></a>
 ##### svm       @ combined/YUN00001_3600/video/plotIceConcentration

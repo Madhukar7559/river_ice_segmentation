@@ -120,6 +120,7 @@ def main():
     parser.add_argument("--normalize_labels", type=int, default=0)
     parser.add_argument("--selective_mode", type=int, default=0)
     parser.add_argument("--ice_type", type=int, default=0, help='0: combined, 1: anchor, 2: frazil')
+    parser.add_argument("--enable_plotting", type=int, default=1, help='enable_plotting')
 
     args = parser.parse_args()
 
@@ -161,6 +162,7 @@ def main():
     plot_changed_seg_count = args.plot_changed_seg_count
 
     load_ice_conc_diff = args.load_ice_conc_diff
+    enable_plotting = args.enable_plotting
 
     ice_types = {
         0: 'Ice',
@@ -543,63 +545,66 @@ def main():
                 conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
 
         plot_labels += seg_labels
-        plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols, plot_title, plot_labels,
-                                plot_x_label, plot_y_label,
-                                legend=0
-                                # ylim=(0, 100)
-                                )
+        if enable_plotting:
+            plot_img = getPlotImage(plot_data_x, plot_data_y, plot_cols, plot_title, plot_labels,
+                                    plot_x_label, plot_y_label,
+                                    legend=0
+                                    # ylim=(0, 100)
+                                    )
 
-        plot_img = resizeAR(plot_img, seg_width, src_height, bkg_col=255)
+            plot_img = resizeAR(plot_img, seg_width, src_height, bkg_col=255)
 
-        # plt.plot(conc_data_x, conc_data_y)
-        # plt.show()
+            # plt.plot(conc_data_x, conc_data_y)
+            # plt.show()
 
-        # conc_data_fname = os.path.join(out_path, img_fname_no_ext + '.txt')
-        # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
-        ann_fmt = (font_id, loc[0], loc[1], size, thickness) + labels_col_rgb + bgr_col
+            # conc_data_fname = os.path.join(out_path, img_fname_no_ext + '.txt')
+            # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
+            ann_fmt = (font_id, loc[0], loc[1], size, thickness) + labels_col_rgb + bgr_col
 
-        putTextWithBackground(src_img, 'frame {}'.format(img_id + 1), fmt=ann_fmt)
+            putTextWithBackground(src_img, 'frame {}'.format(img_id + 1), fmt=ann_fmt)
 
-        if n_seg_paths == 1:
-            print('seg_img_disp: {}'.format(seg_img_disp.shape))
-            print('plot_img: {}'.format(plot_img.shape))
-            stitched_seg_img = np.concatenate((seg_img_disp, plot_img), axis=1)
+            if n_seg_paths == 1:
+                print('seg_img_disp: {}'.format(seg_img_disp.shape))
+                print('plot_img: {}'.format(plot_img.shape))
+                stitched_seg_img = np.concatenate((seg_img_disp, plot_img), axis=1)
 
-            print('stitched_seg_img: {}'.format(stitched_seg_img.shape))
-            print('stitched_img: {}'.format(stitched_img.shape))
-            stitched_img = np.concatenate((stitched_img, stitched_seg_img), axis=0 if labels_path else 1)
-        elif n_seg_paths == 2:
-            stitched_img = np.concatenate((
-                np.concatenate((src_img, conc_diff_img), axis=1),
-                np.concatenate(seg_img_disp_list, axis=1),
-            ), axis=0)
-        elif n_seg_paths == 3:
-            stitched_img = np.concatenate((
-                np.concatenate((src_img, plot_img, conc_diff_img), axis=1),
-                np.concatenate(seg_img_disp_list, axis=1),
-            ), axis=0)
+                print('stitched_seg_img: {}'.format(stitched_seg_img.shape))
+                print('stitched_img: {}'.format(stitched_img.shape))
+                stitched_img = np.concatenate((stitched_img, stitched_seg_img), axis=0 if labels_path else 1)
+            elif n_seg_paths == 2:
+                stitched_img = np.concatenate((
+                    np.concatenate((src_img, conc_diff_img), axis=1),
+                    np.concatenate(seg_img_disp_list, axis=1),
+                ), axis=0)
+            elif n_seg_paths == 3:
+                stitched_img = np.concatenate((
+                    np.concatenate((src_img, plot_img, conc_diff_img), axis=1),
+                    np.concatenate(seg_img_disp_list, axis=1),
+                ), axis=0)
 
-        stitched_img = resizeAR(stitched_img, width=out_width, height=out_height)
+            stitched_img = resizeAR(stitched_img, width=out_width, height=out_height)
 
-        # print('dists: {}'.format(dists))
+            # print('dists: {}'.format(dists))
 
-        if write_to_video:
-            video_out.write(stitched_img)
-        else:
-            stacked_img_path = os.path.join(stitched_seq_path, '{}.{}'.format(img_fname_no_ext, out_ext))
-            cv2.imwrite(stacked_img_path, stitched_img)
+            if write_to_video:
+                video_out.write(stitched_img)
+            else:
+                stacked_img_path = os.path.join(stitched_seq_path, '{}.{}'.format(img_fname_no_ext, out_ext))
+                cv2.imwrite(stacked_img_path, stitched_img)
+
+
+            cv2.imshow('stitched_img', stitched_img)
+            k = cv2.waitKey(1 - _pause)
+            if k == 27:
+                break
+            elif k == 32:
+                _pause = 1 - _pause
 
         end_t = time.time()
+
         sys.stdout.write('\rDone {:d}/{:d} frames. fps: {}'.format(
             img_id + 1 - start_id, n_frames, 1.0 / (end_t - start_t)))
         sys.stdout.flush()
-
-        cv2.imshow('stitched_img', stitched_img)
-        k = cv2.waitKey(1 - _pause)
-        if k == 27:
-            break
-        elif k == 32:
-            _pause = 1 - _pause
 
     print()
 
