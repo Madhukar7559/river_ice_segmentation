@@ -629,6 +629,7 @@ def main():
         seg_count_data_y = []
 
         mean_conc_diff = {}
+        median_conc_diff = {}
         conc_diff_data_y = []
 
         for seg_id in ice_concentration_diff:
@@ -641,6 +642,7 @@ def main():
 
                 conc_diff_data_y.append(_ice_concentration_diff)
                 mean_conc_diff[seg_id] = np.mean(_ice_concentration_diff)
+                median_conc_diff[seg_id] = np.median(_ice_concentration_diff)
 
                 np.savetxt(os.path.join(out_path, '{}_ice_concentration_diff.txt'.format(seg_id)),
                            _ice_concentration_diff, fmt='%8.4f', delimiter='\t')
@@ -652,6 +654,9 @@ def main():
             print('mean_conc_diff:')
             for seg_id in mean_conc_diff:
                 print('{}\t{}'.format(seg_id, mean_conc_diff[seg_id]))
+            print('median_conc_diff:')
+            for seg_id in mean_conc_diff:
+                print('{}\t{}'.format(seg_id, median_conc_diff[seg_id]))
 
             # seg_count_data_X = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
             #
