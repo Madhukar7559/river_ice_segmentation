@@ -261,21 +261,22 @@ def main():
 
     out_seq_name = os.path.basename(out_path)
 
-    if write_to_video:
-        stitched_seq_path = os.path.join(out_path, '{}.{}'.format(out_seq_name, out_ext))
-        print('Writing {}x{} output video to: {}'.format(out_width, out_height, stitched_seq_path))
-        save_dir = os.path.dirname(stitched_seq_path)
+    if enable_plotting:
+        if write_to_video:
+            stitched_seq_path = os.path.join(out_path, '{}.{}'.format(out_seq_name, out_ext))
+            print('Writing {}x{} output video to: {}'.format(out_width, out_height, stitched_seq_path))
+            save_dir = os.path.dirname(stitched_seq_path)
 
-        fourcc = cv2.VideoWriter_fourcc(*codec)
-        video_out = cv2.VideoWriter(stitched_seq_path, fourcc, fps, out_size)
-    else:
-        stitched_seq_path = os.path.join(out_path, out_seq_name)
-        print('Writing {}x{} output images of type {} to: {}'.format(
-            out_width, out_height, out_ext, stitched_seq_path))
-        save_dir = stitched_seq_path
+            fourcc = cv2.VideoWriter_fourcc(*codec)
+            video_out = cv2.VideoWriter(stitched_seq_path, fourcc, fps, out_size)
+        else:
+            stitched_seq_path = os.path.join(out_path, out_seq_name)
+            print('Writing {}x{} output images of type {} to: {}'.format(
+                out_width, out_height, out_ext, stitched_seq_path))
+            save_dir = stitched_seq_path
 
-    if save_dir and not os.path.isdir(save_dir):
-        os.makedirs(save_dir)
+        if save_dir and not os.path.isdir(save_dir):
+            os.makedirs(save_dir)
 
     prev_seg_img = {}
     prev_conc_data_y = {}
@@ -532,8 +533,8 @@ def main():
                     cv2.imshow('seg_count_img', seg_count_img)
                 else:
 
-                    print('seg_count_data_X:\n {}'.format(pformat(seg_count_data_X)))
-                    print('conc_diff_data_y:\n {}'.format(pformat(conc_diff_data_y)))
+                    # print('seg_count_data_X:\n {}'.format(pformat(seg_count_data_X)))
+                    # print('conc_diff_data_y:\n {}'.format(pformat(conc_diff_data_y)))
 
                     conc_diff_img = getPlotImage(seg_count_data_X, conc_diff_data_y, plot_cols,
                                                  'Mean concentration difference between consecutive frames'.format(
@@ -608,7 +609,7 @@ def main():
 
     print()
 
-    if write_to_video:
+    if enable_plotting and write_to_video:
         video_out.release()
 
     if labels_path:
@@ -631,6 +632,7 @@ def main():
         k = cv2.waitKey(0)
     else:
         mean_seg_counts = {}
+        median_seg_counts = {}
         seg_count_data_y = []
 
         mean_conc_diff = {}
@@ -641,6 +643,7 @@ def main():
             if plot_changed_seg_count:
                 seg_count_data_y.append(changed_seg_count[seg_id])
                 mean_seg_counts[seg_id] = np.mean(changed_seg_count[seg_id])
+                median_seg_counts[seg_id] = np.median(changed_seg_count[seg_id])
             else:
                 _ice_concentration_diff = ice_concentration_diff[seg_id]
                 n_test_images = len(_ice_concentration_diff)
@@ -653,8 +656,8 @@ def main():
                            _ice_concentration_diff, fmt='%8.4f', delimiter='\t')
 
         if plot_changed_seg_count:
-            print('mean_seg_counts:')
-            pprint(mean_seg_counts)
+            print('mean_seg_counts:\n{}'.format(pformat(mean_seg_counts)))
+            print('median_seg_counts:\n{}'.format(pformat(median_seg_counts)))
         else:
             print('mean_conc_diff:')
             for seg_id in mean_conc_diff:
