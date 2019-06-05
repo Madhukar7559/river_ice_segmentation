@@ -1,17 +1,17 @@
 This repository provides python and matlab code for all experiments reported in [this paper](https://arxiv.org/abs/1901.04412).
 It contains modified versions of several open source repositories that were used for experimentation though not all of these were reported in the paper.
 These are the reported models and their corresponding folders:
-1. DenseNet: [[densenet]](https://github.com/abhineet123/river_ice_segmentation/tree/master/densenet)   [python/tensorflow]
-2. DeepLab: [[deeplab]](https://github.com/abhineet123/river_ice_segmentation/tree/master/deeplab)  [python/tensorflow]
-3. UNet, SegNet: [[image-segmentation-keras]](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras) [python/keras]
-4. SVM: [[svm]](https://github.com/abhineet123/river_ice_segmentation/tree/master/svm) [matlab]
+1. DenseNet: [[densenet]](densenet)   [python/tensorflow]
+2. DeepLab: [[deeplab]](deeplab)  [python/tensorflow]
+3. UNet, SegNet: [[image-segmentation-keras]](image-segmentation-keras) [python/keras]
+4. SVM: [[svm]](svm) [matlab]
 
-[unet](https://github.com/abhineet123/river_ice_segmentation/tree/master/unet), [tf_unet](https://github.com/abhineet123/river_ice_segmentation/tree/master/tf_unet) and [image-segmentation-keras/deeplab_keras](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras/deeplab_keras) contain other implementations of these models that did not work as well as the above. 
+[unet](unet), [tf_unet](tf_unet) and [image-segmentation-keras/deeplab_keras](image-segmentation-keras/deeplab_keras) contain other implementations of these models that did not work as well as the above. 
 
 Unreported models:
 
-1. FCN: [[image-segmentation-keras]](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras)
-2. Video Segmentation: [[video]](https://github.com/abhineet123/river_ice_segmentation/tree/master/video)
+1. FCN: [[image-segmentation-keras]](image-segmentation-keras)
+2. Video Segmentation: [[video]](video)
 
 
 
