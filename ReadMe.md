@@ -34,8 +34,8 @@ If a command does not work,  the command corresponding to some experiment cannot
 
 All the accompanying data is available here :
 
- [OneDrive](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
- [IEEE DataPort](http://dx.doi.org/10.21227/ebax-1h44)
+ - [OneDrive](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
+ - [IEEE DataPort](http://dx.doi.org/10.21227/ebax-1h44)
 All commands assume that the data is present under _/data/617/_.
 
 
