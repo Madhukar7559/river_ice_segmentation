@@ -12,7 +12,7 @@ Unreported models:
 
 
 The commands for running each model are provided in a .md file in the corresponding folder. For example, commands for UNet are in [image-segmentation-keras/unet.md](https://github.com/abhineet123/river_ice_segmentation/blob/master/image-segmentation-keras/unet.md).
-The commands are organized hierarchically into categories of experiments and there is a table of contents for easy navigation.
+The commands are organized hierarchically into categories of experiments and a table of contents is included for easier navigation.
 
 All the accompanying data is available [here](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
 
