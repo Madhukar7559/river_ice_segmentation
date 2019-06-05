@@ -18,8 +18,8 @@ If a command does not work,  the command corresponding to some experiment cannot
 
 All the accompanying data is available [here](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
 
-The code and data are released under [BSD license](https://opensource.org/licenses/BSD-3-Clause) and is free for research and commercial applications. 
-Also, individual repositories used here have their own licenses that might be more restrictive so please refer to them as well.
+The code and data are released under [BSD license](https://opensource.org/licenses/BSD-3-Clause) and are free for research and commercial applications. 
+Also, individual repositories used here might have their own licenses that might be more restrictive so please refer to them as well.
 
 If you find this work useful, please consider citing [this paper](https://arxiv.org/abs/1901.04412) [[bibtex](http://webdocs.cs.ualberta.ca/~vis/mtf/mtf_iros_bibtex.txt)] [[arxiv version](https://arxiv.org/abs/1602.09130)].
 
