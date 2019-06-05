@@ -18,6 +18,8 @@ The commands are organized hierarchically into categories of experiments and a t
 If a command does not work,  the command corresponding to some experiment cannot be found or the meaning of some command is not clear, please create an issue and we will do our best to address it.
 
 All the accompanying data is available [here](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
+All commands assume that the data is present under __/data/617/__.
+
 
 The code and data are released under [BSD license](https://opensource.org/licenses/BSD-3-Clause) and are free for research and commercial applications. 
 Also, individual repositories used here might have their own licenses that might be more restrictive so please refer to them as well.
