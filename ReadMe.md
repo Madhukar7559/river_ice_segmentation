@@ -25,10 +25,13 @@ Following scripts can be used for data preparation and results generation:
 
 Commands for running these are in [river_ice_segm.md](https://github.com/abhineet123/river_ice_segmentation/blob/master/river_ice_segm.md) as well as in the individual model files.
 
+Some commands might also use general utility scripts available in the [python tracking framework](https://github.com/abhineet123/PTF), e.g. [videoToImgSeq.py](https://github.com/abhineet123/PTF/blob/master/videoToImgSeq.py).
+
 If a command does not work,  the command corresponding to some experiment cannot be found or the meaning of some command is not clear, please create an issue and we will do our best to address it.
 
 All the accompanying data is available [here](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
-All commands assume that the data is present under __/data/617/__.
+All commands assume that the data is present under _/data/617/_.
+
 
 
 The code and data are released under [BSD license](https://opensource.org/licenses/BSD-3-Clause) and are free for research and commercial applications. 
