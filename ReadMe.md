@@ -44,7 +44,7 @@ All commands assume that the data is present under _/data/617/_.
 The code and data are released under [creative commons attribution license](https://creativecommons.org/licenses/by/4.0/) and are free for research and commercial applications. 
 Also, individual repositories used here might have their own licenses that might be more restrictive so please refer to them as well.
 
-If you find this work useful, please consider citing [this paper](https://arxiv.org/abs/1901.04412) [[bibtex](https://github.com/abhineet123/river_ice_segmentation/blob/master/bibtex.txt)].
+If you find this work useful, please consider citing [this paper](https://arxiv.org/abs/1901.04412) [[bibtex](misc/bibtex.txt)].
 
 
 
