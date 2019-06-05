@@ -11,7 +11,7 @@ Unreported models:
 2. Video Segmentation: [video](https://github.com/abhineet123/river_ice_segmentation/tree/master/video)
 
 
- The commands for running each model
+The commands for running each model are provided in a .md file in the corresponding folder. For example, commands for UNet are in [image-segmentation-keras/unet.md](https://github.com/abhineet123/river_ice_segmentation/blob/master/image-segmentation-keras/unet.md)
 
 All the accompanying data is available [here](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
 

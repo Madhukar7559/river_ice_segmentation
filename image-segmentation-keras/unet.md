@@ -1,4 +1,3 @@
-https://github.com/abhineet123/617_w18_proj_code/blob/master/image-segmentation-keras/img_keras.md
 <!-- MarkdownTOC -->
 
 - [640x320 / misc](#640x320__misc)
