@@ -1,4 +1,4 @@
-This repository provides the code for all experiments reported in [this paper](https://arxiv.org/abs/1901.04412).
+This repository provides python and matlab code for all experiments reported in [this paper](https://arxiv.org/abs/1901.04412).
 It contains modified versions of several open source repositories that were used for experimentation though not all of these were reported in the paper.
 These are the reported models and their corresponding folders:
 1. DenseNet: [[densenet]](https://github.com/abhineet123/river_ice_segmentation/tree/master/densenet)   [python/tensorflow]
