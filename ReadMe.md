@@ -4,6 +4,7 @@ These are the reported models and their corresponding folders:
 1. DenseNet: [densenet](https://github.com/abhineet123/river_ice_segmentation/tree/master/densenet)
 2. DeepLab: [deeplab](https://github.com/abhineet123/river_ice_segmentation/tree/master/deeplab)
 3. UNet, SegNet: [image-segmentation-keras](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras)
+4. SVM: [svm](https://github.com/abhineet123/river_ice_segmentation/tree/master/svm)
 
 Unreported models:
 
