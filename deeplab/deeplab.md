@@ -1,4 +1,3 @@
-https://github.com/abhineet123/617_w18_proj_code/blob/master/deeplab/deeplab.md
 <!-- MarkdownTOC -->
 
 - [setup](#setup)
