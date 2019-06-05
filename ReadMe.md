@@ -6,10 +6,13 @@ These are the reported models and their corresponding folders:
 3. UNet, SegNet: [image-segmentation-keras](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras)
 4. SVM: [svm](https://github.com/abhineet123/river_ice_segmentation/tree/master/svm)
 
+[unet](https://github.com/abhineet123/river_ice_segmentation/tree/master/unet), [tf_unet](https://github.com/abhineet123/river_ice_segmentation/tree/master/tf_unet) and [image-segmentation-keras/deeplab_keras](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras/deeplab_keras) contain other implementations of these models that did not work as well as the above. 
+
 Unreported models:
 
 1. FCN: [image-segmentation-keras](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras)
 2. Video Segmentation: [video](https://github.com/abhineet123/river_ice_segmentation/tree/master/video)
+
 
 
 The commands for running each model are provided in a .md file in the corresponding folder. For example, commands for UNet and DenseNet are in [image-segmentation-keras/unet.md](https://github.com/abhineet123/river_ice_segmentation/blob/master/image-segmentation-keras/unet.md) and [densenet/densenet.md](https://github.com/abhineet123/river_ice_segmentation/blob/master/densenet/densenet.md).
