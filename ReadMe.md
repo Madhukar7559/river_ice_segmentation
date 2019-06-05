@@ -1,4 +1,4 @@
-This repository provides the code for all experiments mentioned in [this paper](https://arxiv.org/abs/1901.04412).
+This repository provides the code for all experiments reported in [this paper](https://arxiv.org/abs/1901.04412).
 It contains modified versions of several open source repositories that were used for experimentation though not all of these were reported in the paper.
 These are the reported models and their corresponding folders:
 1. DenseNet: [densenet](https://github.com/abhineet123/river_ice_segmentation/tree/master/densenet)
@@ -17,6 +17,11 @@ The commands are organized hierarchically into categories of experiments and a t
 If a command does not work,  the command corresponding to some experiment cannot be found or the meaning of some command is not clear, please create an issue and we will do our best to address it.
 
 All the accompanying data is available [here](https://ualbertaca-my.sharepoint.com/:f:/g/personal/asingh1_ualberta_ca/EtwQsFI1rCRPm8kE7yv1p8IBCBBBh_vT9RYRIqrfDjXTHQ).
+
+The code and data are released under [BSD license](https://opensource.org/licenses/BSD-3-Clause) and is free for research and commercial applications. 
+If you find it useful, please consider citing [this paper](https://arxiv.org/abs/1901.04412) [[bibtex](http://webdocs.cs.ualberta.ca/~vis/mtf/mtf_iros_bibtex.txt)] [[arxiv version](https://arxiv.org/abs/1602.09130)].
+
+
 
 
 
