@@ -2,7 +2,7 @@ This repository provides the code for all experiments reported in [this paper](h
 It contains modified versions of several open source repositories that were used for experimentation though not all of these were reported in the paper.
 These are the reported models and their corresponding folders:
 1. DenseNet: [[densenet](https://github.com/abhineet123/river_ice_segmentation/tree/master/densenet)   [python/tensorflow]
-2. DeepLab: [[deeplab](https://github.com/abhineet123/river_ice_segmentation/tree/master/deeplab)  [python/tensorflow]
+2. DeepLab: [[deeplab]](https://github.com/abhineet123/river_ice_segmentation/tree/master/deeplab)  [python/tensorflow]
 3. UNet, SegNet: [[image-segmentation-keras](https://github.com/abhineet123/river_ice_segmentation/tree/master/image-segmentation-keras) [python/keras]
 4. SVM: [[svm](https://github.com/abhineet123/river_ice_segmentation/tree/master/svm) [matlab]
 
