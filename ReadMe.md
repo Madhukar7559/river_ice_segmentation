@@ -21,7 +21,7 @@ All the accompanying data is available [here](https://ualbertaca-my.sharepoint.c
 The code and data are released under [BSD license](https://opensource.org/licenses/BSD-3-Clause) and are free for research and commercial applications. 
 Also, individual repositories used here might have their own licenses that might be more restrictive so please refer to them as well.
 
-If you find this work useful, please consider citing [this paper](https://arxiv.org/abs/1901.04412) [[bibtex](http://webdocs.cs.ualberta.ca/~vis/mtf/mtf_iros_bibtex.txt)] [[arxiv version](https://arxiv.org/abs/1602.09130)].
+If you find this work useful, please consider citing [this paper](https://arxiv.org/abs/1901.04412) [[bibtex](https://github.com/abhineet123/river_ice_segmentation/blob/master/bibtex.txt)].
 
 
 
