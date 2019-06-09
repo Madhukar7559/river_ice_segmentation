@@ -23,8 +23,7 @@ y_label = 'acc/IOU';
 
 % plot_title='Recall rates using 5000 video images for training';
 % plot_title='Recall rates on 20K 3-class test set without static images';
-k=importdata('combined_summary.txt');
-% k=importdata('radon.txt');
+
 
 line_width = 3;
 transparent_bkg = 1;
@@ -83,60 +82,95 @@ line_styles = {'--', '-', '-', '-', '-'};
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
 % set(0,'DefaultAxesFontName', 'Times New Roman');
+% k=importdata('radon.txt');
+
 set(0,'DefaultAxesFontSize', axes_font_size);
 set(0,'DefaultAxesFontWeight', 'bold');
+
+rec_prec_mode = 1;
+k=importdata('combined_summary.txt');
 
 if bar_plot
     figure;
     bar(k.data);
 else
-    if isfield(k,'colheaders')
-        n_lines = size(k.data, 2) - 1;
-        plot_data = k.data(:, 2:end);
-        patch_sizes = k.data(:, 1);
-        plot_legend = {k.colheaders{2:end}};
-        x_label='K';
-    else
-        n_lines = size(k.data, 2)
+    if rec_prec_mode
         n_items = size(k.data, 1)
-        plot_data = k.data;
-    %     x_label='Model';
-
-        n_text_lines = size(k.textdata, 2)
-        n_text_items = size(k.textdata, 1)
-        if n_text_items == n_items + 3
-            y_label = k.textdata(1, 1)
-            k.textdata = k.textdata(2:end, :);
-            n_text_items = n_text_items - 1;
+        n_lines = size(k.data, 2) / 2
+        x_data = zeros(n_items, n_lines);
+        y_data = zeros(n_items, n_lines);
+        fileID = fopen('combined_summary.txt','r');
+        plot_title = fscanf(fileID,'%s', 1);
+        plot_legend = cell(n_lines, 1);    
+        for line_id = 1:n_lines        
+            plot_legend{line_id} = fscanf(fileID,'%s', 1);
+            x_data(:, line_id) = k.data(:, 2*line_id-1);
+            y_data(:, line_id) = k.data(:, 2*line_id);
         end
-        if n_text_items == n_items + 2
-            plot_title = k.textdata(1, 1)
-            k.textdata = k.textdata(2:end, :);
-        end
-        x_label = k.textdata(1, 1)
-        plot_legend = {k.textdata{1, 2:end}}
-        xtick_labels = k.textdata(2:end, 1)
-        patch_sizes = 1:n_items;
+        plot_legend
+        fclose(fileID);
+        x_label = k.colheaders(1)
+        y_label = k.colheaders(2)
+        x_ticks = zeros(n_lines, 1);
+        xtick_labels = cell(n_lines, 1);        
+        for item_id = 1:n_items        
+            xtick_labels{item_id} = sprintf('%d', 10*item_id);
+            x_ticks(item_id) = 10*item_id;
+        end   
+        x_ticks
+        xtick_labels
+    else
+        if isfield(k,'colheaders')
+            n_lines = size(k.data, 2) - 1;
+            y_data = k.data(:, 2:end);
+            x_ticks = k.data(:, 1);
+            x_data = repmat(k.data(:, 1),1, n_lines);
+            plot_legend = {k.colheaders{2:end}};
+            x_label='K';
+        else
+            n_lines = size(k.data, 2)
+            n_items = size(k.data, 1)
+            y_data = k.data;
+        %     x_label='Model';
 
-        for j = 1:n_items        
-            if xtick_labels{j}(1)=='_'
-                xtick_labels{j} = xtick_labels{j}(2:end);
+            n_text_lines = size(k.textdata, 2)
+            n_text_items = size(k.textdata, 1)
+            if n_text_items == n_items + 3
+                y_label = k.textdata(1, 1)
+                k.textdata = k.textdata(2:end, :);
+                n_text_items = n_text_items - 1;
             end
+            if n_text_items == n_items + 2
+                plot_title = k.textdata(1, 1)
+                k.textdata = k.textdata(2:end, :);
+            end
+            x_label = k.textdata(1, 1)
+            plot_legend = {k.textdata{1, 2:end}}
+            xtick_labels = k.textdata(2:end, 1)
+            x_ticks = 1:n_items;
+            x_data = repmat((1:n_items)',1, n_lines);
 
+            for j = 1:n_items        
+                if xtick_labels{j}(1)=='_'
+                    xtick_labels{j} = xtick_labels{j}(2:end);
+                end
+            end
         end
-
     end
     figure
-    plot_data
+    y_data
+    x_data
     line_cols
     line_styles
+    n_lines
     for i = 1:n_lines
-        plot_datum = plot_data(:, i);
+        y_datum = y_data(:, i)
+        x_datum = x_data(:, i)
         line_col = line_cols{i};
         line_style = line_styles{i};
         marker = markers{i};
     %     line_spec = line_specs{i};
-        plot(patch_sizes, plot_datum,...
+        plot(x_datum, y_datum,...
             'Color', col_rgb{strcmp(col_names,line_col)},...
             'LineStyle', line_style,...
             'LineWidth', line_width,...
@@ -157,12 +191,12 @@ else
     % set (gca, 'GridLineStyle', '-');
 
     try
-        xticks(patch_sizes);
+        xticks(x_ticks);
         if exist('xtick_labels', 'var')
             xticklabels(xtick_labels);
         end
     catch
-        set(gca, 'XTick', patch_sizes)    
+        set(gca, 'XTick', x_ticks)    
         if exist('xtick_labels', 'var')
             set(gca, 'xticklabel', xtick_labels)
         end
