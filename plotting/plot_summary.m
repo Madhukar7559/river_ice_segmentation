@@ -107,7 +107,7 @@ else
             x_data(:, line_id) = k.data(:, 2*line_id-1);
             y_data(:, line_id) = k.data(:, 2*line_id);
         end
-        plot_legend
+        % plot_legend
         fclose(fileID);
         x_label = k.colheaders(1)
         y_label = k.colheaders(2)
@@ -162,10 +162,10 @@ else
     x_data
     line_cols
     line_styles
-    n_lines
+    % n_lines
     for i = 1:n_lines
-        y_datum = y_data(:, i)
-        x_datum = x_data(:, i)
+        y_datum = y_data(:, i);
+        x_datum = x_data(:, i);
         line_col = line_cols{i};
         line_style = line_styles{i};
         marker = markers{i};
