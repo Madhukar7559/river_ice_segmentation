@@ -34,7 +34,9 @@ legend_font_size = 24;
 title_font_size = 30;
 bar_plot = 0;
 
-markers = {'o', '+', '*', 'x', 'p', 'd'};
+% markers = {'o', '+', '*', 'x', 'p', 'd'};
+
+markers = {'.', '.', '.', '.', '.', '.', '.'};
 
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
@@ -46,8 +48,8 @@ line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
 
 
 
-line_styles = {'--', '-', '-', '-', '-'};
-% line_styles = {'-', '-', '-', '-'};
+% line_styles = {'--', '-', '-', '-', '-'};
+line_styles = {'-', '-', '-', '-'};
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
@@ -87,7 +89,7 @@ line_styles = {'--', '-', '-', '-', '-'};
 set(0,'DefaultAxesFontSize', axes_font_size);
 set(0,'DefaultAxesFontWeight', 'bold');
 
-rec_prec_mode = 1;
+rec_prec_mode = 0;
 k=importdata('combined_summary.txt');
 
 if bar_plot
@@ -123,10 +125,12 @@ else
         if isfield(k,'colheaders')
             n_lines = size(k.data, 2) - 1;
             y_data = k.data(:, 2:end);
-            x_ticks = k.data(:, 1);
+            % x_ticks = k.data(:, 1);
             x_data = repmat(k.data(:, 1),1, n_lines);
             plot_legend = {k.colheaders{2:end}};
-            x_label='K';
+            plot_title = k.textdata{1, 1};
+            y_label = k.textdata{2, 1};
+            x_label = k.textdata{3, 1};
         else
             n_lines = size(k.data, 2)
             n_items = size(k.data, 1)
@@ -191,12 +195,17 @@ else
     % set (gca, 'GridLineStyle', '-');
 
     try
-        xticks(x_ticks);
+        if exist('xtick_labels', 'var')
+            xticks(x_ticks);
+        end          
         if exist('xtick_labels', 'var')
             xticklabels(xtick_labels);
         end
     catch
-        set(gca, 'XTick', x_ticks)    
+        if exist('xtick_labels', 'var')
+            set(gca, 'XTick', x_ticks)
+        end 
+            
         if exist('xtick_labels', 'var')
             set(gca, 'xticklabel', xtick_labels)
         end
