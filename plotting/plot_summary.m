@@ -1,4 +1,4 @@
-% clear all;
+clear all;
 
 colRGBDefs;
 
@@ -34,13 +34,16 @@ legend_font_size = 24;
 title_font_size = 30;
 bar_plot = 0;
 
+rec_prec_mode = 1;
+enable_ap = 1;
+
 % markers = {'o', '+', '*', 'x', 'p', 'd'};
 
-markers = {'.', '.', '.', '.', '.', '.', '.'};
+markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
 
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
-line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
+line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green'};
 % line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
 % line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
@@ -49,7 +52,7 @@ line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan'};
 
 
 % line_styles = {'--', '-', '-', '-', '-'};
-line_styles = {'-', '-', '-', '-'};
+line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-'};
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
@@ -89,7 +92,6 @@ line_styles = {'-', '-', '-', '-'};
 set(0,'DefaultAxesFontSize', axes_font_size);
 set(0,'DefaultAxesFontWeight', 'bold');
 
-rec_prec_mode = 0;
 k=importdata('combined_summary.txt');
 
 if bar_plot
@@ -100,7 +102,8 @@ else
         n_items = size(k.data, 1)
         n_lines = size(k.data, 2) / 2
         x_data = zeros(n_items, n_lines);
-        y_data = zeros(n_items, n_lines);
+        y_data = zeros(n_items, n_lines);  
+       
         fileID = fopen('combined_summary.txt','r');
         plot_title = fscanf(fileID,'%s', 1);
         plot_legend = cell(n_lines, 1);    
@@ -109,18 +112,26 @@ else
             x_data(:, line_id) = k.data(:, 2*line_id-1);
             y_data(:, line_id) = k.data(:, 2*line_id);
         end
+        if enable_ap
+            [ap, mrec, mprec] = VOCap(flipud(x_data/100.0),...
+                flipud(y_data/100.0));
+            x_data = mrec*100.0;
+            y_data = mprec*100.0;
+            ap = ap*100;
+            fprintf('%s ap: %f%%\n', plot_legend{line_id}, ap);
+        end
         % plot_legend
         fclose(fileID);
-        x_label = k.colheaders(1)
-        y_label = k.colheaders(2)
+        x_label = k.colheaders(1);
+        y_label = k.colheaders(2);
         x_ticks = zeros(n_lines, 1);
         xtick_labels = cell(n_lines, 1);        
         for item_id = 1:n_items        
             xtick_labels{item_id} = sprintf('%d', 10*item_id);
             x_ticks(item_id) = 10*item_id;
         end   
-        x_ticks
-        xtick_labels
+%         x_ticks
+%         xtick_labels
     else
         if isfield(k,'colheaders')
             n_lines = size(k.data, 2) - 1;
@@ -129,8 +140,11 @@ else
             x_data = repmat(k.data(:, 1),1, n_lines);
             plot_legend = {k.colheaders{2:end}};
             plot_title = k.textdata{1, 1};
-            y_label = k.textdata{2, 1};
-            x_label = k.textdata{3, 1};
+            y_label = sprintf('%s', plot_legend{1});
+            for line_id = 2:n_lines
+                y_label = sprintf('%s/%s', y_label, plot_legend{line_id})
+            end
+            x_label = k.textdata{2, 1};
         else
             n_lines = size(k.data, 2)
             n_items = size(k.data, 1)
@@ -162,10 +176,10 @@ else
         end
     end
     figure
-    y_data
-    x_data
-    line_cols
-    line_styles
+%     y_data
+%     x_data
+%     line_cols
+%     line_styles
     % n_lines
     for i = 1:n_lines
         y_datum = y_data(:, i);
