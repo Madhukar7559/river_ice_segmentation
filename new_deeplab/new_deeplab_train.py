@@ -210,6 +210,7 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
     ignore_label: Ignore label.
   """
   samples = iterator.get_next()
+  samples[common.IMAGE].set_shape([FLAGS.train_batch_size, FLAGS.train_crop_size[0], FLAGS.train_crop_size[1], 3])
 
   # Add name to input and label nodes so we can add to summary.
   samples[common.IMAGE] = tf.identity(samples[common.IMAGE], name=common.IMAGE)
