@@ -56,7 +56,8 @@ import os.path
 import sys
 import build_data
 import tensorflow as tf
-from scipy.misc import imread, imsave
+# from scipy.misc import imread, imsave
+from scipy import misc
 import numpy as np
 
 FLAGS = tf.app.flags.FLAGS
@@ -117,11 +118,11 @@ def _convert_dataset(db_name):
             os.makedirs(labels_path)
         print('Creating dummy labels at: {}'.format(labels_path))
         for image_filename in image_filenames:
-            image = imread(image_filename)
+            image = misc.imread(image_filename)
             height, width, _ = image.shape
             dummy_label = np.zeros((height, width), dtype=np.uint8)
             out_fname =  os.path.splitext(os.path.basename(image_filename))[0] + '.{}'.format(FLAGS.label_format)
-            imsave(os.path.join(labels_path,out_fname), dummy_label)
+            misc.imsave(os.path.join(labels_path,out_fname), dummy_label)
         print('Done')
 
     labels = os.path.join(FLAGS.db_root_dir, db_name, 'labels', '*.{}'.format(FLAGS.label_format))
