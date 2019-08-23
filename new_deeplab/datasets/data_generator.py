@@ -96,10 +96,96 @@ _ADE20K_INFORMATION = DatasetDescriptor(
     ignore_label=0,
 )
 
+_617_256_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={
+        'training_0_49_256_256_25_100_rot_15_345_4_flip': 159336,
+        'training_0_31_256_256_25_100_rot_15_125_235_345_flip': 84075,
+        'training_32_49_256_256_25_100_rot_15_125_235_345_flip': 44013,
+        'validation_0_563_256_256_256_256': 16920,
+        'validation_0_20_256_256_256_256': 630,
+        'YUN00001_0_239_256_256_256_256': 32400,
+    },
+    num_classes=3,
+    ignore_label=255,
+)
+_617_384_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={
+        'training_0_49_384_384_25_100_rot_15_345_4_flip': 106371,
+        'training_0_31_384_384_25_100_rot_15_345_4_flip': 69375,
+        'training_32_49_384_384_25_100_rot_15_345_4_flip': 36969,
+        'validation_0_563_384_384_384_384': 6768,
+        'validation_0_20_384_384_384_384': 252,
+        'YUN00001_0_239_384_384_384_384': 14400,
+    },
+    num_classes=3,
+    ignore_label=255,
+)
+_617_512_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={
+        'training_0_49_512_512_25_100_rot_15_345_4_flip': 67683,
+        'training_0_31_512_512_25_100_rot_15_345_4_flip': 43971,
+        'training_32_49_512_512_25_100_rot_15_345_4_flip': 22467,
+        'validation_0_563_512_512_512_512': 5076,
+        'validation_0_20_512_512_512_512': 189,
+        'YUN00001_0_239_512_512_512_512': 9600,
+    },
+    num_classes=3,
+    ignore_label=255,
+)
+
+_617_640_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={
+        'training_0_49_640_640_25_100_rot_15_345_4_flip': 7347,
+        'training_0_31_640_640_25_100_rot_15_345_4_flip': 4860,
+        'training_32_49_640_640_25_100_rot_15_345_4_flip': 2358,
+        'training_0_3_640_640_64_256_rot_15_345_4_flip': 726,
+        'training_0_3_640_640_640_640': 25,
+        'training_0_3_640_640_640_640_sel_2': 25,
+        'training_0_3_640_640_640_640_sel_10': 25,
+        'training_0_3_640_640_640_640_sel_100': 25,
+        'training_0_3_640_640_640_640_sel_1000': 25,
+        'training_0_7_640_640_64_256_rot_15_345_4_flip': 1290,
+        'training_0_15_640_640_64_256_rot_15_345_4_flip': 2694,
+        'training_0_23_640_640_64_256_rot_15_345_4_flip': 3678,
+        'training_0_31_640_640_64_256_rot_15_345_4_flip': 4857,
+        'training_0_49_640_640_64_256_rot_15_345_4_flip': 7347,
+        'training_32_49_640_640_64_256_rot_15_345_4_flip': 2358,
+        'training_32_49_640_640_640_640': 108,
+        'training_4_49_640_640_640_640': 276,
+        'validation_0_563_640_640_640_640': 3384,
+        'validation_0_20_640_640_640_640': 126,
+        'YUN00001_0_239_640_640_640_640': 5760,
+        'YUN00001_3600_0_3599_640_640_640_640': 86400,
+        'YUN00001_0_8999_640_640_640_640': 216000,
+        '20160122_YUN00002_700_2500_0_1799_640_640_640_640': 43200,
+        '20160122_YUN00020_2000_3800_0_1799_640_640_640_640': 43200,
+        '20161203_Deployment_1_YUN00001_900_2700_0_1799_640_640_640_640': 43200,
+        '20161203_Deployment_1_YUN00002_1800_0_1799_640_640_640_640': 43200,
+    },
+    num_classes=3,
+    ignore_label=255,
+)
+
+_617_800_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={
+        'training_0_3_800_800_80_320_rot_15_345_4_flip': 321,
+        'training_0_49_800_800_80_320_rot_15_345_4_flip': 2292,
+        'training_0_31_800_800_80_320_rot_15_345_4_flip': 1587,
+        'training_32_49_800_800_80_320_rot_15_345_4_flip': 831,
+    },
+    num_classes=2,
+    ignore_label=255,
+)
+
 _DATASETS_INFORMATION = {
     'cityscapes': _CITYSCAPES_INFORMATION,
     'pascal_voc_seg': _PASCAL_VOC_SEG_INFORMATION,
     'ade20k': _ADE20K_INFORMATION,
+    'training_0_31_49_256_256_25_100_rot_15_125_235_345_flip': _617_256_INFORMATION,
+    'training_0_31_49_384_384_25_100_rot_15_345_4_flip': _617_384_INFORMATION,
+    'training_0_31_49_512_512_25_100_rot_15_345_4_flip': _617_512_INFORMATION,
+    'training_0_31_49_640_640_64_256_rot_15_345_4_flip': _617_640_INFORMATION,
+    'training_0_31_49_800_800_80_320_rot_15_345_4_flip': _617_800_INFORMATION,
 }
 
 # Default file pattern of TFRecord of TensorFlow Example.
