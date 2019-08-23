@@ -18,6 +18,10 @@ See model.py for more details and usage.
 """
 
 import six
+import sys
+
+sys.path.append('..')
+
 import tensorflow as tf
 from tensorflow.python.ops import math_ops
 from new_deeplab import common
