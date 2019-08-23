@@ -4,18 +4,18 @@ import numpy as np
 from tqdm import tqdm
 import torch.nn as nn
 
-from mypath import Path
-from dataloaders import make_data_loader
-from modeling.sync_batchnorm.replicate import patch_replication_callback
-from modeling.deeplab import *
-from utils.loss import SegmentationLosses
-from utils.calculate_weights import calculate_weigths_labels
-from utils.lr_scheduler import LR_Scheduler
-from utils.saver import Saver
-from utils.summaries import TensorboardSummary
-from utils.metrics import Evaluator
-from auto_deeplab import AutoDeeplab
-from architect import Architect
+from auto_deeplab.mypath import Path
+from auto_deeplab.dataloaders import make_data_loader
+from pytorch_deeplab.modeling.sync_batchnorm.replicate import patch_replication_callback
+from pytorch_deeplab.modeling.deeplab import *
+from pytorch_deeplab.ptd_utils.loss import SegmentationLosses
+from pytorch_deeplab.ptd_utils.calculate_weights import calculate_weigths_labels
+from pytorch_deeplab.ptd_utils.lr_scheduler import LR_Scheduler
+from pytorch_deeplab.ptd_utils.saver import Saver
+from pytorch_deeplab.ptd_utils.summaries import TensorboardSummary
+from pytorch_deeplab.ptd_utils.metrics import Evaluator
+from auto_deeplab.auto_deeplab import AutoDeeplab
+from auto_deeplab.architect import Architect
 
 class Trainer(object):
     def __init__(self, args):
