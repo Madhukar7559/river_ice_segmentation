@@ -2,7 +2,6 @@ import argparse
 import os
 import numpy as np
 from tqdm import tqdm
-import torch.nn as nn
 
 from mypath import Path
 from dataloaders import make_data_loader
@@ -14,8 +13,6 @@ from utils.lr_scheduler import LR_Scheduler
 from utils.saver import Saver
 from utils.summaries import TensorboardSummary
 from utils.metrics import Evaluator
-from auto_deeplab import AutoDeeplab
-from architect import Architect
 
 class Trainer(object):
     def __init__(self, args):
@@ -27,12 +24,25 @@ class Trainer(object):
         # Define Tensorboard Summary
         self.summary = TensorboardSummary(self.saver.experiment_dir)
         self.writer = self.summary.create_summary()
-
+        
         # Define Dataloader
         kwargs = {'num_workers': args.workers, 'pin_memory': True}
-        #self.train_loader1, self.train_loader2, self.val_loader, self.test_loader, self.nclass = make_data_loader(args, **kwargs)
-        self.train_loader1, self.train_loader2, self.val_loader,  self.nclass = make_data_loader(args, **kwargs)
-        
+        self.train_loader, self.val_loader, self.test_loader, self.nclass = make_data_loader(args, **kwargs)
+
+        # Define network
+        model = DeepLab(num_classes=self.nclass,
+                        backbone=args.backbone,
+                        output_stride=args.out_stride,
+                        sync_bn=args.sync_bn,
+                        freeze_bn=args.freeze_bn)
+
+        train_params = [{'params': model.get_1x_lr_params(), 'lr': args.lr},
+                        {'params': model.get_10x_lr_params(), 'lr': args.lr * 10}]
+
+        # Define Optimizer
+        optimizer = torch.optim.SGD(train_params, momentum=args.momentum,
+                                    weight_decay=args.weight_decay, nesterov=args.nesterov)
+
         # Define Criterion
         # whether to use class balanced weights
         if args.use_balanced_weights:
@@ -45,37 +55,20 @@ class Trainer(object):
         else:
             weight = None
         self.criterion = SegmentationLosses(weight=weight, cuda=args.cuda).build_loss(mode=args.loss_type)
-
-        # Define network
-        model = AutoDeeplab (self.nclass, 12, self.criterion, crop_size=self.args.crop_size)
-        optimizer = torch.optim.SGD(
-                model.weight_parameters(),
-                args.lr,
-                momentum=args.momentum,
-                weight_decay=args.weight_decay
-            )
         self.model, self.optimizer = model, optimizer
+        
+        # Define Evaluator
+        self.evaluator = Evaluator(self.nclass)
+        # Define lr scheduler
+        self.scheduler = LR_Scheduler(args.lr_scheduler, args.lr,
+                                            args.epochs, len(self.train_loader))
 
         # Using cuda
         if args.cuda:
             self.model = torch.nn.DataParallel(self.model, device_ids=self.args.gpu_ids)
             patch_replication_callback(self.model)
             self.model = self.model.cuda()
-            print ('cuda finished')
 
-
-        # Define Optimizer
-
-
-        self.model, self.optimizer = model, optimizer
-
-        # Define Evaluator
-        self.evaluator = Evaluator(self.nclass)
-        # Define lr scheduler
-        self.scheduler = LR_Scheduler(args.lr_scheduler, args.lr,
-                                            args.epochs, len(self.train_loader1))
-
-        self.architect = Architect (self.model, args)
         # Resuming checkpoint
         self.best_pred = 0.0
         if args.resume is not None:
@@ -84,7 +77,7 @@ class Trainer(object):
             checkpoint = torch.load(args.resume)
             args.start_epoch = checkpoint['epoch']
             if args.cuda:
-                self.model.load_state_dict(checkpoint['state_dict'])
+                self.model.module.load_state_dict(checkpoint['state_dict'])
             else:
                 self.model.load_state_dict(checkpoint['state_dict'])
             if not args.ft:
@@ -100,26 +93,18 @@ class Trainer(object):
     def training(self, epoch):
         train_loss = 0.0
         self.model.train()
-        tbar = tqdm(self.train_loader1)
-        num_img_tr = len(self.train_loader1)
+        tbar = tqdm(self.train_loader)
+        num_img_tr = len(self.train_loader)
         for i, sample in enumerate(tbar):
             image, target = sample['image'], sample['label']
-            search = next (iter (self.train_loader2))
-            image_search, target_search = search['image'], search['label']
-            # print ('------------------------begin-----------------------')
             if self.args.cuda:
                 image, target = image.cuda(), target.cuda()
-                image_search, target_search = image_search.cuda (), target_search.cuda () 
-                # print ('cuda finish')
             self.scheduler(self.optimizer, i, epoch, self.best_pred)
             self.optimizer.zero_grad()
             output = self.model(image)
-            torch.cuda.empty_cache()
             loss = self.criterion(output, target)
             loss.backward()
             self.optimizer.step()
-            if epoch>19:
-                self.architect.step (image_search, target_search)
             train_loss += loss.item()
             tbar.set_description('Train loss: %.3f' % (train_loss / (i + 1)))
             self.writer.add_scalar('train/total_loss_iter', loss.item(), i + num_img_tr * epoch)
@@ -138,7 +123,7 @@ class Trainer(object):
             is_best = False
             self.saver.save_checkpoint({
                 'epoch': epoch + 1,
-                'state_dict': self.model.state_dict(),
+                'state_dict': self.model.module.state_dict(),
                 'optimizer': self.optimizer.state_dict(),
                 'best_pred': self.best_pred,
             }, is_best)
@@ -185,7 +170,7 @@ class Trainer(object):
             self.best_pred = new_pred
             self.saver.save_checkpoint({
                 'epoch': epoch + 1,
-                'state_dict': self.model.state_dict(),
+                'state_dict': self.model.module.state_dict(),
                 'optimizer': self.optimizer.state_dict(),
                 'best_pred': self.best_pred,
             }, is_best)
@@ -195,26 +180,24 @@ def main():
     parser.add_argument('--backbone', type=str, default='resnet',
                         choices=['resnet', 'xception', 'drn', 'mobilenet'],
                         help='backbone name (default: resnet)')
-    parser.add_argument('--out_stride', type=int, default=16,
+    parser.add_argument('--out-stride', type=int, default=16,
                         help='network output stride (default: 8)')
     parser.add_argument('--dataset', type=str, default='pascal',
                         choices=['pascal', 'coco', 'cityscapes'],
                         help='dataset name (default: pascal)')
-    parser.add_argument('--use_sbd', action='store_true', default=False,
+    parser.add_argument('--use-sbd', action='store_true', default=True,
                         help='whether to use SBD dataset (default: True)')
     parser.add_argument('--workers', type=int, default=4,
                         metavar='N', help='dataloader threads')
-    parser.add_argument('--base_size', type=int, default=320,
+    parser.add_argument('--base-size', type=int, default=513,
                         help='base image size')
-    parser.add_argument('--crop_size', type=int, default=320,
+    parser.add_argument('--crop-size', type=int, default=513,
                         help='crop image size')
-    parser.add_argument('--resize', type=int, default=512,
-                        help='resize image size')
-    parser.add_argument('--sync_bn', type=bool, default=None,
+    parser.add_argument('--sync-bn', type=bool, default=None,
                         help='whether to use sync bn (default: auto)')
-    parser.add_argument('--freeze_bn', type=bool, default=False,
+    parser.add_argument('--freeze-bn', type=bool, default=False,
                         help='whether to freeze bn parameters (default: False)')
-    parser.add_argument('--loss_type', type=str, default='ce',
+    parser.add_argument('--loss-type', type=str, default='ce',
                         choices=['ce', 'focal'],
                         help='loss func type (default: ce)')
     # training hyper params
@@ -222,37 +205,32 @@ def main():
                         help='number of epochs to train (default: auto)')
     parser.add_argument('--start_epoch', type=int, default=0,
                         metavar='N', help='start epochs (default:0)')
-    parser.add_argument('--batch_size', type=int, default=None,
+    parser.add_argument('--batch-size', type=int, default=None,
                         metavar='N', help='input batch size for \
                                 training (default: auto)')
-    parser.add_argument('--test_batch_size', type=int, default=None,
+    parser.add_argument('--test-batch-size', type=int, default=None,
                         metavar='N', help='input batch size for \
                                 testing (default: auto)')
-    parser.add_argument('--use_balanced_weights', action='store_true', default=False,
+    parser.add_argument('--use-balanced-weights', action='store_true', default=False,
                         help='whether to use balanced weights (default: False)')
     # optimizer params
-    parser.add_argument('--lr', type=float, default=0.025, metavar='LR',
+    parser.add_argument('--lr', type=float, default=None, metavar='LR',
                         help='learning rate (default: auto)')
-    parser.add_argument('--arch_lr', type=float, default=3e-3, 
-                       help='learning rate for alpha and beta in architect searching process')
-
-    parser.add_argument('--lr_scheduler', type=str, default='cos',
+    parser.add_argument('--lr-scheduler', type=str, default='poly',
                         choices=['poly', 'step', 'cos'],
-                        help='lr scheduler mode: (default: cos)')
+                        help='lr scheduler mode: (default: poly)')
     parser.add_argument('--momentum', type=float, default=0.9,
                         metavar='M', help='momentum (default: 0.9)')
-    parser.add_argument('--weight_decay', type=float, default=3e-4,
+    parser.add_argument('--weight-decay', type=float, default=5e-4,
                         metavar='M', help='w-decay (default: 5e-4)')
-    parser.add_argument('--arch_weight_decay', type=float, default=1e-3,
-                        metavar='M', help='w-decay (default: 5e-4)')
-
     parser.add_argument('--nesterov', action='store_true', default=False,
                         help='whether use nesterov (default: False)')
     # cuda, seed and logging
-    parser.add_argument('--no_cuda', action='store_true', default=
+    parser.add_argument('--no-cuda', action='store_true', default=
                         False, help='disables CUDA training')
-    parser.add_argument('--gpu-ids', nargs='*', type=int, default=0,
-                        help='which GPU to train on (default: 0)')
+    parser.add_argument('--gpu-ids', type=str, default='0',
+                        help='use which gpu to train, must be a \
+                        comma-separated list of integers only (default=0)')
     parser.add_argument('--seed', type=int, default=1, metavar='S',
                         help='random seed (default: 1)')
     # checking point
@@ -264,13 +242,18 @@ def main():
     parser.add_argument('--ft', action='store_true', default=False,
                         help='finetuning on a different dataset')
     # evaluation option
-    parser.add_argument('--eval_interval', type=int, default=1,
+    parser.add_argument('--eval-interval', type=int, default=1,
                         help='evaluuation interval (default: 1)')
-    parser.add_argument('--no_val', action='store_true', default=False,
+    parser.add_argument('--no-val', action='store_true', default=False,
                         help='skip validation during training')
 
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
+    if args.cuda:
+        try:
+            args.gpu_ids = [int(s) for s in args.gpu_ids.split(',')]
+        except ValueError:
+            raise ValueError('Argument --gpu_ids must be a comma-separated list of integers only')
 
     if args.sync_bn is None:
         if args.cuda and len(args.gpu_ids) > 1:
@@ -296,10 +279,10 @@ def main():
     if args.lr is None:
         lrs = {
             'coco': 0.1,
-            'cityscapes': 0.025,
+            'cityscapes': 0.01,
             'pascal': 0.007,
         }
-        #args.lr = lrs[args.dataset.lower()] / (4 * len(args.gpu_ids)) * args.batch_size
+        args.lr = lrs[args.dataset.lower()] / (4 * len(args.gpu_ids)) * args.batch_size
 
 
     if args.checkname is None:
