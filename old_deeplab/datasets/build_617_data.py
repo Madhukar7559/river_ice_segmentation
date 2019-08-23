@@ -56,7 +56,7 @@ import os.path
 import sys
 import build_data
 import tensorflow as tf
-from scipy.misc.pilutil import imread, imsave
+from scipy.misc import imread, imsave
 import numpy as np
 
 FLAGS = tf.app.flags.FLAGS
