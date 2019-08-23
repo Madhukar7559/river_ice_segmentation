@@ -17,7 +17,7 @@
 import functools
 import tensorflow as tf
 
-from deeplab.core import xception
+from old_deeplab.core import xception
 from nets.mobilenet import mobilenet as mobilenet_lib
 from nets.mobilenet import mobilenet_v2
 

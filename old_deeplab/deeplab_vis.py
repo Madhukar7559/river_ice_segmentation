@@ -32,11 +32,11 @@ import time
 import cv2
 import numpy as np
 import tensorflow as tf
-from deeplab import common
-from deeplab import model
-from deeplab.datasets import segmentation_dataset
-from deeplab.utils import input_generator
-from deeplab.utils import save_annotation
+from old_deeplab import common
+from old_deeplab import model
+from old_deeplab.datasets import segmentation_dataset
+from old_deeplab.utils import input_generator
+from old_deeplab.utils import save_annotation
 
 slim = tf.contrib.slim
 

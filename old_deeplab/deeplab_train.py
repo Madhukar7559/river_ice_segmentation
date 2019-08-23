@@ -25,11 +25,11 @@ except:
 sys.path.append('..')
 
 import tensorflow as tf
-from deeplab import common
-from deeplab import model
-from deeplab.datasets import segmentation_dataset
-from deeplab.utils import input_generator
-from deeplab.utils import train_utils
+from old_deeplab import common
+from old_deeplab import model
+from old_deeplab.datasets import segmentation_dataset
+from old_deeplab.utils import input_generator
+from old_deeplab.utils import train_utils
 from deployment import model_deploy
 
 import os

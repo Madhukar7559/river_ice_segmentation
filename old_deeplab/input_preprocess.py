@@ -15,8 +15,8 @@
 
 """Prepares the data used for DeepLab training/evaluation."""
 import tensorflow as tf
-from deeplab.core import feature_extractor
-from deeplab.core import preprocess_utils
+from old_deeplab.core import feature_extractor
+from old_deeplab.core import preprocess_utils
 
 
 # The probability of flipping the images and labels
