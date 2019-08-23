@@ -52,9 +52,9 @@ Alan L. Yuille (* equal contribution)
 (https://arxiv.org/abs/1412.7062)
 """
 import tensorflow as tf
-from deeplab.core import dense_prediction_cell
-from deeplab.core import feature_extractor
-from deeplab.core import utils
+from new_deeplab.core import dense_prediction_cell
+from new_deeplab.core import feature_extractor
+from new_deeplab.core import utils
 
 slim = tf.contrib.slim
 

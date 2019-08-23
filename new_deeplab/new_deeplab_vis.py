@@ -21,10 +21,10 @@ import os.path
 import time
 import numpy as np
 import tensorflow as tf
-from deeplab import common
-from deeplab import model
-from deeplab.datasets import data_generator
-from deeplab.utils import save_annotation
+from new_deeplab import common
+from new_deeplab import model
+from new_deeplab.datasets import data_generator
+from new_deeplab.utils import save_annotation
 
 flags = tf.app.flags
 

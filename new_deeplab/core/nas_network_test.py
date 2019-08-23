@@ -22,8 +22,8 @@ from __future__ import print_function
 import numpy as np
 import tensorflow as tf
 
-from deeplab.core import nas_genotypes
-from deeplab.core import nas_network
+from new_deeplab.core import nas_genotypes
+from new_deeplab.core import nas_network
 
 arg_scope = tf.contrib.framework.arg_scope
 slim = tf.contrib.slim

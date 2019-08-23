@@ -18,9 +18,9 @@ See model.py for more details and usage.
 """
 
 import tensorflow as tf
-from deeplab import common
-from deeplab import model
-from deeplab.datasets import data_generator
+from new_deeplab import common
+from new_deeplab import model
+from new_deeplab.datasets import data_generator
 
 flags = tf.app.flags
 FLAGS = flags.FLAGS

@@ -26,8 +26,8 @@ import numpy as np
 import six
 import tensorflow as tf
 
-from deeplab.evaluation import streaming_metrics
-from deeplab.evaluation import test_utils
+from new_deeplab.evaluation import streaming_metrics
+from new_deeplab.evaluation import test_utils
 
 # See the definition of the color names at:
 #   https://en.wikipedia.org/wiki/Web_colors.

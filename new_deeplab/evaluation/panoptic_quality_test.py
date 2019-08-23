@@ -23,8 +23,8 @@ from absl.testing import absltest
 import numpy as np
 import six
 
-from deeplab.evaluation import panoptic_quality
-from deeplab.evaluation import test_utils
+from new_deeplab.evaluation import panoptic_quality
+from new_deeplab.evaluation import test_utils
 
 # See the definition of the color names at:
 #   https://en.wikipedia.org/wiki/Web_colors.

@@ -44,8 +44,8 @@ from PIL import Image
 import utils as panopticapi_utils
 import six
 
-from deeplab.evaluation import panoptic_quality
-from deeplab.evaluation import parsing_covering
+from new_deeplab.evaluation import panoptic_quality
+from new_deeplab.evaluation import parsing_covering
 
 FLAGS = flags.FLAGS
 

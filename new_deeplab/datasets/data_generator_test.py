@@ -20,8 +20,8 @@ import collections
 
 import tensorflow as tf
 
-from deeplab import common
-from deeplab.datasets import data_generator
+from new_deeplab import common
+from new_deeplab.datasets import data_generator
 
 ImageAttributes = collections.namedtuple(
     'ImageAttributes', ['image', 'label', 'height', 'width', 'image_name'])

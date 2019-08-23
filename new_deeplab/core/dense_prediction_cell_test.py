@@ -21,7 +21,7 @@ from __future__ import print_function
 
 import tensorflow as tf
 
-from deeplab.core import dense_prediction_cell
+from new_deeplab.core import dense_prediction_cell
 
 
 class DensePredictionCellTest(tf.test.TestCase):

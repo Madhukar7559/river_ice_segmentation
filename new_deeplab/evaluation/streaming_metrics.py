@@ -25,8 +25,8 @@ from __future__ import print_function
 
 import tensorflow as tf
 
-from deeplab.evaluation import panoptic_quality
-from deeplab.evaluation import parsing_covering
+from new_deeplab.evaluation import panoptic_quality
+from new_deeplab.evaluation import parsing_covering
 
 _EPSILON = 1e-10
 

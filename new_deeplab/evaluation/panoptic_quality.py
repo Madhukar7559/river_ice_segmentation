@@ -31,7 +31,7 @@ import numpy as np
 import prettytable
 import six
 
-from deeplab.evaluation import base_metric
+from new_deeplab.evaluation import base_metric
 
 
 def _ids_to_counts(id_array):
