@@ -24,7 +24,7 @@ CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_train.py --logtostderr --training_num
 <a id="32___64_0_"></a>
 ## voc2012       @ resnet_v1_101_beta
 
-CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant=resnet_v1_101_beta --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size="513,513" --train_batch_size=2 --dataset=pascal_voc_seg --train_logdir=log/pascal_voc_seg/resnet_v1_101_beta --dataset_dir=/data/voc2012/tfrecord --train_split=train --num_clones=1
+CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant=resnet_v1_101_beta --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=513,513 --train_batch_size=2 --dataset=pascal_voc_seg --train_logdir=log/pascal_voc_seg/resnet_v1_101_beta --dataset_dir=/data/voc2012/tfrecord --train_split=train --num_clones=1
 
 <a id="32___64_0_"></a>
 ## ade20k       @ resnet_v1_101_beta
@@ -36,12 +36,12 @@ CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_train.py --logtostderr --training_num
 <a id="32___64_0_"></a>
 ## 32       @ 640_hnasnet
 
-CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size="640,640" --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_31_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_31_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0
 
 <a id="vis___32_640_"></a>
 ### vis       @ 32/640_hnasnet
 
-CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640 --vis_crop_size=640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49_640_640_640_640/images --labels_path=/data/617/images/training_32_49_640_640_640_640/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49_640_640_640_640/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49_640_640_640_640/vis --n_classes=3 --start_id=0 --end_id=-1
 
@@ -58,7 +58,7 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 <a id="32___64_0_"></a>
 ## 32       @ 640_resnet_v1_101_beta
 
-CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size="640,640" --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/resnet_v1_101/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_31 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_31_640_640_64_256_rot_15_345_4_flip --num_clones=1
+CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size="640,640" --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/resnet_v1_101/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_31 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_31_640_640_64_256_rot_15_345_4_flip --num_clones=1
 
 <a id="vis___32_640_"></a>
 ### vis       @ 32/640_resnet_v1_101_beta

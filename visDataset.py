@@ -1,6 +1,7 @@
 import argparse, os, sys
 import numpy as np
-from scipy.misc.pilutil import imread, imsave
+from scipy import misc
+
 import densenet.evaluation.eval_segm as eval
 from densenet.utils import readData, getDateTime, print_and_write
 
@@ -132,7 +133,7 @@ for img_id in range(start_id, end_id + 1):
 
     if stitch or show_img:
         src_img_fname = os.path.join(images_path, img_fname)
-        src_img = imread(src_img_fname)
+        src_img = misc.imread(src_img_fname)
         if src_img is None:
             raise SystemError('Source image could not be read from: {}'.format(src_img_fname))
 
@@ -149,7 +150,7 @@ for img_id in range(start_id, end_id + 1):
         stitched = src_img
     else:
         labels_img_fname = os.path.join(labels_path, img_fname_no_ext + '.{}'.format(labels_ext))
-        labels_img_orig = imread(labels_img_fname)
+        labels_img_orig = misc.imread(labels_img_fname)
         if labels_img_orig is None:
             raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
         _, src_width = labels_img_orig.shape[:2]
@@ -180,7 +181,7 @@ for img_id in range(start_id, end_id + 1):
 
         if eval_mode:
             seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
-            seg_img = imread(seg_img_fname)
+            seg_img = misc.imread(seg_img_fname)
             if seg_img is None:
                 raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
 
@@ -287,7 +288,7 @@ for img_id in range(start_id, end_id + 1):
     if stitch:
         if save_stitched:
             seg_save_path = os.path.join(save_path, '{}.{}'.format(img_fname_no_ext, out_ext))
-            imsave(seg_save_path, stitched)
+            misc.imsave(seg_save_path, stitched)
         if show_img:
             cv2.imshow('stitched', stitched)
     else:
