@@ -93,7 +93,7 @@ flags.DEFINE_string('dataset_dir', None, 'Where the dataset reside.')
 flags.DEFINE_enum('colormap_type', 'pascal', ['pascal', 'cityscapes'],
                   'Visualization colormap type.')
 
-flags.DEFINE_boolean('also_save_raw_predictions', False,
+flags.DEFINE_boolean('also_save_raw_predictions', True,
                      'Also save raw predictions.')
 
 flags.DEFINE_integer('max_number_of_iterations', 0,
