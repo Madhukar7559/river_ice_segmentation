@@ -99,6 +99,9 @@ flags.DEFINE_enum('colormap_type', 'pascal', ['pascal', 'cityscapes'],
 flags.DEFINE_boolean('also_save_raw_predictions', True,
                      'Also save raw predictions.')
 
+flags.DEFINE_integer('also_save_vis_predictions', 0,
+                     'Also save visualization predictions.')
+
 flags.DEFINE_integer('max_number_of_iterations', 0,
                      'Maximum number of visualization iterations. Will loop '
                      'indefinitely upon nonpositive values.')
@@ -144,7 +147,7 @@ def _convert_train_id_to_eval_id(prediction, train_id_to_eval_id):
 
 def _process_batch(sess, original_images, semantic_predictions, image_names,
                    image_heights, image_widths, image_id_offset, save_dir,
-                   raw_save_dir, train_id_to_eval_id=None):
+                   raw_save_dir, stacked_save_dir, train_id_to_eval_id=None):
     """Evaluates one single batch qualitatively.
 
     Args:
@@ -175,27 +178,47 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         crop_semantic_prediction = semantic_prediction[:image_height, :image_width]
 
         # Save image.
+        # save_annotation.save_annotation(
+        #     original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
+        #     add_colormap=False)
+
+        image_filename = os.path.splitext(os.path.basename(image_names[i]))[0]
+        # print('image_filename: ', image_filename)
+
+        stacked_path = os.path.join(stacked_save_dir, image_filename + '.jpg')
+        mask_img = (crop_semantic_prediction*(255.0/np.max(crop_semantic_prediction))).astype(np.uint8)
+        mask_img = cv2.cvtColor(mask_img, cv2.COLOR_GRAY2BGR)
+        stacked_img = np.concatenate((original_image, mask_img), axis=1)
+        cv2.imwrite(stacked_path, stacked_img)
+
+        # Save prediction.
+        # save_annotation.save_annotation(
+        #     crop_semantic_prediction, save_dir,
+        #     _PREDICTION_FORMAT % (image_id_offset + i),
+        #     add_colormap=True,
+        #     colormap_type=FLAGS.colormap_type)
+
         save_annotation.save_annotation(
-            original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
+            crop_semantic_prediction, raw_save_dir, image_filename,
             add_colormap=False)
 
         # Save prediction.
-        save_annotation.save_annotation(
-            crop_semantic_prediction, save_dir,
-            _PREDICTION_FORMAT % (image_id_offset + i),
-            add_colormap=True,
-            colormap_type=FLAGS.colormap_type)
-
-        if FLAGS.also_save_raw_predictions:
-            image_filename = os.path.basename(image_names[i])
-
-            if train_id_to_eval_id is not None:
-                crop_semantic_prediction = _convert_train_id_to_eval_id(
-                    crop_semantic_prediction,
-                    train_id_to_eval_id)
+        if FLAGS.also_save_vis_predictions:
             save_annotation.save_annotation(
-                crop_semantic_prediction, raw_save_dir, image_filename,
-                add_colormap=False)
+                crop_semantic_prediction, save_dir, image_filename,
+                # _PREDICTION_FORMAT % (image_id_offset + i), add_colormap=True,
+                colormap_type=FLAGS.colormap_type)
+
+        # if FLAGS.also_save_raw_predictions:
+        #     image_filename = os.path.basename(image_names[i])
+        #
+        #     if train_id_to_eval_id is not None:
+        #         crop_semantic_prediction = _convert_train_id_to_eval_id(
+        #             crop_semantic_prediction,
+        #             train_id_to_eval_id)
+        #     save_annotation.save_annotation(
+        #         crop_semantic_prediction, raw_save_dir, image_filename,
+        #         add_colormap=False)
 
 
 def main(unused_argv):
@@ -227,7 +250,10 @@ def main(unused_argv):
     tf.gfile.MakeDirs(save_dir)
     raw_save_dir = os.path.join(
         FLAGS.vis_logdir, _RAW_SEMANTIC_PREDICTION_SAVE_FOLDER)
+    stacked_save_dir = os.path.join(
+        FLAGS.vis_logdir, 'stacked')
     tf.gfile.MakeDirs(raw_save_dir)
+    tf.gfile.MakeDirs(stacked_save_dir)
 
     tf.logging.info('Visualizing on %s set', FLAGS.vis_split)
 
@@ -317,6 +343,7 @@ def main(unused_argv):
                                    image_id_offset=image_id_offset,
                                    save_dir=save_dir,
                                    raw_save_dir=raw_save_dir,
+                                   stacked_save_dir=stacked_save_dir,
                                    train_id_to_eval_id=train_id_to_eval_id)
                     image_id_offset += FLAGS.vis_batch_size
                     batch += 1
