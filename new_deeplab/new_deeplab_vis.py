@@ -182,7 +182,7 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         #     original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
         #     add_colormap=False)
 
-        image_filename = os.path.splitext(os.path.basename(image_names[i]))[0]
+        image_filename = str(os.path.splitext(os.path.basename(image_names[i]))[0])
         # print('image_filename: ', image_filename)
 
         stacked_path = os.path.join(stacked_save_dir, image_filename + '.jpg')
