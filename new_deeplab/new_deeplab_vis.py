@@ -36,9 +36,9 @@ from new_deeplab import common
 from new_deeplab import model
 
 from new_deeplab.datasets import data_generator
-# from new_deeplab.utils import save_annotation
+from new_deeplab.utils import save_annotation
 
-from old_deeplab.utils import save_annotation
+# from old_deeplab.utils import save_annotation
 
 flags = tf.app.flags
 
@@ -183,8 +183,9 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         #     original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
         #     add_colormap=False)
 
-        image_filename = str(os.path.splitext(os.path.basename(image_names[i]))[0])
-        # print('image_filename: ', image_filename)
+        image_filename = (os.path.splitext(os.path.basename(image_names[i]))[0])
+        image_filename = tf.compat.as_str_any(image_filename)
+        print('image_filename: ', image_filename)
 
         stacked_path = os.path.join(stacked_save_dir, image_filename + '.jpg')
         mask_img = (crop_semantic_prediction*(255.0/np.max(crop_semantic_prediction))).astype(np.uint8)
