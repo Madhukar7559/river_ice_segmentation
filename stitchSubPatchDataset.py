@@ -1,9 +1,9 @@
 import os, shutil
 import cv2
 import sys
+import scipy
 import numpy as np
 from densenet.utils import processArguments, sortKey, resizeAR, readData, print_and_write, getDateTime
-from scipy.misc.pilutil import imread
 
 params = {
     'db_root_dir': '/home/abhineet/N/Datasets/617/',
@@ -283,7 +283,7 @@ if __name__ == '__main__':
 
         if eval_mode:
             labels_img_fname = os.path.join(labels_path, img_fname_no_ext + '.{}'.format(labels_ext))
-            gt_labels_orig = imread(labels_img_fname)
+            gt_labels_orig = scipy.misc.imread(labels_img_fname)
 
             if gt_labels_orig is None:
                 raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
