@@ -1,6 +1,6 @@
 import argparse, os, sys
 import numpy as np
-import scipy
+import scipy.misc
 
 import densenet.evaluation.eval_segm as eval
 from densenet.utils import readData, getDateTime, print_and_write

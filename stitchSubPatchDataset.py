@@ -1,7 +1,7 @@
 import os, shutil
 import cv2
 import sys
-import scipy
+import scipy.misc
 import numpy as np
 from densenet.utils import processArguments, sortKey, resizeAR, readData, print_and_write, getDateTime
 
