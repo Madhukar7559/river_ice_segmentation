@@ -1,13 +1,16 @@
 
 # build_data
 
-## voc_2012       @ build_data
+## voc2012       @ build_data
 
-python datasets/build_voc2012_data.py --image_folder=/data/voc2012/JPEGImages --semantic_segmentation_folder=/data/voc2012/SegmentationClassRaw --list_folder=/data/voc2012/ImageSets/Segmentation --image_format="jpg" --output_dir=/data/voc2012/tfrecord
-
-
+python datasets/build_voc2012_data.py --image_folder=/data/voc2012/JPEGImages --semantic_segmentation_folder=/data/voc2012/SegmentationClass --list_folder=/data/voc2012/ImageSets/Segmentation --image_format="jpg" --output_dir=/data/voc2012/tfrecord
 
 # 640_hnasnet
+
+## voc2012       @ 640_hnasnet
+
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640 --train_crop_size="640,640" --train_batch_size=2 --dataset=pascal_voc_seg --train_logdir=log/pascal_voc_seg/nas_hnasnet --dataset_dir=/data/voc2012/tfrecord --train_split=train --num_clones=1 --add_image_level_feature=0
+
 
 <a id="32___64_0_"></a>
 ## 32       @ 640_hnasnet
