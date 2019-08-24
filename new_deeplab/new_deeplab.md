@@ -1,4 +1,12 @@
 
+# build_data
+
+## voc_2012       @ build_data
+
+python datasets/build_voc2012_data.py --image_folder=/data/voc2012/JPEGImages --semantic_segmentation_folder=/data/voc2012/SegmentationClassRaw --list_folder=/data/voc2012/ImageSets/Segmentation --image_format="jpg" --output_dir=/data/voc2012/tfrecord
+
+
+
 # 640_hnasnet
 
 <a id="32___64_0_"></a>
