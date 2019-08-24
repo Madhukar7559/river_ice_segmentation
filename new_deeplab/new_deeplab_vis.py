@@ -17,6 +17,11 @@
 
 See model.py for more details and usage.
 """
+
+import sys
+
+sys.path.append('..')
+
 import os.path
 import time
 import numpy as np
