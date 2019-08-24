@@ -33,8 +33,11 @@ import numpy as np
 import tensorflow as tf
 from new_deeplab import common
 from new_deeplab import model
+
 from new_deeplab.datasets import data_generator
-from new_deeplab.utils import save_annotation
+# from new_deeplab.utils import save_annotation
+
+from old_deeplab.utils import save_annotation
 
 flags = tf.app.flags
 
@@ -179,7 +182,8 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         # Save prediction.
         save_annotation.save_annotation(
             crop_semantic_prediction, save_dir,
-            _PREDICTION_FORMAT % (image_id_offset + i), add_colormap=True,
+            _PREDICTION_FORMAT % (image_id_offset + i),
+            add_colormap=True,
             colormap_type=FLAGS.colormap_type)
 
         if FLAGS.also_save_raw_predictions:
