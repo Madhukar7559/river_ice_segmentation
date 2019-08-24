@@ -34,9 +34,8 @@ import numpy as np
 import tensorflow as tf
 
 from old_deeplab import common
-from old_deeplab import model
+# from old_deeplab import model
 
-from new_deeplab import common
 from new_deeplab import model
 
 from old_deeplab.datasets import segmentation_dataset
