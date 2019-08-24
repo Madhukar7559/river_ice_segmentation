@@ -518,7 +518,7 @@ python datasets/build_617_data.py --db_root_dir=/data/617/images/ --db_dir=train
 <a id="32_49_no_aug___build_data_640_"></a>
 ### 32_49_no_aug       @ build_data/640
 
-python datasets/build_617_data.py --db_root_dir=/data/617/images/ --db_dir=training_32_49_640_640_640_640 --image_format=png --label_format=png --output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip
+CUDA_VISIBLE_DEVICES=0 python datasets/build_617_data.py --db_root_dir=/data/617/images/ --db_dir=training_32_49_640_640_640_640 --image_format=png --label_format=png --output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip
 
 <a id="validation_0_20___build_data_640_"></a>
 ### validation_0_20       @ build_data/640
