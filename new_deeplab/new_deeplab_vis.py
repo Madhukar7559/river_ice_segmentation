@@ -104,7 +104,7 @@ flags.DEFINE_integer('max_number_of_iterations', 0,
 _SEMANTIC_PREDICTION_SAVE_FOLDER = 'segmentation_results'
 
 # The folder where raw semantic segmentation predictions are saved.
-_RAW_SEMANTIC_PREDICTION_SAVE_FOLDER = 'raw_segmentation_results'
+_RAW_SEMANTIC_PREDICTION_SAVE_FOLDER = 'raw'
 
 # The format to save image.
 _IMAGE_FORMAT = '%06d_image'
