@@ -12,7 +12,7 @@ class AutoDeeplabParams:
 	:param int eval_interval: evaluuation interval (default: 1)
 	:param bool freeze_bn: whether to freeze bn parameters (default: False)
 	:param bool ft: finetuning on a different dataset
-	:param int gpu_ids: which GPU to train on (default: 0)
+	:param list gpu_ids: which GPU to train on (default: 0)
 	:param str loss_type: loss func type (default: ce)
 	:param float lr: learning rate (default: auto)
 	:param str lr_scheduler: lr scheduler mode: (default: cos)
@@ -46,7 +46,7 @@ class AutoDeeplabParams:
 		self.eval_interval = 1
 		self.freeze_bn = False
 		self.ft = False
-		self.gpu_ids = 0
+		self.gpu_ids = [0 ,]
 		self.loss_type = 'ce'
 		self.lr = 0.025
 		self.lr_scheduler = 'cos'
@@ -66,36 +66,4 @@ class AutoDeeplabParams:
 		self.weight_decay = 0.0003
 		self.workers = 4
 		self.help = {
-			'__desc__': 'PyTorch DeeplabV3Plus Training',
-			'arch_lr': 'learning rate for alpha and beta in architect searching process',
-			'arch_weight_decay': 'w-decay (default: 5e-4)',
-			'backbone': 'backbone name (default: resnet)',
-			'base_size': 'base image size',
-			'batch_size': 'input batch size for                                 training (default: auto)',
-			'checkname': 'set the checkpoint name',
-			'crop_size': 'crop image size',
-			'dataset': 'dataset name (default: pascal)',
-			'epochs': 'number of epochs to train (default: auto)',
-			'eval_interval': 'evaluuation interval (default: 1)',
-			'freeze_bn': 'whether to freeze bn parameters (default: False)',
-			'ft': 'finetuning on a different dataset',
-			'gpu_ids': 'which GPU to train on (default: 0)',
-			'loss_type': 'loss func type (default: ce)',
-			'lr': 'learning rate (default: auto)',
-			'lr_scheduler': 'lr scheduler mode: (default: cos)',
-			'momentum': 'momentum (default: 0.9)',
-			'nesterov': 'whether use nesterov (default: False)',
-			'no_cuda': 'disables CUDA training',
-			'no_val': 'skip validation during training',
-			'out_stride': 'network output stride (default: 8)',
-			'resize': 'resize image size',
-			'resume': 'put the path to resuming file if needed',
-			'seed': 'random seed (default: 1)',
-			'start_epoch': 'start epochs (default:0)',
-			'sync_bn': 'whether to use sync bn (default: auto)',
-			'test_batch_size': 'input batch size for                                 testing (default: auto)',
-			'use_balanced_weights': 'whether to use balanced weights (default: False)',
-			'use_sbd': 'whether to use SBD dataset (default: True)',
-			'weight_decay': 'w-decay (default: 5e-4)',
-			'workers': 'dataloader threads',
 		}

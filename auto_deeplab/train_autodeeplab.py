@@ -23,80 +23,85 @@ from dataloaders import make_data_loader
 from auto_deeplab import AutoDeeplab
 from architect import Architect
 
-class AutoDeeplabParams:
-	"""
-	:param float arch_lr: learning rate for alpha and beta in architect searching process
-	:param float arch_weight_decay: w-decay (default: 5e-4)
-	:param str backbone: backbone name (default: resnet)
-	:param int base_size: base image size
-	:param int batch_size: input batch size for                                 training (default: auto)
-	:param str checkname: set the checkpoint name
-	:param int crop_size: crop image size
-	:param str dataset: dataset name (default: pascal)
-	:param int epochs: number of epochs to train (default: auto)
-	:param int eval_interval: evaluuation interval (default: 1)
-	:param bool freeze_bn: whether to freeze bn parameters (default: False)
-	:param bool ft: finetuning on a different dataset
-	:param int gpu_ids: which GPU to train on (default: 0)
-	:param str loss_type: loss func type (default: ce)
-	:param float lr: learning rate (default: auto)
-	:param str lr_scheduler: lr scheduler mode: (default: cos)
-	:param float momentum: momentum (default: 0.9)
-	:param bool nesterov: whether use nesterov (default: False)
-	:param bool no_cuda: disables CUDA training
-	:param bool no_val: skip validation during training
-	:param int out_stride: network output stride (default: 8)
-	:param int resize: resize image size
-	:param str resume: put the path to resuming file if needed
-	:param int seed: random seed (default: 1)
-	:param int start_epoch: start epochs (default:0)
-	:param bool sync_bn: whether to use sync bn (default: auto)
-	:param int test_batch_size: input batch size for                                 testing (default: auto)
-	:param bool use_balanced_weights: whether to use balanced weights (default: False)
-	:param bool use_sbd: whether to use SBD dataset (default: True)
-	:param float weight_decay: w-decay (default: 5e-4)
-	:param int workers: dataloader threads
-	"""
-	def __init__(self):
-		self.cfg = ('', )
-		self.arch_lr = 0.003
-		self.arch_weight_decay = 0.001
-		self.backbone = 'resnet'
-		self.base_size = 320
-		self.batch_size = None
-		self.checkname = None
-		self.crop_size = 320
-		self.dataset = 'pascal'
-		self.epochs = None
-		self.eval_interval = 1
-		self.freeze_bn = False
-		self.ft = False
-		self.gpu_ids = 0
-		self.loss_type = 'ce'
-		self.lr = 0.025
-		self.lr_scheduler = 'cos'
-		self.momentum = 0.9
-		self.nesterov = False
-		self.no_cuda = False
-		self.no_val = False
-		self.out_stride = 16
-		self.resize = 512
-		self.resume = None
-		self.seed = 1
-		self.start_epoch = 0
-		self.sync_bn = None
-		self.test_batch_size = None
-		self.use_balanced_weights = False
-		self.use_sbd = False
-		self.weight_decay = 0.0003
-		self.workers = 4
-		self.help = {
-		}
 
+class AutoDeeplabParams:
+    """
+    :param float arch_lr: learning rate for alpha and beta in architect searching process
+    :param float arch_weight_decay: w-decay (default: 5e-4)
+    :param str backbone: backbone name (default: resnet)
+    :param int base_size: base image size
+    :param int batch_size: input batch size for training (default: auto)
+    :param str checkname: set the checkpoint name
+    :param int crop_size: crop image size
+    :param str dataset: dataset name (default: pascal)
+    :param int epochs: number of epochs to train (default: auto)
+    :param int eval_interval: evaluuation interval (default: 1)
+    :param bool freeze_bn: whether to freeze bn parameters (default: False)
+    :param bool ft: finetuning on a different dataset
+    :param list gpu_ids: which GPU to train on (default: 0)
+    :param str loss_type: loss func type (default: ce)
+    :param float lr: learning rate (default: auto)
+    :param str lr_scheduler: lr scheduler mode: (default: cos)
+    :param float momentum: momentum (default: 0.9)
+    :param bool nesterov: whether use nesterov (default: False)
+    :param bool no_cuda: disables CUDA training
+    :param bool no_val: skip validation during training
+    :param int out_stride: network output stride (default: 8)
+    :param int resize: resize image size
+    :param str resume: put the path to resuming file if needed
+    :param int seed: random seed (default: 1)
+    :param int start_epoch: start epochs (default:0)
+    :param bool sync_bn: whether to use sync bn (default: auto)
+    :param int test_batch_size: input batch size for testing (default: auto)
+    :param bool use_balanced_weights: whether to use balanced weights (default: False)
+    :param bool use_sbd: whether to use SBD dataset (default: True)
+    :param float weight_decay: w-decay (default: 5e-4)
+    :param int workers: dataloader threads
+    """
+
+    def __init__(self):
+        self.cfg = ('',)
+        self.arch_lr = 0.003
+        self.arch_weight_decay = 0.001
+        self.backbone = 'resnet'
+        self.base_size = 320
+        self.batch_size = None
+        self.checkname = None
+        self.crop_size = 320
+        self.dataset = 'pascal'
+        self.epochs = None
+        self.eval_interval = 1
+        self.freeze_bn = False
+        self.ft = False
+        self.gpu_ids = [0, ]
+        self.loss_type = 'ce'
+        self.lr = 0.025
+        self.lr_scheduler = 'cos'
+        self.momentum = 0.9
+        self.nesterov = False
+        self.no_cuda = False
+        self.no_val = False
+        self.out_stride = 16
+        self.resize = 512
+        self.resume = None
+        self.seed = 1
+        self.start_epoch = 0
+        self.sync_bn = None
+        self.test_batch_size = None
+        self.use_balanced_weights = False
+        self.use_sbd = False
+        self.weight_decay = 0.0003
+        self.workers = 4
+        self.help = {
+        }
 
 
 class Trainer(object):
     def __init__(self, args):
+        """
+
+        :param AutoDeeplabParams args:
+        """
         self.args = args
 
         # Define Saver
@@ -267,90 +272,90 @@ class Trainer(object):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="PyTorch DeeplabV3Plus Training")
-    parser.add_argument('--backbone', type=str, default='resnet',
-                        choices=['resnet', 'xception', 'drn', 'mobilenet'],
-                        help='backbone name (default: resnet)')
-    parser.add_argument('--out_stride', type=int, default=16,
-                        help='network output stride (default: 8)')
-    parser.add_argument('--dataset', type=str, default='pascal',
-                        choices=['pascal', 'coco', 'cityscapes'],
-                        help='dataset name (default: pascal)')
-    parser.add_argument('--use_sbd', action='store_true', default=False,
-                        help='whether to use SBD dataset (default: True)')
-    parser.add_argument('--workers', type=int, default=4,
-                        metavar='N', help='dataloader threads')
-    parser.add_argument('--base_size', type=int, default=320,
-                        help='base image size')
-    parser.add_argument('--crop_size', type=int, default=320,
-                        help='crop image size')
-    parser.add_argument('--resize', type=int, default=512,
-                        help='resize image size')
-    parser.add_argument('--sync_bn', type=bool, default=None,
-                        help='whether to use sync bn (default: auto)')
-    parser.add_argument('--freeze_bn', type=bool, default=False,
-                        help='whether to freeze bn parameters (default: False)')
-    parser.add_argument('--loss_type', type=str, default='ce',
-                        choices=['ce', 'focal'],
-                        help='loss func type (default: ce)')
-    # training hyper params
-    parser.add_argument('--epochs', type=int, default=None, metavar='N',
-                        help='number of epochs to train (default: auto)')
-    parser.add_argument('--start_epoch', type=int, default=0,
-                        metavar='N', help='start epochs (default:0)')
-    parser.add_argument('--batch_size', type=int, default=None,
-                        metavar='N', help='input batch size for \
-                                training (default: auto)')
-    parser.add_argument('--test_batch_size', type=int, default=None,
-                        metavar='N', help='input batch size for \
-                                testing (default: auto)')
-    parser.add_argument('--use_balanced_weights', action='store_true', default=False,
-                        help='whether to use balanced weights (default: False)')
-    # optimizer params
-    parser.add_argument('--lr', type=float, default=0.025, metavar='LR',
-                        help='learning rate (default: auto)')
-    parser.add_argument('--arch_lr', type=float, default=3e-3,
-                        help='learning rate for alpha and beta in architect searching process')
+    # parser = argparse.ArgumentParser(description="PyTorch DeeplabV3Plus Training")
+    # parser.add_argument('--backbone', type=str, default='resnet',
+    #                     choices=['resnet', 'xception', 'drn', 'mobilenet'],
+    #                     help='backbone name (default: resnet)')
+    # parser.add_argument('--out_stride', type=int, default=16,
+    #                     help='network output stride (default: 8)')
+    # parser.add_argument('--dataset', type=str, default='pascal',
+    #                     choices=['pascal', 'coco', 'cityscapes'],
+    #                     help='dataset name (default: pascal)')
+    # parser.add_argument('--use_sbd', action='store_true', default=False,
+    #                     help='whether to use SBD dataset (default: True)')
+    # parser.add_argument('--workers', type=int, default=4,
+    #                     metavar='N', help='dataloader threads')
+    # parser.add_argument('--base_size', type=int, default=320,
+    #                     help='base image size')
+    # parser.add_argument('--crop_size', type=int, default=320,
+    #                     help='crop image size')
+    # parser.add_argument('--resize', type=int, default=512,
+    #                     help='resize image size')
+    # parser.add_argument('--sync_bn', type=bool, default=None,
+    #                     help='whether to use sync bn (default: auto)')
+    # parser.add_argument('--freeze_bn', type=bool, default=False,
+    #                     help='whether to freeze bn parameters (default: False)')
+    # parser.add_argument('--loss_type', type=str, default='ce',
+    #                     choices=['ce', 'focal'],
+    #                     help='loss func type (default: ce)')
+    # # training hyper params
+    # parser.add_argument('--epochs', type=int, default=None, metavar='N',
+    #                     help='number of epochs to train (default: auto)')
+    # parser.add_argument('--start_epoch', type=int, default=0,
+    #                     metavar='N', help='start epochs (default:0)')
+    # parser.add_argument('--batch_size', type=int, default=None,
+    #                     metavar='N', help='input batch size for \
+    #                             training (default: auto)')
+    # parser.add_argument('--test_batch_size', type=int, default=None,
+    #                     metavar='N', help='input batch size for \
+    #                             testing (default: auto)')
+    # parser.add_argument('--use_balanced_weights', action='store_true', default=False,
+    #                     help='whether to use balanced weights (default: False)')
+    # # optimizer params
+    # parser.add_argument('--lr', type=float, default=0.025, metavar='LR',
+    #                     help='learning rate (default: auto)')
+    # parser.add_argument('--arch_lr', type=float, default=3e-3,
+    #                     help='learning rate for alpha and beta in architect searching process')
+    #
+    # parser.add_argument('--lr_scheduler', type=str, default='cos',
+    #                     choices=['poly', 'step', 'cos'],
+    #                     help='lr scheduler mode: (default: cos)')
+    # parser.add_argument('--momentum', type=float, default=0.9,
+    #                     metavar='M', help='momentum (default: 0.9)')
+    # parser.add_argument('--weight_decay', type=float, default=3e-4,
+    #                     metavar='M', help='w-decay (default: 5e-4)')
+    # parser.add_argument('--arch_weight_decay', type=float, default=1e-3,
+    #                     metavar='M', help='w-decay (default: 5e-4)')
+    #
+    # parser.add_argument('--nesterov', action='store_true', default=False,
+    #                     help='whether use nesterov (default: False)')
+    # # cuda, seed and logging
+    # parser.add_argument('--no_cuda', action='store_true', default=
+    # False, help='disables CUDA training')
+    # parser.add_argument('--gpu-ids', nargs='*', type=int, default=0,
+    #                     help='which GPU to train on (default: 0)')
+    # parser.add_argument('--seed', type=int, default=1, metavar='S',
+    #                     help='random seed (default: 1)')
+    # # checking point
+    # parser.add_argument('--resume', type=str, default=None,
+    #                     help='put the path to resuming file if needed')
+    # parser.add_argument('--checkname', type=str, default=None,
+    #                     help='set the checkpoint name')
+    # # finetuning pre-trained models
+    # parser.add_argument('--ft', action='store_true', default=False,
+    #                     help='finetuning on a different dataset')
+    # # evaluation option
+    # parser.add_argument('--eval_interval', type=int, default=1,
+    #                     help='evaluuation interval (default: 1)')
+    # parser.add_argument('--no_val', action='store_true', default=False,
+    #                     help='skip validation during training')
+    #
+    # paramparse.fromParser(parser, 'AutoDeeplabParams')
+    #
+    # args = parser.parse_args()
 
-    parser.add_argument('--lr_scheduler', type=str, default='cos',
-                        choices=['poly', 'step', 'cos'],
-                        help='lr scheduler mode: (default: cos)')
-    parser.add_argument('--momentum', type=float, default=0.9,
-                        metavar='M', help='momentum (default: 0.9)')
-    parser.add_argument('--weight_decay', type=float, default=3e-4,
-                        metavar='M', help='w-decay (default: 5e-4)')
-    parser.add_argument('--arch_weight_decay', type=float, default=1e-3,
-                        metavar='M', help='w-decay (default: 5e-4)')
-
-    parser.add_argument('--nesterov', action='store_true', default=False,
-                        help='whether use nesterov (default: False)')
-    # cuda, seed and logging
-    parser.add_argument('--no_cuda', action='store_true', default=
-    False, help='disables CUDA training')
-    parser.add_argument('--gpu-ids', nargs='*', type=int, default=0,
-                        help='which GPU to train on (default: 0)')
-    parser.add_argument('--seed', type=int, default=1, metavar='S',
-                        help='random seed (default: 1)')
-    # checking point
-    parser.add_argument('--resume', type=str, default=None,
-                        help='put the path to resuming file if needed')
-    parser.add_argument('--checkname', type=str, default=None,
-                        help='set the checkpoint name')
-    # finetuning pre-trained models
-    parser.add_argument('--ft', action='store_true', default=False,
-                        help='finetuning on a different dataset')
-    # evaluation option
-    parser.add_argument('--eval_interval', type=int, default=1,
-                        help='evaluuation interval (default: 1)')
-    parser.add_argument('--no_val', action='store_true', default=False,
-                        help='skip validation during training')
-
-    paramparse.fromParser(parser, 'AutoDeeplabParams')
-
-    args = parser.parse_args()
-
-    # args = AutoDeeplabParams()
-    # paramparse.process(args)
+    args = AutoDeeplabParams()
+    paramparse.process(args)
 
     args.cuda = not args.no_cuda and torch.cuda.is_available()
 
