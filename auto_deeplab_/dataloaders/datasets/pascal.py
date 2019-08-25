@@ -6,6 +6,7 @@ from torch.utils.data import Dataset
 from torchvision import transforms
 
 from auto_deeplab_.mypath import Path
+from auto_deeplab_.AutoDeeplabParams import AutoDeeplabParams
 from auto_deeplab_.dataloaders import custom_transforms as tr
 
 class VOCSegmentation(Dataset):
@@ -20,6 +21,7 @@ class VOCSegmentation(Dataset):
                  split='train',
                  ):
         """
+        :param AutoDeeplabParams args
         :param base_dir: path to VOC dataset directory
         :param split: train/val
         :param transform: transform to apply
