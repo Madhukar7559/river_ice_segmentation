@@ -136,7 +136,7 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 <a id="ade20k_pretrained___640_hnasne_t_"></a>
 ## ade20k_pretrained       @ 640_hnasnet
 
-CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31_ade20k --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_31_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0 --tf_initial_checkpoint=log/ade20k/resnet_v1_101_beta/model.ckpt-207566
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31_ade20k --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_31_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0 --tf_initial_checkpoint=log/ade20k/nas_hnasnet/model.ckpt-209105
 
 <a id="640_resnet_v1_101_bet_a_"></a>
 # 640_resnet_v1_101_beta
