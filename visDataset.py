@@ -328,6 +328,14 @@ if eval_mode:
         avg_mean_IU_ice, avg_mean_IU_ice_1, avg_mean_IU_ice_2)
     print_and_write(log_txt, log_fname)
 
+    log_txt = "\tanchor_ice\t frazil_ice\t ice+water\t ice+water(fw)\n" \
+              "recall\t{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n" \
+              "precision\t{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n".format(
+        avg_mean_acc_ice_1, avg_mean_acc_ice_2, np.mean(mean_acc), np.mean(pix_acc),
+        avg_mean_IU_ice_1, avg_mean_IU_ice_2, np.mean(mean_IU), np.mean(fw_IU),
+    )
+    print_and_write(log_txt, log_fname)
+
 fw_sum_total = np.sum(fw_sum)
 fw_sum_frac = fw_sum / float(fw_sum_total)
 
