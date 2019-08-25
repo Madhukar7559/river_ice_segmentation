@@ -198,6 +198,8 @@ flags.DEFINE_string('train_split', 'train',
 
 flags.DEFINE_string('dataset_dir', None, 'Where the dataset reside.')
 
+flags.DEFINE_integer('allow_memory_growth', 1, 'allow_memory_growth')
+flags.DEFINE_float('gpu_memory_fraction', 1.0, 'gpu_memory_fraction.')
 
 def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
   """Builds a clone of DeepLab.
@@ -471,7 +473,8 @@ def main(unused_argv):
       # Soft placement allows placing on CPU ops without GPU implementation.
       session_config = tf.ConfigProto(
           allow_soft_placement=True, log_device_placement=False)
-
+      session_config.gpu_options.allow_growth = FLAGS.allow_memory_growth
+      session_config.gpu_options.per_process_gpu_memory_fraction = FLAGS.gpu_memory_fraction
       last_layers = model.get_extra_layer_scopes(
           FLAGS.last_layers_contain_logits_only)
       init_fn = None
