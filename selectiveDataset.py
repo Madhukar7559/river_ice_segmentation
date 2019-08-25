@@ -2,7 +2,7 @@ import os
 import sys
 import numpy as np
 from densenet.utils import processArguments, readData
-from scipy.misc.pilutil import imread, imsave
+from imageio import imread, imsave
 
 params = {
     'db_root_dir': '/home/abhineet/N/Datasets/617/',

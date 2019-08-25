@@ -1,11 +1,14 @@
+import sys
+
+sys.path.append('..')
+
 import argparse
+import paramparse
 import os
 import numpy as np
 from tqdm import tqdm
 import torch.nn as nn
 
-from auto_deeplab.mypath import Path
-from auto_deeplab.dataloaders import make_data_loader
 from pytorch_deeplab.modeling.sync_batchnorm.replicate import patch_replication_callback
 from pytorch_deeplab.modeling.deeplab import *
 from pytorch_deeplab.ptd_utils.loss import SegmentationLosses
@@ -14,8 +17,12 @@ from pytorch_deeplab.ptd_utils.lr_scheduler import LR_Scheduler
 from pytorch_deeplab.ptd_utils.saver import Saver
 from pytorch_deeplab.ptd_utils.summaries import TensorboardSummary
 from pytorch_deeplab.ptd_utils.metrics import Evaluator
-from auto_deeplab.auto_deeplab import AutoDeeplab
-from auto_deeplab.architect import Architect
+
+from mypath import Path
+from dataloaders import make_data_loader
+from auto_deeplab import AutoDeeplab
+from architect import Architect
+
 
 class Trainer(object):
     def __init__(self, args):
@@ -30,13 +37,13 @@ class Trainer(object):
 
         # Define Dataloader
         kwargs = {'num_workers': args.workers, 'pin_memory': True}
-        #self.train_loader1, self.train_loader2, self.val_loader, self.test_loader, self.nclass = make_data_loader(args, **kwargs)
-        self.train_loader1, self.train_loader2, self.val_loader,  self.nclass = make_data_loader(args, **kwargs)
-        
+        # self.train_loader1, self.train_loader2, self.val_loader, self.test_loader, self.nclass = make_data_loader(args, **kwargs)
+        self.train_loader1, self.train_loader2, self.val_loader, self.nclass = make_data_loader(args, **kwargs)
+
         # Define Criterion
         # whether to use class balanced weights
         if args.use_balanced_weights:
-            classes_weights_path = os.path.join(Path.db_root_dir(args.dataset), args.dataset+'_classes_weights.npy')
+            classes_weights_path = os.path.join(Path.db_root_dir(args.dataset), args.dataset + '_classes_weights.npy')
             if os.path.isfile(classes_weights_path):
                 weight = np.load(classes_weights_path)
             else:
@@ -47,13 +54,13 @@ class Trainer(object):
         self.criterion = SegmentationLosses(weight=weight, cuda=args.cuda).build_loss(mode=args.loss_type)
 
         # Define network
-        model = AutoDeeplab (self.nclass, 12, self.criterion, crop_size=self.args.crop_size)
+        model = AutoDeeplab(self.nclass, 12, self.criterion, crop_size=self.args.crop_size)
         optimizer = torch.optim.SGD(
-                model.weight_parameters(),
-                args.lr,
-                momentum=args.momentum,
-                weight_decay=args.weight_decay
-            )
+            model.weight_parameters(),
+            args.lr,
+            momentum=args.momentum,
+            weight_decay=args.weight_decay
+        )
         self.model, self.optimizer = model, optimizer
 
         # Using cuda
@@ -61,11 +68,9 @@ class Trainer(object):
             self.model = torch.nn.DataParallel(self.model, device_ids=self.args.gpu_ids)
             patch_replication_callback(self.model)
             self.model = self.model.cuda()
-            print ('cuda finished')
-
+            print('cuda finished')
 
         # Define Optimizer
-
 
         self.model, self.optimizer = model, optimizer
 
@@ -73,14 +78,14 @@ class Trainer(object):
         self.evaluator = Evaluator(self.nclass)
         # Define lr scheduler
         self.scheduler = LR_Scheduler(args.lr_scheduler, args.lr,
-                                            args.epochs, len(self.train_loader1))
+                                      args.epochs, len(self.train_loader1))
 
-        self.architect = Architect (self.model, args)
+        self.architect = Architect(self.model, args)
         # Resuming checkpoint
         self.best_pred = 0.0
         if args.resume is not None:
             if not os.path.isfile(args.resume):
-                raise RuntimeError("=> no checkpoint found at '{}'" .format(args.resume))
+                raise RuntimeError("=> no checkpoint found at '{}'".format(args.resume))
             checkpoint = torch.load(args.resume)
             args.start_epoch = checkpoint['epoch']
             if args.cuda:
@@ -104,12 +109,12 @@ class Trainer(object):
         num_img_tr = len(self.train_loader1)
         for i, sample in enumerate(tbar):
             image, target = sample['image'], sample['label']
-            search = next (iter (self.train_loader2))
+            search = next(iter(self.train_loader2))
             image_search, target_search = search['image'], search['label']
             # print ('------------------------begin-----------------------')
             if self.args.cuda:
                 image, target = image.cuda(), target.cuda()
-                image_search, target_search = image_search.cuda (), target_search.cuda () 
+                image_search, target_search = image_search.cuda(), target_search.cuda()
                 # print ('cuda finish')
             self.scheduler(self.optimizer, i, epoch, self.best_pred)
             self.optimizer.zero_grad()
@@ -118,8 +123,8 @@ class Trainer(object):
             loss = self.criterion(output, target)
             loss.backward()
             self.optimizer.step()
-            if epoch>19:
-                self.architect.step (image_search, target_search)
+            if epoch > 19:
+                self.architect.step(image_search, target_search)
             train_loss += loss.item()
             tbar.set_description('Train loss: %.3f' % (train_loss / (i + 1)))
             self.writer.add_scalar('train/total_loss_iter', loss.item(), i + num_img_tr * epoch)
@@ -142,7 +147,6 @@ class Trainer(object):
                 'optimizer': self.optimizer.state_dict(),
                 'best_pred': self.best_pred,
             }, is_best)
-
 
     def validation(self, epoch):
         self.model.eval()
@@ -190,6 +194,7 @@ class Trainer(object):
                 'best_pred': self.best_pred,
             }, is_best)
 
+
 def main():
     parser = argparse.ArgumentParser(description="PyTorch DeeplabV3Plus Training")
     parser.add_argument('--backbone', type=str, default='resnet',
@@ -233,8 +238,8 @@ def main():
     # optimizer params
     parser.add_argument('--lr', type=float, default=0.025, metavar='LR',
                         help='learning rate (default: auto)')
-    parser.add_argument('--arch_lr', type=float, default=3e-3, 
-                       help='learning rate for alpha and beta in architect searching process')
+    parser.add_argument('--arch_lr', type=float, default=3e-3,
+                        help='learning rate for alpha and beta in architect searching process')
 
     parser.add_argument('--lr_scheduler', type=str, default='cos',
                         choices=['poly', 'step', 'cos'],
@@ -250,7 +255,7 @@ def main():
                         help='whether use nesterov (default: False)')
     # cuda, seed and logging
     parser.add_argument('--no_cuda', action='store_true', default=
-                        False, help='disables CUDA training')
+    False, help='disables CUDA training')
     parser.add_argument('--gpu-ids', nargs='*', type=int, default=0,
                         help='which GPU to train on (default: 0)')
     parser.add_argument('--seed', type=int, default=1, metavar='S',
@@ -268,6 +273,8 @@ def main():
                         help='evaluuation interval (default: 1)')
     parser.add_argument('--no_val', action='store_true', default=False,
                         help='skip validation during training')
+
+    paramparse.fromParser(parser, 'AutoDeeplabParams')
 
     args = parser.parse_args()
     args.cuda = not args.no_cuda and torch.cuda.is_available()
@@ -299,11 +306,10 @@ def main():
             'cityscapes': 0.025,
             'pascal': 0.007,
         }
-        #args.lr = lrs[args.dataset.lower()] / (4 * len(args.gpu_ids)) * args.batch_size
-
+        # args.lr = lrs[args.dataset.lower()] / (4 * len(args.gpu_ids)) * args.batch_size
 
     if args.checkname is None:
-        args.checkname = 'deeplab-'+str(args.backbone)
+        args.checkname = 'deeplab-' + str(args.backbone)
     print(args)
     torch.manual_seed(args.seed)
     trainer = Trainer(args)
@@ -316,5 +322,6 @@ def main():
 
     trainer.writer.close()
 
+
 if __name__ == "__main__":
-   main()
+    main()
