@@ -3,9 +3,10 @@ import os
 from PIL import Image
 import numpy as np
 from torch.utils.data import Dataset
-from mypath import Path
 from torchvision import transforms
-from dataloaders import custom_transforms as tr
+
+from auto_deeplab_.mypath import Path
+from auto_deeplab_.dataloaders import custom_transforms as tr
 
 class VOCSegmentation(Dataset):
     """

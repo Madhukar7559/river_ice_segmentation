@@ -1,7 +1,15 @@
-from dataloaders.datasets import cityscapes, coco, combine_dbs, pascal, sbd
+from auto_deeplab_.dataloaders.datasets import cityscapes, coco, combine_dbs, pascal, sbd
+from auto_deeplab_.AutoDeeplabParams import AutoDeeplabParams
+
 from torch.utils.data import DataLoader
 
 def make_data_loader(args, **kwargs):
+    """
+
+    :param AutoDeeplabParams args:
+    :param kwargs:
+    :return:
+    """
 
     if args.dataset == 'pascal':
         train_set = pascal.VOCSegmentation(args, split='train')
