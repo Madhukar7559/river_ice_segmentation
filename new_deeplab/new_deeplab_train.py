@@ -26,8 +26,14 @@ import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
+from tensorflow.python.util import deprecation
+deprecation._PRINT_DEPRECATION_WARNINGS = False
+
 import tensorflow as tf
 from tensorflow.python.ops import math_ops
+
+
+
 from new_deeplab import common
 from new_deeplab import model
 from new_deeplab.datasets import data_generator
