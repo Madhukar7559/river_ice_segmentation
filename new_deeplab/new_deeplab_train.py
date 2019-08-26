@@ -22,6 +22,10 @@ import sys
 
 sys.path.append('..')
 
+import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import tensorflow as tf
 from tensorflow.python.ops import math_ops
 from new_deeplab import common
