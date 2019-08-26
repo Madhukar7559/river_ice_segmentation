@@ -91,11 +91,18 @@ if stitch and save_stitched:
 log_fname = os.path.join(save_path, 'vis_log_{:s}.txt'.format(getDateTime()))
 print('Saving log to: {}'.format(log_fname))
 
+save_path_parent = os.path.dirname(save_path)
+templ_1 = os.path.basename(save_path_parent)
+templ_2 = os.path.basename(os.path.dirname(save_path_parent))
+
+templ = '{}_{}'.format(templ_1, templ_2)
+
 if selective_mode:
     label_diff = int(255.0 / n_classes)
 else:
     label_diff = int(255.0 / (n_classes - 1))
 
+print('templ: {}'.format(templ))
 print('label_diff: {}'.format(label_diff))
 
 n_frames = end_id - start_id + 1
@@ -328,9 +335,9 @@ if eval_mode:
         avg_mean_IU_ice, avg_mean_IU_ice_1, avg_mean_IU_ice_2)
     print_and_write(log_txt, log_fname)
 
-    log_txt = "\tanchor_ice\t frazil_ice\t ice+water\t ice+water(fw)\n" \
+    log_txt = "{}\n\tanchor_ice\t frazil_ice\t ice+water\t ice+water(fw)\n" \
               "recall\t{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n" \
-              "precision\t{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n".format(
+              "precision\t{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n".format(templ,
         avg_mean_acc_ice_1, avg_mean_acc_ice_2, np.mean(mean_acc), np.mean(pix_acc),
         avg_mean_IU_ice_1, avg_mean_IU_ice_2, np.mean(mean_IU), np.mean(fw_IU),
     )
