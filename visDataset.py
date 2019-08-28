@@ -348,3 +348,6 @@ fw_sum_frac = fw_sum / float(fw_sum_total)
 
 print('fw_sum_total: {}'.format(fw_sum_total))
 print('fw_sum_frac: {}'.format(fw_sum_frac))
+
+print('Wrote log to: {}'.format(log_fname))
+
