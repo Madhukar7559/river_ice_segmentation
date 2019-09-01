@@ -27,6 +27,8 @@
     - [ade20k_pretrained       @ 640_hnasnet](#ade20k_pretrained___640_hnasne_t_)
         - [4       @ ade20k_pretrained/640_hnasnet](#4___ade20k_pretrained_640_hnasne_t_)
             - [vis       @ 4/ade20k_pretrained/640_hnasnet](#vis___4_ade20k_pretrained_640_hnasne_t_)
+        - [4_non_aug       @ ade20k_pretrained/640_hnasnet](#4_non_aug___ade20k_pretrained_640_hnasne_t_)
+            - [vis       @ 4_non_aug/ade20k_pretrained/640_hnasnet](#vis___4_non_aug_ade20k_pretrained_640_hnasne_t_)
         - [8       @ ade20k_pretrained/640_hnasnet](#8___ade20k_pretrained_640_hnasne_t_)
             - [vis       @ 8/ade20k_pretrained/640_hnasnet](#vis___8_ade20k_pretrained_640_hnasne_t_)
         - [16       @ ade20k_pretrained/640_hnasnet](#16___ade20k_pretrained_640_hnasne_t_)
@@ -178,6 +180,22 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/ima
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_ade20k/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_ade20k/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
 
+
+<a id="4_non_aug___ade20k_pretrained_640_hnasne_t_"></a>
+### 4_non_aug       @ ade20k_pretrained/640_hnasnet
+
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_ade20k --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_3_640_640_640_640 --num_clones=1 --add_image_level_feature=0 --tf_initial_checkpoint=log/ade20k/nas_hnasnet/model.ckpt-352577 --initialize_last_layer=0
+
+<a id="vis___4_non_aug_ade20k_pretrained_640_hnasne_t_"></a>
+#### vis       @ 4_non_aug/ade20k_pretrained/640_hnasnet
+
+CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_ade20k/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_ade20k/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_ade20k/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
+
+python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_ade20k/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_ade20k/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
+
+
 <a id="8___ade20k_pretrained_640_hnasne_t_"></a>
 ### 8       @ ade20k_pretrained/640_hnasnet
 
@@ -186,7 +204,7 @@ CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_num
 <a id="vis___8_ade20k_pretrained_640_hnasne_t_"></a>
 #### vis       @ 8/ade20k_pretrained/640_hnasnet
 
-CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_7_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_7_ade20k/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_7_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_7_ade20k/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_7_ade20k/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_7_ade20k/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
 
@@ -196,12 +214,12 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 <a id="16___ade20k_pretrained_640_hnasne_t_"></a>
 ### 16       @ ade20k_pretrained/640_hnasnet
 
-CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_15_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0 --tf_initial_checkpoint=log/ade20k/nas_hnasnet/model.ckpt-352577 --initialize_last_layer=0
+CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_15_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0 --tf_initial_checkpoint=log/ade20k/nas_hnasnet/model.ckpt-352577 --initialize_last_layer=0
 
 <a id="vis___16_ade20k_pretrained_640_hnasnet_"></a>
 #### vis       @ 16/ade20k_pretrained/640_hnasnet
 
-CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
+CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_15_ade20k/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
 
@@ -210,7 +228,7 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 <a id="24___ade20k_pretrained_640_hnasne_t_"></a>
 ### 24       @ ade20k_pretrained/640_hnasnet
 
-CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_23_ade20k --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_23_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0 --tf_initial_checkpoint=log/ade20k/nas_hnasnet/model.ckpt-352577 --initialize_last_layer=0
+CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size=640,640 --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_23_ade20k --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_23_640_640_64_256_rot_15_345_4_flip --num_clones=1 --add_image_level_feature=0 --tf_initial_checkpoint=log/ade20k/nas_hnasnet/model.ckpt-352577 --initialize_last_layer=0
 
 <a id="vis___24_ade20k_pretrained_640_hnasnet_"></a>
 #### vis       @ 24/ade20k_pretrained/640_hnasnet
@@ -236,8 +254,6 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/ima
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31_ade20k/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31_ade20k/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
 
-
-
 <a id="640_resnet_v1_101_bet_a_"></a>
 # 640_resnet_v1_101_beta
 
@@ -261,12 +277,12 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 <a id="8___imagenet_pretrained_640_resnet_v1_101_beta_"></a>
 ### 8       @ imagenet_pretrained/640_resnet_v1_101_beta
 
-CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size="640,640" --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/resnet_v1_101/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_7_640_640_64_256_rot_15_345_4_flip --num_clones=1
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size="640,640" --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/resnet_v1_101/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_7_640_640_64_256_rot_15_345_4_flip --num_clones=1
 
 <a id="vis___8_imagenet_pretrained_640_resnet_v1_101_beta_"></a>
 #### vis       @ 8/imagenet_pretrained/640_resnet_v1_101_beta
 
-CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_vis.py --logtostderr --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=10 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=10 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_7/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
 
@@ -280,7 +296,7 @@ CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_train.py --logtostderr --training_num
 <a id="vis___16_imagenet_pretrained_640_resnet_v1_101_bet_a_"></a>
 #### vis       @ 16/imagenet_pretrained/640_resnet_v1_101_beta
 
-CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_vis.py --logtostderr --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_15 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_15/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=10 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
+CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_vis.py --logtostderr --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_15 --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_15/training_32_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_32_49_640_640_640_640 --vis_batch_size=10 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0
 
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_15/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_15/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
 
@@ -289,7 +305,7 @@ python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --
 <a id="24___imagenet_pretrained_640_resnet_v1_101_beta_"></a>
 ### 24       @ imagenet_pretrained/640_resnet_v1_101_beta
 
-CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size="640,640" --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/resnet_v1_101/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_23 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_23_640_640_64_256_rot_15_345_4_flip --num_clones=1
+CUDA_VISIBLE_DEVICES=2 python3 new_deeplab_train.py --logtostderr --training_number_of_steps=1000000 --model_variant="resnet_v1_101_beta" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --train_crop_size="640,640" --train_batch_size=2 --dataset=training_0_31_49_640_640_64_256_rot_15_345_4_flip --tf_initial_checkpoint=pre_trained/resnet_v1_101/model.ckpt --train_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/resnet_v1_101_0_23 --dataset_dir=data/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --train_split=training_0_23_640_640_64_256_rot_15_345_4_flip --num_clones=1
 
 <a id="vis___24_imagenet_pretrained_640_resnet_v1_101_bet_a_"></a>
 #### vis       @ 24/imagenet_pretrained/640_resnet_v1_101_beta

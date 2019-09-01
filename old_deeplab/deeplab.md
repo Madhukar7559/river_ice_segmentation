@@ -50,6 +50,7 @@
    - [build_data       @ 640](#build_data___64_0_)
       - [0_3       @ build_data/640](#0_3___build_data_640_)
       - [0_3_non_aug       @ build_data/640](#0_3_non_aug___build_data_640_)
+         - [all       @ 0_3_non_aug/build_data/640](#all___0_3_non_aug_build_data_640_)
          - [sel_2       @ 0_3_non_aug/build_data/640](#sel_2___0_3_non_aug_build_data_640_)
          - [sel_10       @ 0_3_non_aug/build_data/640](#sel_10___0_3_non_aug_build_data_640_)
          - [sel_100       @ 0_3_non_aug/build_data/640](#sel_100___0_3_non_aug_build_data_640_)
@@ -457,6 +458,9 @@ python datasets/build_617_data.py --db_root_dir=/data/617/images/ --db_dir=train
 
 <a id="0_3_non_aug___build_data_640_"></a>
 ### 0_3_non_aug       @ build_data/640
+
+<a id="all___0_3_non_aug_build_data_640_"></a>
+#### all       @ 0_3_non_aug/build_data/640
 
 python datasets/build_617_data.py --db_root_dir=/data/617/images/ --db_dir=training_0_3_640_640_640_640 --image_format=png --label_format=png --output_dir=training_0_31_49_640_640_64_256_rot_15_345_4_flip
 
