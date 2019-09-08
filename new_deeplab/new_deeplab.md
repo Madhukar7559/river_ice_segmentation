@@ -32,12 +32,16 @@
             - [vis_4_49       @ 4_non_aug/ade20k_pretrained/640_hnasnet](#vis_4_49___4_non_aug_ade20k_pretrained_640_hnasne_t_)
         - [4_non_aug_sel_2       @ ade20k_pretrained/640_hnasnet](#4_non_aug_sel_2___ade20k_pretrained_640_hnasne_t_)
             - [vis       @ 4_non_aug_sel_2/ade20k_pretrained/640_hnasnet](#vis___4_non_aug_sel_2_ade20k_pretrained_640_hnasne_t_)
+            - [vis_4_49       @ 4_non_aug_sel_2/ade20k_pretrained/640_hnasnet](#vis_4_49___4_non_aug_sel_2_ade20k_pretrained_640_hnasne_t_)
         - [4_non_aug_sel_10       @ ade20k_pretrained/640_hnasnet](#4_non_aug_sel_10___ade20k_pretrained_640_hnasne_t_)
             - [vis       @ 4_non_aug_sel_10/ade20k_pretrained/640_hnasnet](#vis___4_non_aug_sel_10_ade20k_pretrained_640_hnasnet_)
+            - [vis_4_49       @ 4_non_aug_sel_10/ade20k_pretrained/640_hnasnet](#vis_4_49___4_non_aug_sel_10_ade20k_pretrained_640_hnasnet_)
         - [4_non_aug_sel_100       @ ade20k_pretrained/640_hnasnet](#4_non_aug_sel_100___ade20k_pretrained_640_hnasne_t_)
             - [vis       @ 4_non_aug_sel_100/ade20k_pretrained/640_hnasnet](#vis___4_non_aug_sel_100_ade20k_pretrained_640_hnasne_t_)
+            - [vis_4_49       @ 4_non_aug_sel_100/ade20k_pretrained/640_hnasnet](#vis_4_49___4_non_aug_sel_100_ade20k_pretrained_640_hnasne_t_)
         - [4_non_aug_sel_1000       @ ade20k_pretrained/640_hnasnet](#4_non_aug_sel_1000___ade20k_pretrained_640_hnasne_t_)
             - [vis       @ 4_non_aug_sel_1000/ade20k_pretrained/640_hnasnet](#vis___4_non_aug_sel_1000_ade20k_pretrained_640_hnasnet_)
+            - [vis_4_49       @ 4_non_aug_sel_1000/ade20k_pretrained/640_hnasnet](#vis_4_49___4_non_aug_sel_1000_ade20k_pretrained_640_hnasnet_)
         - [8       @ ade20k_pretrained/640_hnasnet](#8___ade20k_pretrained_640_hnasne_t_)
             - [vis       @ 8/ade20k_pretrained/640_hnasnet](#vis___8_ade20k_pretrained_640_hnasne_t_)
         - [16       @ ade20k_pretrained/640_hnasnet](#16___ade20k_pretrained_640_hnasne_t_)
@@ -229,6 +233,16 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/ima
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
 
+<a id="vis_4_49___4_non_aug_sel_2_ade20k_pretrained_640_hnasne_t_"></a>
+#### vis_4_49       @ 4_non_aug_sel_2/ade20k_pretrained/640_hnasnet
+
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k/training_4_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_4_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k/training_4_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k/training_4_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
+
+python3 ../visDataset.py --images_path=/data/617/images/training_4_49/images --labels_path=/data/617/images/training_4_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k/training_4_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_2_ade20k/training_4_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
+
+
 <a id="4_non_aug_sel_10___ade20k_pretrained_640_hnasne_t_"></a>
 ### 4_non_aug_sel_10       @ ade20k_pretrained/640_hnasnet
 
@@ -242,6 +256,16 @@ CUDA_VISIBLE_DEVICES=1 python3 new_deeplab_vis.py --logtostderr --model_variant=
 python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_ade20k/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_ade20k/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_ade20k/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_ade20k/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
+
+<a id="vis_4_49___4_non_aug_sel_10_ade20k_pretrained_640_hnasnet_"></a>
+#### vis_4_49       @ 4_non_aug_sel_10/ade20k_pretrained/640_hnasnet
+
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_sel_2_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_sel_2_ade20k/training_4_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_4_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_sel_2_ade20k/training_4_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_sel_2_ade20k/training_4_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
+
+python3 ../visDataset.py --images_path=/data/617/images/training_4_49/images --labels_path=/data/617/images/training_4_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_sel_2_ade20k/training_4_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_10_sel_2_ade20k/training_4_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
+
 
 <a id="4_non_aug_sel_100___ade20k_pretrained_640_hnasne_t_"></a>
 ### 4_non_aug_sel_100       @ ade20k_pretrained/640_hnasnet
@@ -258,6 +282,15 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/ima
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_ade20k/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_ade20k/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
 
 
+<a id="vis_4_49___4_non_aug_sel_100_ade20k_pretrained_640_hnasne_t_"></a>
+#### vis_4_49       @ 4_non_aug_sel_100/ade20k_pretrained/640_hnasnet
+
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_sel_2_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_sel_2_ade20k/training_4_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_4_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_sel_2_ade20k/training_4_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_sel_2_ade20k/training_4_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
+
+python3 ../visDataset.py --images_path=/data/617/images/training_4_49/images --labels_path=/data/617/images/training_4_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_sel_2_ade20k/training_4_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_100_sel_2_ade20k/training_4_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
+
 <a id="4_non_aug_sel_1000___ade20k_pretrained_640_hnasne_t_"></a>
 ### 4_non_aug_sel_1000       @ ade20k_pretrained/640_hnasnet
 
@@ -272,7 +305,14 @@ python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/ima
 
 python3 ../visDataset.py --images_path=/data/617/images/training_32_49/images --labels_path=/data/617/images/training_32_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_ade20k/training_32_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_ade20k/training_32_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
 
+<a id="vis_4_49___4_non_aug_sel_1000_ade20k_pretrained_640_hnasnet_"></a>
+#### vis_4_49       @ 4_non_aug_sel_1000/ade20k_pretrained/640_hnasnet
 
+CUDA_VISIBLE_DEVICES=0 python3 new_deeplab_vis.py --logtostderr --model_variant="nas_hnasnet" --atrous_rates=6 --atrous_rates=12 --atrous_rates=18 --output_stride=16 --decoder_output_stride=4 --vis_crop_size=640,640 --dataset="training_0_31_49_640_640_64_256_rot_15_345_4_flip" --checkpoint_dir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_sel_2_ade20k --vis_logdir=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_sel_2_ade20k/training_4_49_640_640_640_640 --dataset_dir=/data/617/images/training_0_31_49_640_640_64_256_rot_15_345_4_flip/tfrecord --vis_split=training_4_49_640_640_640_640 --vis_batch_size=50 --also_save_vis_predictions=0 --max_number_of_iterations=1 --eval_interval_secs=0 --add_image_level_feature=0
+
+python3 ../stitchSubPatchDataset.py src_path=/data/617/images/training_4_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_sel_2_ade20k/training_4_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_sel_2_ade20k/training_4_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
+
+python3 ../visDataset.py --images_path=/data/617/images/training_4_49/images --labels_path=/data/617/images/training_4_49/labels --seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_sel_2_ade20k/training_4_49/raw --save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_3_non_aug_sel_1000_sel_2_ade20k/training_4_49/vis --n_classes=3 --start_id=0 --end_id=-1 --normalize_labels=1
 
 <a id="8___ade20k_pretrained_640_hnasne_t_"></a>
 ### 8       @ ade20k_pretrained/640_hnasnet
