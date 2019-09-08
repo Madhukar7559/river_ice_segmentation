@@ -2,7 +2,7 @@ This repository provides python and matlab code for all experiments reported in 
 It contains modified versions of several open source repositories that were used for experimentation though not all of these were reported in the paper.
 These are the reported models and their corresponding folders:
 1. DenseNet: [[densenet]](densenet)   [python/tensorflow]
-2. DeepLab: [[deeplab]](deeplab)  [python/tensorflow]
+2. DeepLab: [[old_deeplab]](old_deeplab), [[new_deeplab]](new_deeplab)  [python/tensorflow]
 3. UNet, SegNet: [[image-segmentation-keras]](image-segmentation-keras) [python/keras]
 4. SVM: [[svm]](svm) [matlab]
 
