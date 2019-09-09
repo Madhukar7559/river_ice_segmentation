@@ -1,7 +1,7 @@
 import argparse, os, sys
 import numpy as np
 import pandas as pd
-from scipy.misc.pilutil import imread, imsave
+from imageio import imread, imsave
 from matplotlib import pyplot as plt
 import cv2
 import time
