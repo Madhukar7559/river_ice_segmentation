@@ -1,7 +1,7 @@
 import argparse, os, sys
 import numpy as np
 import pandas as pd
-from imageio import imread, imsave
+from skimage.io import imread, imsave
 from matplotlib import pyplot as plt
 import cv2
 import time
@@ -613,15 +613,18 @@ def main():
         video_out.release()
 
     if labels_path:
+        median_dists = {}
         mean_dists = {}
         mae_data_y = []
         for _label in seg_labels:
             _dists = dists[_label]
             mae_data_y.append(_dists['mae'])
             mean_dists[_label] = {k: np.mean(_dists[k]) for k in _dists}
+            median_dists[_label] = {k: np.median(_dists[k]) for k in _dists}
 
-        print('mean_dists:')
-        pprint(mean_dists)
+        print('mean_dists:\n{}'.format(pformat(mean_dists)))
+        print('median_dists:\n{}'.format(pformat(median_dists)))
+
         n_test_images = len(mae_data_y[0])
 
         mae_data_x = np.asarray(range(1, n_test_images + 1), dtype=np.float64)
