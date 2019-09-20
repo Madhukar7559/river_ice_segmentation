@@ -1,5 +1,6 @@
 function [ap, mrec,mpre]  = VOCap(rec,prec)
-
+% mrec = rec;
+% mpre = prec;
 mrec=[0 ; rec ; 1];
 mpre=[0 ; prec ; 0];
 for i=numel(mpre)-1:-1:1
