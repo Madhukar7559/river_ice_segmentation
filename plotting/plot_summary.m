@@ -28,23 +28,33 @@ line_width = 3;
 transparent_bkg = 1;
 transparent_legend = 0;
 vertcal_x_label = 0;
-axes_font_size = 24;
-legend_font_size = 24;
+axes_font_size = 18;
+legend_font_size = 20;
 title_font_size = 30;
 bar_plot = 0;
 
-rec_prec_mode = 1;
+rec_prec_mode = 0;
 enable_ap = 0;
-thresh_mode = 1;
+thresh_mode = 3;
 
-% markers = {'o', '+', '*', 'x', 'p', 'd'};
+% markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
+% markers = {'o', 'o', '+', '+', '*', '*', 'x', 'x', 'p', 'p', 'd', 'd'};
 
 markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
 
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
-line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green'};
+% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
+
+% line_cols = {'forest_green', 'red', 'blue', 'magenta', 'cyan', 'green', 'peach_puff', 'black', 'maroon'};
+% line_cols = {'forest_green', 'forest_green', 'red', 'red', 'blue', 'blue', 'magenta', 'magenta', 'cyan', 'cyan', 'green', 'green'};
+
+% line_cols = {'red', 'magenta', 'blue', 'cyan', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
+% line_cols = {'red','red', 'magenta', 'magenta', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
+
 % line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
+line_cols = {'forest_green','forest_green', 'blue', 'blue', 'red', 'red', 'black', 'black', 'cyan', 'cyan'};
+
 % line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
@@ -52,10 +62,13 @@ line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'gr
 
 
 % line_styles = {'--', '-', '-', '-', '-'};
-line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-'};
+line_styles = {'-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':'};
+% line_styles = {'-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
+
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
 
+% line_styles = {'-o', '-+', '-*', '-x', '-s', '-p'};
 
 
 % line_specs = {'-og', '-+r'};
@@ -138,45 +151,46 @@ else
                 x_data(:, line_id) = rec_data;
                 y_data(:, line_id) = prec_data;
             end
-            if enable_ap
-                [ap, mrec, mprec] = VOCap(flipud(rec_data/100.0),...
-                    flipud(prec_data/100.0));
-                x_data = mrec*100.0;
-                y_data = mprec*100.0;
-                ap = ap*100;
-                fprintf('%s ap: %f%%\n', plot_legend{line_id}, ap);
-            end
-            % plot_legend
-            fclose(fileID);
-            
-            if thresh_mode
-                thresh_label = k.colheaders(1);
-                rec_label = k.colheaders(2);
-                prec_label = k.colheaders(3);                
-                if thresh_mode==1
-                    x_label = thresh_label;
-                    y_label = rec_label;
-                elseif thresh_mode==2
-                    x_label = thresh_label;
-                    y_label = prec_label;
-                elseif thresh_mode==3
-                    x_label = rec_label;
-                    y_label = prec_label;
-                else
-                    error('Invalid thresh_mode: %d', thresh_mode)
-                end
-            else
-                x_label = k.colheaders(1);
-                y_label = k.colheaders(2);
-            x_ticks = zeros(n_lines, 1);
-            xtick_labels = cell(n_lines, 1);
-            for item_id = 1:n_items
-                xtick_labels{item_id} = sprintf('%d', 10*item_id);
-                x_ticks(item_id) = 10*item_id;
-            end
-            %         x_ticks
-            %         xtick_labels
         end
+        if enable_ap
+            [ap, mrec, mprec] = VOCap(flipud(rec_data/100.0),...
+                flipud(prec_data/100.0));
+            x_data = mrec*100.0;
+            y_data = mprec*100.0;
+            ap = ap*100;
+            fprintf('%s ap: %f%%\n', plot_legend{line_id}, ap);
+        end
+        % plot_legend
+        fclose(fileID);
+
+        if thresh_mode
+            thresh_label = k.colheaders(1);
+            rec_label = k.colheaders(2);
+            prec_label = k.colheaders(3);                
+            if thresh_mode==1
+                x_label = thresh_label;
+                y_label = rec_label;
+            elseif thresh_mode==2
+                x_label = thresh_label;
+                y_label = prec_label;
+            elseif thresh_mode==3
+                x_label = rec_label;
+                y_label = prec_label;
+            else
+                error('Invalid thresh_mode: %d', thresh_mode)
+            end
+        else
+            x_label = k.colheaders(1);
+            y_label = k.colheaders(2);
+        end
+%         x_ticks = zeros(n_lines, 1);
+%         xtick_labels = cell(n_lines, 1);
+%         for item_id = 1:n_items
+%             xtick_labels{item_id} = sprintf('%d', 10*item_id);
+%             x_ticks(item_id) = 10*item_id;
+%         end
+        %         x_ticks
+        %         xtick_labels
     else
         if isfield(k,'colheaders')
             n_lines = size(k.data, 2) - 1;
@@ -226,22 +240,36 @@ else
     %     line_cols
     %     line_styles
     % n_lines
+    final_legend = {};
     for i = 1:n_lines
         y_datum = y_data(:, i);
         x_datum = x_data(:, i);
         line_col = line_cols{i};
         line_style = line_styles{i};
         marker = markers{i};
+        vis = 'on';
+        line_width_ = line_width;
+        
+        if strcmp(plot_legend{i}, '-')
+            fprintf('Turning off legend for line %d\n', i)
+            vis = 'off';
+            line_width_ = 2;
+            marker = '.';
+        else
+            final_legend{end+1} = plot_legend{i};
+        end
         %     line_spec = line_specs{i};
         plot(x_datum, y_datum,...
             'Color', col_rgb{strcmp(col_names,line_col)},...
             'LineStyle', line_style,...
-            'LineWidth', line_width,...
-            'Marker', marker);
+            'LineWidth', line_width_,...
+            'Marker', marker,...
+            'HandleVisibility', vis);
         hold on
     end
     hold off
-    h_legend=legend(plot_legend, 'Interpreter','none');
+    
+    h_legend=legend(final_legend, 'Interpreter','none');
     set(h_legend,'FontSize',legend_font_size);
     set(h_legend,'FontWeight','bold');
     grid on;
