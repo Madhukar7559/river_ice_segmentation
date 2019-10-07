@@ -33,18 +33,19 @@ legend_font_size = 20;
 title_font_size = 30;
 bar_plot = 0;
 
-rec_prec_mode = 0;
+rec_prec_mode = 1;
 enable_ap = 0;
-thresh_mode = 3;
+thresh_mode = 2;
 
 % markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
 % markers = {'o', 'o', '+', '+', '*', '*', 'x', 'x', 'p', 'p', 'd', 'd'};
 
-markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
+% markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
 
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
-% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
+% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_green', 'magenta'};
+line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
 
 % line_cols = {'forest_green', 'red', 'blue', 'magenta', 'cyan', 'green', 'peach_puff', 'black', 'maroon'};
 % line_cols = {'forest_green', 'forest_green', 'red', 'red', 'blue', 'blue', 'magenta', 'magenta', 'cyan', 'cyan', 'green', 'green'};
@@ -53,16 +54,17 @@ markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
 % line_cols = {'red','red', 'magenta', 'magenta', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
 
 % line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
-line_cols = {'forest_green','forest_green', 'blue', 'blue', 'red', 'red', 'black', 'black', 'cyan', 'cyan'};
+% line_cols = {'forest_green','forest_green', 'blue', 'blue', 'red', 'red', 'purple', 'purple', 'cyan', 'cyan'};
 
 % line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
-
+line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
+% line_styles = {'-', '-', '-', '-', '--', '--', '--', '--'};
 
 % line_styles = {'--', '-', '-', '-', '-'};
-line_styles = {'-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':'};
+% line_styles = {'-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':'};
 % line_styles = {'-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
 
 % line_styles = {'-', '-', '--', '--', '--'};
@@ -246,7 +248,11 @@ else
         x_datum = x_data(:, i);
         line_col = line_cols{i};
         line_style = line_styles{i};
-        marker = markers{i};
+        if exist('markers', 'var')            
+            marker = markers{i};
+        else
+            marker = 'none';
+        end
         vis = 'on';
         line_width_ = line_width;
         
