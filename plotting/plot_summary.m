@@ -33,7 +33,7 @@ legend_font_size = 20;
 title_font_size = 30;
 bar_plot = 0;
 
-rec_prec_mode = 1;
+rec_prec_mode = 0;
 enable_ap = 0;
 thresh_mode = 2;
 
@@ -45,13 +45,21 @@ thresh_mode = 2;
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
 % line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_green', 'magenta'};
-line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
+% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
 
 % line_cols = {'forest_green', 'red', 'blue', 'magenta', 'cyan', 'green', 'peach_puff', 'black', 'maroon'};
 % line_cols = {'forest_green', 'forest_green', 'red', 'red', 'blue', 'blue', 'magenta', 'magenta', 'cyan', 'cyan', 'green', 'green'};
 
 % line_cols = {'red', 'magenta', 'blue', 'cyan', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
 % line_cols = {'red','red', 'magenta', 'magenta', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
+line_cols = {'red','red', 'blue', 'blue', 'magenta', 'magenta', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
+
+% line_cols = {'red','red','red',...
+%     'magenta', 'magenta',...
+%     'blue', 'blue', 'blue',...
+%     'cyan', 'cyan',...
+%     'forest_green', 'forest_green', 'forest_green',...
+%     'green', 'peach_puff', 'black', 'maroon'};
 
 % line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
 % line_cols = {'forest_green','forest_green', 'blue', 'blue', 'red', 'red', 'purple', 'purple', 'cyan', 'cyan'};
@@ -60,12 +68,12 @@ line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'gr
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
-line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
+% line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
 % line_styles = {'-', '-', '-', '-', '--', '--', '--', '--'};
 
 % line_styles = {'--', '-', '-', '-', '-'};
 % line_styles = {'-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':'};
-% line_styles = {'-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
+line_styles = {'-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
 
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
@@ -256,11 +264,17 @@ else
         vis = 'on';
         line_width_ = line_width;
         
-        if strcmp(plot_legend{i}, '-')
+        if strcmp(plot_legend{i}, '_')
             fprintf('Turning off legend for line %d\n', i)
             vis = 'off';
             line_width_ = 2;
-            marker = '.';
+            marker = 'none';
+            line_style = ':';
+        elseif strcmp(plot_legend{i}, '__')
+            fprintf('Turning off legend for line %d\n', i)
+            vis = 'off';
+            marker = 'none';
+            line_style = '--';
         else
             final_legend{end+1} = plot_legend{i};
         end
