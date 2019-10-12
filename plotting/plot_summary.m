@@ -52,7 +52,7 @@ thresh_mode = 2;
 
 % line_cols = {'red', 'magenta', 'blue', 'cyan', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
 % line_cols = {'red','red', 'magenta', 'magenta', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
-line_cols = {'red','red', 'blue', 'blue', 'magenta', 'magenta', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
+line_cols = {'red','red', 'blue', 'blue', 'forest_green', 'magenta', 'magenta', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
 
 % line_cols = {'red','red','red',...
 %     'magenta', 'magenta',...
@@ -68,12 +68,12 @@ line_cols = {'red','red', 'blue', 'blue', 'magenta', 'magenta', 'cyan', 'cyan', 
 % line_cols = {'red', 'forest_green', 'blue', 'blue'};
 % line_cols = {'forest_green', 'red'};
 
-% line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
+line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
 % line_styles = {'-', '-', '-', '-', '--', '--', '--', '--'};
 
 % line_styles = {'--', '-', '-', '-', '-'};
 % line_styles = {'-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':'};
-line_styles = {'-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
+line_styles = {'-', '--', '-', '--', ':', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
 
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};

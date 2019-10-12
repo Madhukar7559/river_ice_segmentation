@@ -1,8 +1,7 @@
-mRP (%)				
-mRP on synthetic data				
-Training Data	YOLO_3_class	YOLO_4_class	RETINA_3_class	RETINA_4_class
-real_data	76.97	77.83	85.34	85.33
-no_mask	75.01	79.5	70.58	76.03
-manual_masks	93.36	94.9	94.41	95.21
-mask_rcnn	94.93	98.04	93.68	95.83
-siam_mask	95.15	96.31	92.9	93.99
+mRP (%) / cRP (%) / Speed (FPS)					
+YOLO+DASiamRPN mRP/cRP and Speeds					
+max_trackers	1: 1K/Seq/8	__	3: 10K/Seq/6	__	speed (FPS)
+no_tracking	35.36	80.76	79.3	91.7	71.414
+max_tracker_1	35.95	76.32	78.96	89.37	45.06
+max_tracker_2	32.89	62.37	68.24	75.5	34.57
+max_tracker_3	30.45	57.17	64.5	71.51	30.64
