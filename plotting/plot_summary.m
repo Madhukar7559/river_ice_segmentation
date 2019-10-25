@@ -33,9 +33,9 @@ legend_font_size = 20;
 title_font_size = 30;
 bar_plot = 0;
 
-rec_prec_mode = 0;
+rec_prec_mode = 1;
 enable_ap = 0;
-thresh_mode = 2;
+thresh_mode = 1;
 
 % markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
 % markers = {'o', 'o', '+', '+', '*', '*', 'x', 'x', 'p', 'p', 'd', 'd'};
@@ -44,7 +44,9 @@ thresh_mode = 2;
 
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
-% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_green', 'magenta'};
+line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_green', 'magenta'};
+% line_cols = {'red', 'blue', 'forest_green', 'red', 'blue', 'forest_green'};
+
 % line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
 
 % line_cols = {'forest_green', 'red', 'blue', 'magenta', 'cyan', 'green', 'peach_puff', 'black', 'maroon'};
@@ -52,7 +54,7 @@ thresh_mode = 2;
 
 % line_cols = {'red', 'magenta', 'blue', 'cyan', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
 % line_cols = {'red','red', 'magenta', 'magenta', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
-line_cols = {'red','red', 'blue', 'blue', 'forest_green', 'magenta', 'magenta', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
+% line_cols = {'red','red', 'blue', 'blue', 'forest_green', 'magenta', 'magenta', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
 
 % line_cols = {'red','red','red',...
 %     'magenta', 'magenta',...
@@ -70,10 +72,11 @@ line_cols = {'red','red', 'blue', 'blue', 'forest_green', 'magenta', 'magenta', 
 
 line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
 % line_styles = {'-', '-', '-', '-', '--', '--', '--', '--'};
+% line_styles = {'-', '-', '-', '--', '--', '--'};
 
 % line_styles = {'--', '-', '-', '-', '-'};
 % line_styles = {'-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':'};
-line_styles = {'-', '--', '-', '--', ':', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
+% line_styles = {'-', '--', '-', '--', ':', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
 
 % line_styles = {'-', '-', '--', '--', '--'};
 % line_styles = {'-', '-', '--', '-'};
