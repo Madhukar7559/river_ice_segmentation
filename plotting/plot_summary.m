@@ -19,7 +19,8 @@ plot_title='Selective Training';
 
 % y_label = 'Recall (%)';
 % y_label = 'pixel accuracy';
-y_label = 'acc/IOU';
+% y_label = 'acc/IOU';
+y_label = 'Recall / Precision';
 
 % plot_title='Recall rates using 5000 video images for training';
 % plot_title='Recall rates on 20K 3-class test set without static images';
@@ -32,19 +33,24 @@ axes_font_size = 18;
 legend_font_size = 20;
 title_font_size = 30;
 bar_plot = 0;
-
-rec_prec_mode = 1;
+title_interpreter = 'tex';
+% title_interpreter = 'none';
+rec_prec_mode = 0;
 enable_ap = 0;
 thresh_mode = 1;
 
-% markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
+markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
 % markers = {'o', 'o', '+', '+', '*', '*', 'x', 'x', 'p', 'p', 'd', 'd'};
 
 % markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
 
 % line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
 
-line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_green', 'magenta'};
+% line_cols = {'red','red', 'forest_green', 'blue'};
+
+% line_cols = {'red','red', 'forest_green', 'forest_green', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
+
+% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_green', 'magenta'};
 % line_cols = {'red', 'blue', 'forest_green', 'red', 'blue', 'forest_green'};
 
 % line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
@@ -67,11 +73,17 @@ line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_gr
 % line_cols = {'forest_green','forest_green', 'blue', 'blue', 'red', 'red', 'purple', 'purple', 'cyan', 'cyan'};
 
 % line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
-% line_cols = {'red', 'forest_green', 'blue', 'blue'};
-% line_cols = {'forest_green', 'red'};
+% line_cols = {'blue', 'forest_green', 'red'};
+% line_cols = {'cyan', 'magenta'};
 
-line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
-% line_styles = {'-', '-', '-', '-', '--', '--', '--', '--'};
+mode = 1;
+if mode == 1
+    line_cols = {'blue', 'forest_green', 'red', 'blue', 'forest_green', 'red'};
+    line_styles = {'-', '-', '-', ':', ':', ':'};
+else
+    line_cols = {'cyan', 'magenta', 'cyan', 'magenta'};
+    line_styles = {'-', '-', ':', ':', ':'};
+end
 % line_styles = {'-', '-', '-', '--', '--', '--'};
 
 % line_styles = {'--', '-', '-', '-', '-'};
@@ -214,29 +226,31 @@ else
             plot_title = k.textdata{1, 1};
             y_label = sprintf('%s', plot_legend{1});
             for line_id = 2:n_lines
-                y_label = sprintf('%s/%s', y_label, plot_legend{line_id})
+                if ~strcmp(plot_legend{line_id}, '_') &&  ~strcmp(plot_legend{line_id}, '__')
+                    y_label = sprintf('%s/%s', y_label, plot_legend{line_id});
+                end
             end
             x_label = k.textdata{2, 1};
         else
-            n_lines = size(k.data, 2)
-            n_items = size(k.data, 1)
+            n_lines = size(k.data, 2);
+            n_items = size(k.data, 1);
             y_data = k.data;
             %     x_label='Model';
             
-            n_text_lines = size(k.textdata, 2)
-            n_text_items = size(k.textdata, 1)
+            n_text_lines = size(k.textdata, 2);
+            n_text_items = size(k.textdata, 1);
             if n_text_items == n_items + 3
                 y_label = k.textdata(1, 1)
                 k.textdata = k.textdata(2:end, :);
                 n_text_items = n_text_items - 1;
             end
             if n_text_items == n_items + 2
-                plot_title = k.textdata(1, 1)
+                plot_title = k.textdata(1, 1);
                 k.textdata = k.textdata(2:end, :);
             end
-            x_label = k.textdata(1, 1)
-            plot_legend = {k.textdata{1, 2:end}}
-            xtick_labels = k.textdata(2:end, 1)
+            x_label = k.textdata(1, 1);
+            plot_legend = {k.textdata{1, 2:end}};
+            xtick_labels = k.textdata(2:end, 1);
             x_ticks = 1:n_items;
             x_data = repmat((1:n_items)',1, n_lines);
             
@@ -278,6 +292,7 @@ else
             vis = 'off';
             marker = 'none';
             line_style = '--';
+            line_width_=2;
         else
             final_legend{end+1} = plot_legend{i};
         end
@@ -332,7 +347,8 @@ else
     % ylim([0.60, 0.90]);
     % ylim([0.65, 0.90]);
     plot_title = strtrim(plot_title);
-    title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold', 'Interpreter', 'none');
+    title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold',...
+        'Interpreter', title_interpreter);
     if transparent_bkg
         set(gca,'color','none')
         if transparent_legend
