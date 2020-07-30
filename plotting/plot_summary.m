@@ -76,7 +76,7 @@ markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
 % line_cols = {'blue', 'forest_green', 'red'};
 % line_cols = {'cyan', 'magenta'};
 
-mode = 1;
+mode = 1
 if mode == 1
     line_cols = {'blue', 'forest_green', 'red', 'blue', 'forest_green', 'red'};
     line_styles = {'-', '-', '-', ':', ':', ':'};
@@ -231,6 +231,24 @@ else
                 end
             end
             x_label = k.textdata{2, 1};
+        elseif size(k.textdata, 2) == size(k.data, 2) + 1
+            n_data = size(k.data, 1);
+            n_lines = size(k.data, 2);
+            y_data = k.data(:, 1:end);
+            % x_ticks = k.data(:, 1);
+            x_data = repmat(transpose(1:n_data),1, n_lines);
+            plot_legend = {k.textdata{3, 2:end}};
+            plot_title = k.textdata{1, 1};
+            y_label = sprintf('%s', plot_legend{1});
+            for line_id = 2:n_lines
+                if ~strcmp(plot_legend{line_id}, '_') &&  ~strcmp(plot_legend{line_id}, '__')
+                    y_label = sprintf('%s/%s', y_label, plot_legend{line_id});
+                end
+            end
+            x_label = k.textdata{2, 1};
+            xtick_labels = k.textdata(4:end, 1);
+            x_label = x_label
+            
         else
             n_lines = size(k.data, 2);
             n_items = size(k.data, 1);
@@ -261,7 +279,8 @@ else
             end
         end
     end
-    figure
+    figure_handle = figure;
+    propertyeditor(figure_handle,'on');
     %     y_data
     %     x_data
     %     line_cols
@@ -320,14 +339,14 @@ else
     % set (gca, 'GridLineStyle', '-');
     
     try
-        if exist('xtick_labels', 'var')
+        if exist('x_ticks', 'var')
             xticks(x_ticks);
         end
         if exist('xtick_labels', 'var')
             xticklabels(xtick_labels);
         end
     catch
-        if exist('xtick_labels', 'var')
+        if exist('x_ticks', 'var')
             set(gca, 'XTick', x_ticks)
         end
         
