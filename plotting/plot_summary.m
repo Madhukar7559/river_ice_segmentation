@@ -80,6 +80,7 @@ mode = 1
 if mode == 1
     line_cols = {'blue', 'forest_green', 'red', 'blue', 'forest_green', 'red'};
     line_styles = {'-', '-', '-', ':', ':', ':'};
+    valid_columns = [1, 3];
 else
     line_cols = {'cyan', 'magenta', 'cyan', 'magenta'};
     line_styles = {'-', '-', ':', ':', ':'};
@@ -232,11 +233,11 @@ else
             end
             x_label = k.textdata{2, 1};
         elseif size(k.textdata, 2) == size(k.data, 2) + 1
-            n_data = size(k.data, 1);
+            n_items = size(k.data, 1);
             n_lines = size(k.data, 2);
             y_data = k.data(:, 1:end);
             % x_ticks = k.data(:, 1);
-            x_data = repmat(transpose(1:n_data),1, n_lines);
+            x_data = repmat(transpose(1:n_items),1, n_lines);
             plot_legend = {k.textdata{3, 2:end}};
             plot_title = k.textdata{1, 1};
             y_label = sprintf('%s', plot_legend{1});
@@ -247,7 +248,16 @@ else
             end
             x_label = k.textdata{2, 1};
             xtick_labels = k.textdata(4:end, 1);
-            x_label = x_label
+            x_ticks = 1:n_items;
+            xlim([1, n_items]);
+            x_label = x_label     
+            
+            if exist('valid_columns', 'var')
+                x_data = x_data(:, valid_columns);
+                y_data = y_data(:, valid_columns);
+                plot_legend = plot_legend(:, valid_columns);
+                n_lines = size(x_data, 2);
+            end
             
         else
             n_lines = size(k.data, 2);
@@ -338,6 +348,7 @@ else
     % set (gca, 'GridAlpha', 0.5);
     % set (gca, 'GridLineStyle', '-');
     
+    xlim([1, n_items]);
     try
         if exist('x_ticks', 'var')
             xticks(x_ticks);
