@@ -1,4 +1,4 @@
-function hText = xticklabel_rotate(XTick,rot,varargin)
+function hText = xticklabel_rotate(XTick,rot,XTickLabel,cols,varargin)
 %hText = xticklabel_rotate(XTick,rot,XTickLabel,varargin)     Rotate XTickLabel
 %
 % Syntax: xticklabel_rotate
@@ -89,17 +89,27 @@ end
 % if no XTickLabel AND no XTick are defined use the current XTickLabel
 %if nargin < 3 & (~exist('XTick') | isempty(XTick)),
 % Modified with forum comment by "Nathan Pust" allow the current text labels to be used and property value pairs to be changed for those labels
-if (nargin < 3 || isempty(varargin{1})) & (~exist('XTick') | isempty(XTick)),
-	xTickLabels = get(gca,'XTickLabel')  ; % use current XTickLabel
-	if ~iscell(xTickLabels)
-		% remove trailing spaces if exist (typical with auto generated XTickLabel)
-		temp1 = num2cell(xTickLabels,2)         ;
-		for loop = 1:length(temp1),
-			temp1{loop} = deblank(temp1{loop})  ;
-		end
-		xTickLabels = temp1                     ;
-	end
-varargin = varargin(2:length(varargin));	
+% if (nargin < 3 || isempty(varargin{1})) & (~exist('XTick') | isempty(XTick)),
+% 	xTickLabels = get(gca,'XTickLabel')  ; % use current XTickLabel
+% 	if ~iscell(xTickLabels)
+% 		% remove trailing spaces if exist (typical with auto generated XTickLabel)
+% 		temp1 = num2cell(xTickLabels,2)         ;
+% 		for loop = 1:length(temp1),
+% 			temp1{loop} = deblank(temp1{loop})  ;
+% 		end
+% 		xTickLabels = temp1                     ;
+% 	end
+% varargin = varargin(3:length(varargin));	
+% end
+
+xTickLabels = get(gca,'XTickLabel')  ; % use current XTickLabel
+if ~iscell(xTickLabels)
+    % remove trailing spaces if exist (typical with auto generated XTickLabel)
+    temp1 = num2cell(xTickLabels,2)         ;
+    for loop = 1:length(temp1),
+        temp1{loop} = deblank(temp1{loop})  ;
+    end
+    xTickLabels = temp1                     ;
 end
 
 % if no XTick is defined use the current XTick
@@ -240,6 +250,7 @@ set(gca,'position',newpos)                      ;
 set(hText,'units','data')                       ;
 for loop= 1:length(hText),
     set(hText(loop),'position',[XTick(loop), y(loop)])  ;
+    set(hText(loop),'color', cols{loop})  ;
 end
 
 % adjust position of xlabel and ylabel

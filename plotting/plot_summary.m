@@ -1,4 +1,6 @@
-clear all;
+if ~exist('no_clear', 'var')
+    clear all;
+end
 
 colRGBDefs;
 
@@ -27,8 +29,9 @@ y_label = 'Recall / Precision';
 fname = 'combined_summary.txt';
 line_width = 3;
 transparent_bkg = 1;
-transparent_legend = 0;
+transparent_legend = 1;
 vertcal_x_label = 0;
+colored_x_label = 0;
 axes_font_size = 18;
 legend_font_size = 20;
 title_font_size = 30;
@@ -37,10 +40,12 @@ title_interpreter = 'tex';
 % title_interpreter = 'none';
 rec_prec_mode = 0;
 enable_ap = 0;
-thresh_mode = 1;
+thresh_mode = 0;
+white_text = 1;
+y_limits = [0, 100];
 
-markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
-% markers = {'o', 'o', '+', '+', '*', '*', 'x', 'x', 'p', 'p', 'd', 'd'};
+% markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
+markers = {'o', 'o', '+', '+', '*', '*', 'x', 'x', 'p', 'p', 'd', 'd'};
 
 % markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
 
@@ -76,14 +81,34 @@ markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
 % line_cols = {'blue', 'forest_green', 'red'};
 % line_cols = {'cyan', 'magenta'};
 
-mode = 1
+mode = 3;
 if mode == 1
-    line_cols = {'blue', 'forest_green', 'red', 'blue', 'forest_green', 'red'};
+%     line_cols = {'blue', 'forest_green', 'blue', 'forest_green'};
+    line_cols = {'blue', 'purple', 'blue', 'purple'};
     line_styles = {'-', '-', '-', ':', ':', ':'};
-    valid_columns = [1, 3];
-else
-    line_cols = {'cyan', 'magenta', 'cyan', 'magenta'};
+    markers = {'o', '+','o', '+'};
+    % valid_columns = [1, 3];
+elseif mode == 2
+    line_cols = {'blue', 'purple', 'blue', 'purple'};
     line_styles = {'-', '-', ':', ':', ':'};
+    markers = {'o', '+', 'o', '+'};
+elseif mode == 3
+%         line_cols = {'blue', 'blue', 'forest_green', 'forest_green',...
+%             'magenta', 'magenta', 'red', 'red',...
+%             'cyan', 'cyan', 'purple', 'purple'};
+        
+%         line_cols = {'blue', 'red', 'forest_green', 'cyan','purple','green',...
+%             'blue', 'forest_green', 'green','red', 'cyan','purple'};
+        
+        line_cols = {'blue', 'blue', 'blue',...
+            'red','red','red',...
+            'forest_green',...
+            'forest_green', 'forest_green',...
+            'purple', 'purple','purple'};
+        
+        
+        line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
+        markers = {'o', 'o','o', 'o','o', 'o','o', 'o','o', 'o','o', 'o'};
 end
 % line_styles = {'-', '-', '-', '--', '--', '--'};
 
@@ -130,6 +155,21 @@ end
 
 set(0,'DefaultAxesFontSize', axes_font_size);
 set(0,'DefaultAxesFontWeight', 'bold');
+
+if white_text
+    set(0,'DefaultAxesXColor', col_rgb{strcmp(col_names,'white')});
+    set(0,'DefaultAxesYColor', col_rgb{strcmp(col_names,'white')});
+end
+
+if white_text
+    set(0,'DefaultAxesLineWidth', 2.0);
+    set(0,'DefaultAxesGridLineStyle', ':');    
+%     set(0,'DefaultAxesGridAlpha', 1.0);
+%     set(0, 'DefaultAxesGridColor', col_rgb{strcmp(col_names,'white')});
+%     set(0,'DefaultAxesMinorGridColor', col_rgb{strcmp(col_names,'white')});
+end
+
+ 
 
 k = importdata(fname);
 
@@ -219,6 +259,7 @@ else
         %         xtick_labels
     else
         if isfield(k,'colheaders')
+            n_items = size(k.data, 1);
             n_lines = size(k.data, 2) - 1;
             y_data = k.data(:, 2:end);
             % x_ticks = k.data(:, 1);
@@ -227,7 +268,7 @@ else
             plot_title = k.textdata{1, 1};
             y_label = sprintf('%s', plot_legend{1});
             for line_id = 2:n_lines
-                if ~strcmp(plot_legend{line_id}, '_') &&  ~strcmp(plot_legend{line_id}, '__')
+                if ~strcmp(plot_legend{line_id}, '_') ||  ~strcmp(plot_legend{line_id}, '__')
                     y_label = sprintf('%s/%s', y_label, plot_legend{line_id});
                 end
             end
@@ -240,23 +281,33 @@ else
             x_data = repmat(transpose(1:n_items),1, n_lines);
             plot_legend = {k.textdata{3, 2:end}};
             plot_title = k.textdata{1, 1};
-            y_label = sprintf('%s', plot_legend{1});
-            for line_id = 2:n_lines
-                if ~strcmp(plot_legend{line_id}, '_') &&  ~strcmp(plot_legend{line_id}, '__')
-                    y_label = sprintf('%s/%s', y_label, plot_legend{line_id});
-                end
-            end
             x_label = k.textdata{2, 1};
             xtick_labels = k.textdata(4:end, 1);
             x_ticks = 1:n_items;
             xlim([1, n_items]);
-            x_label = x_label     
             
             if exist('valid_columns', 'var')
                 x_data = x_data(:, valid_columns);
                 y_data = y_data(:, valid_columns);
                 plot_legend = plot_legend(:, valid_columns);
                 n_lines = size(x_data, 2);
+                
+                line_cols = line_cols(valid_columns);
+                line_styles = line_styles(valid_columns);
+                markers = markers(valid_columns);
+                temp = strsplit(x_label, '---');
+                
+                x_label = temp{1};
+                y_label = temp{valid_columns(1)+1};     
+                
+                plot_title = sprintf('%s %s', plot_title, y_label);                
+            else
+                y_label = sprintf('%s', plot_legend{1});
+                for line_id = 2:n_lines
+                    if ~strcmp(plot_legend{line_id}, '_') ||  ~strcmp(plot_legend{line_id}, '__')
+                        y_label = sprintf('%s/%s', y_label, plot_legend{line_id});
+                    end
+                end
             end
             
         else
@@ -280,13 +331,14 @@ else
             plot_legend = {k.textdata{1, 2:end}};
             xtick_labels = k.textdata(2:end, 1);
             x_ticks = 1:n_items;
-            x_data = repmat((1:n_items)',1, n_lines);
-            
-            for j = 1:n_items
-                if xtick_labels{j}(1)=='_'
-                    xtick_labels{j} = xtick_labels{j}(2:end);
-                end
-            end
+            x_data = repmat((1:n_items)',1, n_lines);           
+
+        end
+    end
+    
+    for j = 1:n_items
+        if xtick_labels{j}(1)=='_'
+            xtick_labels{j} = xtick_labels{j}(2:end);
         end
     end
     figure_handle = figure;
@@ -312,16 +364,16 @@ else
         
         if strcmp(plot_legend{i}, '_')
             fprintf('Turning off legend for line %d\n', i)
-            vis = 'off';
+%             vis = 'off';
             line_width_ = 2;
             marker = 'none';
             line_style = ':';
         elseif strcmp(plot_legend{i}, '__')
             fprintf('Turning off legend for line %d\n', i)
-            vis = 'off';
+%             vis = 'off';
             marker = 'none';
             line_style = '--';
-            line_width_=2;
+            line_width_=3;
         else
             final_legend{end+1} = plot_legend{i};
         end
@@ -339,16 +391,56 @@ else
     h_legend=legend(final_legend, 'Interpreter','none');
     set(h_legend,'FontSize',legend_font_size);
     set(h_legend,'FontWeight','bold');
-    grid on;
+    if white_text
+        set(h_legend,'TextColor', col_rgb{strcmp(col_names,'white')});
+        set(h_legend,'LineWidth', 1.0);
+    end
+%     grid on;   
     
+    grid(gca,'on')
+
     % ax = gca;
     % ax.GridAlpha=0.25;
     % ax.GridLineStyle=':';
-    % set (gca, 'GridAlphaMode', 'manual');
-    % set (gca, 'GridAlpha', 0.5);
+%     set (gca, 'GridAlphaMode', 'manual');
+%     set (gca, 'GridAlpha', 1.0);
     % set (gca, 'GridLineStyle', '-');
     
+    xtick_label_cols = cell(length(xtick_labels), 1);
+    for x_label_id=1:length(xtick_labels)
+        curr_x_label=xtick_labels{x_label_id};
+        
+        split_x_label = strsplit(curr_x_label, '---');       
+        
+        
+        if length(split_x_label)==2
+            new_x_label = split_x_label{1};
+            xtick_label_col = split_x_label{2};            
+        else
+            new_x_label = curr_x_label;
+            xtick_label_col='black';
+        end
+        
+%         
+%         if contains(curr_x_label, '@')
+%             split_x_label = split(curr_x_label, '@');
+%             new_x_label = split_x_label{1};
+%             xtick_label_col = split_x_label{2};            
+%         else
+%             new_x_label = curr_x_label;
+%             xtick_label_col='black';
+%         end
+%         
+        xtick_labels{x_label_id} = new_x_label;
+        xtick_label_cols{x_label_id} = col_rgb{strcmp(col_names,xtick_label_col)};        
+    end
+    
     xlim([1, n_items]);
+    
+    ax = gca;
+    ax.LineWidth = 4;
+    ax.GridAlpha = 4;
+
     try
         if exist('x_ticks', 'var')
             xticks(x_ticks);
@@ -369,22 +461,51 @@ else
     y_label = strtrim(y_label);
     ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
     
+%     ax = gca;
+%     outerpos = ax.OuterPosition;
+%     ti = ax.TightInset; 
+%     left = outerpos(1) + ti(1);
+%     bottom = outerpos(2) + ti(2);
+%     ax_width = outerpos(3) - ti(1) - ti(3);
+%     ax_height = outerpos(4) - ti(2) - ti(4);
+%     ax.Position = [left bottom ax_width ax_height];
+%     ax.Position = outerpos;
+
     x_label = strtrim(x_label);
     xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
-    if vertcal_x_label
-        xticklabel_rotate([],90,[], 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+    if colored_x_label
+        xticklabel_rotate([],0,[], xtick_label_cols, 'fontsize',20, 'FontWeight','bold',...
+            'Interpreter', 'none');
+    elseif vertcal_x_label
+        xticklabel_rotate([],90,[], xtick_label_cols, 'fontsize',20, 'FontWeight','bold',...
+            'Interpreter', 'none');
     end
     % ylim([0.60, 0.90]);
-    % ylim([0.65, 0.90]);
+    
+    if exist('y_limits', 'var')
+        ylim(y_limits);
+    end
+    
     plot_title = strtrim(plot_title);
-    title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold',...
-        'Interpreter', title_interpreter);
+    title_obj = title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold',...
+        'Interpreter', title_interpreter);    
+    if white_text
+        set(title_obj,'Color', col_rgb{strcmp(col_names,'white')});
+    end
     if transparent_bkg
         set(gca,'color','none')
         if transparent_legend
             set(h_legend,'color','none');
         end
     end
+    
+%     if white_text
+%         ax = gca;
+%         set(0,'DefaultAxesGridAlpha', 1.0);
+%         set(0, 'DefaultAxesGridColor', col_rgb{strcmp(col_names,'white')});
+%         set(0,'DefaultAxesMinorGridColor', col_rgb{strcmp(col_names,'white')});
+%     end
+%     
 end
 
 
