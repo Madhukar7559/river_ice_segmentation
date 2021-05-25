@@ -33,7 +33,7 @@ transparent_legend = 1;
 vertcal_x_label = 0;
 colored_x_label = 0;
 axes_font_size = 18;
-legend_font_size = 20;
+legend_font_size = 30;
 title_font_size = 30;
 bar_plot = 0;
 title_interpreter = 'tex';
@@ -43,46 +43,18 @@ enable_ap = 0;
 thresh_mode = 0;
 white_text = 1;
 y_limits = [0, 100];
+add_ylabel_to_title = 0;
 
-% markers = {'o', '+', '*', 'x', 'p', 'd', 'o', '+'};
-markers = {'o', 'o', '+', '+', '*', '*', 'x', 'x', 'p', 'p', 'd', 'd'};
+enable_y_label = 1;
+enable_x_label = 0;
+mode = 4;
+if mode == 0
+    line_cols = {'blue', 'forest_green', 'red', 'purple', 'magenta', 'cyan',...
+        'green', 'maroon', 'peach_puff', 'black'};
+    line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-'};
+    markers = {'o', '+', '*', 'x', 'p', 'd', 'o','+', '*', 'x'};
 
-% markers = {'.', '.', '.', '.', '.', '.', '.', '.', '.', '.'};
-
-% line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
-
-% line_cols = {'red','red', 'forest_green', 'blue'};
-
-% line_cols = {'red','red', 'forest_green', 'forest_green', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
-
-% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'red', 'blue', 'forest_green', 'magenta'};
-% line_cols = {'red', 'blue', 'forest_green', 'red', 'blue', 'forest_green'};
-
-% line_cols = {'red', 'blue', 'forest_green', 'magenta', 'cyan', 'peach_puff', 'green', 'black', 'maroon'};
-
-% line_cols = {'forest_green', 'red', 'blue', 'magenta', 'cyan', 'green', 'peach_puff', 'black', 'maroon'};
-% line_cols = {'forest_green', 'forest_green', 'red', 'red', 'blue', 'blue', 'magenta', 'magenta', 'cyan', 'cyan', 'green', 'green'};
-
-% line_cols = {'red', 'magenta', 'blue', 'cyan', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
-% line_cols = {'red','red', 'magenta', 'magenta', 'blue', 'blue', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
-% line_cols = {'red','red', 'blue', 'blue', 'forest_green', 'magenta', 'magenta', 'cyan', 'cyan', 'forest_green', 'forest_green', 'green', 'peach_puff', 'black', 'maroon'};
-
-% line_cols = {'red','red','red',...
-%     'magenta', 'magenta',...
-%     'blue', 'blue', 'blue',...
-%     'cyan', 'cyan',...
-%     'forest_green', 'forest_green', 'forest_green',...
-%     'green', 'peach_puff', 'black', 'maroon'};
-
-% line_cols = {'forest_green', 'blue', 'red', 'magenta', 'cyan'};
-% line_cols = {'forest_green','forest_green', 'blue', 'blue', 'red', 'red', 'purple', 'purple', 'cyan', 'cyan'};
-
-% line_cols = {'blue', 'forest_green', 'magenta', 'cyan'};
-% line_cols = {'blue', 'forest_green', 'red'};
-% line_cols = {'cyan', 'magenta'};
-
-mode = 3;
-if mode == 1
+elseif mode == 1
 %     line_cols = {'blue', 'forest_green', 'blue', 'forest_green'};
     line_cols = {'blue', 'purple', 'blue', 'purple'};
     line_styles = {'-', '-', '-', ':', ':', ':'};
@@ -107,8 +79,44 @@ elseif mode == 3
             'purple', 'purple','purple'};
         
         
-        line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
-        markers = {'o', 'o','o', 'o','o', 'o','o', 'o','o', 'o','o', 'o'};
+        line_styles = {
+            '-', '-', '-', '-',...
+            '-', '-', '-', '-',...
+            '-', '-','-', '-'...
+            '-', '-', '-', '-'};
+        markers = {
+            'o', 'o','o', 'o',...
+            'o', 'o','o', 'o',...
+            'o', 'o','o', 'o',...
+            'o', 'o','o', 'o',...
+            };
+        
+elseif mode == 4
+%         line_cols = {'blue', 'blue', 'forest_green', 'forest_green',...
+%             'magenta', 'magenta', 'red', 'red',...
+%             'cyan', 'cyan', 'purple', 'purple'};
+        
+%         line_cols = {'blue', 'red', 'forest_green', 'cyan','purple','green',...
+%             'blue', 'forest_green', 'green','red', 'cyan','purple'};
+        
+        line_cols = {'blue', 'blue', 'blue', 'blue',...
+            'red','red','red','red',...
+            'forest_green',...
+            'forest_green', 'forest_green', 'forest_green',...
+            'purple', 'purple','purple','purple'};
+        
+        
+        line_styles = {
+            '-', '-', '-', '-',...
+            '-', '-', '-', '-',...
+            '-', '-','-', '-'...
+            '-', '-', '-', '-'};
+        markers = {
+            'o', 'o','o', 'o',...
+            'o', 'o','o', 'o',...
+            'o', 'o','o', 'o',...
+            'o', 'o','o', 'o',...
+            };
 end
 % line_styles = {'-', '-', '-', '--', '--', '--'};
 
@@ -300,7 +308,9 @@ else
                 x_label = temp{1};
                 y_label = temp{valid_columns(1)+1};     
                 
-                plot_title = sprintf('%s %s', plot_title, y_label);                
+                if add_ylabel_to_title
+                    plot_title = sprintf('%s %s', plot_title, y_label);     
+                end
             else
                 y_label = sprintf('%s', plot_legend{1});
                 for line_id = 2:n_lines
@@ -459,7 +469,9 @@ else
     end
     % ylabel('metric value');
     y_label = strtrim(y_label);
-    ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+    if enable_y_label
+        ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+    end
     
 %     ax = gca;
 %     outerpos = ax.OuterPosition;
@@ -469,10 +481,12 @@ else
 %     ax_width = outerpos(3) - ti(1) - ti(3);
 %     ax_height = outerpos(4) - ti(2) - ti(4);
 %     ax.Position = [left bottom ax_width ax_height];
-%     ax.Position = outerpos;
+%     ax.Position = outerpos;    
 
     x_label = strtrim(x_label);
-    xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+    if enable_x_label
+        xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+    end
     if colored_x_label
         xticklabel_rotate([],0,[], xtick_label_cols, 'fontsize',20, 'FontWeight','bold',...
             'Interpreter', 'none');

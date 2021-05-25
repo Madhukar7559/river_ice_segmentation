@@ -69,6 +69,13 @@ class ImageReader(object):
       elif self._image_format == 'png':
         self._decode = tf.image.decode_png(self._decode_data,
                                            channels=channels)
+      elif self._image_format == 'tif':
+        self._decode = tf.image.decode_png(self._decode_data,
+                                           channels=channels)
+        raise AssertionError('TIF is nt supported yet')
+
+      else:
+          raise AssertionError('invalid image format: {}'.format(self._image_format))
 
   def read_image_dims(self, image_data):
     """Reads the image dimensions.
