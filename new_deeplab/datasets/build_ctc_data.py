@@ -17,6 +17,9 @@
 
 import math
 import os
+
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
+
 import random
 import sys
 import build_data
@@ -59,21 +62,22 @@ def irange(a, b):
 
 class Params:
     class CTCSubSeq:
-        all = irange(0, 19)
-        bf = irange(0, 3)
-        bf1 = irange(0, 1)
-        bf2 = irange(2, 3)
-        dic = irange(4, 5)
-        fluo = irange(6, 15)
-        fluo1 = irange(6, 11)
-        fluo2 = irange(12, 15)
-        huh = irange(6, 7)
-        gow = irange(8, 9)
-        sim = irange(10, 11)
-        hela = irange(14, 15)
-        phc = irange(16, 19)
-        phc1 = irange(16, 17)
-        phc2 = irange(18, 19)
+        def __init__(self):
+            self.all = irange(0, 19)
+            self.bf = irange(0, 3)
+            self.bf1 = irange(0, 1)
+            self.bf2 = irange(2, 3)
+            self.dic = irange(4, 5)
+            self.fluo = irange(6, 15)
+            self.fluo1 = irange(6, 11)
+            self.fluo2 = irange(12, 15)
+            self.huh = irange(6, 7)
+            self.gow = irange(8, 9)
+            self.sim = irange(10, 11)
+            self.hela = irange(14, 15)
+            self.phc = irange(16, 19)
+            self.phc1 = irange(16, 17)
+            self.phc2 = irange(18, 19)
 
     def __init__(self):
         self.cfg = ('',)
@@ -193,6 +197,7 @@ def _convert_dataset(params):
     os.makedirs(png_img_root_path, exist_ok=True)
 
     output_root_dir = linux_path(params.root_dir, 'CTC', 'tfrecord', params.sub_seq)
+    os.makedirs(output_root_dir, exist_ok=True)
 
     tif_labels_root_path = linux_path(params.root_dir, 'CTC', 'tif')
     png_labels_root_path = linux_path(params.root_dir, 'CTC', 'Labels_PNG')
@@ -200,7 +205,7 @@ def _convert_dataset(params):
 
     for seq_id in seq_ids:
 
-        seq_name = params.sequences[seq_id]
+        seq_name = params.sequences[seq_id][0]
 
         silver_seg_path = linux_path(tif_labels_root_path, seq_name + '_ST', 'SEG')
         gold_seg_path = linux_path(tif_labels_root_path, seq_name + '_GT', 'SEG')
@@ -214,21 +219,25 @@ def _convert_dataset(params):
         gold_seg_src_file_ids = {}
         silver_seg_src_file_ids = {}
 
-        if not os.path.exists(gold_seg_path):
+        if os.path.exists(gold_seg_path):
             gold_seg_src_files = [k for k in os.listdir(gold_seg_path) if
                                   os.path.splitext(k.lower())[1] in ('.tif',)]
             gold_seg_src_files.sort()
 
             gold_seg_src_file_ids = {''.join(k for k in src_file if k.isdigit()): src_file
                                      for src_file in gold_seg_src_files}
+        else:
+            print("\ngold  segmentations not found for sequence: {}\n".format(seq_name))
 
-        if not os.path.exists(silver_seg_path):
+        if os.path.exists(silver_seg_path):
             silver_seg_src_files = [k for k in os.listdir(silver_seg_path) if
                                     os.path.splitext(k.lower())[1] in ('.tif',)]
             silver_seg_src_files.sort()
 
             silver_seg_src_file_ids = {''.join(k for k in src_file if k.isdigit()): src_file
                                        for src_file in silver_seg_src_files}
+        else:
+            print("\nsilver  segmentations not found for sequence: {}\n".format(seq_name))
 
         # unique_gold_seg_src_files = [v for k,v in gold_seg_src_file_ids.items() if k not in
         # silver_seg_src_file_ids.keys()]
@@ -257,6 +266,7 @@ def _convert_dataset(params):
 
         # output_dir = linux_path(output_root_dir, seq_name)
         output_dir = output_root_dir
+        os.makedirs(output_dir, exist_ok=True)
 
         for shard_id in range(params.num_shards):
 
@@ -305,7 +315,7 @@ def _convert_dataset(params):
                             n_silver_seg_objs = len(silver_seg_obj_ids)
 
                         if n_silver_seg_objs == 0 and n_gold_seg_objs == 0:
-                            print('no segmentations found for {}'.format(img_src_file))
+                            print('\nno segmentations found for {}\n'.format(img_src_file))
                             continue
 
                         if n_silver_seg_objs > n_gold_seg_objs:
@@ -339,11 +349,12 @@ def _convert_dataset(params):
             sys.stdout.write('\n')
             sys.stdout.flush()
 
-def main(unused_argv):
+
+def main():
     params = Params()
     paramparse.process(params)
     _convert_dataset(params)
 
 
 if __name__ == '__main__':
-    tf.app.run()
+    main()
