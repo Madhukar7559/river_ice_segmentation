@@ -39,7 +39,7 @@ class NewDeeplabTrainParams:
     :type run_with_profiling: bool
 
     :ivar profile_file:  Dump profile information to a file (for python -m pstats). Implies --run_with_profiling.
-    :type profile_file: NoneType
+    :type profile_file: str
 
     :ivar use_cprofile_for_profiling:  Use cProfile instead of the profile module for profiling. This has no effect
     unless --run_with_profiling is set. (default: 'true')
@@ -59,7 +59,7 @@ class NewDeeplabTrainParams:
     :type test_srcdir: str
 
     :ivar test_tmpdir:  Directory for temporary testing files (default:
-    'C:\\Users\\Tommy\\AppData\\Local\\Temp\\absl_testing')
+    'C:/Users/Tommy/AppData/Local/Temp/absl_testing')
     :type test_tmpdir: str
 
     :ivar test_randomize_ordering_seed:  If positive, use this as a seed to randomize the execution order for test
@@ -92,7 +92,7 @@ class NewDeeplabTrainParams:
     :type task: int
 
     :ivar train_logdir:  Where the checkpoint and logs are stored.
-    :type train_logdir: NoneType
+    :type train_logdir: str
 
     :ivar log_steps:  Display logging information at every log_steps. (default: '10') (an integer)
     :type log_steps: int
@@ -108,7 +108,7 @@ class NewDeeplabTrainParams:
     :type save_summaries_images: bool
 
     :ivar profile_logdir:  Where the profile files are stored.
-    :type profile_logdir: NoneType
+    :type profile_logdir: str
 
     :ivar learning_policy:  <poly|step>: Learning rate policy for training. (default: 'poly')
     :type learning_policy: str
@@ -152,7 +152,7 @@ class NewDeeplabTrainParams:
     :type drop_path_keep_prob: float
 
     :ivar tf_initial_checkpoint:  The initial checkpoint in tensorflow format.
-    :type tf_initial_checkpoint: NoneType
+    :type tf_initial_checkpoint: str
 
     :ivar initialize_last_layer:  Initialize the last layer. (default: 'true')
     :type initialize_last_layer: bool
@@ -180,7 +180,6 @@ class NewDeeplabTrainParams:
 
     :ivar atrous_rates:  Atrous rates for atrous spatial pyramid pooling.; repeat this option to specify a list of
     values (an integer)
-    :type atrous_rates: NoneType
 
     :ivar output_stride:
     :type output_stride: int
@@ -188,7 +187,7 @@ class NewDeeplabTrainParams:
     :ivar hard_example_mining_step:  The training step in which exact hard example mining kicks off. Note we
     gradually reduce the mining percent to the specified top_k_percent_pixels. For example,
     if hard_example_mining_step=100K and top_k_percent_pixels=0.25, then mining percent will gradually reduce from
-    100% to 25% until 100K steps after which we only mine top 25% pixels. (default: '0') (an integer)
+    100%% to 25%% until 100K steps after which we only mine top 25%% pixels. (default: '0') (an integer)
     :type hard_example_mining_step: int
 
     :ivar top_k_percent_pixels:  The top k percent pixels (in terms of the loss values) used to compute loss during
@@ -206,7 +205,7 @@ class NewDeeplabTrainParams:
     :type train_split: str
 
     :ivar dataset_dir:  Where the dataset reside.
-    :type dataset_dir: NoneType
+    :type dataset_dir: str
 
     :ivar allow_memory_growth:  allow_memory_growth (default: '1') (an integer)
     :type allow_memory_growth: int
@@ -215,13 +214,13 @@ class NewDeeplabTrainParams:
     :type gpu_memory_fraction: float
 
     :ivar min_resize_value:  Desired size of the smaller image side. (an integer)
-    :type min_resize_value: NoneType
+    :type min_resize_value: int
 
     :ivar max_resize_value:  Maximum allowed size of the larger image side. (an integer)
-    :type max_resize_value: NoneType
+    :type max_resize_value: int
 
     :ivar resize_factor:  Resized dimensions are multiple of factor plus one. (an integer)
-    :type resize_factor: NoneType
+    :type resize_factor: int
 
     :ivar logits_kernel_size:  The kernel size for the convolutional kernel that generates logits. (default: '1') (an
     integer)
@@ -232,7 +231,6 @@ class NewDeeplabTrainParams:
 
     :ivar image_pyramid:  Input scales for multi-scale feature extraction.; repeat this option to specify a list of
     values (a number)
-    :type image_pyramid: NoneType
 
     :ivar add_image_level_feature:  Add image level feature. (default: 'true')
     :type add_image_level_feature: bool
@@ -240,7 +238,7 @@ class NewDeeplabTrainParams:
     :ivar image_pooling_crop_size:  Image pooling crop size [height, width] used in the ASPP module. When value is
     None, the model performs image pooling with "crop_size". Thisflag is useful when one likes to use different image
     pooling sizes. (a comma separated list)
-    :type image_pooling_crop_size: NoneType
+    :type image_pooling_crop_size: list
 
     :ivar image_pooling_stride:  Image pooling stride [height, width] used in the ASPP image pooling. (default: '1,
     1') (a comma separated list)
@@ -254,7 +252,6 @@ class NewDeeplabTrainParams:
 
     :ivar multi_grid:  Employ a hierarchy of atrous rates for ResNet.; repeat this option to specify a list of values
     (an integer)
-    :type multi_grid: NoneType
 
     :ivar depth_multiplier:  Multiplier for the depth (number of channels) for all convolution ops used in MobileNet.
     (default: '1.0') (a number)
@@ -262,12 +259,12 @@ class NewDeeplabTrainParams:
 
     :ivar divisible_by:  An integer that ensures the layer # channels are divisible by this value. Used in MobileNet.
     (an integer)
-    :type divisible_by: NoneType
+    :type divisible_by: int
 
     :ivar decoder_output_stride:  Comma-separated list of strings with the number specifying output stride of
     low-level features at each network level.Current semantic segmentation implementation assumes at most one output
     stride (i.e., either None or a list with only one element. (a comma separated list)
-    :type decoder_output_stride: NoneType
+    :type decoder_output_stride: list
 
     :ivar decoder_use_separable_conv:  Employ separable convolution for decoder or not. (default: 'true')
     :type decoder_use_separable_conv: bool
@@ -294,7 +291,12 @@ class NewDeeplabTrainParams:
     """
 
     def __init__(self):
-        self.cfg = ('',)
+        self.cfg_root = 'cfg'
+        self.cfg_ext = 'cfg'
+        self.cfg = ()
+
+        self.gpu = ""
+
         self.logtostderr = False
         self.alsologtostderr = False
         self.log_dir = ''
@@ -311,8 +313,8 @@ class NewDeeplabTrainParams:
         self.op_conversion_fallback_to_while_loop = False
         self.test_random_seed = 301
         self.test_srcdir = ''
-        self.test_tmpdir = 'C:\Users\Tommy\AppData\Local\Temp\absl_testing'
-        self.test_randomize_ordering_seed = None
+        self.test_tmpdir = 'C:/Users/Tommy/AppData/Local/Temp/absl_testing'
+        self.test_randomize_ordering_seed = 0
         self.xml_output_file = ''
         self.num_clones = 1
         self.clone_on_cpu = False
@@ -321,18 +323,18 @@ class NewDeeplabTrainParams:
         self.num_ps_tasks = 0
         self.master = ''
         self.task = 0
-        self.train_logdir = None
+        self.train_logdir = ''
         self.log_steps = 10
         self.save_interval_secs = 1200
         self.save_summaries_secs = 600
         self.save_summaries_images = False
-        self.profile_logdir = None
+        self.profile_logdir = ''
         self.learning_policy = 'poly'
         self.base_learning_rate = 0.0001
         self.learning_rate_decay_factor = 0.1
         self.learning_rate_decay_step = 2000
         self.learning_power = 0.9
-        self.training_number_of_steps = 30000
+        self.training_number_of_steps = 1000000
         self.momentum = 0.9
         self.train_batch_size = 8
         self.weight_decay = 4e-05
@@ -349,7 +351,7 @@ class NewDeeplabTrainParams:
         self.min_scale_factor = 0.5
         self.max_scale_factor = 2.0
         self.scale_factor_step_size = 0.25
-        self.atrous_rates = None
+        self.atrous_rates = [6, 12, 18]
         self.output_stride = 16
         self.hard_example_mining_step = 0
         self.top_k_percent_pixels = 1.0
@@ -364,13 +366,13 @@ class NewDeeplabTrainParams:
         self.resize_factor = None
         self.logits_kernel_size = 1
         self.model_variant = 'mobilenet_v2'
-        self.image_pyramid = None
+        self.image_pyramid = []
         self.add_image_level_feature = True
         self.image_pooling_crop_size = None
         self.image_pooling_stride = [['1', '1'], ]
         self.aspp_with_batch_norm = True
         self.aspp_with_separable_conv = True
-        self.multi_grid = None
+        self.multi_grid = []
         self.depth_multiplier = 1.0
         self.divisible_by = None
         self.decoder_output_stride = None

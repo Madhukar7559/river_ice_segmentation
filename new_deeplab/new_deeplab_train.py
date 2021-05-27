@@ -38,7 +38,6 @@ from tensorflow.python.ops import math_ops
 
 import paramparse
 
-
 from new_deeplab import common
 from new_deeplab import model
 from new_deeplab.datasets import data_generator
@@ -47,10 +46,12 @@ from new_deeplab.utils import train_utils
 # paramparse.from_flags(FLAGS, to_clipboard=1)
 
 from new_deeplab_train_params import NewDeeplabTrainParams
-FLAGS = NewDeeplabTrainParams()
-paramparse.process(FLAGS)
+
+params = NewDeeplabTrainParams()
+paramparse.process(params)
 
 print()
+
 
 def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
     """Builds a clone of DeepLab.
@@ -63,7 +64,7 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
       ignore_label: Ignore label.
     """
     samples = iterator.get_next()
-    samples[common.IMAGE].set_shape([FLAGS.train_batch_size, FLAGS.train_crop_size[0], FLAGS.train_crop_size[1], 3])
+    samples[common.IMAGE].set_shape([params.train_batch_size, params.train_crop_size[0], params.train_crop_size[1], 3])
 
     # Add name to input and label nodes so we can add to summary.
     samples[common.IMAGE] = tf.identity(samples[common.IMAGE], name=common.IMAGE)
@@ -71,20 +72,20 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
 
     model_options = common.ModelOptions(
         outputs_to_num_classes=outputs_to_num_classes,
-        crop_size=[int(sz) for sz in FLAGS.train_crop_size],
-        atrous_rates=FLAGS.atrous_rates,
-        output_stride=FLAGS.output_stride)
+        crop_size=[int(sz) for sz in params.train_crop_size],
+        atrous_rates=params.atrous_rates,
+        output_stride=params.output_stride)
 
     outputs_to_scales_to_logits = model.multi_scale_logits(
         samples[common.IMAGE],
         model_options=model_options,
-        image_pyramid=FLAGS.image_pyramid,
-        weight_decay=FLAGS.weight_decay,
+        image_pyramid=params.image_pyramid,
+        weight_decay=params.weight_decay,
         is_training=True,
-        fine_tune_batch_norm=FLAGS.fine_tune_batch_norm,
+        fine_tune_batch_norm=params.fine_tune_batch_norm,
         nas_training_hyper_parameters={
-            'drop_path_keep_prob': FLAGS.drop_path_keep_prob,
-            'total_training_steps': FLAGS.training_number_of_steps,
+            'drop_path_keep_prob': params.drop_path_keep_prob,
+            'total_training_steps': params.training_number_of_steps,
         })
 
     # Add name to graph node so we can add to summary.
@@ -99,9 +100,9 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
             num_classes,
             ignore_label,
             loss_weight=1.0,
-            upsample_logits=FLAGS.upsample_logits,
-            hard_example_mining_step=FLAGS.hard_example_mining_step,
-            top_k_percent_pixels=FLAGS.top_k_percent_pixels,
+            upsample_logits=params.upsample_logits,
+            hard_example_mining_step=params.hard_example_mining_step,
+            top_k_percent_pixels=params.top_k_percent_pixels,
             scope=output)
 
         # Log the summary
@@ -180,7 +181,7 @@ def _log_summaries(input_image, label, num_of_classes, output):
         tf.summary.histogram(model_var.op.name, model_var)
 
     # Add summaries for images, labels, semantic predictions.
-    if FLAGS.save_summaries_images:
+    if params.save_summaries_images:
         tf.summary.image('samples/%s' % common.IMAGE, input_image)
 
         # Scale up summary image pixel values for better visualization.
@@ -208,17 +209,17 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
     global_step = tf.train.get_or_create_global_step()
 
     learning_rate = train_utils.get_model_learning_rate(
-        FLAGS.learning_policy, FLAGS.base_learning_rate,
-        FLAGS.learning_rate_decay_step, FLAGS.learning_rate_decay_factor,
-        FLAGS.training_number_of_steps, FLAGS.learning_power,
-        FLAGS.slow_start_step, FLAGS.slow_start_learning_rate)
+        params.learning_policy, params.base_learning_rate,
+        params.learning_rate_decay_step, params.learning_rate_decay_factor,
+        params.training_number_of_steps, params.learning_power,
+        params.slow_start_step, params.slow_start_learning_rate)
     tf.summary.scalar('learning_rate', learning_rate)
 
-    optimizer = tf.train.MomentumOptimizer(learning_rate, FLAGS.momentum)
+    optimizer = tf.train.MomentumOptimizer(learning_rate, params.momentum)
 
     tower_losses = []
     tower_grads = []
-    for i in range(FLAGS.num_clones):
+    for i in range(params.num_clones):
         with tf.device('/gpu:%d' % i):
             # First tower has default name scope.
             name_scope = ('clone_%d' % i) if i else ''
@@ -231,13 +232,13 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
                     reuse_variable=(i != 0))
                 tower_losses.append(loss)
 
-    if FLAGS.quantize_delay_step >= 0:
-        if FLAGS.num_clones > 1:
+    if params.quantize_delay_step >= 0:
+        if params.num_clones > 1:
             raise ValueError('Quantization doesn\'t support multi-clone yet.')
         tf.contrib.quantize.create_training_graph(
-            quant_delay=FLAGS.quantize_delay_step)
+            quant_delay=params.quantize_delay_step)
 
-    for i in range(FLAGS.num_clones):
+    for i in range(params.num_clones):
         with tf.device('/gpu:%d' % i):
             name_scope = ('clone_%d' % i) if i else ''
             with tf.name_scope(name_scope) as scope:
@@ -249,9 +250,9 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
 
         # Modify the gradients for biases and last layer variables.
         last_layers = model.get_extra_layer_scopes(
-            FLAGS.last_layers_contain_logits_only)
+            params.last_layers_contain_logits_only)
         grad_mult = train_utils.get_model_gradient_multipliers(
-            last_layers, FLAGS.last_layer_gradient_multiplier)
+            last_layers, params.last_layer_gradient_multiplier)
         if grad_mult:
             grads_and_vars = tf.contrib.training.multiply_gradients(
                 grads_and_vars, grad_mult)
@@ -270,7 +271,7 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
 
         # Print total loss to the terminal.
         # This implementation is mirrored from tf.slim.summaries.
-        should_log = math_ops.equal(math_ops.mod(global_step, FLAGS.log_steps), 0)
+        should_log = math_ops.equal(math_ops.mod(global_step, params.log_steps), 0)
         total_loss = tf.cond(
             should_log,
             lambda: tf.Print(total_loss, [total_loss], 'Total loss is :'),
@@ -286,32 +287,33 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
     return train_tensor, summary_op
 
 
-def main(unused_argv):
-    tf.logging.set_verbosity(tf.logging.INFO)
+def main():
+    if params.gpu:
+        os.environ["CUDA_VISIBLE_DEVICES"] = params.gpu
 
-    tf.gfile.MakeDirs(FLAGS.train_logdir)
-    tf.logging.info('Training on %s set', FLAGS.train_split)
+    tf.gfile.MakeDirs(params.train_logdir)
+    tf.logging.info('Training on %s set', params.train_split)
 
     graph = tf.Graph()
     with graph.as_default():
-        with tf.device(tf.train.replica_device_setter(ps_tasks=FLAGS.num_ps_tasks)):
-            assert FLAGS.train_batch_size % FLAGS.num_clones == 0, (
+        with tf.device(tf.train.replica_device_setter(ps_tasks=params.num_ps_tasks)):
+            assert params.train_batch_size % params.num_clones == 0, (
                 'Training batch size not divisble by number of clones (GPUs).')
-            clone_batch_size = FLAGS.train_batch_size // FLAGS.num_clones
+            clone_batch_size = params.train_batch_size // params.num_clones
 
             dataset = data_generator.Dataset(
-                dataset_name=FLAGS.dataset,
-                split_name=FLAGS.train_split,
-                dataset_dir=FLAGS.dataset_dir,
+                dataset_name=params.dataset,
+                split_name=params.train_split,
+                dataset_dir=params.dataset_dir,
                 batch_size=clone_batch_size,
-                crop_size=[int(sz) for sz in FLAGS.train_crop_size],
-                min_resize_value=FLAGS.min_resize_value,
-                max_resize_value=FLAGS.max_resize_value,
-                resize_factor=FLAGS.resize_factor,
-                min_scale_factor=FLAGS.min_scale_factor,
-                max_scale_factor=FLAGS.max_scale_factor,
-                scale_factor_step_size=FLAGS.scale_factor_step_size,
-                model_variant=FLAGS.model_variant,
+                crop_size=[int(sz) for sz in params.train_crop_size],
+                min_resize_value=params.min_resize_value,
+                max_resize_value=params.max_resize_value,
+                resize_factor=params.resize_factor,
+                min_scale_factor=params.min_scale_factor,
+                max_scale_factor=params.max_scale_factor,
+                scale_factor_step_size=params.scale_factor_step_size,
+                model_variant=params.model_variant,
                 num_readers=2,
                 is_training=True,
                 should_shuffle=True,
@@ -324,16 +326,16 @@ def main(unused_argv):
             # Soft placement allows placing on CPU ops without GPU implementation.
             session_config = tf.ConfigProto(
                 allow_soft_placement=True, log_device_placement=False)
-            session_config.gpu_options.allow_growth = FLAGS.allow_memory_growth
-            session_config.gpu_options.per_process_gpu_memory_fraction = FLAGS.gpu_memory_fraction
+            session_config.gpu_options.allow_growth = params.allow_memory_growth
+            session_config.gpu_options.per_process_gpu_memory_fraction = params.gpu_memory_fraction
             last_layers = model.get_extra_layer_scopes(
-                FLAGS.last_layers_contain_logits_only)
+                params.last_layers_contain_logits_only)
             init_fn = None
-            if FLAGS.tf_initial_checkpoint:
+            if params.tf_initial_checkpoint:
                 init_fn = train_utils.get_model_init_fn(
-                    FLAGS.train_logdir,
-                    FLAGS.tf_initial_checkpoint,
-                    FLAGS.initialize_last_layer,
+                    params.train_logdir,
+                    params.tf_initial_checkpoint,
+                    params.initialize_last_layer,
                     last_layers,
                     ignore_missing_vars=True)
 
@@ -343,30 +345,28 @@ def main(unused_argv):
             )
 
             stop_hook = tf.train.StopAtStepHook(
-                last_step=FLAGS.training_number_of_steps)
+                last_step=params.training_number_of_steps)
 
-            profile_dir = FLAGS.profile_logdir
+            profile_dir = params.profile_logdir
             if profile_dir is not None:
                 tf.gfile.MakeDirs(profile_dir)
 
             with tf.contrib.tfprof.ProfileContext(
                     enabled=profile_dir is not None, profile_dir=profile_dir):
                 with tf.train.MonitoredTrainingSession(
-                        master=FLAGS.master,
-                        is_chief=(FLAGS.task == 0),
+                        master=params.master,
+                        is_chief=(params.task == 0),
                         config=session_config,
                         scaffold=scaffold,
-                        checkpoint_dir=FLAGS.train_logdir,
-                        summary_dir=FLAGS.train_logdir,
-                        log_step_count_steps=FLAGS.log_steps,
-                        save_summaries_steps=FLAGS.save_summaries_secs,
-                        save_checkpoint_secs=FLAGS.save_interval_secs,
+                        checkpoint_dir=params.train_logdir,
+                        summary_dir=params.train_logdir,
+                        log_step_count_steps=params.log_steps,
+                        save_summaries_steps=params.save_summaries_secs,
+                        save_checkpoint_secs=params.save_interval_secs,
                         hooks=[stop_hook]) as sess:
                     while not sess.should_stop():
                         sess.run([train_tensor])
 
 
 if __name__ == '__main__':
-    flags.mark_flag_as_required('train_logdir')
-    flags.mark_flag_as_required('dataset_dir')
-    tf.app.run()
+    main()

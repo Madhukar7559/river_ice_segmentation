@@ -57,7 +57,9 @@ class Params:
             self.phc2 = irange(18, 19)
 
     def __init__(self):
-        self.cfg = ('',)
+        self.sub_seq = 'phc2'
+
+        self.cfg = ()
         self.ignore_missing_gt = 1
         self.ignore_missing_seg = 1
         self.ignored_region_only = 0
@@ -68,13 +70,14 @@ class Params:
 
         self.start_id = 0
         self.end_id = -1
-        self.sub_seq = 'bf'
         # self.seq_ids = [6, 7, 14, 15]
 
         self.write_gt = 0
         self.write_img = 1
         self.raad_gt = 0
         self.tra_only = 0
+
+        self.two_classes = 1
 
         self.show_img = 0
         self.save_img = 0
@@ -152,7 +155,10 @@ class Params:
 
 
 def seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
-               silver_seg_path, gold_seg_path, png_seg_src_path, img_src_file):
+               silver_seg_path, gold_seg_path, png_seg_src_path, img_src_file, two_classes):
+
+    gold_seg_img = silver_seg_img = None
+
     try:
         gold_seg_src_file = gold_seg_src_file_ids[img_src_file_id]
     except KeyError:
@@ -183,9 +189,14 @@ def seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
         return 0
 
     if n_silver_seg_objs > n_gold_seg_objs:
-        cv2.imwrite(png_seg_src_path, silver_seg_img)
+        seg_img = silver_seg_img
     else:
-        cv2.imwrite(png_seg_src_path, gold_seg_img)
+        seg_img = gold_seg_img
+
+    if two_classes:
+        seg_img[seg_img > 0] = 255
+
+    cv2.imwrite(png_seg_src_path, gold_seg_img)
 
     return 1
 
@@ -311,6 +322,8 @@ def _convert_dataset(params):
 
     print('Creating {} shards with {} images ({} per shard)'.format(params.num_shards, num_images, num_per_shard))
 
+    exit()
+
     for shard_id in range(params.num_shards):
 
         output_file_path = os.path.join(
@@ -335,7 +348,7 @@ def _convert_dataset(params):
                 png_seg_src_path = os.path.join(png_seg_path, img_src_file_no_ext + '.png')
                 if not os.path.exists(png_seg_src_path):
                     segmentation_found = seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
-               silver_seg_path, gold_seg_path, png_seg_src_path, img_src_file)
+               silver_seg_path, gold_seg_path, png_seg_src_path, img_src_file, params.two_classes)
                     if not segmentation_found:
                         continue
 

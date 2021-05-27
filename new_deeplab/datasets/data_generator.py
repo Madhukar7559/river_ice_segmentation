@@ -177,6 +177,27 @@ _617_800_INFORMATION = DatasetDescriptor(
     ignore_label=255,
 )
 
+_CTC_INFORMATION = DatasetDescriptor(
+    splits_to_sizes={
+        'bf': 6280,
+        'bf1': 3528,
+        'bf2': 2752,
+        'dic': 168,
+        'fluo': 739,
+        'fluo1': 459,
+        'fluo2': 280,
+        'huh': 60,
+        'gow': 184,
+        'sim': 215,
+        'hela': 184,
+        'phc': 830,
+        'phc1': 230,
+        'phc2': 600,
+    },
+    num_classes=2,
+    ignore_label=128,
+)
+
 _DATASETS_INFORMATION = {
     'cityscapes': _CITYSCAPES_INFORMATION,
     'pascal_voc_seg': _PASCAL_VOC_SEG_INFORMATION,
