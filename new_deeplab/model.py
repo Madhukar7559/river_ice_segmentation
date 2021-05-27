@@ -398,7 +398,7 @@ def extract_features(images,
     return features, end_points
   else:
     if model_options.dense_prediction_cell_config is not None:
-      tf.logging.info('Using dense prediction cell config.')
+      print('Using dense prediction cell config.')
       dense_prediction_layer = dense_prediction_cell.DensePredictionCell(
           config=model_options.dense_prediction_cell_config,
           hparams={

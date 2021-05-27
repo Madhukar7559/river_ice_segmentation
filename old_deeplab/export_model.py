@@ -101,7 +101,7 @@ def _create_input_tensors():
 
 def main(unused_argv):
   tf.logging.set_verbosity(tf.logging.INFO)
-  tf.logging.info('Prepare to export model to: %s', FLAGS.export_path)
+  print('Prepare to export model to: %s', FLAGS.export_path)
 
   with tf.Graph().as_default():
     image, image_size, resized_image_size = _create_input_tensors()
@@ -113,13 +113,13 @@ def main(unused_argv):
         output_stride=FLAGS.output_stride)
 
     if tuple(FLAGS.inference_scales) == (1.0,):
-      tf.logging.info('Exported model performs single-scale inference.')
+      print('Exported model performs single-scale inference.')
       predictions = model.predict_labels(
           image,
           model_options=model_options,
           image_pyramid=FLAGS.image_pyramid)
     else:
-      tf.logging.info('Exported model performs multi-scale inference.')
+      print('Exported model performs multi-scale inference.')
       predictions = model.predict_labels_multi_scale(
           image,
           model_options=model_options,

@@ -10,7 +10,6 @@ from tabulate import tabulate
 
 from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
 from matplotlib.figure import Figure
-import matplotlib.pyplot as plt
 
 # plt.style.use('presentation')
 

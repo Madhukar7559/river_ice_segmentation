@@ -218,7 +218,7 @@ def main(unused_argv):
         FLAGS.dataset, FLAGS.vis_split, dataset_dir=FLAGS.dataset_dir)
     train_id_to_eval_id = None
     if dataset.name == segmentation_dataset.get_cityscapes_dataset_name():
-        tf.logging.info('Cityscapes requires converting train_id to eval_id.')
+        print('Cityscapes requires converting train_id to eval_id.')
         train_id_to_eval_id = _CITYSCAPES_TRAIN_ID_TO_EVAL_ID
 
     # Prepare for visualization.
@@ -232,7 +232,7 @@ def main(unused_argv):
     tf.gfile.MakeDirs(raw_save_dir)
     tf.gfile.MakeDirs(stacked_save_dir)
 
-    tf.logging.info('Visualizing on %s set', FLAGS.vis_split)
+    print('Visualizing on %s set', FLAGS.vis_split)
 
     print('Saving raw labels to: {}'.format(raw_save_dir))
     print('Saving stacked labels to: {}'.format(stacked_save_dir))
@@ -256,13 +256,13 @@ def main(unused_argv):
             output_stride=FLAGS.output_stride)
 
         if tuple(FLAGS.eval_scales) == (1.0,):
-            tf.logging.info('Performing single-scale test.')
+            print('Performing single-scale test.')
             predictions = model.predict_labels(
                 samples[common.IMAGE],
                 model_options=model_options,
                 image_pyramid=FLAGS.image_pyramid)
         else:
-            tf.logging.info('Performing multi-scale test.')
+            print('Performing multi-scale test.')
             predictions = model.predict_labels_multi_scale(
                 samples[common.IMAGE],
                 model_options=model_options,
@@ -313,10 +313,10 @@ def main(unused_argv):
             last_checkpoint = slim.evaluation.wait_for_new_checkpoint(
                 FLAGS.checkpoint_dir, last_checkpoint)
             start = time.time()
-            tf.logging.info(
+            print(
                 'Starting visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                              time.gmtime()))
-            tf.logging.info('Visualizing with model %s', last_checkpoint)
+            print('Visualizing with model %s', last_checkpoint)
             session_config = tf.ConfigProto(
                 allow_soft_placement=True, log_device_placement=False)
             session_config.gpu_options.allow_growth = FLAGS.allow_memory_growth
@@ -330,7 +330,7 @@ def main(unused_argv):
 
                 image_id_offset = 0
                 for batch in range(num_batches):
-                    tf.logging.info('Visualizing batch %d / %d', batch + 1, num_batches)
+                    print('Visualizing batch %d / %d', batch + 1, num_batches)
                     _process_batch(sess=sess,
                                    original_images=samples[common.ORIGINAL_IMAGE],
                                    semantic_predictions=predictions,
@@ -344,7 +344,7 @@ def main(unused_argv):
                                    train_id_to_eval_id=train_id_to_eval_id)
                     image_id_offset += FLAGS.vis_batch_size
 
-            tf.logging.info(
+            print(
                 'Finished visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                              time.gmtime()))
             time_to_next_eval = start + FLAGS.eval_interval_secs - time.time()

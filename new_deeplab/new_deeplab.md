@@ -118,8 +118,8 @@ python36 new_deeplab_train.py cfg=gpu:2,_hnas_
 <a id="ctc___atrous_6_12_18_hnasnet_"></a>
 ### ctc       @ atrous:6_12_18/hnasnet-->new_deeplab
 
-#### bf       @ ctc/atrous:6_12_18/hnasnet-->new_deeplab
-python36 new_deeplab_train.py cfg=gpu:2,_hnas_:atrous-6_12_18,_ctc_:bf
+#### huh       @ ctc/atrous:6_12_18/hnasnet-->new_deeplab
+python36 new_deeplab_train.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:huh
 
 <a id="atrous_rates_12_24_36___hnasne_t_"></a>
 ## atrous_rates_12_24_36       @ hnasnet-->new_deeplab

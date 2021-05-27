@@ -243,7 +243,7 @@ def main(unused_argv):
 
     train_id_to_eval_id = None
     if dataset.dataset_name == data_generator.get_cityscapes_dataset_name():
-        tf.logging.info('Cityscapes requires converting train_id to eval_id.')
+        print('Cityscapes requires converting train_id to eval_id.')
         train_id_to_eval_id = _CITYSCAPES_TRAIN_ID_TO_EVAL_ID
 
     # Prepare for visualization.
@@ -257,7 +257,7 @@ def main(unused_argv):
     tf.gfile.MakeDirs(raw_save_dir)
     tf.gfile.MakeDirs(stacked_save_dir)
 
-    tf.logging.info('Visualizing on %s set', FLAGS.vis_split)
+    print('Visualizing on %s set', FLAGS.vis_split)
 
     with tf.Graph().as_default():
         samples = dataset.get_one_shot_iterator().get_next()
@@ -269,13 +269,13 @@ def main(unused_argv):
             output_stride=FLAGS.output_stride)
 
         if tuple(FLAGS.eval_scales) == (1.0,):
-            tf.logging.info('Performing single-scale test.')
+            print('Performing single-scale test.')
             predictions = model.predict_labels(
                 samples[common.IMAGE],
                 model_options=model_options,
                 image_pyramid=FLAGS.image_pyramid)
         else:
-            tf.logging.info('Performing multi-scale test.')
+            print('Performing multi-scale test.')
             if FLAGS.quantize_delay_step >= 0:
                 raise ValueError(
                     'Quantize mode is not supported with multi-scale test.')
@@ -319,10 +319,10 @@ def main(unused_argv):
             FLAGS.checkpoint_dir, min_interval_secs=FLAGS.eval_interval_secs)
         for checkpoint_path in checkpoints_iterator:
             num_iteration += 1
-            tf.logging.info(
+            print(
                 'Starting visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                              time.gmtime()))
-            tf.logging.info('Visualizing with model %s', checkpoint_path)
+            print('Visualizing with model %s', checkpoint_path)
 
             scaffold = tf.train.Scaffold(init_op=tf.global_variables_initializer())
             session_creator = tf.train.ChiefSessionCreator(
@@ -335,7 +335,7 @@ def main(unused_argv):
                 image_id_offset = 0
 
                 while not sess.should_stop():
-                    tf.logging.info('Visualizing batch %d', batch + 1)
+                    print('Visualizing batch %d', batch + 1)
                     _process_batch(sess=sess,
                                    original_images=samples[common.ORIGINAL_IMAGE],
                                    semantic_predictions=predictions,
@@ -350,7 +350,7 @@ def main(unused_argv):
                     image_id_offset += FLAGS.vis_batch_size
                     batch += 1
 
-            tf.logging.info(
+            print(
                 'Finished visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                              time.gmtime()))
             if max_num_iteration > 0 and num_iteration >= max_num_iteration:

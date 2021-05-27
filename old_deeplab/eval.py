@@ -96,7 +96,7 @@ def main(unused_argv):
       FLAGS.dataset, FLAGS.eval_split, dataset_dir=FLAGS.dataset_dir)
 
   tf.gfile.MakeDirs(FLAGS.eval_logdir)
-  tf.logging.info('Evaluating on %s set', FLAGS.eval_split)
+  print('Evaluating on %s set', FLAGS.eval_split)
 
   with tf.Graph().as_default():
     samples = input_generator.get(
@@ -117,11 +117,11 @@ def main(unused_argv):
         output_stride=FLAGS.output_stride)
 
     if tuple(FLAGS.eval_scales) == (1.0,):
-      tf.logging.info('Performing single-scale test.')
+      print('Performing single-scale test.')
       predictions = model.predict_labels(samples[common.IMAGE], model_options,
                                          image_pyramid=FLAGS.image_pyramid)
     else:
-      tf.logging.info('Performing multi-scale test.')
+      print('Performing multi-scale test.')
       predictions = model.predict_labels_multi_scale(
           samples[common.IMAGE],
           model_options=model_options,
@@ -159,8 +159,8 @@ def main(unused_argv):
     num_batches = int(
         math.ceil(dataset.num_samples / float(FLAGS.eval_batch_size)))
 
-    tf.logging.info('Eval num images %d', dataset.num_samples)
-    tf.logging.info('Eval batch size %d and num batch %d',
+    print('Eval num images %d', dataset.num_samples)
+    print('Eval batch size %d and num batch %d',
                     FLAGS.eval_batch_size, num_batches)
 
     num_eval_iters = None

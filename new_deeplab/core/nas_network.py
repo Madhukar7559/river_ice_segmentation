@@ -200,9 +200,9 @@ def pnasnet(images,
     hparams.set_hparam('total_training_steps',
                        nas_training_hyper_parameters['total_training_steps'])
   if not is_training:
-    tf.logging.info('During inference, setting drop_path_keep_prob = 1.0.')
+    print('During inference, setting drop_path_keep_prob = 1.0.')
     hparams.set_hparam('drop_path_keep_prob', 1.0)
-  tf.logging.info(hparams)
+  print(hparams)
   if output_stride == 8:
     backbone = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
   elif output_stride == 16:
@@ -247,9 +247,9 @@ def hnasnet(images,
     hparams.set_hparam('total_training_steps',
                        nas_training_hyper_parameters['total_training_steps'])
   if not is_training:
-    tf.logging.info('During inference, setting drop_path_keep_prob = 1.0.')
+    print('During inference, setting drop_path_keep_prob = 1.0.')
     hparams.set_hparam('drop_path_keep_prob', 1.0)
-  tf.logging.info(hparams)
+  print(hparams)
   operations = [
       'atrous_5x5', 'separable_3x3_2', 'separable_3x3_2', 'atrous_3x3',
       'separable_3x3_2', 'separable_3x3_2', 'separable_5x5_2',

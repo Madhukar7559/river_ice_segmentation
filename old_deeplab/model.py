@@ -535,7 +535,7 @@ def refine_by_decoder(features,
         feature_list = feature_extractor.networks_to_feature_maps[
             model_variant][feature_extractor.DECODER_END_POINTS]
         if feature_list is None:
-          tf.logging.info('Not found any decoder end points.')
+          print('Not found any decoder end points.')
           return features
         else:
           decoder_features = features

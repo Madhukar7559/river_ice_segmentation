@@ -16,6 +16,9 @@
 
 See model.py for more details and usage.
 """
+import tensorflow.python.util.deprecation as deprecation
+
+deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 import six
 import sys
@@ -182,16 +185,43 @@ def _log_summaries(input_image, label, num_of_classes, output):
 
     # Add summaries for images, labels, semantic predictions.
     if params.save_summaries_images:
-        tf.summary.image('samples/%s' % common.IMAGE, input_image)
+        batch_size, input_h, input_w, n_channels = input_image.shape
+
+        # tf.summary.image('samples/%s' % common.IMAGE, input_image)
+
+        summary_image = tf.cast(input_image, tf.uint8)
 
         # Scale up summary image pixel values for better visualization.
         pixel_scaling = max(1, 255 // num_of_classes)
         summary_label = tf.cast(label * pixel_scaling, tf.uint8)
-        tf.summary.image('samples/%s' % common.LABEL, summary_label)
+        # tf.summary.image('samples/%s' % common.LABEL, summary_label)
+
+        print('num_of_classes: {}'.format(num_of_classes))
+        print('pixel_scaling: {}'.format(pixel_scaling))
+        print('batch_size: {}'.format(batch_size))
+        print('input_h: {}'.format(input_h))
+        print('input_w: {}'.format(input_w))
+        print('n_channels: {}'.format(n_channels))
 
         predictions = tf.expand_dims(tf.argmax(output, 3), -1)
         summary_predictions = tf.cast(predictions * pixel_scaling, tf.uint8)
-        tf.summary.image('samples/%s' % common.OUTPUT_TYPE, summary_predictions)
+        # tf.summary.image('samples/%s' % common.OUTPUT_TYPE, summary_predictions)
+
+        summary_label_resized = tf.image.resize(summary_label, (input_h, input_w))
+        summary_predictions_resized = tf.image.resize(summary_predictions, (input_h, input_w))
+
+        summary_label_resized = tf.cast(summary_label_resized, tf.uint8)
+        summary_predictions_resized = tf.cast(summary_predictions_resized, tf.uint8)
+
+        if n_channels == 3:
+            summary_label_resized_rgb = tf.image.grayscale_to_rgb(summary_label_resized)
+            summary_predictions_resized_rgb = tf.image.grayscale_to_rgb(summary_predictions_resized)
+        else:
+            summary_label_resized_rgb = summary_label_resized
+            summary_predictions_resized_rgb = summary_predictions_resized
+
+        concat_tensor = tf.concat((summary_image, summary_label_resized_rgb, summary_predictions_resized_rgb), axis=2)
+        tf.summary.image('img_gt_pred/%s' % common.OUTPUT_TYPE, concat_tensor)
 
 
 def _train_deeplab_model(iterator, num_of_classes, ignore_label):
@@ -288,11 +318,13 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
 
 
 def main():
+    # tf.logging.set_verbosity(tf.logging.INFO)
+
     if params.gpu:
         os.environ["CUDA_VISIBLE_DEVICES"] = params.gpu
 
     tf.gfile.MakeDirs(params.train_logdir)
-    tf.logging.info('Training on %s set', params.train_split)
+    print('Training on %s set', params.train_split)
 
     graph = tf.Graph()
     with graph.as_default():
@@ -358,7 +390,7 @@ def main():
                         is_chief=(params.task == 0),
                         config=session_config,
                         scaffold=scaffold,
-                        checkpoint_dir=params.train_logdir,
+                        checkpoint_dir=params.train_ckptdir,
                         summary_dir=params.train_logdir,
                         log_step_count_steps=params.log_steps,
                         save_summaries_steps=params.save_summaries_secs,

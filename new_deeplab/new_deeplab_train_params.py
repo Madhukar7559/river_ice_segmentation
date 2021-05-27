@@ -299,11 +299,13 @@ class NewDeeplabTrainParams:
 
         self.logtostderr = False
         self.alsologtostderr = False
+
+        self.stderrthreshold = 'fatal'
+        self.showprefixforinfo = True
+
         self.log_dir = ''
         self.v = -1
         self.verbosity = -1
-        self.stderrthreshold = 'fatal'
-        self.showprefixforinfo = True
         self.run_with_pdb = False
         self.pdb_post_mortem = False
         self.run_with_profiling = False
@@ -323,12 +325,13 @@ class NewDeeplabTrainParams:
         self.num_ps_tasks = 0
         self.master = ''
         self.task = 0
+        self.train_ckptdir = ''
         self.train_logdir = ''
         self.log_steps = 10
-        self.save_interval_secs = 1200
-        self.save_summaries_secs = 600
-        self.save_summaries_images = False
-        self.profile_logdir = ''
+        self.save_interval_secs = 12
+        self.save_summaries_secs = 6
+        self.save_summaries_images = True
+        self.profile_logdir = None
         self.learning_policy = 'poly'
         self.base_learning_rate = 0.0001
         self.learning_rate_decay_factor = 0.1
@@ -338,7 +341,7 @@ class NewDeeplabTrainParams:
         self.momentum = 0.9
         self.train_batch_size = 8
         self.weight_decay = 4e-05
-        self.train_crop_size = [['513', '513'], ]
+        self.train_crop_size = ['513', '513']
         self.last_layer_gradient_multiplier = 1.0
         self.upsample_logits = True
         self.drop_path_keep_prob = 1.0
@@ -369,7 +372,7 @@ class NewDeeplabTrainParams:
         self.image_pyramid = []
         self.add_image_level_feature = True
         self.image_pooling_crop_size = None
-        self.image_pooling_stride = [['1', '1'], ]
+        self.image_pooling_stride = ['1', '1']
         self.aspp_with_batch_norm = True
         self.aspp_with_separable_conv = True
         self.multi_grid = []

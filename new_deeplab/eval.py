@@ -99,7 +99,7 @@ def main(unused_argv):
       should_repeat=False)
 
   tf.gfile.MakeDirs(FLAGS.eval_logdir)
-  tf.logging.info('Evaluating on %s set', FLAGS.eval_split)
+  print('Evaluating on %s set', FLAGS.eval_split)
 
   with tf.Graph().as_default():
     samples = dataset.get_one_shot_iterator().get_next()
@@ -117,11 +117,11 @@ def main(unused_argv):
          int(FLAGS.eval_crop_size[1]),
          3])
     if tuple(FLAGS.eval_scales) == (1.0,):
-      tf.logging.info('Performing single-scale test.')
+      print('Performing single-scale test.')
       predictions = model.predict_labels(samples[common.IMAGE], model_options,
                                          image_pyramid=FLAGS.image_pyramid)
     else:
-      tf.logging.info('Performing multi-scale test.')
+      print('Performing multi-scale test.')
       if FLAGS.quantize_delay_step >= 0:
         raise ValueError(
             'Quantize mode is not supported with multi-scale test.')
