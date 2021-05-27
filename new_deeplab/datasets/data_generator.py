@@ -195,7 +195,7 @@ _CTC_INFORMATION = DatasetDescriptor(
         'phc2': 600,
     },
     num_classes=2,
-    ignore_label=128,
+    ignore_label=255,
 )
 
 _DATASETS_INFORMATION = {

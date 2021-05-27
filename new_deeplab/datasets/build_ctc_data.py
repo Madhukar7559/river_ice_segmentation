@@ -194,9 +194,10 @@ def seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
         seg_img = gold_seg_img
 
     if two_classes:
-        seg_img[seg_img > 0] = 255
+        seg_img[seg_img > 0] = 1
+        seg_img = seg_img.astype(np.uint8)
 
-    cv2.imwrite(png_seg_src_path, gold_seg_img)
+    cv2.imwrite(png_seg_src_path, seg_img)
 
     return 1
 
@@ -322,7 +323,7 @@ def _convert_dataset(params):
 
     print('Creating {} shards with {} images ({} per shard)'.format(params.num_shards, num_images, num_per_shard))
 
-    exit()
+    # exit()
 
     for shard_id in range(params.num_shards):
 
