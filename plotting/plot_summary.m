@@ -47,7 +47,7 @@ add_ylabel_to_title = 0;
 
 enable_y_label = 1;
 enable_x_label = 0;
-mode = 4;
+mode = 0;
 if mode == 0
     line_cols = {'blue', 'forest_green', 'red', 'purple', 'magenta', 'cyan',...
         'green', 'maroon', 'peach_puff', 'black'};

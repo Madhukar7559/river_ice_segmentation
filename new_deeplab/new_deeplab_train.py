@@ -44,7 +44,7 @@ import paramparse
 from new_deeplab import common
 from new_deeplab import model
 from new_deeplab.datasets import data_generator
-from new_deeplab.utils import train_utils
+from new_deeplab.utils import train_utils, linux_path
 
 # paramparse.from_flags(FLAGS, to_clipboard=1)
 
@@ -67,7 +67,7 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
       ignore_label: Ignore label.
     """
     samples = iterator.get_next()
-    samples[common.IMAGE].set_shape([params.train_batch_size, params.train_crop_size[0], params.train_crop_size[1], 3])
+    samples[common.IMAGE].set_shape([params.batch_size, params.train_crop_size[0], params.train_crop_size[1], 3])
 
     # Add name to input and label nodes so we can add to summary.
     samples[common.IMAGE] = tf.identity(samples[common.IMAGE], name=common.IMAGE)
@@ -323,15 +323,20 @@ def main():
     if params.gpu:
         os.environ["CUDA_VISIBLE_DEVICES"] = params.gpu
 
-    tf.gfile.MakeDirs(params.train_logdir)
+    log_dir = linux_path('log', params.db_info, params.model_info)
+    checkpoint_dir = linux_path(log_dir, 'ckpt')
+
+
+    tf.gfile.MakeDirs(log_dir)
     print('Training on %s set', params.train_split)
+
 
     graph = tf.Graph()
     with graph.as_default():
         with tf.device(tf.train.replica_device_setter(ps_tasks=params.num_ps_tasks)):
-            assert params.train_batch_size % params.num_clones == 0, (
+            assert params.batch_size % params.num_clones == 0, (
                 'Training batch size not divisble by number of clones (GPUs).')
-            clone_batch_size = params.train_batch_size // params.num_clones
+            clone_batch_size = params.batch_size // params.num_clones
 
             dataset = data_generator.Dataset(
                 dataset_name=params.dataset,
@@ -365,7 +370,7 @@ def main():
             init_fn = None
             if params.tf_initial_checkpoint:
                 init_fn = train_utils.get_model_init_fn(
-                    params.train_logdir,
+                    log_dir,
                     params.tf_initial_checkpoint,
                     params.initialize_last_layer,
                     last_layers,
@@ -390,8 +395,8 @@ def main():
                         is_chief=(params.task == 0),
                         config=session_config,
                         scaffold=scaffold,
-                        checkpoint_dir=params.train_ckptdir,
-                        summary_dir=params.train_logdir,
+                        checkpoint_dir=checkpoint_dir,
+                        summary_dir=log_dir,
                         log_step_count_steps=params.log_steps,
                         save_summaries_steps=params.save_summaries_secs,
                         save_checkpoint_secs=params.save_interval_secs,

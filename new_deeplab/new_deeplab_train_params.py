@@ -1,3 +1,5 @@
+from paramparse import MultiPath
+
 class NewDeeplabTrainParams:
     """
     :ivar logtostderr:  Should only log to stderr? (default: 'false')
@@ -5,9 +7,6 @@ class NewDeeplabTrainParams:
 
     :ivar alsologtostderr:  also log to stderr? (default: 'false')
     :type alsologtostderr: bool
-
-    :ivar log_dir:  directory to write logfiles into (default: '')
-    :type log_dir: str
 
     :ivar v:
     :type v: int
@@ -91,8 +90,8 @@ class NewDeeplabTrainParams:
     :ivar task:  The task ID. (default: '0') (an integer)
     :type task: int
 
-    :ivar train_logdir:  Where the checkpoint and logs are stored.
-    :type train_logdir: str
+    :ivar log_dir:  Where the checkpoint and logs are stored.
+    :type log_dir: str
 
     :ivar log_steps:  Display logging information at every log_steps. (default: '10') (an integer)
     :type log_steps: int
@@ -131,8 +130,8 @@ class NewDeeplabTrainParams:
     :ivar momentum:  The momentum value to use (default: '0.9') (a number)
     :type momentum: float
 
-    :ivar train_batch_size:  The number of images in each batch during training. (default: '8') (an integer)
-    :type train_batch_size: int
+    :ivar batch_size:  The number of images in each batch during training. (default: '8') (an integer)
+    :type batch_size: int
 
     :ivar weight_decay:  The value of the weight decay for training. (default: '4e-05') (a number)
     :type weight_decay: float
@@ -303,7 +302,6 @@ class NewDeeplabTrainParams:
         self.stderrthreshold = 'fatal'
         self.showprefixforinfo = True
 
-        self.log_dir = ''
         self.v = -1
         self.verbosity = -1
         self.run_with_pdb = False
@@ -325,8 +323,7 @@ class NewDeeplabTrainParams:
         self.num_ps_tasks = 0
         self.master = ''
         self.task = 0
-        self.train_ckptdir = ''
-        self.train_logdir = ''
+
         self.log_steps = 10
         self.save_interval_secs = 12
         self.save_summaries_secs = 6
@@ -339,7 +336,6 @@ class NewDeeplabTrainParams:
         self.learning_power = 0.9
         self.training_number_of_steps = 1000000
         self.momentum = 0.9
-        self.train_batch_size = 8
         self.weight_decay = 4e-05
         self.train_crop_size = ['513', '513']
         self.last_layer_gradient_multiplier = 1.0
@@ -385,3 +381,8 @@ class NewDeeplabTrainParams:
         self.dense_prediction_cell_json = ''
         self.nas_stem_output_num_conv_filters = 20
         self.use_bounded_activation = False
+
+        self.batch_size = 8
+        
+        self.model_info = MultiPath()
+        self.db_info = MultiPath()

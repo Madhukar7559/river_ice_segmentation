@@ -32,80 +32,18 @@ import cv2
 import numpy as np
 
 import tensorflow as tf
+
+import paramparse
+
 from new_deeplab import common
 from new_deeplab import model
 
 from new_deeplab.datasets import data_generator
-from new_deeplab.utils import save_annotation
+from new_deeplab.utils import save_annotation, linux_path
+
+from new_deeplab_vis_params import NewDeeplabVisParams
 
 # from old_deeplab.utils import save_annotation
-
-flags = tf.app.flags
-
-FLAGS = flags.FLAGS
-
-flags.DEFINE_string('master', '', 'BNS name of the tensorflow server')
-
-# Settings for log directories.
-
-flags.DEFINE_string('vis_logdir', None, 'Where to write the event logs.')
-
-flags.DEFINE_string('checkpoint_dir', None, 'Directory of model checkpoints.')
-
-# Settings for visualizing the model.
-
-flags.DEFINE_integer('vis_batch_size', 1,
-                     'The number of images in each batch during evaluation.')
-
-flags.DEFINE_list('vis_crop_size', '513,513',
-                  'Crop size [height, width] for visualization.')
-
-flags.DEFINE_integer('eval_interval_secs', 60 * 5,
-                     'How often (in seconds) to run evaluation.')
-
-# For `xception_65`, use atrous_rates = [12, 24, 36] if output_stride = 8, or
-# rates = [6, 12, 18] if output_stride = 16. For `mobilenet_v2`, use None. Note
-# one could use different atrous_rates/output_stride during training/evaluation.
-flags.DEFINE_multi_integer('atrous_rates', None,
-                           'Atrous rates for atrous spatial pyramid pooling.')
-
-flags.DEFINE_integer('output_stride', 16,
-                     'The ratio of input to output spatial resolution.')
-
-# Change to [0.5, 0.75, 1.0, 1.25, 1.5, 1.75] for multi-scale test.
-flags.DEFINE_multi_float('eval_scales', [1.0],
-                         'The scales to resize images for evaluation.')
-
-# Change to True for adding flipped images during test.
-flags.DEFINE_bool('add_flipped_images', False,
-                  'Add flipped images for evaluation or not.')
-
-flags.DEFINE_integer(
-    'quantize_delay_step', -1,
-    'Steps to start quantized training. If < 0, will not quantize model.')
-
-# Dataset settings.
-
-flags.DEFINE_string('dataset', 'pascal_voc_seg',
-                    'Name of the segmentation dataset.')
-
-flags.DEFINE_string('vis_split', 'val',
-                    'Which split of the dataset used for visualizing results')
-
-flags.DEFINE_string('dataset_dir', None, 'Where the dataset reside.')
-
-flags.DEFINE_enum('colormap_type', 'pascal', ['pascal', 'cityscapes'],
-                  'Visualization colormap type.')
-
-flags.DEFINE_boolean('also_save_raw_predictions', True,
-                     'Also save raw predictions.')
-
-flags.DEFINE_integer('also_save_vis_predictions', 0,
-                     'Also save visualization predictions.')
-
-flags.DEFINE_integer('max_number_of_iterations', 0,
-                     'Maximum number of visualization iterations. Will loop '
-                     'indefinitely upon nonpositive values.')
 
 # The folder where semantic segmentation predictions are saved.
 _SEMANTIC_PREDICTION_SAVE_FOLDER = 'segmentation_results'
@@ -188,7 +126,7 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         print('image_filename: ', image_filename)
 
         stacked_path = os.path.join(stacked_save_dir, image_filename + '.jpg')
-        mask_img = (crop_semantic_prediction*(255.0/np.max(crop_semantic_prediction))).astype(np.uint8)
+        mask_img = (crop_semantic_prediction * (255.0 / np.max(crop_semantic_prediction))).astype(np.uint8)
         mask_img = cv2.cvtColor(mask_img, cv2.COLOR_GRAY2BGR)
         stacked_img = np.concatenate((original_image, mask_img), axis=1)
         cv2.imwrite(stacked_path, stacked_img)
@@ -205,11 +143,11 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
             add_colormap=False)
 
         # Save prediction.
-        if FLAGS.also_save_vis_predictions:
+        if params.also_save_vis_predictions:
             save_annotation.save_annotation(
                 crop_semantic_prediction, save_dir, image_filename,
                 # _PREDICTION_FORMAT % (image_id_offset + i), add_colormap=True,
-                colormap_type=FLAGS.colormap_type)
+                colormap_type=params.colormap_type)
 
         # if FLAGS.also_save_raw_predictions:
         #     image_filename = os.path.basename(image_names[i])
@@ -223,20 +161,22 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         #         add_colormap=False)
 
 
-def main(unused_argv):
+def main():
     tf.logging.set_verbosity(tf.logging.INFO)
+
+    # paramparse.from_flags(FLAGS, to_clipboard=1)
 
     # Get dataset-dependent information.
     dataset = data_generator.Dataset(
-        dataset_name=FLAGS.dataset,
-        split_name=FLAGS.vis_split,
-        dataset_dir=FLAGS.dataset_dir,
-        batch_size=FLAGS.vis_batch_size,
-        crop_size=[int(sz) for sz in FLAGS.vis_crop_size],
-        min_resize_value=FLAGS.min_resize_value,
-        max_resize_value=FLAGS.max_resize_value,
-        resize_factor=FLAGS.resize_factor,
-        model_variant=FLAGS.model_variant,
+        dataset_name=params.dataset,
+        split_name=params.db_split,
+        dataset_dir=params.dataset_dir,
+        batch_size=params.batch_size,
+        crop_size=params.vis_crop_size,
+        min_resize_value=params.min_resize_value,
+        max_resize_value=params.max_resize_value,
+        resize_factor=params.resize_factor,
+        model_variant=params.model_variant,
         is_training=False,
         should_shuffle=False,
         should_repeat=False)
@@ -246,50 +186,55 @@ def main(unused_argv):
         print('Cityscapes requires converting train_id to eval_id.')
         train_id_to_eval_id = _CITYSCAPES_TRAIN_ID_TO_EVAL_ID
 
-    # Prepare for visualization.
-    tf.gfile.MakeDirs(FLAGS.vis_logdir)
-    save_dir = os.path.join(FLAGS.vis_logdir, _SEMANTIC_PREDICTION_SAVE_FOLDER)
-    tf.gfile.MakeDirs(save_dir)
-    raw_save_dir = os.path.join(
-        FLAGS.vis_logdir, _RAW_SEMANTIC_PREDICTION_SAVE_FOLDER)
-    stacked_save_dir = os.path.join(
-        FLAGS.vis_logdir, 'stacked')
-    tf.gfile.MakeDirs(raw_save_dir)
-    tf.gfile.MakeDirs(stacked_save_dir)
+    log_dir = linux_path('log', params.db_info, params.model_info)
+    checkpoint_dir = linux_path(log_dir, 'ckpt')
+    vis_logdir = linux_path(log_dir, params.vis_info)
 
-    print('Visualizing on %s set', FLAGS.vis_split)
+    # Prepare for visualization.
+    os.makedirs(vis_logdir, exist_ok=1)
+    save_dir = os.path.join(vis_logdir, _SEMANTIC_PREDICTION_SAVE_FOLDER)
+    os.makedirs(save_dir, exist_ok=1)
+    raw_save_dir = os.path.join(
+        vis_logdir, _RAW_SEMANTIC_PREDICTION_SAVE_FOLDER)
+    stacked_save_dir = os.path.join(
+        vis_logdir, 'stacked')
+    os.makedirs(raw_save_dir, exist_ok=1)
+    os.makedirs(stacked_save_dir, exist_ok=1)
+
+    print('Visualizing on %s set', params.db_split)
+
 
     with tf.Graph().as_default():
         samples = dataset.get_one_shot_iterator().get_next()
 
         model_options = common.ModelOptions(
             outputs_to_num_classes={common.OUTPUT_TYPE: dataset.num_of_classes},
-            crop_size=[int(sz) for sz in FLAGS.vis_crop_size],
-            atrous_rates=FLAGS.atrous_rates,
-            output_stride=FLAGS.output_stride)
+            crop_size=[int(sz) for sz in params.vis_crop_size],
+            atrous_rates=params.atrous_rates,
+            output_stride=params.output_stride)
 
-        if tuple(FLAGS.eval_scales) == (1.0,):
+        if tuple(params.eval_scales) == (1.0,):
             print('Performing single-scale test.')
             predictions = model.predict_labels(
                 samples[common.IMAGE],
                 model_options=model_options,
-                image_pyramid=FLAGS.image_pyramid)
+                image_pyramid=params.image_pyramid)
         else:
             print('Performing multi-scale test.')
-            if FLAGS.quantize_delay_step >= 0:
+            if params.quantize_delay_step >= 0:
                 raise ValueError(
                     'Quantize mode is not supported with multi-scale test.')
             predictions = model.predict_labels_multi_scale(
                 samples[common.IMAGE],
                 model_options=model_options,
-                eval_scales=FLAGS.eval_scales,
-                add_flipped_images=FLAGS.add_flipped_images)
+                eval_scales=params.eval_scales,
+                add_flipped_images=params.add_flipped_images)
         predictions = predictions[common.OUTPUT_TYPE]
 
-        if FLAGS.min_resize_value and FLAGS.max_resize_value:
+        if params.min_resize_value and params.max_resize_value:
             # Only support batch_size = 1, since we assume the dimensions of original
             # image after tf.squeeze is [height, width, 3].
-            assert FLAGS.vis_batch_size == 1
+            assert params.batch_size == 1
 
             # Reverse the resizing and padding operations performed in preprocessing.
             # First, we slice the valid regions (i.e., remove padded region) and then
@@ -309,14 +254,14 @@ def main(unused_argv):
                                        align_corners=True), 3)
 
         tf.train.get_or_create_global_step()
-        if FLAGS.quantize_delay_step >= 0:
+        if params.quantize_delay_step >= 0:
             tf.contrib.quantize.create_eval_graph()
 
         num_iteration = 0
-        max_num_iteration = FLAGS.max_number_of_iterations
+        max_num_iteration = params.max_number_of_iterations
 
         checkpoints_iterator = tf.contrib.training.checkpoints_iterator(
-            FLAGS.checkpoint_dir, min_interval_secs=FLAGS.eval_interval_secs)
+            checkpoint_dir, min_interval_secs=params.eval_interval_secs)
         for checkpoint_path in checkpoints_iterator:
             num_iteration += 1
             print(
@@ -327,7 +272,7 @@ def main(unused_argv):
             scaffold = tf.train.Scaffold(init_op=tf.global_variables_initializer())
             session_creator = tf.train.ChiefSessionCreator(
                 scaffold=scaffold,
-                master=FLAGS.master,
+                master=params.master,
                 checkpoint_filename_with_path=checkpoint_path)
             with tf.train.MonitoredSession(
                     session_creator=session_creator, hooks=None) as sess:
@@ -347,7 +292,7 @@ def main(unused_argv):
                                    raw_save_dir=raw_save_dir,
                                    stacked_save_dir=stacked_save_dir,
                                    train_id_to_eval_id=train_id_to_eval_id)
-                    image_id_offset += FLAGS.vis_batch_size
+                    image_id_offset += params.batch_size
                     batch += 1
 
             print(
@@ -358,7 +303,11 @@ def main(unused_argv):
 
 
 if __name__ == '__main__':
-    flags.mark_flag_as_required('checkpoint_dir')
-    flags.mark_flag_as_required('vis_logdir')
-    flags.mark_flag_as_required('dataset_dir')
-    tf.app.run()
+    params = NewDeeplabVisParams()
+    paramparse.process(params)
+
+    # flags.mark_flag_as_required('checkpoint_dir')
+    # flags.mark_flag_as_required('vis_logdir')
+    # flags.mark_flag_as_required('dataset_dir')
+
+    main()
