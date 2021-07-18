@@ -130,8 +130,8 @@ class NewDeeplabTrainParams:
     :ivar momentum:  The momentum value to use (default: '0.9') (a number)
     :type momentum: float
 
-    :ivar batch_size:  The number of images in each batch during training. (default: '8') (an integer)
-    :type batch_size: int
+    :ivar train_batch_size:  The number of images in each batch during training. (default: '8') (an integer)
+    :type train_batch_size: int
 
     :ivar weight_decay:  The value of the weight decay for training. (default: '4e-05') (a number)
     :type weight_decay: float
@@ -290,11 +290,6 @@ class NewDeeplabTrainParams:
     """
 
     def __init__(self):
-        self.cfg_root = 'cfg'
-        self.cfg_ext = 'cfg'
-        self.cfg = ()
-
-        self.gpu = ""
 
         self.logtostderr = False
         self.alsologtostderr = False
@@ -382,7 +377,7 @@ class NewDeeplabTrainParams:
         self.nas_stem_output_num_conv_filters = 20
         self.use_bounded_activation = False
 
-        self.batch_size = 8
-        
+        self.train_batch_size = 8
+
         self.model_info = MultiPath()
         self.db_info = MultiPath()

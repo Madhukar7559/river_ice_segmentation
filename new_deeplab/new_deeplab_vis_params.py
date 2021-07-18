@@ -190,8 +190,8 @@ class NewDeeplabVisParams:
     :ivar verbosity:
     :type verbosity: int
 
-    :ivar batch_size:  The number of images in each batch during evaluation. (default: '1') (an integer)
-    :type batch_size: int
+    :ivar vis_batch_size:  The number of images in each batch during evaluation. (default: '1') (an integer)
+    :type vis_batch_size: int
 
     :ivar vis_crop_size:  Crop size [height, width] for visualization. (default: '513,513') (a comma separated list)
     :type vis_crop_size: list
@@ -263,11 +263,9 @@ class NewDeeplabVisParams:
         self.use_cprofile_for_profiling = True
         self.v = -1
         self.verbosity = -1
-        self.batch_size = 1
+        self.vis_batch_size = 1
         self.vis_crop_size = [513, 513]
 
-        self.model_info = MultiPath()
-        self.db_info = MultiPath()
         self.vis_info = MultiPath()
 
         self.db_split = 'val'

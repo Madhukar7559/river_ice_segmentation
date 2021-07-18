@@ -6,73 +6,112 @@ import imageio
 import numpy as np
 from densenet.utils import processArguments, sortKey, resizeAR, readData, print_and_write, getDateTime
 
-params = {
-    'db_root_dir': '/home/abhineet/N/Datasets/617/',
-    'seq_name': 'Training',
-    'src_path': '',
-    'stitched_seq_path': '',
-    'patch_seq_path': '',
-    'patch_seq_name': '',
-    'patch_seq_type': 'images',
-    'labels_path': '',
-    'labels_ext': 'png',
-    'fname_templ': 'img',
-    'img_ext': 'tif',
-    'patch_ext': 'png',
-    'out_ext': 'png',
-    'patch_height': 32,
-    'patch_width': 0,
-    'show_img': 0,
-    'del_patch_seq': 0,
-    'n_frames': 0,
-    'width': 1280,
-    'height': 720,
-    'start_id': 0,
-    'end_id': -1,
-    'method': 0,
-    'stacked': 0,
-    'disp_resize_factor': 1.0,
-    'resize_factor': 1.0,
-    'normalize_patches': 0,
-    'n_classes': 3,
-    'fps': 30,
-    'codec': 'H264',
-}
 
-if __name__ == '__main__':
-    processArguments(sys.argv[1:], params)
+#
+# params = {
+#         'db_root_dir': '/home/abhineet/N/Datasets/617/',
+#         'seq_name': 'Training',
+#         'src_path': '',
+#         'stitched_seq_path': '',
+#         'patch_seq_path': '',
+#         'patch_seq_name': '',
+#         'patch_seq_type': 'images',
+#         'labels_path': '',
+#         'labels_ext': 'png',
+#         'fname_templ': 'img',
+#         'img_ext': 'tif',
+#         'patch_ext': 'png',
+#         'out_ext': 'png',
+#         'patch_height': 32,
+#         'patch_width': 0,
+#         'show_img': 0,
+#         'del_patch_seq': 0,
+#         'n_frames': 0,
+#         'width': 1280,
+#         'height': 720,
+#         'start_id': 0,
+#         'end_id': -1,
+#         'method': 0,
+#         'stacked': 0,
+#         'disp_resize_factor': 1.0,
+#         'resize_factor': 1.0,
+#         'normalize_patches': 0,
+#         'n_classes': 3,
+#         'fps': 30,
+#         'codec': 'H264',
+#     }
+# paramparse.from_dict(params, to_clipboard=True)
+# exit()
 
-    db_root_dir = params['db_root_dir']
-    seq_name = params['seq_name']
-    src_path = params['src_path']
-    patch_seq_path = params['patch_seq_path']
-    stitched_seq_path = params['stitched_seq_path']
-    patch_seq_name = params['patch_seq_name']
-    patch_seq_type = params['patch_seq_type']
-    fname_templ = params['fname_templ']
-    img_ext = params['img_ext']
-    patch_ext = params['patch_ext']
-    out_ext = params['out_ext']
-    del_patch_seq = params['del_patch_seq']
-    show_img = params['show_img']
-    patch_height = params['patch_height']
-    patch_width = params['patch_width']
-    n_frames = params['n_frames']
-    width = params['width']
-    height = params['height']
-    start_id = params['start_id']
-    end_id = params['end_id']
-    method = params['method']
-    stacked = params['stacked']
-    disp_resize_factor = params['disp_resize_factor']
-    resize_factor = params['resize_factor']
-    normalize_patches = params['normalize_patches']
-    n_classes = params['n_classes']
-    fps = params['fps']
-    codec = params['codec']
 
-    labels_path = params['labels_path']
-    labels_ext = params['labels_ext']
+class StitchParams:
+
+    def __init__(self):
+        self.cfg = ()
+        self.codec = 'H264'
+        self.db_root_dir = '/home/abhineet/N/Datasets/617/'
+        self.del_patch_seq = 0
+        self.disp_resize_factor = 1.0
+        self.end_id = -1
+        self.fname_templ = 'img'
+        self.fps = 30
+        self.height = 720
+        self.img_ext = 'tif'
+        self.labels_ext = 'png'
+        self.labels_path = ''
+        self.method = 0
+        self.n_classes = 3
+        self.n_frames = 0
+        self.normalize_patches = 0
+        self.out_ext = 'png'
+        self.patch_ext = 'png'
+        self.patch_height = 32
+        self.patch_seq_name = ''
+        self.patch_seq_path = ''
+        self.patch_seq_type = 'images'
+        self.patch_width = 0
+        self.resize_factor = 1.0
+        self.seq_name = 'Training'
+        self.show_img = 0
+        self.src_path = ''
+        self.stacked = 0
+        self.start_id = 0
+        self.stitched_seq_path = ''
+        self.width = 1280
+
+
+def run(params):
+    db_root_dir = params.db_root_dir
+    seq_name = params.seq_name
+    src_path = params.src_path
+    patch_seq_path = params.patch_seq_path
+    stitched_seq_path = params.stitched_seq_path
+    patch_seq_name = params.patch_seq_name
+    patch_seq_type = params.patch_seq_type
+    fname_templ = params.fname_templ
+    img_ext = params.img_ext
+    patch_ext = params.patch_ext
+    out_ext = params.out_ext
+    del_patch_seq = params.del_patch_seq
+    show_img = params.show_img
+    patch_height = params.patch_height
+    patch_width = params.patch_width
+    n_frames = params.n_frames
+    width = params.width
+    height = params.height
+    start_id = params.start_id
+    end_id = params.end_id
+    method = params.method
+    stacked = params.stacked
+    disp_resize_factor = params.disp_resize_factor
+    resize_factor = params.resize_factor
+    normalize_patches = params.normalize_patches
+    n_classes = params.n_classes
+    fps = params.fps
+    codec = params.codec
+
+    labels_path = params.labels_path
+    labels_ext = params.labels_ext
 
     video_exts = ['mp4', 'mkv', 'avi', 'mpg', 'mpeg', 'mjpg']
 
@@ -158,7 +197,6 @@ if __name__ == '__main__':
     skip_mean_IU_ice_1 = skip_mean_IU_ice_2 = 0
 
     _n_frames = end_id - start_id + 1
-
 
     for img_id in range(start_id, end_id + 1):
 
@@ -364,8 +402,10 @@ if __name__ == '__main__':
             # print('max(seg_img): {:d}'.format(int(np.max(seg_img))))
             # print('min(seg_img): {:d}'.format(int(np.min(seg_img))))
 
-            # np.savetxt('/home/abhineet/seg_img_{}.data'.format(img_id), np.squeeze(seg_img[:, :, 0]).astype(np.float64), fmt='%f')
-            # np.savetxt('/home/abhineet/stitched_img_{}.data'.format(img_id), np.squeeze(stitched_img[:, :, 0]).astype(np.float64), fmt='%f')
+            # np.savetxt('/home/abhineet/seg_img_{}.data'.format(img_id), np.squeeze(seg_img[:, :, 0]).astype(
+            # np.float64), fmt='%f')
+            # np.savetxt('/home/abhineet/stitched_img_{}.data'.format(img_id), np.squeeze(stitched_img[:, :,
+            # 0]).astype(np.float64), fmt='%f')
 
             # seg_img = seg_img.astype(np.uint8)
 
@@ -397,8 +437,6 @@ if __name__ == '__main__':
 
         n_patches += out_id
 
-
-
     sys.stdout.write('\n')
     sys.stdout.flush()
     sys.stdout.write('Total patches processed: {}\n'.format(n_patches))
@@ -423,3 +461,14 @@ if __name__ == '__main__':
 
         print_and_write('Saved log to: {}'.format(log_fname), log_fname)
         print_and_write('Read patch images from: {}'.format(patch_seq_path), log_fname)
+
+
+if __name__ == '__main__':
+    import paramparse
+
+    _params = StitchParams()
+    paramparse.process(_params)
+
+    run(_params)
+
+    # processArguments(sys.argv[1:], params)

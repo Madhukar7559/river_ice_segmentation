@@ -84,7 +84,7 @@ def _convert_train_id_to_eval_id(prediction, train_id_to_eval_id):
     return converted_prediction
 
 
-def _process_batch(sess, original_images, semantic_predictions, image_names,
+def _process_batch(params, sess, original_images, semantic_predictions, image_names,
                    image_heights, image_widths, image_id_offset, save_dir,
                    raw_save_dir, stacked_save_dir, train_id_to_eval_id=None):
     """Evaluates one single batch qualitatively.
@@ -100,6 +100,9 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
       save_dir: The directory where the predictions will be saved.
       raw_save_dir: The directory where the raw predictions will be saved.
       train_id_to_eval_id: A list mapping from train id to eval id.
+
+    :param NewDeeplabVisParams params:
+
     """
     (original_images,
      semantic_predictions,
@@ -161,7 +164,11 @@ def _process_batch(sess, original_images, semantic_predictions, image_names,
         #         add_colormap=False)
 
 
-def main():
+def run(params):
+    """
+
+    :param NewDeeplabVisParams params:
+    """
     tf.logging.set_verbosity(tf.logging.INFO)
 
     # paramparse.from_flags(FLAGS, to_clipboard=1)
@@ -171,7 +178,7 @@ def main():
         dataset_name=params.dataset,
         split_name=params.db_split,
         dataset_dir=params.dataset_dir,
-        batch_size=params.batch_size,
+        batch_size=params.vis_batch_size,
         crop_size=params.vis_crop_size,
         min_resize_value=params.min_resize_value,
         max_resize_value=params.max_resize_value,
@@ -203,7 +210,6 @@ def main():
 
     print('Visualizing on %s set', params.db_split)
 
-
     with tf.Graph().as_default():
         samples = dataset.get_one_shot_iterator().get_next()
 
@@ -234,7 +240,7 @@ def main():
         if params.min_resize_value and params.max_resize_value:
             # Only support batch_size = 1, since we assume the dimensions of original
             # image after tf.squeeze is [height, width, 3].
-            assert params.batch_size == 1
+            assert params.vis_batch_size == 1
 
             # Reverse the resizing and padding operations performed in preprocessing.
             # First, we slice the valid regions (i.e., remove padded region) and then
@@ -281,33 +287,32 @@ def main():
 
                 while not sess.should_stop():
                     print('Visualizing batch %d', batch + 1)
-                    _process_batch(sess=sess,
-                                   original_images=samples[common.ORIGINAL_IMAGE],
-                                   semantic_predictions=predictions,
-                                   image_names=samples[common.IMAGE_NAME],
-                                   image_heights=samples[common.HEIGHT],
-                                   image_widths=samples[common.WIDTH],
-                                   image_id_offset=image_id_offset,
-                                   save_dir=save_dir,
-                                   raw_save_dir=raw_save_dir,
-                                   stacked_save_dir=stacked_save_dir,
-                                   train_id_to_eval_id=train_id_to_eval_id)
-                    image_id_offset += params.batch_size
+                    _process_batch(
+                        params=params,
+                        sess=sess,
+                        original_images=samples[common.ORIGINAL_IMAGE],
+                        semantic_predictions=predictions,
+                        image_names=samples[common.IMAGE_NAME],
+                        image_heights=samples[common.HEIGHT],
+                        image_widths=samples[common.WIDTH],
+                        image_id_offset=image_id_offset,
+                        save_dir=save_dir,
+                        raw_save_dir=raw_save_dir,
+                        stacked_save_dir=stacked_save_dir,
+                        train_id_to_eval_id=train_id_to_eval_id)
+                    image_id_offset += params.vis_batch_size
                     batch += 1
 
             print(
                 'Finished visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                              time.gmtime()))
-            if max_num_iteration > 0 and num_iteration >= max_num_iteration:
+            if num_iteration >= max_num_iteration > 0:
                 break
 
 
 if __name__ == '__main__':
+    import paramparse
+
     params = NewDeeplabVisParams()
     paramparse.process(params)
-
-    # flags.mark_flag_as_required('checkpoint_dir')
-    # flags.mark_flag_as_required('vis_logdir')
-    # flags.mark_flag_as_required('dataset_dir')
-
-    main()
+    run(params)

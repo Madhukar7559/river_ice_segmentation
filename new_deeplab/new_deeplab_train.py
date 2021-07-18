@@ -39,24 +39,20 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from tensorflow.python.ops import math_ops
 
-import paramparse
-
 from new_deeplab import common
 from new_deeplab import model
 from new_deeplab.datasets import data_generator
 from new_deeplab.utils import train_utils, linux_path
 
-# paramparse.from_flags(FLAGS, to_clipboard=1)
-
 from new_deeplab_train_params import NewDeeplabTrainParams
 
-params = NewDeeplabTrainParams()
-paramparse.process(params)
+# paramparse.from_flags(FLAGS, to_clipboard=1)
+
 
 print()
 
 
-def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
+def _build_deeplab(params, iterator, outputs_to_num_classes, ignore_label):
     """Builds a clone of DeepLab.
 
     Args:
@@ -65,9 +61,11 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
         example, for the task of semantic segmentation with 21 semantic classes,
         we would have outputs_to_num_classes['semantic'] = 21.
       ignore_label: Ignore label.
+
+    :param NewDeeplabTrainParams params:
     """
     samples = iterator.get_next()
-    samples[common.IMAGE].set_shape([params.batch_size, params.train_crop_size[0], params.train_crop_size[1], 3])
+    samples[common.IMAGE].set_shape([params.train_batch_size, params.train_crop_size[0], params.train_crop_size[1], 3])
 
     # Add name to input and label nodes so we can add to summary.
     samples[common.IMAGE] = tf.identity(samples[common.IMAGE], name=common.IMAGE)
@@ -110,10 +108,11 @@ def _build_deeplab(iterator, outputs_to_num_classes, ignore_label):
 
         # Log the summary
         _log_summaries(samples[common.IMAGE], samples[common.LABEL], num_classes,
-                       output_type_dict[model.MERGED_LOGITS_SCOPE])
+                       output_type_dict[model.MERGED_LOGITS_SCOPE],
+                       save_summaries_images=params.save_summaries_images)
 
 
-def _tower_loss(iterator, num_of_classes, ignore_label, scope, reuse_variable):
+def _tower_loss(params, iterator, num_of_classes, ignore_label, scope, reuse_variable):
     """Calculates the total loss on a single tower running the deeplab model.
 
     Args:
@@ -128,7 +127,7 @@ def _tower_loss(iterator, num_of_classes, ignore_label, scope, reuse_variable):
     """
     with tf.variable_scope(
             tf.get_variable_scope(), reuse=True if reuse_variable else None):
-        _build_deeplab(iterator, {common.OUTPUT_TYPE: num_of_classes}, ignore_label)
+        _build_deeplab(params, iterator, {common.OUTPUT_TYPE: num_of_classes}, ignore_label)
 
     losses = tf.losses.get_losses(scope=scope)
     for loss in losses:
@@ -155,6 +154,8 @@ def _average_gradients(tower_grads):
     Returns:
        List of pairs of (gradient, variable) where the gradient has been summed
          across all towers.
+
+    :param NewDeeplabTrainParams params:
     """
     average_grads = []
     for grad_and_vars in zip(*tower_grads):
@@ -169,7 +170,7 @@ def _average_gradients(tower_grads):
     return average_grads
 
 
-def _log_summaries(input_image, label, num_of_classes, output):
+def _log_summaries(input_image, label, num_of_classes, output, save_summaries_images):
     """Logs the summaries for the model.
 
     Args:
@@ -178,13 +179,15 @@ def _log_summaries(input_image, label, num_of_classes, output):
       label: Label of the image. Its shape is [batch_size, height, width].
       num_of_classes: The number of classes of the dataset.
       output: Output of the model. Its shape is [batch_size, height, width].
+
+    :param bool save_summaries_images:
     """
     # Add summaries for model variables.
     for model_var in tf.model_variables():
         tf.summary.histogram(model_var.op.name, model_var)
 
     # Add summaries for images, labels, semantic predictions.
-    if params.save_summaries_images:
+    if save_summaries_images:
         batch_size, input_h, input_w, n_channels = input_image.shape
 
         # tf.summary.image('samples/%s' % common.IMAGE, input_image)
@@ -224,8 +227,10 @@ def _log_summaries(input_image, label, num_of_classes, output):
         tf.summary.image('img_gt_pred/%s' % common.OUTPUT_TYPE, concat_tensor)
 
 
-def _train_deeplab_model(iterator, num_of_classes, ignore_label):
-    """Trains the deeplab model.
+def _train_deeplab_model(params, iterator, num_of_classes, ignore_label):
+    """
+
+    Trains the deeplab model.
 
     Args:
       iterator: An iterator of type tf.data.Iterator for images and labels.
@@ -235,6 +240,11 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
     Returns:
       train_tensor: A tensor to update the model variables.
       summary_op: An operation to log the summaries.
+
+    :param NewDeeplabTrainParams params:
+    """
+
+    """
     """
     global_step = tf.train.get_or_create_global_step()
 
@@ -255,6 +265,7 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
             name_scope = ('clone_%d' % i) if i else ''
             with tf.name_scope(name_scope) as scope:
                 loss = _tower_loss(
+                    params=params,
                     iterator=iterator,
                     num_of_classes=num_of_classes,
                     ignore_label=ignore_label,
@@ -317,26 +328,27 @@ def _train_deeplab_model(iterator, num_of_classes, ignore_label):
     return train_tensor, summary_op
 
 
-def main():
-    # tf.logging.set_verbosity(tf.logging.INFO)
+def run(params):
+    """
 
-    if params.gpu:
-        os.environ["CUDA_VISIBLE_DEVICES"] = params.gpu
+    :param NewDeeplabTrainParams params:
+    :return:
+    """
+
+    # tf.logging.set_verbosity(tf.logging.INFO)
 
     log_dir = linux_path('log', params.db_info, params.model_info)
     checkpoint_dir = linux_path(log_dir, 'ckpt')
 
-
     tf.gfile.MakeDirs(log_dir)
     print('Training on %s set', params.train_split)
-
 
     graph = tf.Graph()
     with graph.as_default():
         with tf.device(tf.train.replica_device_setter(ps_tasks=params.num_ps_tasks)):
-            assert params.batch_size % params.num_clones == 0, (
+            assert params.train_batch_size % params.num_clones == 0, (
                 'Training batch size not divisble by number of clones (GPUs).')
-            clone_batch_size = params.batch_size // params.num_clones
+            clone_batch_size = params.train_batch_size // params.num_clones
 
             dataset = data_generator.Dataset(
                 dataset_name=params.dataset,
@@ -356,9 +368,9 @@ def main():
                 should_shuffle=True,
                 should_repeat=True)
 
-            train_tensor, summary_op = _train_deeplab_model(
-                dataset.get_one_shot_iterator(), dataset.num_of_classes,
-                dataset.ignore_label)
+            train_tensor, summary_op = _train_deeplab_model(params,
+                                                            dataset.get_one_shot_iterator(), dataset.num_of_classes,
+                                                            dataset.ignore_label)
 
             # Soft placement allows placing on CPU ops without GPU implementation.
             session_config = tf.ConfigProto(
@@ -406,4 +418,7 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    import paramparse
+    params = NewDeeplabTrainParams()
+    paramparse.process(params)
+    run(params)
