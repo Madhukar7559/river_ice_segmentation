@@ -338,7 +338,7 @@ def run(params):
     # tf.logging.set_verbosity(tf.logging.INFO)
 
     os.makedirs(params.log_dir, exist_ok=1)
-    print('Training on %s set', params.db_split)
+    print('Training on {} set with {} split'.format(params.dataset, params.db_split))
 
     graph = tf.Graph()
     with graph.as_default():
@@ -366,7 +366,8 @@ def run(params):
                 should_repeat=True)
 
             train_tensor, summary_op = _train_deeplab_model(params,
-                                                            dataset.get_one_shot_iterator(), dataset.num_of_classes,
+                                                            dataset.get_one_shot_iterator(),
+                                                            dataset.num_of_classes,
                                                             dataset.ignore_label)
 
             # Soft placement allows placing on CPU ops without GPU implementation.

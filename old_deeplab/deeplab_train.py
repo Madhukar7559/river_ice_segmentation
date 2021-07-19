@@ -236,7 +236,7 @@ def main(unused_argv):
         FLAGS.dataset, FLAGS.train_split, dataset_dir=FLAGS.dataset_dir)
 
     tf.gfile.MakeDirs(FLAGS.train_logdir)
-    print('Training on %s set', FLAGS.train_split)
+    print('Training on {} set'.format(FLAGS.train_split))
 
     with tf.Graph().as_default():
         with tf.device(config.inputs_device()):

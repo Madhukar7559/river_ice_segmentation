@@ -88,6 +88,8 @@ class VisParams:
         self.start_id = 0
         self.stitch = 0
         self.stitch_seg = 1
+
+        self.log_root_dir = 'log'
         self.db_root_dir = '/data'
 
         self.images_path = ''
@@ -107,6 +109,13 @@ class VisParams:
         if not self.labels_path:
             self.labels_path = os.path.join(self.db_root_dir, self.dataset, 'Labels')
 
+        log_dir = linux_path(self.log_root_dir, self.db_info, self.model_info)
+
+        if not self.seg_path:
+            self.seg_path = linux_path(log_dir, self.vis_info, 'raw')
+
+        if not self.save_path:
+            self.save_path = linux_path(log_dir, self.vis_info, 'vis')
 
 def run(params):
     """
