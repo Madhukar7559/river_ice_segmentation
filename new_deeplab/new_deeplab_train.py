@@ -338,7 +338,7 @@ def run(params):
     # tf.logging.set_verbosity(tf.logging.INFO)
 
     os.makedirs(params.log_dir, exist_ok=1)
-    print('Training on {} set with {} split'.format(params.dataset, params.db_split))
+    print('Training on set: {} with split: {}'.format(params.dataset, params.db_split))
 
     graph = tf.Graph()
     with graph.as_default():

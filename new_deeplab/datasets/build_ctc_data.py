@@ -56,6 +56,21 @@ class CTCInfo:
             self.phc1 = irange(16, 17)
             self.phc2 = irange(18, 19)
 
+            self.bf_test = irange(20, 23)
+            self.bf1_test = irange(20, 21)
+            self.bf2_test = irange(22, 23)
+            self.dic_test = irange(24, 25)
+            self.fluo_test = irange(26, 35)
+            self.fluo1_test = irange(26, 31)
+            self.fluo2_test = irange(32, 35)
+            self.huh_test = irange(26, 27)
+            self.gow_test = irange(28, 29)
+            self.sim_test = irange(30, 31)
+            self.hela_test = irange(34, 35)
+            self.phc_test = irange(36, 39)
+            self.phc1_test = irange(36, 37)
+            self.phc2_test = irange(38, 39)
+
     sequences = {
         # train
         0: ('BF-C2DL-HSC_01', 1764),
