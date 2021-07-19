@@ -387,6 +387,15 @@ class NewDeeplabTrainParams:
         self.model_info = MultiPath()
         self.db_info = MultiPath()
 
+        self.log_dir = ''
+        self.checkpoint_dir = ''
+
     def process(self):
         if not self.dataset_dir:
             self.dataset_dir = linux_path(self.db_root_dir, self.dataset, 'tfrecord')
+
+        if not self.log_dir:
+            self.log_dir = linux_path('log', self.db_info, self.model_info)
+
+        if not self.checkpoint_dir:
+            self.checkpoint_dir = linux_path(self.log_dir, 'ckpt')

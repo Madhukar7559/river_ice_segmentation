@@ -337,10 +337,7 @@ def run(params):
 
     # tf.logging.set_verbosity(tf.logging.INFO)
 
-    log_dir = linux_path('log', params.db_info, params.model_info)
-    checkpoint_dir = linux_path(log_dir, 'ckpt')
-
-    tf.gfile.MakeDirs(log_dir)
+    os.makedirs(params.log_dir, exist_ok=1)
     print('Training on %s set', params.train_split)
 
     graph = tf.Graph()
@@ -407,8 +404,8 @@ def run(params):
                         is_chief=(params.task == 0),
                         config=session_config,
                         scaffold=scaffold,
-                        checkpoint_dir=checkpoint_dir,
-                        summary_dir=log_dir,
+                        checkpoint_dir=params.checkpoint_dir,
+                        summary_dir=params.log_dir,
                         log_step_count_steps=params.log_steps,
                         save_summaries_steps=params.save_summaries_secs,
                         save_checkpoint_secs=params.save_interval_secs,
@@ -419,6 +416,9 @@ def run(params):
 
 if __name__ == '__main__':
     import paramparse
+
     params = NewDeeplabTrainParams()
     paramparse.process(params)
+
+    params.process()
     run(params)
