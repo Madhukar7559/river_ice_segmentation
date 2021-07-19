@@ -257,6 +257,8 @@ def print_and_write(_str, fname=None):
     if fname is not None:
         open(fname, 'a').write(_str + '\n')
 
+def linux_path(*args, **kwargs):
+    return os.path.join(*args, **kwargs).replace(os.sep, '/')
 
 def sortKey(fname):
     fname = os.path.splitext(fname)[0]
@@ -375,7 +377,6 @@ def resizeAR(src_img, width=0, height=0, return_factors=False, bkg_col=0):
         return dst_img, resize_factor, start_row, start_col
     else:
         return dst_img
-
 
 def readData(images_path='', images_ext='', labels_path='', labels_ext='',
              images_type='source', labels_type='labels'):

@@ -36,10 +36,10 @@ from tqdm import tqdm
 def irange(a, b):
     return list(range(a, b + 1))
 
-
-class Params:
-    class CTCSubSeq:
+class CTCInfo:
+    class DBSplits:
         def __init__(self):
+
             self.all = irange(0, 19)
             self.bf = irange(0, 3)
             self.bf1 = irange(0, 1)
@@ -56,8 +56,71 @@ class Params:
             self.phc1 = irange(16, 17)
             self.phc2 = irange(18, 19)
 
+    sequences = {
+        # train
+        0: ('BF-C2DL-HSC_01', 1764),
+        1: ('BF-C2DL-HSC_02', 1764),
+        2: ('BF-C2DL-MuSC_01', 1376),
+        3: ('BF-C2DL-MuSC_02', 1376),
+
+        4: ('DIC-C2DH-HeLa_01', 84),
+        5: ('DIC-C2DH-HeLa_02', 84),
+
+        6: ('Fluo-C2DL-Huh7_01', 30),
+        7: ('Fluo-C2DL-Huh7_02', 30),
+
+        8: ('Fluo-N2DH-GOWT1_01', 92),
+        9: ('Fluo-N2DH-GOWT1_02', 92),
+
+        10: ('Fluo-N2DH-SIM_01', 65),
+        11: ('Fluo-N2DH-SIM_02', 150),
+
+        12: ('Fluo-C2DL-MSC_01', 48),
+        13: ('Fluo-C2DL-MSC_02', 48),
+
+        14: ('Fluo-N2DL-HeLa_01', 92),
+        15: ('Fluo-N2DL-HeLa_02', 92),
+
+        16: ('PhC-C2DH-U373_01', 115),
+        17: ('PhC-C2DH-U373_02', 115),
+        18: ('PhC-C2DL-PSC_01', 300),
+        19: ('PhC-C2DL-PSC_02', 300),
+
+        # test
+
+        20: ('BF-C2DL-HSC_Test_01', 1764),
+        21: ('BF-C2DL-HSC_Test_02', 1764),
+        22: ('BF-C2DL-MuSC_Test_01', 1376),
+        23: ('BF-C2DL-MuSC_Test_02', 1376),
+
+        24: ('DIC-C2DH-HeLa_Test_01', 115),
+        25: ('DIC-C2DH-HeLa_Test_02', 115),
+
+        26: ('Fluo-C2DL-Huh7_Test_01', 30),
+        27: ('Fluo-C2DL-Huh7_Test_02', 30),
+
+        28: ('Fluo-N2DH-GOWT1_Test_01', 92),
+        29: ('Fluo-N2DH-GOWT1_Test_02', 92),
+
+        30: ('Fluo-N2DH-SIM_Test_01', 110),
+        31: ('Fluo-N2DH-SIM_Test_02', 138),
+
+        32: ('Fluo-C2DL-MSC_Test_01', 48),
+        33: ('Fluo-C2DL-MSC_Test_02', 48),
+
+        34: ('Fluo-N2DL-HeLa_Test_01', 92),
+        35: ('Fluo-N2DL-HeLa_Test_02', 92),
+
+        36: ('PhC-C2DH-U373_Test_01', 115),
+        37: ('PhC-C2DH-U373_Test_02', 115),
+        38: ('PhC-C2DL-PSC_Test_02', 300),
+        39: ('PhC-C2DL-PSC_Test_01', 300),
+    }
+
+class Params:
+
     def __init__(self):
-        self.sub_seq = 'huh'
+        self.db_split = 'huh'
 
         self.cfg = ()
         self.ignore_missing_gt = 1
@@ -89,69 +152,10 @@ class Params:
 
         self.vis_height = 1080
         self.vis_width = 1920
-        self.sub_seq_dict = Params.CTCSubSeq().__dict__
+        self.db_splits = CTCInfo.DBSplits().__dict__
         self.num_shards = 4
 
-        self.sequences = {
-            # train
-            0: ('BF-C2DL-HSC_01', 1764),
-            1: ('BF-C2DL-HSC_02', 1764),
-            2: ('BF-C2DL-MuSC_01', 1376),
-            3: ('BF-C2DL-MuSC_02', 1376),
 
-            4: ('DIC-C2DH-HeLa_01', 84),
-            5: ('DIC-C2DH-HeLa_02', 84),
-
-            6: ('Fluo-C2DL-Huh7_01', 30),
-            7: ('Fluo-C2DL-Huh7_02', 30),
-
-            8: ('Fluo-N2DH-GOWT1_01', 92),
-            9: ('Fluo-N2DH-GOWT1_02', 92),
-
-            10: ('Fluo-N2DH-SIM_01', 65),
-            11: ('Fluo-N2DH-SIM_02', 150),
-
-            12: ('Fluo-C2DL-MSC_01', 48),
-            13: ('Fluo-C2DL-MSC_02', 48),
-
-            14: ('Fluo-N2DL-HeLa_01', 92),
-            15: ('Fluo-N2DL-HeLa_02', 92),
-
-            16: ('PhC-C2DH-U373_01', 115),
-            17: ('PhC-C2DH-U373_02', 115),
-            18: ('PhC-C2DL-PSC_01', 300),
-            19: ('PhC-C2DL-PSC_02', 300),
-
-            # test
-
-            20: ('BF-C2DL-HSC_Test_01', 1764),
-            21: ('BF-C2DL-HSC_Test_02', 1764),
-            22: ('BF-C2DL-MuSC_Test_01', 1376),
-            23: ('BF-C2DL-MuSC_Test_02', 1376),
-
-            24: ('DIC-C2DH-HeLa_Test_01', 115),
-            25: ('DIC-C2DH-HeLa_Test_02', 115),
-
-            26: ('Fluo-C2DL-Huh7_Test_01', 30),
-            27: ('Fluo-C2DL-Huh7_Test_02', 30),
-
-            28: ('Fluo-N2DH-GOWT1_Test_01', 92),
-            29: ('Fluo-N2DH-GOWT1_Test_02', 92),
-
-            30: ('Fluo-N2DH-SIM_Test_01', 110),
-            31: ('Fluo-N2DH-SIM_Test_02', 138),
-
-            32: ('Fluo-C2DL-MSC_Test_01', 48),
-            33: ('Fluo-C2DL-MSC_Test_02', 48),
-
-            34: ('Fluo-N2DL-HeLa_Test_01', 92),
-            35: ('Fluo-N2DL-HeLa_Test_02', 92),
-
-            36: ('PhC-C2DH-U373_Test_01', 115),
-            37: ('PhC-C2DH-U373_Test_02', 115),
-            38: ('PhC-C2DL-PSC_Test_02', 300),
-            39: ('PhC-C2DL-PSC_Test_01', 300),
-        }
 
 
 def seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
@@ -212,10 +216,10 @@ def _convert_dataset(params):
     :return:
     """
 
-    seq_ids = params.sub_seq_dict[params.sub_seq]
+    seq_ids = params.db_splits[params.db_split]
 
     print('root_dir: {}'.format(params.root_dir))
-    print('sub_seq: {}'.format(params.sub_seq))
+    print('sub_seq: {}'.format(params.db_split))
     print('seq_ids: {}'.format(seq_ids))
 
     jpg_img_root_path = linux_path(params.root_dir, 'CTC', 'Images')
@@ -251,7 +255,7 @@ def _convert_dataset(params):
     img_src_files = []
     for __id, seq_id in enumerate(seq_ids):
 
-        seq_name, n_frames = params.sequences[seq_id]
+        seq_name, n_frames = CTCInfo.sequences[seq_id]
 
         print('\tseq {} / {}\t{}\t{}\t{} frames'.format(__id + 1, n_seq, seq_id, seq_name, n_frames))
 
@@ -338,14 +342,14 @@ def _convert_dataset(params):
             img_src_file_ids[img_src_file] = (img_src_file_id, seq_name, png_seg_src_path, img_src_path)
 
     n_src_files = len(img_src_files)
-    print('\n\n{}: {} / {}\n\n'.format(params.sub_seq, n_src_files, n_total_src_files))
+    print('\n\n{}: {} / {}\n\n'.format(params.db_split, n_src_files, n_total_src_files))
 
     # return
 
     # output_dir = linux_path(output_root_dir, seq_name)
     output_dir = output_root_dir
 
-    create_tfrecords(img_src_files, img_src_file_ids, params.num_shards, params.sub_seq, params.use_tif, output_dir)
+    create_tfrecords(img_src_files, img_src_file_ids, params.num_shards, params.db_split, params.use_tif, output_dir)
 
 
 def create_tfrecords(src_files, file_ids, n_shards, sub_seq, use_tif, output_dir):

@@ -2,8 +2,10 @@ import os, sys
 import numpy as np
 import imageio
 
+from paramparse import MultiPath
+
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import readData, getDateTime, print_and_write
+from densenet.utils import readData, getDateTime, print_and_write, linux_path
 
 import cv2
 
@@ -40,6 +42,30 @@ import cv2
 # paramparse.from_parser(parser, to_clipboard=True)
 # exit()
 # args = parser.parse_args()
+# args.images_path = args.images_path
+# args.images_ext = args.images_ext
+# args.labels_path = args.labels_path
+# args.labels_ext = args.labels_ext
+#
+# args.seg_path = args.seg_path
+# args.seg_ext = args.seg_ext
+#
+# args.out_ext = args.out_ext
+#
+# args.save_path = args.save_path
+#
+# args.n_classes = args.n_classes
+#
+# args.end_id = args.end_id
+# args.start_id = args.start_id
+#
+# args.show_img = args.show_img
+# args.stitch = args.stitch
+# args.stitch_seg = args.stitch_seg
+# args.save_stitched = args.save_stitched
+#
+# args.normalize_labels = args.normalize_labels
+# args.selective_mode = args.selective_mode
 
 
 class VisParams:
@@ -48,11 +74,9 @@ class VisParams:
         self.cfg = ()
         self.end_id = -1
         self.images_ext = 'png'
-        self.images_path = None
         self.labels_ext = 'png'
-        self.labels_path = ''
-        self.log_dir = None
-        self.n_classes = None
+        self.log_dir = ''
+        self.n_classes = 3
         self.normalize_labels = 1
         self.out_ext = 'png'
         self.save_path = ''
@@ -64,83 +88,105 @@ class VisParams:
         self.start_id = 0
         self.stitch = 0
         self.stitch_seg = 1
+        self.db_root_dir = '/data'
+
+        self.images_path = ''
+        self.labels_path = ''
+
+        self.dataset = ''
+        self.db_split = ''
+
+        self.db_info = MultiPath()
+        self.model_info = MultiPath()
+        self.vis_info = MultiPath()
+
+    def process(self):
+        if not self.images_path:
+            self.images_path = os.path.join(self.db_root_dir, self.dataset, 'Images')
+
+        if not self.labels_path:
+            self.labels_path = os.path.join(self.db_root_dir, self.dataset, 'Labels')
 
 
-def run(args):
+def run(params):
     """
 
-    :param NewDeeplabTrainParams params:
+    :param VisParams params:
     :return:
     """
-    images_path = args.images_path
-    images_ext = args.images_ext
-    labels_path = args.labels_path
-    labels_ext = args.labels_ext
 
-    seg_path = args.seg_path
-    seg_ext = args.seg_ext
+    if params.dataset == 'ctc':
+        from new_deeplab.datasets.build_ctc_data import CTCInfo
 
-    out_ext = args.out_ext
+        assert params.db_split, "db_split must be provided for CTC"
 
-    save_path = args.save_path
+        db_splits = CTCInfo.DBSplits().__dict__
 
-    n_classes = args.n_classes
+        seq_ids = db_splits[params.db_split]
 
-    end_id = args.end_id
-    start_id = args.start_id
+        src_files = []
+        src_labels_list = []
+        total_frames = 0
 
-    show_img = args.show_img
-    stitch = args.stitch
-    stitch_seg = args.stitch_seg
-    save_stitched = args.save_stitched
+        for seq_id in seq_ids:
+            seq_name, n_frames = CTCInfo.sequences[seq_id]
 
-    normalize_labels = args.normalize_labels
-    selective_mode = args.selective_mode
+            images_path = os.path.join(params.images_path, seq_name)
+            labels_path = os.path.join(params.labels_path, seq_name)
 
-    src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
-                                                        labels_ext)
-    if end_id < start_id:
-        end_id = total_frames - 1
+            _src_files, _src_labels_list, _total_frames = readData(images_path, params.images_ext,
+                                                                   labels_path,
+                                                                   params.labels_ext)
+
+            src_files += _src_files
+            src_labels_list += _src_labels_list
+            total_frames += _total_frames
+    else:
+        src_files, src_labels_list, total_frames = readData(params.images_path, params.images_ext, params.labels_path,
+                                                            params.labels_ext)
+    if params.end_id < params.start_id:
+        params.end_id = total_frames - 1
 
     eval_mode = False
-    if labels_path and seg_path and seg_ext:
-        _, seg_labels_list, seg_total_frames = readData(labels_path=seg_path, labels_ext=seg_ext, labels_type='seg')
+    if params.labels_path and params.seg_path and params.seg_ext:
+        _, seg_labels_list, seg_total_frames = readData(labels_path=params.seg_path, labels_ext=params.seg_ext,
+                                                        labels_type='seg')
         if seg_total_frames != total_frames:
             raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
                 total_frames, seg_total_frames))
         eval_mode = True
     else:
-        stitch = save_stitched = 1
+        params.stitch = params.save_stitched = 1
 
-    if not save_path:
+    if not params.save_path:
         if eval_mode:
-            save_path = os.path.join(os.path.dirname(seg_path), 'vis')
+            params.save_path = os.path.join(os.path.dirname(params.seg_path), 'vis')
         else:
-            save_path = os.path.join(os.path.dirname(images_path), 'vis')
+            params.save_path = os.path.join(os.path.dirname(params.images_path), 'vis')
 
-    if not os.path.isdir(save_path):
-        os.makedirs(save_path)
-    if stitch and save_stitched:
-        print('Saving visualization images to: {}'.format(save_path))
+    if not os.path.isdir(params.save_path):
+        os.makedirs(params.save_path)
+    if params.stitch and params.save_stitched:
+        print('Saving visualization images to: {}'.format(params.save_path))
 
-    log_fname = os.path.join(save_path, 'vis_log_{:s}.txt'.format(getDateTime()))
+    log_fname = os.path.join(params.save_path, 'vis_log_{:s}.txt'.format(getDateTime()))
     print('Saving log to: {}'.format(log_fname))
 
-    save_path_parent = os.path.dirname(save_path)
+    save_path_parent = os.path.dirname(params.save_path)
     templ_1 = os.path.basename(save_path_parent)
     templ_2 = os.path.basename(os.path.dirname(save_path_parent))
 
     templ = '{}_{}'.format(templ_1, templ_2)
 
-    if selective_mode:
-        label_diff = int(255.0 / n_classes)
+    if params.selective_mode:
+        label_diff = int(255.0 / params.n_classes)
     else:
-        label_diff = int(255.0 / (n_classes - 1))
+        label_diff = int(255.0 / (params.n_classes - 1))
 
     print('templ: {}'.format(templ))
     print('label_diff: {}'.format(label_diff))
 
-    n_frames = end_id - start_id + 1
+    n_frames = params.end_id - params.start_id + 1
 
     pix_acc = np.zeros((n_frames,))
 
@@ -155,7 +201,7 @@ def run(args):
     # mean_IU_ice_2 = np.zeros((n_frames,))
 
     fw_IU = np.zeros((n_frames,))
-    fw_sum = np.zeros((n_classes,))
+    fw_sum = np.zeros((params.n_classes,))
 
     print_diff = max(1, int(n_frames * 0.01))
 
@@ -167,14 +213,14 @@ def run(args):
     _pause = 1
     labels_img = None
 
-    for img_id in range(start_id, end_id + 1):
+    for img_id in range(params.start_id, params.end_id + 1):
 
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
         img_fname = src_files[img_id]
         img_fname_no_ext = os.path.splitext(img_fname)[0]
 
-        if stitch or show_img:
-            src_img_fname = os.path.join(images_path, img_fname)
+        if params.stitch or params.show_img:
+            src_img_fname = os.path.join(params.images_path, img_fname)
             src_img = imageio.imread(src_img_fname)
             if src_img is None:
                 raise SystemError('Source image could not be read from: {}'.format(src_img_fname))
@@ -188,10 +234,10 @@ def run(args):
                 print('error: {}'.format(e))
                 sys.exit(1)
 
-        if not labels_path:
+        if not params.labels_path:
             stitched = src_img
         else:
-            labels_img_fname = os.path.join(labels_path, img_fname_no_ext + '.{}'.format(labels_ext))
+            labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
             labels_img_orig = imageio.imread(labels_img_fname)
             if labels_img_orig is None:
                 raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
@@ -200,16 +246,16 @@ def run(args):
             if len(labels_img_orig.shape) == 3:
                 labels_img_orig = np.squeeze(labels_img_orig[:, :, 0])
 
-            if show_img:
+            if params.show_img:
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
-            if normalize_labels:
-                if selective_mode:
+            if params.normalize_labels:
+                if params.selective_mode:
                     selective_idx = (labels_img_orig == 255)
                     print('labels_img_orig.shape: {}'.format(labels_img_orig.shape))
                     print('selective_idx count: {}'.format(np.count_nonzero(selective_idx)))
-                    labels_img_orig[selective_idx] = n_classes
-                    if show_img:
+                    labels_img_orig[selective_idx] = params.n_classes
+                    if params.show_img:
                         cv2.imshow('labels_img_orig norm', labels_img_orig)
                 labels_img = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
             else:
@@ -218,11 +264,11 @@ def run(args):
             if len(labels_img.shape) != 3:
                 labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
 
-            if stitch:
+            if params.stitch:
                 stitched = np.concatenate((src_img, labels_img), axis=1)
 
             if eval_mode:
-                seg_img_fname = os.path.join(seg_path, img_fname_no_ext + '.{}'.format(seg_ext))
+                seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
                 seg_img = imageio.imread(seg_img_fname)
                 if seg_img is None:
                     raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
@@ -233,7 +279,7 @@ def run(args):
                 eval_cl, _ = eval.extract_classes(seg_img)
                 gt_cl, _ = eval.extract_classes(labels_img_orig)
 
-                if seg_img.max() > n_classes - 1:
+                if seg_img.max() > params.n_classes - 1:
                     seg_img = (seg_img.astype(np.float64) / label_diff).astype(np.uint8)
 
                 seg_height, seg_width = seg_img.shape
@@ -298,9 +344,9 @@ def run(args):
                 if len(seg_img.shape) != 3:
                     seg_img = np.stack((seg_img, seg_img, seg_img), axis=2)
 
-                if stitch and stitch_seg:
+                if params.stitch and params.stitch_seg:
                     stitched = np.concatenate((stitched, seg_img), axis=1)
-                if not stitch and show_img:
+                if not params.stitch and params.show_img:
                     cv2.imshow('seg_img', seg_img)
             else:
                 _, _fw = eval.frequency_weighted_IU(labels_img_orig, labels_img_orig, return_freq=1)
@@ -312,7 +358,7 @@ def run(args):
 
                     gt_cl, _ = eval.extract_classes(labels_img_orig)
                     print('gt_cl: {}'.format(gt_cl))
-                    for k in range(n_classes):
+                    for k in range(params.n_classes):
                         if k not in gt_cl:
                             _fw.insert(k, 0)
 
@@ -327,25 +373,25 @@ def run(args):
 
             print('_fw_frac: {}'.format(_fw_frac))
 
-        if stitch:
-            if save_stitched:
-                seg_save_path = os.path.join(save_path, '{}.{}'.format(img_fname_no_ext, out_ext))
+        if params.stitch:
+            if params.save_stitched:
+                seg_save_path = os.path.join(params.save_path, '{}.{}'.format(img_fname_no_ext, params.out_ext))
                 imageio.imsave(seg_save_path, stitched)
-            if show_img:
+            if params.show_img:
                 cv2.imshow('stitched', stitched)
         else:
-            if show_img:
+            if params.show_img:
                 cv2.imshow('src_img', src_img)
-                if labels_path:
+                if params.labels_path:
                     cv2.imshow('labels_img', labels_img)
 
-        if show_img:
+        if params.show_img:
             k = cv2.waitKey(1 - _pause)
             if k == 27:
                 sys.exit(0)
             elif k == 32:
                 _pause = 1 - _pause
-        img_done = img_id - start_id + 1
+        img_done = img_id - params.start_id + 1
         if img_done % print_diff == 0:
             log_txt = 'Done {:5d}/{:5d} frames'.format(img_done, n_frames)
             if eval_mode:
@@ -392,6 +438,7 @@ def run(args):
 if __name__ == '__main__':
     import paramparse
 
-    params = VisParams()
-    paramparse.process(params)
-    run(params)
+    _params = VisParams()
+    paramparse.process(_params)
+    _params.process()
+    run(_params)

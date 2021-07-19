@@ -1,4 +1,5 @@
 from paramparse import MultiPath
+from new_deeplab.utils import linux_path
 
 
 class NewDeeplabVisParams:
@@ -217,8 +218,10 @@ class NewDeeplabVisParams:
         self.aspp_with_separable_conv = True
         self.atrous_rates = []
         self.colormap_type = 'pascal'
+
         self.dataset = 'pascal_voc_seg'
-        self.dataset_dir = None
+        self.dataset_dir = ''
+
         self.decoder_output_stride = None
         self.decoder_use_separable_conv = True
         self.dense_prediction_cell_json = ''
@@ -258,7 +261,7 @@ class NewDeeplabVisParams:
         self.test_random_seed = 301
         self.test_randomize_ordering_seed = None
         self.test_srcdir = ''
-        self.test_tmpdir = 'C:\Users\Tommy\AppData\Local\Temp\absl_testing'
+
         self.use_bounded_activation = False
         self.use_cprofile_for_profiling = True
         self.v = -1
@@ -266,8 +269,27 @@ class NewDeeplabVisParams:
         self.vis_batch_size = 1
         self.vis_crop_size = [513, 513]
 
+        self.db_info = MultiPath()
+        self.model_info = MultiPath()
         self.vis_info = MultiPath()
 
+        self.db_root_dir = '/data'
         self.db_split = 'val'
         self.xml_output_file = ''
 
+        self.log_dir = ''
+        self.checkpoint_dir = ''
+        self.vis_logdir = ''
+
+    def process(self):
+        if not self.dataset_dir:
+            self.dataset_dir = linux_path(self.db_root_dir, self.dataset, 'tfrecord')
+
+        if not self.log_dir:
+            self.log_dir = linux_path('log', self.db_info, self.model_info)
+            
+        if not self.checkpoint_dir:
+            self.checkpoint_dir = linux_path(self.log_dir, 'ckpt')
+
+        if not self.vis_logdir:
+            self.vis_logdir = linux_path(self.log_dir, self.vis_info)

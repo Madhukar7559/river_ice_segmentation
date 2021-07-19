@@ -33,7 +33,6 @@ import numpy as np
 
 import tensorflow as tf
 
-import paramparse
 
 from new_deeplab import common
 from new_deeplab import model
@@ -193,18 +192,14 @@ def run(params):
         print('Cityscapes requires converting train_id to eval_id.')
         train_id_to_eval_id = _CITYSCAPES_TRAIN_ID_TO_EVAL_ID
 
-    log_dir = linux_path('log', params.db_info, params.model_info)
-    checkpoint_dir = linux_path(log_dir, 'ckpt')
-    vis_logdir = linux_path(log_dir, params.vis_info)
-
     # Prepare for visualization.
-    os.makedirs(vis_logdir, exist_ok=1)
-    save_dir = os.path.join(vis_logdir, _SEMANTIC_PREDICTION_SAVE_FOLDER)
+    os.makedirs(params.vis_logdir, exist_ok=1)
+    save_dir = os.path.join(params.vis_logdir, _SEMANTIC_PREDICTION_SAVE_FOLDER)
     os.makedirs(save_dir, exist_ok=1)
     raw_save_dir = os.path.join(
-        vis_logdir, _RAW_SEMANTIC_PREDICTION_SAVE_FOLDER)
+        params.vis_logdir, _RAW_SEMANTIC_PREDICTION_SAVE_FOLDER)
     stacked_save_dir = os.path.join(
-        vis_logdir, 'stacked')
+        params.vis_logdir, 'stacked')
     os.makedirs(raw_save_dir, exist_ok=1)
     os.makedirs(stacked_save_dir, exist_ok=1)
 
@@ -267,7 +262,8 @@ def run(params):
         max_num_iteration = params.max_number_of_iterations
 
         checkpoints_iterator = tf.contrib.training.checkpoints_iterator(
-            checkpoint_dir, min_interval_secs=params.eval_interval_secs)
+            params.checkpoint_dir, min_interval_secs=params.eval_interval_secs)
+        
         for checkpoint_path in checkpoints_iterator:
             num_iteration += 1
             print(
@@ -315,4 +311,7 @@ if __name__ == '__main__':
 
     params = NewDeeplabVisParams()
     paramparse.process(params)
+
+    params.process()
+
     run(params)

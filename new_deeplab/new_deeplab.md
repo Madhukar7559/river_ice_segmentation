@@ -100,7 +100,7 @@ CUDA_VISIBLE_DEVICES=2 python36 datasets/build_ade20k_data.py train_image_folder
 
 <a id="ctc___build_data_"></a>
 ## ctc       @ build_data-->new_deeplab
-python36 datasets/build_ctc_data.pys
+python36 datasets/build_ctc_data.py
 
 <a id="hnasnet_"></a>
 # hnasnet
@@ -123,7 +123,7 @@ python36 new_deeplab_train.py cfg=gpu:2,_hnas_
 
 <a id="huh___ctc_atrous_6_12_18_hnasnet_"></a>
 #### huh       @ ctc/atrous:6_12_18/hnasnet-->new_deeplab
-python36 new_deeplab_train.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:huh,_train_:b2
+python36 new_deeplab_train.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:huh:vis-huh,_train_:b2,_vis_:640
 
 <a id="vis___huh_ctc_atrous_6_12_18_hnasnet_"></a>
 ##### vis       @ huh/ctc/atrous:6_12_18/hnasnet-->new_deeplab

@@ -1,4 +1,6 @@
 from paramparse import MultiPath
+from new_deeplab.utils import linux_path
+
 
 class NewDeeplabTrainParams:
     """
@@ -290,7 +292,6 @@ class NewDeeplabTrainParams:
     """
 
     def __init__(self):
-
         self.logtostderr = False
         self.alsologtostderr = False
 
@@ -350,9 +351,11 @@ class NewDeeplabTrainParams:
         self.hard_example_mining_step = 0
         self.top_k_percent_pixels = 1.0
         self.quantize_delay_step = -1
+
         self.dataset = 'pascal_voc_seg'
         self.train_split = 'train'
-        self.dataset_dir = None
+        self.dataset_dir = ''
+
         self.allow_memory_growth = 1
         self.gpu_memory_fraction = 1.0
         self.min_resize_value = None
@@ -379,5 +382,11 @@ class NewDeeplabTrainParams:
 
         self.train_batch_size = 8
 
+        self.db_root_dir = '/data'
+
         self.model_info = MultiPath()
         self.db_info = MultiPath()
+
+    def process(self):
+        if not self.dataset_dir:
+            self.dataset_dir = linux_path(self.db_root_dir, self.dataset, 'tfrecord')
