@@ -202,8 +202,8 @@ class NewDeeplabTrainParams:
     :ivar dataset:  Name of the segmentation dataset. (default: 'pascal_voc_seg')
     :type dataset: str
 
-    :ivar train_split:  Which split of the dataset to be used for training (default: 'train')
-    :type train_split: str
+    :ivar db_split:  Which split of the dataset to be used for training (default: 'train')
+    :type db_split: str
 
     :ivar dataset_dir:  Where the dataset reside.
     :type dataset_dir: str
@@ -353,7 +353,7 @@ class NewDeeplabTrainParams:
         self.quantize_delay_step = -1
 
         self.dataset = 'pascal_voc_seg'
-        self.train_split = 'train'
+        self.db_split = 'train'
         self.dataset_dir = ''
 
         self.allow_memory_growth = 1

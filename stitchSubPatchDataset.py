@@ -21,8 +21,10 @@ class StitchParams:
         self.fname_templ = 'img'
         self.fps = 30
         self.height = 720
-        self.img_ext = 'tif'
+
+        self.images_ext = 'tif'
         self.labels_ext = 'png'
+
         self.labels_path = ''
         self.method = 0
         self.n_classes = 3
@@ -75,12 +77,12 @@ def run(params):
 
     print('Reading source images from: {}'.format(params.src_path))
 
-    src_files = [k for k in os.listdir(params.src_path) if k.endswith('.{:s}'.format(params.img_ext))]
+    src_files = [k for k in os.listdir(params.src_path) if k.endswith('.{:s}'.format(params.images_ext))]
     total_frames = len(src_files)
     # print('file_list: {}'.format(file_list))
     if total_frames <= 0:
         print('params: {}'.format(params))
-        raise SystemError('No input frames of type {} found'.format(params.img_ext))
+        raise SystemError('No input frames of type {} found'.format(params.images_ext))
 
     print('total_frames: {}'.format(total_frames))
 

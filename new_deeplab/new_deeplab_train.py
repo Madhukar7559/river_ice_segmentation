@@ -338,7 +338,7 @@ def run(params):
     # tf.logging.set_verbosity(tf.logging.INFO)
 
     os.makedirs(params.log_dir, exist_ok=1)
-    print('Training on %s set', params.train_split)
+    print('Training on %s set', params.db_split)
 
     graph = tf.Graph()
     with graph.as_default():
@@ -349,7 +349,7 @@ def run(params):
 
             dataset = data_generator.Dataset(
                 dataset_name=params.dataset,
-                split_name=params.train_split,
+                split_name=params.db_split,
                 dataset_dir=params.dataset_dir,
                 batch_size=clone_batch_size,
                 crop_size=[int(sz) for sz in params.train_crop_size],
@@ -379,7 +379,7 @@ def run(params):
             init_fn = None
             if params.tf_initial_checkpoint:
                 init_fn = train_utils.get_model_init_fn(
-                    log_dir,
+                    params.log_dir,
                     params.tf_initial_checkpoint,
                     params.initialize_last_layer,
                     last_layers,
