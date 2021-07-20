@@ -36,40 +36,57 @@ from tqdm import tqdm
 def irange(a, b):
     return list(range(a, b + 1))
 
+
 class CTCInfo:
     class DBSplits:
         def __init__(self):
+            self.all_r = irange(0, 19)
+            self.bf_r = irange(0, 3)
+            self.bf1_r = irange(0, 1)
+            self.bf2_r = irange(2, 3)
+            self.dic_r = irange(4, 5)
+            self.fluo_r = irange(6, 15)
+            self.fluo1_r = irange(6, 11)
+            self.fluo2_r = irange(12, 15)
+            self.huh_r = irange(6, 7)
+            self.gow_r = irange(8, 9)
+            self.sim_r = irange(10, 11)
+            self.hela_r = irange(14, 15)
+            self.phc_r = irange(16, 19)
+            self.phc1_r = irange(16, 17)
+            self.phc2_r = irange(18, 19)
 
-            self.all = irange(0, 19)
-            self.bf = irange(0, 3)
-            self.bf1 = irange(0, 1)
-            self.bf2 = irange(2, 3)
-            self.dic = irange(4, 5)
-            self.fluo = irange(6, 15)
-            self.fluo1 = irange(6, 11)
-            self.fluo2 = irange(12, 15)
-            self.huh = irange(6, 7)
-            self.gow = irange(8, 9)
-            self.sim = irange(10, 11)
-            self.hela = irange(14, 15)
-            self.phc = irange(16, 19)
-            self.phc1 = irange(16, 17)
-            self.phc2 = irange(18, 19)
+            self.all_e = irange(20, 39)
+            self.bf_e = irange(20, 23)
+            self.bf1_e = irange(20, 21)
+            self.bf2_e = irange(22, 23)
+            self.dic_e = irange(24, 25)
+            self.fluo_e = irange(26, 35)
+            self.fluo1_e = irange(26, 31)
+            self.fluo2_e = irange(32, 35)
+            self.huh_e = irange(26, 27)
+            self.gow_e = irange(28, 29)
+            self.sim_e = irange(30, 31)
+            self.hela_e = irange(34, 35)
+            self.phc_e = irange(36, 39)
+            self.phc1_e = irange(36, 37)
+            self.phc2_e = irange(38, 39)
 
-            self.bf_test = irange(20, 23)
-            self.bf1_test = irange(20, 21)
-            self.bf2_test = irange(22, 23)
-            self.dic_test = irange(24, 25)
-            self.fluo_test = irange(26, 35)
-            self.fluo1_test = irange(26, 31)
-            self.fluo2_test = irange(32, 35)
-            self.huh_test = irange(26, 27)
-            self.gow_test = irange(28, 29)
-            self.sim_test = irange(30, 31)
-            self.hela_test = irange(34, 35)
-            self.phc_test = irange(36, 39)
-            self.phc1_test = irange(36, 37)
-            self.phc2_test = irange(38, 39)
+            self.all = self.all_r + self.all_e
+            self.bf = self.bf_r + self.bf_e
+            self.bf1 = self.bf1_r + self.bf1_e
+            self.bf2 = self.bf2_r + self.bf2_e
+            self.dic = self.dic_r + self.dic_e
+            self.fluo = self.fluo_r + self.fluo_e
+            self.fluo1 = self.fluo1_r + self.fluo1_e
+            self.fluo2 = self.fluo2_r + self.fluo2_e
+            self.huh = self.huh_r + self.huh_e
+            self.gow = self.gow_r + self.gow_e
+            self.sim = self.sim_r + self.sim_e
+            self.hela = self.hela_r + self.hela_e
+            self.phc = self.phc_r + self.phc_e
+            self.phc1 = self.phc1_r + self.phc1_e
+            self.phc2 = self.phc2_r + self.phc2_e
 
     sequences = {
         # train
@@ -132,6 +149,7 @@ class CTCInfo:
         39: ('PhC-C2DL-PSC_Test_01', 300),
     }
 
+
 class Params:
 
     def __init__(self):
@@ -169,8 +187,6 @@ class Params:
         self.vis_width = 1920
         self.db_splits = CTCInfo.DBSplits().__dict__
         self.num_shards = 4
-
-
 
 
 def seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
