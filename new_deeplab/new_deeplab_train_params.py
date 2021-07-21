@@ -385,6 +385,7 @@ class NewDeeplabTrainParams:
         self.db_split = MultiPath()
 
         self.log_dir = ''
+        self.tb_dir = ''
         self.checkpoint_dir = ''
 
     def process(self):
@@ -393,6 +394,9 @@ class NewDeeplabTrainParams:
 
         if not self.log_dir:
             self.log_dir = linux_path('log', self.db_info, self.model_info)
+
+        if not self.tb_dir:
+            self.tb_dir = linux_path(self.log_dir, 'tb')
 
         if not self.checkpoint_dir:
             self.checkpoint_dir = linux_path('ckpt', self.db_info, self.model_info)

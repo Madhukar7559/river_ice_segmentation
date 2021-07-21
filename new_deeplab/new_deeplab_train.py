@@ -399,7 +399,7 @@ def run(params):
                 tf.gfile.MakeDirs(profile_dir)
 
             print('saving checkpoints to: {}'.format(params.checkpoint_dir))
-            print('saving TB summary to: {}'.format(params.log_dir))
+            print('saving TB summary to: {}'.format(params.tb_dir))
 
             with tf.contrib.tfprof.ProfileContext(
                     enabled=profile_dir is not None, profile_dir=profile_dir):
@@ -409,7 +409,7 @@ def run(params):
                         config=session_config,
                         scaffold=scaffold,
                         checkpoint_dir=params.checkpoint_dir,
-                        summary_dir=params.log_dir,
+                        summary_dir=params.tb_dir,
                         log_step_count_steps=params.log_steps,
                         save_summaries_steps=params.save_summaries_secs,
                         save_checkpoint_secs=params.save_interval_secs,
