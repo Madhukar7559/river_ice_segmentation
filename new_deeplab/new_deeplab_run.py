@@ -35,6 +35,7 @@ class NewDeeplabParams:
         self.gpu = ""
 
         self.phases = '013'
+        self.start = 0
 
         self.train = NewDeeplabTrainParams()
         self.raw_vis = NewDeeplabVisParams()
@@ -54,19 +55,23 @@ def main():
 
     params.process()
 
+    phases = params.phases
+    if params.start > 0:
+        phases = phases[params.start:]
+
     if params.gpu:
         os.environ["CUDA_VISIBLE_DEVICES"] = params.gpu
 
-    if Phases.train in params.phases:
+    if Phases.train in phases:
         train.run(params.train)
 
-    if Phases.raw_vis in params.phases:
+    if Phases.raw_vis in phases:
         raw_vis.run(params.raw_vis)
 
-    if Phases.stitch in params.phases:
+    if Phases.stitch in phases:
         stitch.run(params.stitch)
 
-    if Phases.vis in params.phases:
+    if Phases.vis in phases:
         vis.run(params.vis)
 
 
