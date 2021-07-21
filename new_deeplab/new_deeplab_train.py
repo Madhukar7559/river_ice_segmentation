@@ -380,7 +380,7 @@ def run(params):
             init_fn = None
             if params.tf_initial_checkpoint:
                 init_fn = train_utils.get_model_init_fn(
-                    params.log_dir,
+                    params.checkpoint_dir,
                     params.tf_initial_checkpoint,
                     params.initialize_last_layer,
                     last_layers,
