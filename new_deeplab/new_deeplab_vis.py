@@ -203,7 +203,7 @@ def run(params):
     os.makedirs(raw_save_dir, exist_ok=1)
     os.makedirs(stacked_save_dir, exist_ok=1)
 
-    print('Visualizing on %s set', params.db_split)
+    print('Visualizing on set: {} with split: {}'.format(params.dataset, params.db_split))
 
     with tf.Graph().as_default():
         samples = dataset.get_one_shot_iterator().get_next()
