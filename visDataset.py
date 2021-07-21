@@ -96,8 +96,8 @@ class VisParams:
         self.labels_path = ''
 
         self.dataset = ''
-        self.db_split = ''
 
+        self.db_split = MultiPath()
         self.db_info = MultiPath()
         self.model_info = MultiPath()
         self.vis_info = MultiPath()

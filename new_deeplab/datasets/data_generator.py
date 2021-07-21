@@ -51,8 +51,10 @@ References:
 import collections
 import os
 import tensorflow as tf
+
 from new_deeplab import common
 from new_deeplab import input_preprocess
+from build_ctc_data import CTCInfo
 
 # Named tuple to describe the dataset properties.
 DatasetDescriptor = collections.namedtuple(
@@ -177,24 +179,65 @@ _617_800_INFORMATION = DatasetDescriptor(
     ignore_label=255,
 )
 
+ctc_splits_to_sizes = {
+    'all_r': 8017,
+    'bf_r': 6280,
+    'bf1_r': 3528,
+    'bf2_r': 2752,
+    'dic_r': 168,
+    'fluo_r': 739,
+    'fluo1_r': 459,
+    'fluo2_r': 280,
+    'huh_r': 60,
+    'gow_r': 184,
+    'sim_r': 215,
+    'hela_r': 184,
+    'phc_r': 830,
+    'phc1_r': 230,
+    'phc2_r': 600,
+
+    'all_e': 8112,
+    'bf_e': 6280,
+    'bf1_e': 3528,
+    'bf2_e': 2752,
+    'dic_e': 230,
+    'fluo_e': 772,
+    'fluo1_e': 492,
+    'fluo2_e': 280,
+    'huh_e': 60,
+    'gow_e': 184,
+    'sim_e': 248,
+    'hela_e': 184,
+    'phc_e': 830,
+    'phc1_e': 230,
+    'phc2_e': 600,
+
+    'all': 16129,
+    'bf': 12560,
+    'bf1': 7056,
+    'bf2': 5504,
+    'dic': 398,
+    'fluo': 1511,
+    'fluo1': 951,
+    'fluo2': 560,
+    'huh': 120,
+    'gow': 368,
+    'sim': 463,
+    'hela': 368,
+    'phc': 1660,
+    'phc1': 460,
+    'phc2': 1200
+}
+
+# db_splits = CTCInfo.DBSplits().__dict__
+# for db_split in db_splits:
+#     seq_ids = db_splits[db_split]
+#
+#     seq_n_frames = [CTCInfo.sequences[seq_id][1] for seq_id in seq_ids]
+#     ctc_splits_to_sizes[db_split] = sum(seq_n_frames)
+
 _CTC_INFORMATION = DatasetDescriptor(
-    splits_to_sizes={
-        'all': 7970,
-        'bf': 6280,
-        'bf1': 3528,
-        'bf2': 2752,
-        'dic': 168,
-        'fluo': 692,
-        'fluo1': 412,
-        'fluo2': 280,
-        'huh': 13,
-        'gow': 184,
-        'sim': 215,
-        'hela': 184,
-        'phc': 830,
-        'phc1': 230,
-        'phc2': 600,
-    },
+    splits_to_sizes=ctc_splits_to_sizes,
     num_classes=2,
     ignore_label=255,
 )

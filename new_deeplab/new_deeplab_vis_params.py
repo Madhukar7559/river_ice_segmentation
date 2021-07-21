@@ -198,7 +198,6 @@ class NewDeeplabVisParams:
     :type vis_crop_size: list
 
     :ivar db_split:  Which split of the dataset used for visualizing results (default: 'val')
-    :type db_split: str
 
     :ivar xml_output_file:  File to store XML test results (default: '')
     :type xml_output_file: str
@@ -219,8 +218,6 @@ class NewDeeplabVisParams:
         self.atrous_rates = []
         self.colormap_type = 'pascal'
 
-        self.dataset = 'pascal_voc_seg'
-        self.dataset_dir = ''
 
         self.decoder_output_stride = None
         self.decoder_use_separable_conv = True
@@ -272,9 +269,11 @@ class NewDeeplabVisParams:
         self.db_info = MultiPath()
         self.model_info = MultiPath()
         self.vis_info = MultiPath()
+        self.db_split = MultiPath()
 
+        self.dataset = ''
+        self.dataset_dir = ''
         self.db_root_dir = '/data'
-        self.db_split = 'val'
         self.xml_output_file = ''
 
         self.log_dir = ''

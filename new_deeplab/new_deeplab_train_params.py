@@ -203,7 +203,6 @@ class NewDeeplabTrainParams:
     :type dataset: str
 
     :ivar db_split:  Which split of the dataset to be used for training (default: 'train')
-    :type db_split: str
 
     :ivar dataset_dir:  Where the dataset reside.
     :type dataset_dir: str
@@ -352,9 +351,7 @@ class NewDeeplabTrainParams:
         self.top_k_percent_pixels = 1.0
         self.quantize_delay_step = -1
 
-        self.dataset = 'pascal_voc_seg'
-        self.db_split = 'train'
-        self.dataset_dir = ''
+
 
         self.allow_memory_growth = 1
         self.gpu_memory_fraction = 1.0
@@ -384,8 +381,12 @@ class NewDeeplabTrainParams:
 
         self.db_root_dir = '/data'
 
+        self.dataset = ''
+        self.dataset_dir = ''
+
         self.model_info = MultiPath()
         self.db_info = MultiPath()
+        self.db_split = MultiPath()
 
         self.log_dir = ''
         self.checkpoint_dir = ''

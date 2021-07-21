@@ -54,9 +54,9 @@ class StitchParams:
 
         self.db_info = MultiPath()
         self.model_info = MultiPath()
+        self.db_split = MultiPath()
 
         self.dataset = ''
-        self.db_split = ''
 
     def process(self):
         if not self.src_path:
