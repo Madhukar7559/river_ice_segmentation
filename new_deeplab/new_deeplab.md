@@ -100,7 +100,7 @@ CUDA_VISIBLE_DEVICES=2 python36 datasets/build_ade20k_data.py train_image_folder
 
 <a id="ctc___build_data_"></a>
 ## ctc       @ build_data-->new_deeplab
-python36 datasets/build_ctc_data.py
+python36 datasets/build_ctc_data.py db_split=huh_r
 
 <a id="hnasnet_"></a>
 # hnasnet

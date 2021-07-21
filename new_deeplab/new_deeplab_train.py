@@ -17,7 +17,7 @@
 See model.py for more details and usage.
 """
 try:
-    import tensorflow.python.util.deprecation as deprecation
+    from tensorflow.python.util import deprecation
 except BaseException:
     pass
 else:
@@ -31,9 +31,6 @@ sys.path.append('..')
 import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
-
-from tensorflow.python.util import deprecation
-
 
 import tensorflow as tf
 
@@ -317,7 +314,7 @@ def _train_deeplab_model(params, iterator, num_of_classes, ignore_label):
         should_log = math_ops.equal(math_ops.mod(global_step, params.log_steps), 0)
         total_loss = tf.cond(
             should_log,
-            lambda: tf.Print(total_loss, [total_loss], 'Total loss is :'),
+            lambda: tf.Print('global_step: ', global_step, 'total loss: ', total_loss),
             lambda: total_loss)
 
         tf.summary.scalar('total_loss', total_loss)
@@ -399,6 +396,9 @@ def run(params):
             profile_dir = params.profile_logdir
             if profile_dir is not None:
                 tf.gfile.MakeDirs(profile_dir)
+
+            print('saving checkpoints to: {}'.format(params.checkpoint_dir))
+            print('saving TB summary to: {}'.format(params.log_dir))
 
             with tf.contrib.tfprof.ProfileContext(
                     enabled=profile_dir is not None, profile_dir=profile_dir):

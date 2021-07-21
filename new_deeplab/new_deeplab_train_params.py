@@ -307,8 +307,6 @@ class NewDeeplabTrainParams:
         self.only_check_args = False
         self.op_conversion_fallback_to_while_loop = False
         self.test_random_seed = 301
-        self.test_srcdir = ''
-        self.test_tmpdir = 'C:/Users/Tommy/AppData/Local/Temp/absl_testing'
         self.test_randomize_ordering_seed = 0
         self.xml_output_file = ''
         self.num_clones = 1
@@ -350,8 +348,6 @@ class NewDeeplabTrainParams:
         self.hard_example_mining_step = 0
         self.top_k_percent_pixels = 1.0
         self.quantize_delay_step = -1
-
-
 
         self.allow_memory_growth = 1
         self.gpu_memory_fraction = 1.0
