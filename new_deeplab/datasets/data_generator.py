@@ -54,7 +54,7 @@ import tensorflow as tf
 
 from new_deeplab import common
 from new_deeplab import input_preprocess
-from build_ctc_data import CTCInfo
+# from build_ctc_data import CTCInfo
 
 # Named tuple to describe the dataset properties.
 DatasetDescriptor = collections.namedtuple(
