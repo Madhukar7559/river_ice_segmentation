@@ -395,4 +395,4 @@ class NewDeeplabTrainParams:
             self.log_dir = linux_path('log', self.db_info, self.model_info)
 
         if not self.checkpoint_dir:
-            self.checkpoint_dir = linux_path(self.log_dir, 'ckpt')
+            self.checkpoint_dir = linux_path('ckpt', self.db_info, self.model_info)

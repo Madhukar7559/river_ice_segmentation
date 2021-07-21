@@ -311,7 +311,7 @@ def _train_deeplab_model(params, iterator, num_of_classes, ignore_label):
 
         # Print total loss to the terminal.
         # This implementation is mirrored from tf.slim.summaries.
-        
+
         # should_log = math_ops.equal(math_ops.mod(global_step, params.log_steps), 0)
         # total_loss = tf.cond(
         #     should_log,

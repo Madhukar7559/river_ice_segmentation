@@ -4,13 +4,12 @@
     - [voc2012       @ build_data](#voc2012___build_data_)
     - [ade20k       @ build_data](#ade20k___build_data_)
     - [ctc       @ build_data](#ctc___build_data_)
+        - [bf_r       @ ctc/build_data](#bf_r___ctc_build_data_)
+        - [huh_r       @ ctc/build_data](#huh_r___ctc_build_data_)
 - [hnasnet](#hnasnet_)
     - [atrous:6_12_18       @ hnasnet](#atrous_6_12_18___hnasne_t_)
         - [voc2012       @ atrous:6_12_18/hnasnet](#voc2012___atrous_6_12_18_hnasnet_)
         - [ade20k       @ atrous:6_12_18/hnasnet](#ade20k___atrous_6_12_18_hnasnet_)
-        - [ctc       @ atrous:6_12_18/hnasnet](#ctc___atrous_6_12_18_hnasnet_)
-            - [huh       @ ctc/atrous:6_12_18/hnasnet](#huh___ctc_atrous_6_12_18_hnasnet_)
-                - [vis       @ huh/ctc/atrous:6_12_18/hnasnet](#vis___huh_ctc_atrous_6_12_18_hnasnet_)
     - [atrous_rates_12_24_36       @ hnasnet](#atrous_rates_12_24_36___hnasne_t_)
         - [voc2012       @ atrous_rates_12_24_36/hnasnet](#voc2012___atrous_rates_12_24_36_hnasne_t_)
         - [ade20k       @ atrous_rates_12_24_36/hnasnet](#ade20k___atrous_rates_12_24_36_hnasne_t_)
@@ -100,6 +99,13 @@ CUDA_VISIBLE_DEVICES=2 python36 datasets/build_ade20k_data.py train_image_folder
 
 <a id="ctc___build_data_"></a>
 ## ctc       @ build_data-->new_deeplab
+
+<a id="bf_r___ctc_build_data_"></a>
+### bf_r       @ ctc/build_data-->new_deeplab
+python36 datasets/build_ctc_data.py db_split=bf_r
+
+<a id="huh_r___ctc_build_data_"></a>
+### huh_r       @ ctc/build_data-->new_deeplab
 python36 datasets/build_ctc_data.py db_split=huh_r
 
 <a id="hnasnet_"></a>
@@ -117,24 +123,6 @@ python36 new_deeplab_train.py cfg=gpu:2,_hnas_:b2,_voc_
 ### ade20k       @ atrous:6_12_18/hnasnet-->new_deeplab
 
 python36 new_deeplab_train.py cfg=gpu:2,_hnas_  
-
-<a id="ctc___atrous_6_12_18_hnasnet_"></a>
-### ctc       @ atrous:6_12_18/hnasnet-->new_deeplab
-
-<a id="huh___ctc_atrous_6_12_18_hnasnet_"></a>
-#### huh       @ ctc/atrous:6_12_18/hnasnet-->new_deeplab
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:huh-r:+++vis:huh-e,_train_:b2,_vis_:640
-
-<a id="vis___huh_ctc_atrous_6_12_18_hnasnet_"></a>
-##### vis       @ huh/ctc/atrous:6_12_18/hnasnet-->new_deeplab
-
-python36 new_deeplab_vis.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:huh,_vis_:640
-
-python36 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
-
-python36 ../visDataset.py images_path=/data/617/images/training_32_49/images labels_path=/data/617/images/training_32_49/labels seg_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49/raw save_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49/vis n_classes=3 start_id=0 end_id=-1 normalize_labels=1
-
-
 <a id="atrous_rates_12_24_36___hnasne_t_"></a>
 ## atrous_rates_12_24_36       @ hnasnet-->new_deeplab
 
