@@ -4,6 +4,7 @@
     - [bf_r       @ build_data](#bf_r___build_data_)
     - [huh_r       @ build_data](#huh_r___build_data_)
     - [fluo_r       @ build_data](#fluo_r___build_data_)
+    - [phc_r       @ build_data](#phc_r___build_data_)
 - [hnasnet](#hnasnet_)
     - [atrous:6_12_18       @ hnasnet](#atrous_6_12_18___hnasne_t_)
         - [huh       @ atrous:6_12_18/hnasnet](#huh___atrous_6_12_18_hnasnet_)
@@ -27,6 +28,10 @@ python36 datasets/build_ctc_data.py db_split=huh_r
 <a id="fluo_r___build_data_"></a>
 ## fluo_r       @ build_data-->new_deeplab_ctc
 python36 datasets/build_ctc_data.py db_split=fluo_r
+
+<a id="phc_r___build_data_"></a>
+## phc_r       @ build_data-->new_deeplab_ctc
+python36 datasets/build_ctc_data.py db_split=phc_r
 
 <a id="hnasnet_"></a>
 # hnasnet
