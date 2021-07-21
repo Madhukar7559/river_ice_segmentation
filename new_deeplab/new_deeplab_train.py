@@ -16,9 +16,12 @@
 
 See model.py for more details and usage.
 """
-import tensorflow.python.util.deprecation as deprecation
-
-deprecation._PRINT_DEPRECATION_WARNINGS = False
+try:
+    import tensorflow.python.util.deprecation as deprecation
+except BaseException:
+    pass
+else:
+    deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 import six
 import sys
@@ -31,7 +34,6 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 from tensorflow.python.util import deprecation
 
-deprecation._PRINT_DEPRECATION_WARNINGS = False
 
 import tensorflow as tf
 
