@@ -314,7 +314,7 @@ def _train_deeplab_model(params, iterator, num_of_classes, ignore_label):
         should_log = math_ops.equal(math_ops.mod(global_step, params.log_steps), 0)
         total_loss = tf.cond(
             should_log,
-            lambda: tf.Print(total_loss, global_step, 'global_step:', total_loss, 'total_loss:'),
+            lambda: tf.Print(total_loss, [global_step], 'global_step:', [total_loss], 'total_loss:'),
             lambda: total_loss)
 
         tf.summary.scalar('total_loss', total_loss)
