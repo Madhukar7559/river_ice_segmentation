@@ -327,7 +327,7 @@ class NewDeeplabTrainParams:
         self.learning_rate_decay_factor = 0.1
         self.learning_rate_decay_step = 2000
         self.learning_power = 0.9
-        self.training_number_of_steps = 1000000
+        self.training_number_of_steps = 50000
         self.momentum = 0.9
         self.weight_decay = 4e-05
         self.train_crop_size = ['513', '513']

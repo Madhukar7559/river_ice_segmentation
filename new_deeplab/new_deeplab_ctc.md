@@ -9,6 +9,7 @@
         - [huh       @ atrous:6_12_18/hnasnet](#huh___atrous_6_12_18_hnasnet_)
         - [bf       @ atrous:6_12_18/hnasnet](#bf___atrous_6_12_18_hnasnet_)
         - [fluo       @ atrous:6_12_18/hnasnet](#fluo___atrous_6_12_18_hnasnet_)
+        - [phc       @ atrous:6_12_18/hnasnet](#phc___atrous_6_12_18_hnasnet_)
 
 <!-- /MarkdownTOC -->
 
@@ -51,3 +52,7 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ctc_:train:bf-r:+++
 <a id="fluo___atrous_6_12_18_hnasnet_"></a>
 ### fluo       @ atrous:6_12_18/hnasnet-->new_deeplab_ctc
 python36 new_deeplab_run.py cfg=gpu:2,_hnas_:atrous-6_12_18,_ctc_:train:fluo-r:+++vis:fluo-e,_train_:b2,_vis_:640
+
+<a id="phc___atrous_6_12_18_hnasnet_"></a>
+### phc       @ atrous:6_12_18/hnasnet-->new_deeplab_ctc
+python36 new_deeplab_run.py cfg=gpu:2,_hnas_:atrous-6_12_18,_ctc_:train:phc-r:+++vis:phc-e,_train_:b2,_vis_:640
