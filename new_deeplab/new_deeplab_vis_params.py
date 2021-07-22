@@ -207,7 +207,7 @@ class NewDeeplabVisParams:
     def __init__(self):
         self.cfg = ()
         self.add_flipped_images = False
-        self.add_image_level_feature = True
+        self.add_image_level_feature = 0
         self.also_save_raw_predictions = True
         self.also_save_vis_predictions = 0
 
@@ -224,17 +224,17 @@ class NewDeeplabVisParams:
         self.dense_prediction_cell_json = ''
         self.depth_multiplier = 1.0
         self.divisible_by = None
-        self.eval_interval_secs = 300
-        self.eval_scales = [[1.0], ]
+        self.eval_interval_secs = 0
+        self.eval_scales = [1.0, ]
         self.image_pooling_crop_size = None
-        self.image_pooling_stride = [['1', '1'], ]
+        self.image_pooling_stride = [1, 1]
         self.image_pyramid = None
         self.logits_kernel_size = 1
 
         self.logtostderr = False
 
         self.master = ''
-        self.max_number_of_iterations = 0
+        self.max_number_of_iterations = 1
         self.max_resize_value = None
         self.merge_method = 'max'
         self.min_resize_value = None
@@ -263,7 +263,7 @@ class NewDeeplabVisParams:
         self.use_cprofile_for_profiling = True
         self.v = -1
         self.verbosity = -1
-        self.vis_batch_size = 1
+        self.vis_batch_size = 50
         self.vis_crop_size = [513, 513]
 
         self.db_info = MultiPath()
@@ -280,6 +280,7 @@ class NewDeeplabVisParams:
         self.checkpoint_dir = ''
         self.vis_logdir = ''
 
+
     def process(self):
         if not self.dataset_dir:
             self.dataset_dir = linux_path(self.db_root_dir, self.dataset, 'tfrecord')
@@ -288,7 +289,7 @@ class NewDeeplabVisParams:
             self.log_dir = linux_path('log', self.db_info, self.model_info)
             
         if not self.checkpoint_dir:
-            self.log_dir = linux_path('ckpt', self.db_info, self.model_info)
+            self.checkpoint_dir = linux_path('ckpt', self.db_info, self.model_info)
 
         if not self.vis_logdir:
             self.vis_logdir = linux_path(self.log_dir, self.vis_info)

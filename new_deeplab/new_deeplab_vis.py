@@ -209,6 +209,7 @@ def run(params):
         samples = dataset.get_one_shot_iterator().get_next()
 
         model_options = common.ModelOptions(
+            params=params,
             outputs_to_num_classes={common.OUTPUT_TYPE: dataset.num_of_classes},
             crop_size=[int(sz) for sz in params.vis_crop_size],
             atrous_rates=params.atrous_rates,
@@ -269,7 +270,7 @@ def run(params):
             print(
                 'Starting visualization at ' + time.strftime('%Y-%m-%d-%H:%M:%S',
                                                              time.gmtime()))
-            print('Visualizing with model %s', checkpoint_path)
+            print('Visualizing with model {}'.format(checkpoint_path))
 
             scaffold = tf.train.Scaffold(init_op=tf.global_variables_initializer())
             session_creator = tf.train.ChiefSessionCreator(

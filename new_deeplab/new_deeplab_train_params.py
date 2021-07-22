@@ -330,7 +330,7 @@ class NewDeeplabTrainParams:
         self.training_number_of_steps = 50000
         self.momentum = 0.9
         self.weight_decay = 4e-05
-        self.train_crop_size = ['513', '513']
+        self.train_crop_size = [513, 513]
         self.last_layer_gradient_multiplier = 1.0
         self.upsample_logits = True
         self.drop_path_keep_prob = 1.0
@@ -359,7 +359,7 @@ class NewDeeplabTrainParams:
         self.image_pyramid = []
         self.add_image_level_feature = True
         self.image_pooling_crop_size = None
-        self.image_pooling_stride = ['1', '1']
+        self.image_pooling_stride = [1, 1]
         self.aspp_with_batch_norm = True
         self.aspp_with_separable_conv = True
         self.multi_grid = []

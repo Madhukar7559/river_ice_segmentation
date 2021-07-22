@@ -71,6 +71,7 @@ def _build_deeplab(params, iterator, outputs_to_num_classes, ignore_label):
     samples[common.LABEL] = tf.identity(samples[common.LABEL], name=common.LABEL)
 
     model_options = common.ModelOptions(
+        params=params,
         outputs_to_num_classes=outputs_to_num_classes,
         crop_size=[int(sz) for sz in params.train_crop_size],
         atrous_rates=params.atrous_rates,
