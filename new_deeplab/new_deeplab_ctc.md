@@ -44,7 +44,6 @@ python36 datasets/build_ctc_data.py db_split=phc_r
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:huh-r:+++vis:huh-e,_train_:b2 start=0
 
 
-python36 new_deeplab_vis.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:huh,_vis_:640
 
 python36 ../stitchSubPatchDataset.py src_path=/data/617/images/training_32_49/images img_ext=jpg  patch_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49_640_640_640_640/raw stitched_seq_path=log/training_0_31_49_640_640_64_256_rot_15_345_4_flip/nas_hnasnet_0_31/training_32_49/raw patch_height=640 patch_width=640 start_id=0 end_id=-1  show_img=0 stacked=0 method=1 normalize_patches=0 img_ext=png
 
