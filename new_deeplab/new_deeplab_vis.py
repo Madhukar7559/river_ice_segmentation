@@ -33,6 +33,7 @@ import numpy as np
 
 import tensorflow as tf
 
+import paramparse
 
 from new_deeplab import common
 from new_deeplab import model
@@ -168,6 +169,9 @@ def run(params):
 
     :param NewDeeplabVisParams params:
     """
+
+    paramparse.to_flags(tf.app.flags.FLAGS, params, verbose=1, allow_missing=1)
+
     tf.logging.set_verbosity(tf.logging.INFO)
 
     # paramparse.from_flags(FLAGS, to_clipboard=1)
@@ -209,7 +213,7 @@ def run(params):
         samples = dataset.get_one_shot_iterator().get_next()
 
         model_options = common.ModelOptions(
-            params=params,
+            # params=params,
             outputs_to_num_classes={common.OUTPUT_TYPE: dataset.num_of_classes},
             crop_size=[int(sz) for sz in params.vis_crop_size],
             atrous_rates=params.atrous_rates,
@@ -308,7 +312,6 @@ def run(params):
 
 
 if __name__ == '__main__':
-    import paramparse
 
     params = NewDeeplabVisParams()
     paramparse.process(params)

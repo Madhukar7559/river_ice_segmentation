@@ -207,7 +207,7 @@ class NewDeeplabVisParams:
     def __init__(self):
         self.cfg = ()
         self.add_flipped_images = False
-        self.add_image_level_feature = 0
+        self.add_image_level_feature = False
         self.also_save_raw_predictions = True
         self.also_save_vis_predictions = 0
 

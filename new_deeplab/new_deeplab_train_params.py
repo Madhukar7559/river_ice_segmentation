@@ -1,7 +1,6 @@
 from paramparse import MultiPath
 from new_deeplab.utils import linux_path
 
-
 class NewDeeplabTrainParams:
     """
     :ivar logtostderr:  Should only log to stderr? (default: 'false')

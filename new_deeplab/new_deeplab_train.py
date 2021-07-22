@@ -38,6 +38,8 @@ tf.compat.v1.logging.set_verbosity(tf.compat.v1.logging.ERROR)
 
 from tensorflow.python.ops import math_ops
 
+import paramparse
+
 from new_deeplab import common
 from new_deeplab import model
 from new_deeplab.datasets import data_generator
@@ -336,6 +338,9 @@ def run(params):
     :return:
     """
 
+    paramparse.to_flags(tf.app.flags.FLAGS, params, verbose=1, allow_missing=1)
+
+
     # tf.logging.set_verbosity(tf.logging.INFO)
 
     os.makedirs(params.log_dir, exist_ok=1)
@@ -420,10 +425,9 @@ def run(params):
 
 
 if __name__ == '__main__':
-    import paramparse
 
-    params = NewDeeplabTrainParams()
-    paramparse.process(params)
+    _params = NewDeeplabTrainParams()
+    paramparse.process(_params)
 
-    params.process()
-    run(params)
+    _params.process()
+    run(_params)
