@@ -41,7 +41,7 @@ python36 datasets/build_ctc_data.py db_split=phc_r
 
 <a id="huh___atrous_6_12_18_hnasnet_"></a>
 ### huh       @ atrous:6_12_18/hnasnet-->new_deeplab_ctc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:huh-r:+++vis:huh-e,_train_:b2 start=1
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:huh-r:+++vis:huh-e,_train_:b2 start=0
 
 
 python36 new_deeplab_vis.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:huh,_vis_:640
