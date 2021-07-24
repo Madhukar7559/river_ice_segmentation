@@ -179,6 +179,7 @@ class Params:
         self.save_img = 0
         self.save_vid = 0
 
+        self.disable_seg = 0
         self.disable_tqdm = 0
         self.codec = 'H264'
         self.use_tif = 0
@@ -261,9 +262,12 @@ def _convert_dataset(params):
     output_root_dir = linux_path(params.root_dir, 'CTC', 'tfrecord')
     os.makedirs(output_root_dir, exist_ok=True)
 
-    tif_labels_root_path = linux_path(params.root_dir, 'CTC', 'tif')
-    png_labels_root_path = linux_path(params.root_dir, 'CTC', 'Labels_PNG')
-    os.makedirs(png_labels_root_path, exist_ok=True)
+    if not params.disable_seg:
+        tif_labels_root_path = linux_path(params.root_dir, 'CTC', 'tif')
+        png_labels_root_path = linux_path(params.root_dir, 'CTC', 'Labels_PNG')
+        os.makedirs(png_labels_root_path, exist_ok=True)
+    else:
+        print('\nSegmentations are disabled\n')
 
     if params.start_id > 0:
         seq_ids = seq_ids[params.start_id:]
@@ -277,8 +281,9 @@ def _convert_dataset(params):
         img_root_path = jpg_img_root_path
         img_exts = ('.jpg',)
 
-    gold_seg_src_file_ids = {}
-    silver_seg_src_file_ids = {}
+    if not params.disable_seg:
+        gold_seg_src_file_ids = {}
+        silver_seg_src_file_ids = {}
     img_src_file_ids = {}
 
     n_total_src_files = 0
@@ -290,37 +295,39 @@ def _convert_dataset(params):
 
         print('\tseq {} / {}\t{}\t{}\t{} frames'.format(__id + 1, n_seq, seq_id, seq_name, n_frames))
 
-        silver_seg_path = linux_path(tif_labels_root_path, seq_name + '_ST', 'SEG')
-        gold_seg_path = linux_path(tif_labels_root_path, seq_name + '_GT', 'SEG')
+        if not params.disable_seg:
 
-        assert os.path.exists(silver_seg_path) or os.path.exists(gold_seg_path), \
-            "Neither silver nor gold segmentations found for sequence: {}".format(seq_name)
+            silver_seg_path = linux_path(tif_labels_root_path, seq_name + '_ST', 'SEG')
+            gold_seg_path = linux_path(tif_labels_root_path, seq_name + '_GT', 'SEG')
 
-        if os.path.exists(gold_seg_path):
-            _gold_seg_src_files = [linux_path(gold_seg_path, k) for k in os.listdir(gold_seg_path) if
-                                   os.path.splitext(k.lower())[1] in ('.tif',)]
-            _gold_seg_src_files.sort()
+            assert os.path.exists(silver_seg_path) or os.path.exists(gold_seg_path), \
+                "Neither silver nor gold segmentations found for sequence: {}".format(seq_name)
 
-            _gold_seg_src_file_ids = {
-                seq_name + '::' + ''.join(k for k in os.path.basename(src_file) if k.isdigit()): src_file
-                for src_file in _gold_seg_src_files
-            }
-            gold_seg_src_file_ids.update(_gold_seg_src_file_ids)
-        else:
-            print("\ngold  segmentations not found for sequence: {}\n".format(seq_name))
+            if os.path.exists(gold_seg_path):
+                _gold_seg_src_files = [linux_path(gold_seg_path, k) for k in os.listdir(gold_seg_path) if
+                                       os.path.splitext(k.lower())[1] in ('.tif',)]
+                _gold_seg_src_files.sort()
 
-        if os.path.exists(silver_seg_path):
-            _silver_seg_src_files = [linux_path(silver_seg_path, k) for k in os.listdir(silver_seg_path) if
-                                     os.path.splitext(k.lower())[1] in ('.tif',)]
-            _silver_seg_src_files.sort()
+                _gold_seg_src_file_ids = {
+                    seq_name + '::' + ''.join(k for k in os.path.basename(src_file) if k.isdigit()): src_file
+                    for src_file in _gold_seg_src_files
+                }
+                gold_seg_src_file_ids.update(_gold_seg_src_file_ids)
+            else:
+                print("\ngold  segmentations not found for sequence: {}\n".format(seq_name))
 
-            _silver_seg_src_file_ids = {
-                seq_name + '::' + ''.join(k for k in os.path.basename(src_file) if k.isdigit()): src_file
-                for src_file in _silver_seg_src_files
-            }
-            silver_seg_src_file_ids.update(_silver_seg_src_file_ids)
-        else:
-            print("\nsilver  segmentations not found for sequence: {}\n".format(seq_name))
+            if os.path.exists(silver_seg_path):
+                _silver_seg_src_files = [linux_path(silver_seg_path, k) for k in os.listdir(silver_seg_path) if
+                                         os.path.splitext(k.lower())[1] in ('.tif',)]
+                _silver_seg_src_files.sort()
+
+                _silver_seg_src_file_ids = {
+                    seq_name + '::' + ''.join(k for k in os.path.basename(src_file) if k.isdigit()): src_file
+                    for src_file in _silver_seg_src_files
+                }
+                silver_seg_src_file_ids.update(_silver_seg_src_file_ids)
+            else:
+                print("\nsilver  segmentations not found for sequence: {}\n".format(seq_name))
 
         # unique_gold_seg_src_files = [v for k,v in gold_seg_src_file_ids.items() if k not in
         # silver_seg_src_file_ids.keys()]
@@ -340,19 +347,21 @@ def _convert_dataset(params):
         for img_src_file in _img_src_files:
             img_src_file_no_ext = os.path.splitext(os.path.basename(img_src_file))[0]
             img_src_file_id = seq_name + '::' + ''.join(k for k in os.path.basename(img_src_file) if k.isdigit())
+            if not params.disable_seg:
+                silver_seg_path = linux_path(tif_labels_root_path, seq_name + '_ST', 'SEG')
+                gold_seg_path = linux_path(tif_labels_root_path, seq_name + '_GT', 'SEG')
+                png_seg_path = linux_path(png_labels_root_path, seq_name)
+                os.makedirs(png_seg_path, exist_ok=True)
 
-            silver_seg_path = linux_path(tif_labels_root_path, seq_name + '_ST', 'SEG')
-            gold_seg_path = linux_path(tif_labels_root_path, seq_name + '_GT', 'SEG')
-            png_seg_path = linux_path(png_labels_root_path, seq_name)
-            os.makedirs(png_seg_path, exist_ok=True)
-
-            png_seg_src_path = os.path.join(png_seg_path, img_src_file_no_ext + '.png')
-            if not os.path.exists(png_seg_src_path):
-                segmentation_found = seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
-                                                silver_seg_path, gold_seg_path, png_seg_src_path, img_src_file,
-                                                params.two_classes)
-                if not segmentation_found:
-                    continue
+                png_seg_src_path = os.path.join(png_seg_path, img_src_file_no_ext + '.png')
+                if not os.path.exists(png_seg_src_path):
+                    segmentation_found = seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
+                                                    silver_seg_path, gold_seg_path, png_seg_src_path, img_src_file,
+                                                    params.two_classes)
+                    if not segmentation_found:
+                        continue
+            else:
+                png_seg_src_path = None
 
             png_img_dir_path = linux_path(png_img_root_path, seq_name)
             jpg_img_dir_path = linux_path(jpg_img_root_path, seq_name)
@@ -412,15 +421,17 @@ def create_tfrecords(src_files, file_ids, n_shards, sub_seq, use_tif, output_dir
 
                 img_src_file = src_files[img_id]
                 img_src_file_id, seq_name, seg_src_path, img_src_path = file_ids[img_src_file]
-
-                seg_data = tf.gfile.FastGFile(seg_src_path, 'rb').read()
-                seg_height, seg_width = label_reader.read_image_dims(seg_data)
-
                 image_data = tf.gfile.FastGFile(img_src_path, 'rb').read()
-
                 height, width = image_reader.read_image_dims(image_data)
-                if height != seg_height or width != seg_width:
-                    raise RuntimeError('Shape mismatch found between image and label')
+
+                if seg_src_path is not None:
+                    seg_data = tf.gfile.FastGFile(seg_src_path, 'rb').read()
+                    seg_height, seg_width = label_reader.read_image_dims(seg_data)
+
+                    if height != seg_height or width != seg_width:
+                        raise RuntimeError('Shape mismatch found between image and label')
+                else:
+                    seg_data = None
 
                 # Convert to tf example.
                 example = build_data.image_seg_to_tfexample(

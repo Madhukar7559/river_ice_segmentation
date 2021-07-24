@@ -153,7 +153,8 @@ def image_seg_to_tfexample(image_data, filename, height, width, seg_data):
   Returns:
     tf example of one image/segmentation pair.
   """
-  return tf.train.Example(features=tf.train.Features(feature={
+
+  features = {
       'image/encoded': _bytes_list_feature(image_data),
       'image/filename': _bytes_list_feature(filename),
       'image/format': _bytes_list_feature(
@@ -161,8 +162,15 @@ def image_seg_to_tfexample(image_data, filename, height, width, seg_data):
       'image/height': _int64_list_feature(height),
       'image/width': _int64_list_feature(width),
       'image/channels': _int64_list_feature(3),
+  }
+  if seg_data is not None:
+      features.update({
       'image/segmentation/class/encoded': (
           _bytes_list_feature(seg_data)),
       'image/segmentation/class/format': _bytes_list_feature(
           FLAGS.label_format),
-  }))
+      })
+
+  return tf.train.Example(features=tf.train.Features(feature=features))
+
+

@@ -24,6 +24,7 @@ python36 datasets/build_ctc_data.py db_split=bf_r
 <a id="huh_r___build_data_"></a>
 ## huh_r       @ build_data-->new_deeplab_ctc
 python36 datasets/build_ctc_data.py db_split=huh_r
+python36 datasets/build_ctc_data.py db_split=huh_e
 
 <a id="fluo_r___build_data_"></a>
 ## fluo_r       @ build_data-->new_deeplab_ctc
@@ -41,7 +42,7 @@ python36 datasets/build_ctc_data.py db_split=phc_r
 
 <a id="huh___atrous_6_12_18_hnasnet_"></a>
 ### huh       @ atrous:6_12_18/hnasnet-->new_deeplab_ctc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:huh-r:+++vis:huh-e,_train_:b2 start=0
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:huh-r:+++vis:huh-e,_train_:b2 start=1
 
 
 
@@ -59,4 +60,4 @@ python36 new_deeplab_run.py cfg=gpu:2,_hnas_:atrous-6_12_18,_ctc_:train:fluo-r:+
 
 <a id="phc___atrous_6_12_18_hnasnet_"></a>
 ### phc       @ atrous:6_12_18/hnasnet-->new_deeplab_ctc
-python36 new_deeplab_run.py cfg=gpu:2,_hnas_:atrous-6_12_18,_ctc_:train:phc-r:+++vis:phc-e,_train_:b2,_vis_:640
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:phc-r:+++vis:phc-e,_train_:b2,_vis_:640 start=0
