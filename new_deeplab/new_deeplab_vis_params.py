@@ -197,7 +197,7 @@ class NewDeeplabVisParams:
     :ivar vis_crop_size:  Crop size [height, width] for visualization. (default: '513,513') (a comma separated list)
     :type vis_crop_size: list
 
-    :ivar db_split:  Which split of the dataset used for visualizing results (default: 'val')
+    :ivar train_split:  Which split of the dataset used for visualizing results (default: 'val')
 
     :ivar xml_output_file:  File to store XML test results (default: '')
     :type xml_output_file: str
@@ -266,10 +266,11 @@ class NewDeeplabVisParams:
         self.vis_batch_size = 2
         self.vis_crop_size = [513, 513]
 
-        self.db_info = MultiPath()
         self.model_info = MultiPath()
+        self.train_info = MultiPath()
+        self.train_split = MultiPath()
         self.vis_info = MultiPath()
-        self.db_split = MultiPath()
+        self.vis_split = MultiPath()
 
         self.dataset = ''
         self.dataset_dir = ''
@@ -286,10 +287,10 @@ class NewDeeplabVisParams:
             self.dataset_dir = linux_path(self.db_root_dir, self.dataset, 'tfrecord')
 
         if not self.log_dir:
-            self.log_dir = linux_path('log', self.db_info, self.model_info)
+            self.log_dir = linux_path('log', self.train_info, self.model_info)
             
         if not self.checkpoint_dir:
-            self.checkpoint_dir = linux_path('ckpt', self.db_info, self.model_info)
+            self.checkpoint_dir = linux_path('ckpt', self.train_info, self.model_info)
 
         if not self.vis_logdir:
             self.vis_logdir = linux_path(self.log_dir, self.vis_info)

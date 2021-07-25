@@ -52,9 +52,9 @@ class StitchParams:
 
         self.width = 1280
 
-        self.db_info = MultiPath()
         self.model_info = MultiPath()
-        self.db_split = MultiPath()
+        self.train_info = MultiPath()
+        self.train_split = MultiPath()
 
         self.dataset = ''
 

@@ -344,7 +344,7 @@ def run(params):
     # tf.logging.set_verbosity(tf.logging.INFO)
 
     os.makedirs(params.log_dir, exist_ok=1)
-    print('Training on set: {} with split: {}'.format(params.dataset, params.db_split))
+    print('Training on set: {} with split: {}'.format(params.dataset, params.train_split))
 
     graph = tf.Graph()
     with graph.as_default():
@@ -355,7 +355,7 @@ def run(params):
 
             dataset = data_generator.Dataset(
                 dataset_name=params.dataset,
-                split_name=params.db_split,
+                split_name=params.train_split,
                 dataset_dir=params.dataset_dir,
                 batch_size=clone_batch_size,
                 crop_size=[int(sz) for sz in params.train_crop_size],

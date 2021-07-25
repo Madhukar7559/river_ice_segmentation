@@ -97,9 +97,10 @@ class VisParams:
 
         self.dataset = ''
 
-        self.db_split = MultiPath()
-        self.db_info = MultiPath()
         self.model_info = MultiPath()
+        self.train_split = MultiPath()
+        self.vis_split = MultiPath()
+        self.train_info = MultiPath()
         self.vis_info = MultiPath()
 
     def process(self):
@@ -109,7 +110,7 @@ class VisParams:
         if not self.labels_path:
             self.labels_path = os.path.join(self.db_root_dir, self.dataset, 'Labels')
 
-        log_dir = linux_path(self.log_root_dir, self.db_info, self.model_info)
+        log_dir = linux_path(self.log_root_dir, self.train_info, self.model_info)
 
         if not self.seg_path:
             self.seg_path = linux_path(log_dir, self.vis_info, 'raw')
@@ -127,11 +128,11 @@ def run(params):
     if params.dataset == 'ctc':
         from new_deeplab.datasets.build_ctc_data import CTCInfo
 
-        assert params.db_split, "db_split must be provided for CTC"
+        assert params.train_split, "db_split must be provided for CTC"
 
         db_splits = CTCInfo.DBSplits().__dict__
 
-        seq_ids = db_splits[params.db_split]
+        seq_ids = db_splits[params.train_split]
 
         src_files = []
         src_labels_list = []

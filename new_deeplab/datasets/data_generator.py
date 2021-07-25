@@ -54,6 +54,7 @@ import tensorflow as tf
 
 from new_deeplab import common
 from new_deeplab import input_preprocess
+
 # from build_ctc_data import CTCInfo
 
 # Named tuple to describe the dataset properties.
@@ -281,7 +282,9 @@ class Dataset(object):
                  num_readers=1,
                  is_training=False,
                  should_shuffle=False,
-                 should_repeat=False):
+                 should_repeat=False,
+                 is_test=0,
+                 ):
         """Initializes the dataset.
 
         Args:
@@ -323,6 +326,7 @@ class Dataset(object):
                                'feature_extractor.network_map for supported model '
                                'variants.')
 
+        self.is_test = is_test
         self.split_name = split_name
         self.dataset_dir = dataset_dir
         self.batch_size = batch_size
@@ -387,7 +391,11 @@ class Dataset(object):
         image = _decode_image(parsed_features['image/encoded'], channels=3)
 
         label = None
-        if self.split_name != common.TEST_SET:
+        """mind bogglingly annoying foul scummy hard-coded crappy garbage - what if test split is called something other 
+        than test ?
+        what if there are multiple test splits ?"""
+        # if self.split_name != common.TEST_SET:
+        if not self.is_test:
             label = _decode_image(
                 parsed_features['image/segmentation/class/encoded'], channels=1)
 
@@ -430,7 +438,10 @@ class Dataset(object):
           ValueError: Ground truth label not provided during training.
         """
         image = sample[common.IMAGE]
-        label = sample[common.LABELS_CLASS]
+        try:
+            label = sample[common.LABELS_CLASS]
+        except KeyError:
+            label = None
 
         original_image, image, label = input_preprocess.preprocess_image_and_label(
             image=image,
@@ -472,9 +483,14 @@ class Dataset(object):
         files = self._get_all_files()
 
         dataset = (
-            tf.data.TFRecordDataset(files, num_parallel_reads=self.num_readers)
-                .map(self._parse_function, num_parallel_calls=self.num_readers)
-                .map(self._preprocess_image, num_parallel_calls=self.num_readers))
+            tf.data.TFRecordDataset(
+                files, num_parallel_reads=self.num_readers
+            ).map(
+                self._parse_function,
+                num_parallel_calls=self.num_readers
+            ).map(
+                self._preprocess_image,
+                num_parallel_calls=self.num_readers))
 
         if self.should_shuffle:
             dataset = dataset.shuffle(buffer_size=100)

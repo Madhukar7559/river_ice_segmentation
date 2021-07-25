@@ -179,7 +179,8 @@ def run(params):
     # Get dataset-dependent information.
     dataset = data_generator.Dataset(
         dataset_name=params.dataset,
-        split_name=params.db_split,
+        is_test=1,
+        split_name=params.vis_split,
         dataset_dir=params.dataset_dir,
         batch_size=params.vis_batch_size,
         crop_size=params.vis_crop_size,
@@ -207,7 +208,7 @@ def run(params):
     os.makedirs(raw_save_dir, exist_ok=1)
     os.makedirs(stacked_save_dir, exist_ok=1)
 
-    print('Visualizing on set: {} with split: {}'.format(params.dataset, params.db_split))
+    print('Visualizing on set: {} with split: {}'.format(params.dataset, params.vis_split))
 
     with tf.Graph().as_default():
         samples = dataset.get_one_shot_iterator().get_next()
@@ -287,7 +288,7 @@ def run(params):
                 image_id_offset = 0
 
                 while not sess.should_stop():
-                    print('Visualizing batch %d', batch + 1)
+                    print('Visualizing batch {:d}'.format(batch + 1))
                     _process_batch(
                         params=params,
                         sess=sess,

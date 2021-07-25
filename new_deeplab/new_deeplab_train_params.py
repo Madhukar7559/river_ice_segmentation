@@ -201,7 +201,7 @@ class NewDeeplabTrainParams:
     :ivar dataset:  Name of the segmentation dataset. (default: 'pascal_voc_seg')
     :type dataset: str
 
-    :ivar db_split:  Which split of the dataset to be used for training (default: 'train')
+    :ivar train_split:  Which split of the dataset to be used for training (default: 'train')
 
     :ivar dataset_dir:  Where the dataset reside.
     :type dataset_dir: str
@@ -380,8 +380,8 @@ class NewDeeplabTrainParams:
         self.dataset_dir = ''
 
         self.model_info = MultiPath()
-        self.db_info = MultiPath()
-        self.db_split = MultiPath()
+        self.train_info = MultiPath()
+        self.train_split = MultiPath()
 
         self.log_dir = ''
         self.tb_dir = ''
@@ -392,10 +392,10 @@ class NewDeeplabTrainParams:
             self.dataset_dir = linux_path(self.db_root_dir, self.dataset, 'tfrecord')
 
         if not self.log_dir:
-            self.log_dir = linux_path('log', self.db_info, self.model_info)
+            self.log_dir = linux_path('log', self.train_info, self.model_info)
 
         if not self.tb_dir:
             self.tb_dir = linux_path(self.log_dir, 'tb')
 
         if not self.checkpoint_dir:
-            self.checkpoint_dir = linux_path('ckpt', self.db_info, self.model_info)
+            self.checkpoint_dir = linux_path('ckpt', self.train_info, self.model_info)
