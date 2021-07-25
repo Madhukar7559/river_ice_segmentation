@@ -90,8 +90,9 @@ def preprocess_image_and_label(image,
                 max_size=max_resize_value,
                 factor=resize_factor,
                 align_corners=True))
-        # The `original_image` becomes the resized image.
-        original_image = tf.identity(processed_image)
+
+        """The `original_image` becomes the resized image - what kind of inane foulness is this ?."""
+        # original_image = tf.identity(processed_image)
 
     # Data augmentation by randomly scaling the inputs.
     if is_training:

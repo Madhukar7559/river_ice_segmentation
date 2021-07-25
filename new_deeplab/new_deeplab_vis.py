@@ -84,7 +84,7 @@ def _convert_train_id_to_eval_id(prediction, train_id_to_eval_id):
     return converted_prediction
 
 
-def _process_batch(params, sess, original_images, semantic_predictions, image_names,
+def _process_batch(params, sess, images, original_images, semantic_predictions, image_names,
                    image_heights, image_widths, image_id_offset, save_dir,
                    raw_save_dir, stacked_save_dir, train_id_to_eval_id=None):
     """Evaluates one single batch qualitatively.
@@ -108,7 +108,7 @@ def _process_batch(params, sess, original_images, semantic_predictions, image_na
      semantic_predictions,
      image_names,
      image_heights,
-     image_widths) = sess.run([original_images, semantic_predictions,
+     image_widths) = sess.run([images, semantic_predictions,
                                image_names, image_heights, image_widths])
 
     num_image = semantic_predictions.shape[0]
@@ -238,27 +238,27 @@ def run(params):
                 add_flipped_images=params.add_flipped_images)
         predictions = predictions[common.OUTPUT_TYPE]
 
-        if params.min_resize_value and params.max_resize_value:
-            # Only support batch_size = 1, since we assume the dimensions of original
-            # image after tf.squeeze is [height, width, 3].
-            assert params.vis_batch_size == 1
-
-            # Reverse the resizing and padding operations performed in preprocessing.
-            # First, we slice the valid regions (i.e., remove padded region) and then
-            # we resize the predictions back.
-            original_image = tf.squeeze(samples[common.ORIGINAL_IMAGE])
-            original_image_shape = tf.shape(original_image)
-            predictions = tf.slice(
-                predictions,
-                [0, 0, 0],
-                [1, original_image_shape[0], original_image_shape[1]])
-            resized_shape = tf.to_int32([tf.squeeze(samples[common.HEIGHT]),
-                                         tf.squeeze(samples[common.WIDTH])])
-            predictions = tf.squeeze(
-                tf.image.resize_images(tf.expand_dims(predictions, 3),
-                                       resized_shape,
-                                       method=tf.image.ResizeMethod.NEAREST_NEIGHBOR,
-                                       align_corners=True), 3)
+        # if params.min_resize_value and params.max_resize_value:
+        #     # Only support batch_size = 1, since we assume the dimensions of original
+        #     # image after tf.squeeze is [height, width, 3].
+        #     assert params.vis_batch_size == 1
+        #
+        #     # Reverse the resizing and padding operations performed in preprocessing.
+        #     # First, we slice the valid regions (i.e., remove padded region) and then
+        #     # we resize the predictions back.
+        #     original_image = tf.squeeze(samples[common.ORIGINAL_IMAGE])
+        #     original_image_shape = tf.shape(original_image)
+        #     predictions = tf.slice(
+        #         predictions,
+        #         [0, 0, 0],
+        #         [1, original_image_shape[0], original_image_shape[1]])
+        #     resized_shape = tf.to_int32([tf.squeeze(samples[common.HEIGHT]),
+        #                                  tf.squeeze(samples[common.WIDTH])])
+        #     predictions = tf.squeeze(
+        #         tf.image.resize_images(tf.expand_dims(predictions, 3),
+        #                                resized_shape,
+        #                                method=tf.image.ResizeMethod.NEAREST_NEIGHBOR,
+        #                                align_corners=True), 3)
 
         tf.train.get_or_create_global_step()
         if params.quantize_delay_step >= 0:
@@ -292,6 +292,7 @@ def run(params):
                     _process_batch(
                         params=params,
                         sess=sess,
+                        images=samples[common.IMAGE],
                         original_images=samples[common.ORIGINAL_IMAGE],
                         semantic_predictions=predictions,
                         image_names=samples[common.IMAGE_NAME],

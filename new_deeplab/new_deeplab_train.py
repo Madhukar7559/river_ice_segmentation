@@ -340,7 +340,6 @@ def run(params):
 
     paramparse.to_flags(tf.app.flags.FLAGS, params, verbose=1, allow_missing=1)
 
-
     # tf.logging.set_verbosity(tf.logging.INFO)
 
     os.makedirs(params.log_dir, exist_ok=1)
@@ -371,8 +370,9 @@ def run(params):
                 should_shuffle=True,
                 should_repeat=True)
 
-            train_tensor, summary_op = _train_deeplab_model(params,
-                                                            dataset.get_one_shot_iterator(),
+            samples = dataset.get_one_shot_iterator().get_next()
+
+            train_tensor, summary_op = _train_deeplab_model(params,dataset.get_one_shot_iterator(),
                                                             dataset.num_of_classes,
                                                             dataset.ignore_label)
 
