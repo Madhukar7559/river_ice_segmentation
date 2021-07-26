@@ -7,7 +7,7 @@ import numpy as np
 
 from paramparse import MultiPath
 
-from densenet.utils import linux_path, sortKey, resizeAR, readData, print_and_write, getDateTime
+from densenet.utils import linux_path, sort_key, resize_ar, readData, print_and_write, getDateTime
 
 
 class StitchParams:
@@ -49,6 +49,8 @@ class StitchParams:
         self.db_root_dir = '/data'
         self.patch_seq_name = ''
         self.patch_seq_type = 'images'
+        self.labels_dir = 'Labels'
+        self.images_dir = 'Images'
 
         self.width = 1280
 
@@ -60,7 +62,7 @@ class StitchParams:
 
     def process(self):
         if not self.src_path:
-            self.src_path = linux_path(self.db_root_dir, self.dataset, 'Images')
+            self.src_path = linux_path(self.db_root_dir, self.dataset, self.images_dir)
 
 def run(params):
     """
@@ -86,7 +88,7 @@ def run(params):
 
     print('total_frames: {}'.format(total_frames))
 
-    src_files.sort(key=sortKey)
+    src_files.sort(key=sort_key)
 
     if params.n_frames <= 0:
         params.n_frames = total_frames
@@ -383,7 +385,7 @@ def run(params):
             out_img = seg_img
 
         if write_to_video:
-            out_img = resizeAR(out_img, params.width, params.height)
+            out_img = resize_ar(out_img, params.width, params.height)
             video_out.write(out_img)
             # statinfo = os.stat(params.stitched_seq_path)
             # print('\nvideo_size: {}'.format(statinfo.st_size))

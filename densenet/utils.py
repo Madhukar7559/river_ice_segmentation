@@ -202,7 +202,7 @@ def processArguments(args, params):
             params[arg[0]] = type(params[arg[0]])(arg[1])
 
 
-def resizeAR(src_img, width, height, return_factors=False):
+def resize_ar_old(src_img, width, height, return_factors=False):
     src_height, src_width, n_channels = src_img.shape
     src_aspect_ratio = float(src_width) / float(src_height)
 
@@ -260,7 +260,7 @@ def print_and_write(_str, fname=None):
 def linux_path(*args, **kwargs):
     return os.path.join(*args, **kwargs).replace(os.sep, '/')
 
-def sortKey(fname):
+def sort_key(fname):
     fname = os.path.splitext(fname)[0]
     # print('fname: ', fname)
     # split_fname = fname.split('_')
@@ -288,7 +288,7 @@ def sortKey(fname):
     return key
 
 
-def putTextWithBackground(img, text, fmt=None):
+def put_text_with_background(img, text, fmt=None):
     font_types = {
         0: cv2.FONT_HERSHEY_COMPLEX_SMALL,
         1: cv2.FONT_HERSHEY_COMPLEX,
@@ -339,7 +339,7 @@ def putTextWithBackground(img, text, fmt=None):
     # cv2.imshow('putTextWithBackground', img)
 
 
-def resizeAR(src_img, width=0, height=0, return_factors=False, bkg_col=0):
+def resize_ar(src_img, width=0, height=0, return_factors=False, bkg_col=0):
 
     src_height, src_width, n_channels = src_img.shape
     src_aspect_ratio = float(src_width) / float(src_height)
@@ -391,7 +391,7 @@ def readData(images_path='', images_ext='', labels_path='', labels_ext='',
             raise SystemError('No input frames found')
 
         print('total_frames: {}'.format(total_frames))
-        src_file_list.sort(key=sortKey)
+        src_file_list.sort(key=sort_key)
 
     if labels_path and labels_ext:
         print('Reading {} images from: {}'.format(labels_type, labels_path))
@@ -402,7 +402,7 @@ def readData(images_path='', images_ext='', labels_path='', labels_ext='',
         else:
             total_frames = len(src_labels_list)
 
-        src_labels_list.sort(key=sortKey)
+        src_labels_list.sort(key=sort_key)
 
     return src_file_list, src_labels_list, total_frames
 

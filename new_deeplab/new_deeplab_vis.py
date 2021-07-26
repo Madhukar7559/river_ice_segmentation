@@ -270,6 +270,10 @@ def run(params):
         checkpoints_iterator = tf.contrib.training.checkpoints_iterator(
             params.checkpoint_dir, min_interval_secs=params.eval_interval_secs)
 
+        print('save_dir: {}'.format(save_dir))
+        print('raw_save_dir: {}'.format(raw_save_dir))
+        print('stacked_save_dir: {}'.format(stacked_save_dir))
+
         for checkpoint_path in checkpoints_iterator:
             num_iteration += 1
             print(

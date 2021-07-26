@@ -94,6 +94,8 @@ class VisParams:
 
         self.images_path = ''
         self.labels_path = ''
+        self.labels_dir = 'Labels'
+        self.images_dir = 'Images'
 
         self.dataset = ''
 
@@ -105,10 +107,10 @@ class VisParams:
 
     def process(self):
         if not self.images_path:
-            self.images_path = os.path.join(self.db_root_dir, self.dataset, 'Images')
+            self.images_path = os.path.join(self.db_root_dir, self.dataset, self.images_dir)
 
         if not self.labels_path:
-            self.labels_path = os.path.join(self.db_root_dir, self.dataset, 'Labels')
+            self.labels_path = os.path.join(self.db_root_dir, self.dataset, self.labels_dir)
 
         log_dir = linux_path(self.log_root_dir, self.train_info, self.model_info)
 

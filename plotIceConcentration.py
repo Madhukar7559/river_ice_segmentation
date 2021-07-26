@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 # plt.style.use('presentation')
 
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import readData, getDateTime, print_and_write, resizeAR, putTextWithBackground, col_rgb
+from densenet.utils import readData, getDateTime, print_and_write, resize_ar, put_text_with_background, col_rgb
 from dictances import bhattacharyya, euclidean, mae, mse
 
 
@@ -424,7 +424,7 @@ def main():
                 seg_img_disp = np.stack((seg_img_disp, seg_img_disp, seg_img_disp), axis=2)
 
             ann_fmt = (font_id, loc[0], loc[1], size, thickness) + fgr_col + bgr_col
-            putTextWithBackground(seg_img_disp, seg_labels[seg_id], fmt=ann_fmt)
+            put_text_with_background(seg_img_disp, seg_labels[seg_id], fmt=ann_fmt)
 
             seg_img_disp_list.append(seg_img_disp)
             # eval_cl, _ = eval.extract_classes(seg_img)
@@ -520,7 +520,7 @@ def main():
             mae_img = getPlotImage(mae_data_X, mae_data_y, plot_cols, 'MAE', seg_labels,
                                    'frame', 'MAE')
             cv2.imshow('mae_img', mae_img)
-            conc_diff_img = resizeAR(mae_img, seg_width, src_height, bkg_col=255)
+            conc_diff_img = resize_ar(mae_img, seg_width, src_height, bkg_col=255)
         else:
             if img_id > 0:
                 n_test_images = img_id
@@ -540,7 +540,7 @@ def main():
                                                      ice_type_str),
                                                  seg_labels, 'frame', 'Concentration Difference (%)')
                     # cv2.imshow('conc_diff_img', conc_diff_img)
-                    conc_diff_img = resizeAR(conc_diff_img, seg_width, src_height, bkg_col=255)
+                    conc_diff_img = resize_ar(conc_diff_img, seg_width, src_height, bkg_col=255)
             else:
                 conc_diff_img = np.zeros((src_height, seg_width, 3), dtype=np.uint8)
 
@@ -552,7 +552,7 @@ def main():
                                     # ylim=(0, 100)
                                     )
 
-            plot_img = resizeAR(plot_img, seg_width, src_height, bkg_col=255)
+            plot_img = resize_ar(plot_img, seg_width, src_height, bkg_col=255)
 
             # plt.plot(conc_data_x, conc_data_y)
             # plt.show()
@@ -561,7 +561,7 @@ def main():
             # np.savetxt(conc_data_fname, conc_data, fmt='%.6f')
             ann_fmt = (font_id, loc[0], loc[1], size, thickness) + labels_col_rgb + bgr_col
 
-            putTextWithBackground(src_img, 'frame {}'.format(img_id + 1), fmt=ann_fmt)
+            put_text_with_background(src_img, 'frame {}'.format(img_id + 1), fmt=ann_fmt)
 
             if n_seg_paths == 1:
                 print('seg_img_disp: {}'.format(seg_img_disp.shape))
@@ -582,7 +582,7 @@ def main():
                     np.concatenate(seg_img_disp_list, axis=1),
                 ), axis=0)
 
-            stitched_img = resizeAR(stitched_img, width=out_width, height=out_height)
+            stitched_img = resize_ar(stitched_img, width=out_width, height=out_height)
 
             # print('dists: {}'.format(dists))
 

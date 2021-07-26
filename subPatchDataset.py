@@ -4,7 +4,7 @@ import sys
 import numpy as np
 import random
 import imutils
-from densenet.utils import processArguments, sortKey
+from densenet.utils import processArguments, sort_key
 
 params = {
     'db_root_dir': '/home/abhineet/N/Datasets/617/',
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     if total_frames <= 0:
         raise SystemError('No input frames found')
     print('total_frames: {}'.format(total_frames))
-    src_files.sort(key=sortKey)
+    src_files.sort(key=sort_key)
     # src_file_list = src_file_list.sort()
 
     if n_frames <= 0:
