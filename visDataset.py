@@ -88,6 +88,7 @@ class VisParams:
         self.start_id = 0
         self.stitch = 0
         self.stitch_seg = 1
+        self.no_labels = 1
 
         self.log_root_dir = 'log'
         self.db_root_dir = '/data'
@@ -120,6 +121,7 @@ class VisParams:
         if not self.save_path:
             self.save_path = linux_path(log_dir, self.vis_info, 'vis')
 
+
 def run(params):
     """
 
@@ -127,31 +129,44 @@ def run(params):
     :return:
     """
 
-    if params.dataset == 'ctc':
+
+
+    if params.dataset.lower() == 'ctc':
         from new_deeplab.datasets.build_ctc_data import CTCInfo
 
-        assert params.train_split, "db_split must be provided for CTC"
+        assert params.vis_split, "vis_split must be provided for CTC"
 
         db_splits = CTCInfo.DBSplits().__dict__
 
-        seq_ids = db_splits[params.train_split]
+        seq_ids = db_splits[params.vis_split]
 
         src_files = []
-        src_labels_list = []
+        if params.no_labels:
+            src_labels_list = []
+        else:
+            src_labels_list = None
+
         total_frames = 0
 
         for seq_id in seq_ids:
             seq_name, n_frames = CTCInfo.sequences[seq_id]
 
             images_path = os.path.join(params.images_path, seq_name)
-            labels_path = os.path.join(params.labels_path, seq_name)
+
+            if params.no_labels:
+                labels_path = ''
+            else:
+                labels_path = os.path.join(params.labels_path, seq_name)
 
             _src_files, _src_labels_list, _total_frames = readData(images_path, params.images_ext,
                                                                    labels_path,
                                                                    params.labels_ext)
 
             src_files += _src_files
-            src_labels_list += _src_labels_list
+
+            if not params.no_labels:
+                src_labels_list += _src_labels_list
+
             total_frames += _total_frames
     else:
         src_files, src_labels_list, total_frames = readData(params.images_path, params.images_ext, params.labels_path,
