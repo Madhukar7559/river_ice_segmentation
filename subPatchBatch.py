@@ -39,17 +39,17 @@ class Params:
         self.cfg = ()
 
         self.dataset = ''
-        self.db_root_dir = '/home/abhineet/N/Datasets/617/'
         self.seq_name = MultiPath()
         self.image_dir = 'Images'
         self.labels_dir = 'Labels'
         self.seq_name = MultiPath()
 
+        self.db_root_dir = ''
         self.src_path = ''
         self.labels_path = ''
 
-        self.fname_templ = 'img'
         self.img_ext = 'tif'
+        self.labels_ext = 'jpg'
         self.out_ext = 'png'
 
         self.start_id = 0
@@ -71,6 +71,7 @@ def run(params):
     db_root_dir = params.db_root_dir
     seq_name = params.seq_name
     img_ext = params.img_ext
+    labels_ext = params.labels_ext
     out_ext = params.out_ext
     show_img = params.show_img
     patch_height = params.patch_height
@@ -125,10 +126,10 @@ def run(params):
     if enable_flip:
         cmb_out_seq_name = '{}_flip'.format(cmb_out_seq_name)
 
-    base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={} img_ext={} out_ext={} ' \
+    base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={} img_ext={} labels_ext={} out_ext={} ' \
                'patch_height={} patch_width={} min_stride={} max_stride={} enable_flip={} start_id={} end_id={} ' \
                'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={}'.format(
-        db_root_dir, seq_name, img_ext, out_ext, patch_height, patch_width, min_stride, max_stride,
+        db_root_dir, seq_name, img_ext, labels_ext, out_ext, patch_height, patch_width, min_stride, max_stride,
         enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name, src_path, labels_path)
 
     # out_seq_name_base = '{:s}_{:d}_{:d}_{:d}_{:d}_{:d}_{:d}'.format(
@@ -182,13 +183,17 @@ if __name__ == '__main__':
         db_splits = CTCInfo.DBSplits().__dict__
 
         split = _params.seq_name
+        db_root_dir = _params.db_root_dir
+
+        _params.db_root_dir = ''
 
         seq_ids = db_splits[split]
         for seq_id in seq_ids:
             seq_name, n_frames = CTCInfo.sequences[seq_id]
             _params.seq_name = seq_name
-            _params.src_path = linux_path(_params.db_root_dir, _params.image_dir, seq_name)
-            _params.labels_path = linux_path(_params.db_root_dir, _params.labels_dir, seq_name)
+
+            _params.src_path = linux_path(db_root_dir, _params.image_dir, seq_name)
+            _params.labels_path = linux_path(db_root_dir, _params.labels_dir, seq_name)
 
             run(_params)
     else:

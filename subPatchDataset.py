@@ -4,57 +4,66 @@ import sys
 import numpy as np
 import random
 import imutils
-from densenet.utils import processArguments, sort_key
+from densenet.utils import linux_path, sort_key
 
 import paramparse
 
-params = {
-    'db_root_dir': '/home/abhineet/N/Datasets/617/',
-    'seq_name': 'training',
-    'out_seq_name': '',
-    'fname_templ': 'img',
-    'img_ext': 'tif',
-    'out_ext': 'png',
-    'patch_height': 32,
-    'patch_width': 0,
-    'min_stride': 10,
-    'max_stride': 0,
-    'enable_flip': 0,
-    'enable_rot': 0,
-    'min_rot': 10,
-    'max_rot': 0,
-    'show_img': 0,
-    'n_frames': 0,
-    'start_id': 0,
-    'end_id': -1,
-    'enable_labels': 1
-}
-paramparse.from_dict(params, to_clipboard=True)
-exit()
+
+#
+# params = {
+#     'db_root_dir': '/home/abhineet/N/Datasets/617/',
+#     'seq_name': 'training',
+#     'out_seq_name': '',
+#     'fname_templ': 'img',
+#     'img_ext': 'tif',
+#     'out_ext': 'png',
+#     'patch_height': 32,
+#     'patch_width': 0,
+#     'min_stride': 10,
+#     'max_stride': 0,
+#     'enable_flip': 0,
+#     'enable_rot': 0,
+#     'min_rot': 10,
+#     'max_rot': 0,
+#     'show_img': 0,
+#     'n_frames': 0,
+#     'start_id': 0,
+#     'end_id': -1,
+#     'enable_labels': 1
+# }
+# paramparse.from_dict(params, to_clipboard=True)
+# exit()
 
 
 class Params:
     def __init__(self):
         self.cfg = ()
-        self.db_root_dir = '/home/abhineet/N/Datasets/617/'
-        self.enable_flip = 0
+
         self.enable_labels = 1
+        self.allow_missing_labels = 1
+
+        self.enable_flip = 0
         self.enable_rot = 0
-        self.end_id = -1
-        self.img_ext = 'tif'
         self.max_rot = 0
         self.max_stride = 0
         self.min_rot = 10
         self.min_stride = 10
         self.n_frames = 0
-        self.out_ext = 'png'
-        self.out_seq_name = ''
         self.patch_height = 32
         self.patch_width = 0
+
         self.seq_name = 'training'
         self.show_img = 0
         self.start_id = 0
+        self.end_id = -1
 
+        self.img_ext = 'tif'
+        self.labels_ext = 'jpg'
+
+        self.out_seq_name = ''
+        self.out_ext = 'png'
+
+        self.db_root_dir = ''
         self.src_path = ''
         self.labels_path = ''
 
@@ -83,31 +92,35 @@ def run(params):
     start_id = params.start_id
     end_id = params.end_id
     enable_labels = params.enable_labels
+    allow_missing_labels = params.allow_missing_labels
 
     src_path = params.src_path
     labels_path = params.labels_path
 
     if enable_labels:
         if not labels_path:
-            labels_path = os.path.join(db_root_dir, seq_name, 'labels')
+            labels_path = linux_path(db_root_dir, seq_name, 'labels')
         if not os.path.isdir(labels_path):
             print('Labels folder does not exist so disabling it')
             enable_labels = 0
+        else:
+            labels_path_root_dir = os.path.dirname(labels_path)
 
     if enable_rot and not enable_labels:
         raise SystemError('Rotation cannot be enabled without labels')
 
     if not src_path:
-        src_path = os.path.join(db_root_dir, seq_name, 'images')
+        src_path = linux_path(db_root_dir, seq_name, 'images')
+
+    src_path_root_dir = os.path.dirname(src_path)
 
     print('Reading source images from: {}'.format(src_path))
 
     src_files = [k for k in os.listdir(src_path) if k.endswith('.{:s}'.format(img_ext))]
-    assert src_files,  SystemError('No input frames found')
+    assert src_files, SystemError('No input frames found')
     total_frames = len(src_files)
     print('total_frames: {}'.format(total_frames))
     src_files.sort(key=sort_key)
-    
 
     # src_file_list = src_file_list.sort()
 
@@ -146,14 +159,23 @@ def run(params):
         if enable_flip:
             out_seq_name = '{}_flip'.format(out_seq_name)
 
-    print('Writing output images to: {}'.format(out_seq_name))
+    if db_root_dir:
+        out_src_path = linux_path(db_root_dir, out_seq_name, 'images')
+    else:
+        out_src_path = linux_path(src_path_root_dir, out_seq_name)
 
-    out_src_path = os.path.join(db_root_dir, out_seq_name, 'images')
+    print('Writing output images to: {}'.format(out_src_path))
+
     if not os.path.isdir(out_src_path):
         os.makedirs(out_src_path)
 
     if enable_labels:
-        out_labels_path = os.path.join(db_root_dir, out_seq_name, 'labels')
+        if db_root_dir:
+            out_labels_path = linux_path(db_root_dir, out_seq_name, 'labels')
+        else:
+            out_labels_path = linux_path(labels_path_root_dir, out_seq_name)
+
+        print('Writing output labels to: {}'.format(out_labels_path))
         if not os.path.isdir(out_labels_path):
             os.makedirs(out_labels_path)
 
@@ -168,9 +190,9 @@ def run(params):
 
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
         img_fname = src_files[img_id]
-        img_fname_no_ext = os.path.splitext(img_fname)[0]
+        img_fname_no_ext, _ = os.path.splitext(img_fname)
 
-        src_img_fname = os.path.join(src_path, img_fname)
+        src_img_fname = linux_path(src_path, img_fname)
         src_img = cv2.imread(src_img_fname)
 
         src_height, src_width, _ = src_img.shape
@@ -187,32 +209,56 @@ def run(params):
             raise SystemError('Source image could not be read from: {}'.format(src_img_fname))
 
         if enable_labels:
-            labels_img_fname = os.path.join(labels_path, img_fname)
+            labels_img_fname = linux_path(labels_path, img_fname_no_ext + '.' + params.labels_ext)
             labels_img = cv2.imread(labels_img_fname)
             labels_img_orig = np.copy(labels_img)
 
             if labels_img is None:
-                raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
+                msg = 'Labels image could not be read from: {}'.format(labels_img_fname)
+                if allow_missing_labels:
+                    print('\n' + msg + '\n')
+                    continue
+                raise AssertionError(msg)
 
         if enable_rot:
-            labels_img[labels_img < 64] = 50
-            labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 150
-            labels_img[labels_img >= 192] = 250
-
             rot_angle = random.randint(min_rot, max_rot)
             src_img = imutils.rotate_bound(src_img, rot_angle)
-            labels_img = imutils.rotate_bound(labels_img, rot_angle).astype(np.int32)
 
-            out_src_img_fname = os.path.join(db_root_dir, out_seq_name, 'img_{:d}_rot_{:d}.{:s}'.format(
-                img_id + 1, rot_angle, out_ext))
+            out_src_img_fname = 'img_{:d}_rot_{:d}.{:s}'.format(
+                img_id + 1, rot_angle, out_ext)
 
-            out_labels_img_fname = os.path.join(db_root_dir, out_seq_name, 'labels_{:d}_rot_{:d}.{:s}'.format(
-                img_id + 1, rot_angle, out_ext))
+            if db_root_dir:
+                out_src_img_dir = linux_path(db_root_dir, out_seq_name)
+            else:
+                out_src_img_dir = linux_path(src_path_root_dir, 'rot', out_seq_name)
 
-            cv2.imwrite(out_src_img_fname, src_img)
-            cv2.imwrite(out_labels_img_fname, labels_img)
+            os.makedirs(out_src_img_dir, exist_ok=1)
 
-            labels_img[labels_img == 0] = -1
+            out_src_img_path = linux_path(out_src_img_dir, out_src_img_fname)
+
+            cv2.imwrite(out_src_img_path, src_img)
+
+            if enable_labels:
+                labels_img[labels_img < 64] = 50
+                labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 150
+                labels_img[labels_img >= 192] = 250
+                labels_img = imutils.rotate_bound(labels_img, rot_angle).astype(np.int32)
+
+                out_labels_img_fname = 'labels_{:d}_rot_{:d}.{:s}'.format(
+                    img_id + 1, rot_angle, out_ext)
+
+                if db_root_dir:
+                    out_labels_img_dir = linux_path(db_root_dir, out_seq_name)
+                else:
+                    out_labels_img_dir = linux_path(labels_path_root_dir, 'rot', out_seq_name)
+
+                os.makedirs(out_labels_img_dir, exist_ok=1)
+
+                out_labels_img_path = linux_path(out_labels_img_dir, out_src_img_fname)
+
+                cv2.imwrite(out_labels_img_path, labels_img)
+
+                labels_img[labels_img == 0] = -1
 
         n_rows, ncols, n_channels = src_img.shape
 
@@ -226,7 +272,7 @@ def run(params):
             labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 1
             labels_img[labels_img >= 192] = 2
 
-        # np.savetxt(os.path.join(db_root_dir, seq_name, 'labels_img_{}.txt'.format(img_id + 1)),
+        # np.savetxt(linux_path(db_root_dir, seq_name, 'labels_img_{}.txt'.format(img_id + 1)),
         #            labels_img[:, :, 2], fmt='%d')
 
         out_id = 0
@@ -269,7 +315,7 @@ def run(params):
 
                     out_id += 1
 
-                    out_src_img_fname = os.path.join(out_src_path, '{:s}.{:s}'.format(out_img_fname, out_ext))
+                    out_src_img_fname = linux_path(out_src_path, '{:s}.{:s}'.format(out_img_fname, out_ext))
                     cv2.imwrite(out_src_img_fname, src_patch)
                     if show_img:
                         disp_img = src_img.copy()
@@ -290,27 +336,27 @@ def run(params):
                         elif k == 32:
                             pause_after_frame = 1 - pause_after_frame
                     if enable_labels:
-                        out_labels_img_fname = os.path.join(out_labels_path, '{:s}.{:s}'.format(out_img_fname, out_ext))
+                        out_labels_img_fname = linux_path(out_labels_path, '{:s}.{:s}'.format(out_img_fname, out_ext))
                         cv2.imwrite(out_labels_img_fname, labels_patch)
 
                     if enable_flip:
                         src_patch_lr = np.fliplr(src_patch)
-                        out_src_img_fname = os.path.join(out_src_path, '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
+                        out_src_img_fname = linux_path(out_src_path, '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
                         cv2.imwrite(out_src_img_fname, src_patch_lr)
 
                         src_patch_ud = np.flipud(src_patch)
-                        out_src_img_fname = os.path.join(out_src_path, '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
+                        out_src_img_fname = linux_path(out_src_path, '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
                         cv2.imwrite(out_src_img_fname, src_patch_ud)
 
                         if enable_labels:
                             labels_patch_lr = np.fliplr(labels_patch)
-                            out_labels_img_fname = os.path.join(out_labels_path,
-                                                                '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
+                            out_labels_img_fname = linux_path(out_labels_path,
+                                                              '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
                             cv2.imwrite(out_labels_img_fname, labels_patch_lr)
 
                             labels_patch_ud = np.flipud(labels_patch)
-                            out_labels_img_fname = os.path.join(out_labels_path,
-                                                                '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
+                            out_labels_img_fname = linux_path(out_labels_path,
+                                                              '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
                             cv2.imwrite(out_labels_img_fname, labels_patch_ud)
                 min_col += random.randint(min_stride, max_stride)
                 if image_as_patch or max_col >= ncols:
@@ -336,3 +382,5 @@ if __name__ == '__main__':
     _params = Params()
 
     paramparse.process(_params)
+
+    run(_params)
