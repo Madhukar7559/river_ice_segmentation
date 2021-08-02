@@ -436,6 +436,7 @@ def create_tfrecords(src_files, file_ids, n_shards, sub_seq, use_tif, output_dir
                 # Convert to tf example.
                 example = build_data.image_seg_to_tfexample(
                     image_data, img_src_path, height, width, seg_data)
+
                 tfrecord_writer.write(example.SerializeToString())
 
 

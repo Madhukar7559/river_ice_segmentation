@@ -129,8 +129,6 @@ def run(params):
     :return:
     """
 
-
-
     if params.dataset.lower() == 'ctc':
         from new_deeplab.datasets.build_ctc_data import CTCInfo
 
@@ -147,6 +145,7 @@ def run(params):
             src_labels_list = None
 
         total_frames = 0
+        seg_total_frames = 0
 
         for seq_id in seq_ids:
             seq_name, n_frames = CTCInfo.sequences[seq_id]
@@ -167,23 +166,37 @@ def run(params):
             if not params.no_labels:
                 src_labels_list += _src_labels_list
 
+            eval_mode = False
+            if params.seg_path and params.seg_ext:
+                seg_path = os.path.join(params.seg_path, seq_name)
+
+                _, seg_labels_list, _seg_total_frames = readData(labels_path=seg_path, labels_ext=params.seg_ext,
+                                                                labels_type='seg')
+                if _seg_total_frames != _total_frames:
+                    raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
+                        total_frames, _seg_total_frames))
+                seg_total_frames += _seg_total_frames
+                eval_mode = True
+            else:
+                params.stitch = params.save_stitched = 1
+
             total_frames += _total_frames
     else:
         src_files, src_labels_list, total_frames = readData(params.images_path, params.images_ext, params.labels_path,
                                                             params.labels_ext)
-    if params.end_id < params.start_id:
-        params.end_id = total_frames - 1
+        if params.end_id < params.start_id:
+            params.end_id = total_frames - 1
 
-    eval_mode = False
-    if params.labels_path and params.seg_path and params.seg_ext:
-        _, seg_labels_list, seg_total_frames = readData(labels_path=params.seg_path, labels_ext=params.seg_ext,
-                                                        labels_type='seg')
-        if seg_total_frames != total_frames:
-            raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
-                total_frames, seg_total_frames))
-        eval_mode = True
-    else:
-        params.stitch = params.save_stitched = 1
+        eval_mode = False
+        if params.labels_path and params.seg_path and params.seg_ext:
+            _, seg_labels_list, seg_total_frames = readData(labels_path=params.seg_path, labels_ext=params.seg_ext,
+                                                            labels_type='seg')
+            if seg_total_frames != total_frames:
+                raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
+                    total_frames, seg_total_frames))
+            eval_mode = True
+        else:
+            params.stitch = params.save_stitched = 1
 
     if not params.save_path:
         if eval_mode:

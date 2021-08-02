@@ -1,48 +1,98 @@
 import sys, os
 import subprocess
-from densenet.utils import processArguments
 
-params = {
-    'db_root_dir': '/home/abhineet/N/Datasets/617/',
-    'seq_name': 'training',
-    'fname_templ': 'img',
-    'img_ext': 'tif',
-    'out_ext': 'png',
-    'patch_height': 32,
-    'patch_width': 0,
-    'min_stride': 10,
-    'max_stride': 0,
-    'enable_flip': 0,
-    'min_rot': 15,
-    'max_rot': 345,
-    'n_rot': 3,
-    'show_img': 0,
-    'n_frames': 0,
-    'start_id': 0,
-    'end_id': -1,
-}
+import paramparse
+from paramparse import MultiPath
 
-if __name__ == '__main__':
-    processArguments(sys.argv[1:], params)
-    db_root_dir = params['db_root_dir']
-    seq_name = params['seq_name']
-    fname_templ = params['fname_templ']
-    img_ext = params['img_ext']
-    out_ext = params['out_ext']
-    show_img = params['show_img']
-    patch_height = params['patch_height']
-    patch_width = params['patch_width']
-    min_stride = params['min_stride']
-    max_stride = params['max_stride']
-    enable_flip = params['enable_flip']
-    min_rot = params['min_rot']
-    max_rot = params['max_rot']
-    n_rot = params['n_rot']
-    n_frames = params['n_frames']
-    start_id = params['start_id']
-    end_id = params['end_id']
+from densenet.utils import linux_path
 
-    src_path = os.path.join(db_root_dir, seq_name, 'images')
+
+#
+# params = {
+#     'db_root_dir': '/home/abhineet/N/Datasets/617/',
+#     'seq_name': 'training',
+#     'fname_templ': 'img',
+#     'img_ext': 'tif',
+#     'out_ext': 'png',
+#     'patch_height': 32,
+#     'patch_width': 0,
+#     'min_stride': 10,
+#     'max_stride': 0,
+#     'enable_flip': 0,
+#     'min_rot': 15,
+#     'max_rot': 345,
+#     'n_rot': 3,
+#     'show_img': 0,
+#     'n_frames': 0,
+#     'start_id': 0,
+#     'end_id': -1,
+# }
+#
+# paramparse.from_dict(params, to_clipboard=1)
+# exit()
+
+
+class Params:
+    def __init__(self):
+        self.cfg_root = 'cfg'
+        self.cfg_ext = 'cfg'
+        self.cfg = ()
+
+        self.dataset = ''
+        self.db_root_dir = '/home/abhineet/N/Datasets/617/'
+        self.seq_name = MultiPath()
+        self.image_dir = 'Images'
+        self.labels_dir = 'Labels'
+        self.seq_name = MultiPath()
+
+        self.src_path = ''
+        self.labels_path = ''
+
+        self.fname_templ = 'img'
+        self.img_ext = 'tif'
+        self.out_ext = 'png'
+
+        self.start_id = 0
+        self.end_id = -1
+
+        self.enable_flip = 0
+        self.max_rot = 345
+        self.max_stride = 0
+        self.min_rot = 15
+        self.min_stride = 10
+        self.n_frames = 0
+        self.n_rot = 3
+        self.patch_height = 32
+        self.patch_width = 0
+        self.show_img = 0
+
+
+def run(params):
+    db_root_dir = params.db_root_dir
+    seq_name = params.seq_name
+    img_ext = params.img_ext
+    out_ext = params.out_ext
+    show_img = params.show_img
+    patch_height = params.patch_height
+    patch_width = params.patch_width
+    min_stride = params.min_stride
+    max_stride = params.max_stride
+    enable_flip = params.enable_flip
+    min_rot = params.min_rot
+    max_rot = params.max_rot
+    n_rot = params.n_rot
+    n_frames = params.n_frames
+    start_id = params.start_id
+    end_id = params.end_id
+    src_path = params.src_path
+    labels_path = params.labels_path
+
+    if not src_path:
+        src_path = linux_path(db_root_dir, seq_name, 'images')
+
+    if not labels_path:
+        labels_path = os.path.join(db_root_dir, seq_name, 'labels')
+
     src_files = [k for k in os.listdir(src_path) if k.endswith('.{:s}'.format(img_ext))]
     total_frames = len(src_files)
     # print('file_list: {}'.format(file_list))
@@ -75,11 +125,11 @@ if __name__ == '__main__':
     if enable_flip:
         cmb_out_seq_name = '{}_flip'.format(cmb_out_seq_name)
 
-    base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={} fname_templ={} img_ext={} out_ext={} ' \
+    base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={} img_ext={} out_ext={} ' \
                'patch_height={} patch_width={} min_stride={} max_stride={} enable_flip={} start_id={} end_id={} ' \
-               'n_frames={} show_img={} out_seq_name={}'.format(
-        db_root_dir, seq_name, fname_templ, img_ext, out_ext, patch_height, patch_width, min_stride, max_stride,
-        enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name)
+               'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={}'.format(
+        db_root_dir, seq_name, img_ext, out_ext, patch_height, patch_width, min_stride, max_stride,
+        enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name, src_path, labels_path)
 
     # out_seq_name_base = '{:s}_{:d}_{:d}_{:d}_{:d}_{:d}_{:d}'.format(
     #     seq_name, start_id, end_id, patch_height, patch_width, min_stride, max_stride)
@@ -119,3 +169,27 @@ if __name__ == '__main__':
         #         merge_base_cmb, out_seq_names[i], cmb_out_seq_name, start_id, end_id)
         #     print('\n\nRunning:\n {}\n\n'.format(merge_cmd))
         #     subprocess.check_call(merge_cmd, shell=True)
+
+
+if __name__ == '__main__':
+    _params = Params()
+
+    paramparse.process(_params)
+
+    if _params.dataset == 'ctc':
+        from new_deeplab.datasets.build_ctc_data import CTCInfo
+
+        db_splits = CTCInfo.DBSplits().__dict__
+
+        split = _params.seq_name
+
+        seq_ids = db_splits[split]
+        for seq_id in seq_ids:
+            seq_name, n_frames = CTCInfo.sequences[seq_id]
+            _params.seq_name = seq_name
+            _params.src_path = linux_path(_params.db_root_dir, _params.image_dir, seq_name)
+            _params.labels_path = linux_path(_params.db_root_dir, _params.labels_dir, seq_name)
+
+            run(_params)
+    else:
+        run(_params)

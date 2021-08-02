@@ -6,6 +6,8 @@ import random
 import imutils
 from densenet.utils import processArguments, sort_key
 
+import paramparse
+
 params = {
     'db_root_dir': '/home/abhineet/N/Datasets/617/',
     'seq_name': 'training',
@@ -27,31 +29,67 @@ params = {
     'end_id': -1,
     'enable_labels': 1
 }
+paramparse.from_dict(params, to_clipboard=True)
+exit()
 
-if __name__ == '__main__':
-    processArguments(sys.argv[1:], params)
-    db_root_dir = params['db_root_dir']
-    seq_name = params['seq_name']
-    out_seq_name = params['out_seq_name']
-    fname_templ = params['fname_templ']
-    img_ext = params['img_ext']
-    out_ext = params['out_ext']
-    show_img = params['show_img']
-    _patch_height = params['patch_height']
-    _patch_width = params['patch_width']
-    min_stride = params['min_stride']
-    max_stride = params['max_stride']
-    enable_flip = params['enable_flip']
-    enable_rot = params['enable_rot']
-    min_rot = params['min_rot']
-    max_rot = params['max_rot']
-    n_frames = params['n_frames']
-    start_id = params['start_id']
-    end_id = params['end_id']
-    enable_labels = params['enable_labels']
+
+class Params:
+    def __init__(self):
+        self.cfg = ()
+        self.db_root_dir = '/home/abhineet/N/Datasets/617/'
+        self.enable_flip = 0
+        self.enable_labels = 1
+        self.enable_rot = 0
+        self.end_id = -1
+        self.img_ext = 'tif'
+        self.max_rot = 0
+        self.max_stride = 0
+        self.min_rot = 10
+        self.min_stride = 10
+        self.n_frames = 0
+        self.out_ext = 'png'
+        self.out_seq_name = ''
+        self.patch_height = 32
+        self.patch_width = 0
+        self.seq_name = 'training'
+        self.show_img = 0
+        self.start_id = 0
+
+        self.src_path = ''
+        self.labels_path = ''
+
+
+def run(params):
+    """
+
+    :param Params params:
+    :return:
+    """
+    db_root_dir = params.db_root_dir
+    seq_name = params.seq_name
+    out_seq_name = params.out_seq_name
+    img_ext = params.img_ext
+    out_ext = params.out_ext
+    show_img = params.show_img
+    _patch_height = params.patch_height
+    _patch_width = params.patch_width
+    min_stride = params.min_stride
+    max_stride = params.max_stride
+    enable_flip = params.enable_flip
+    enable_rot = params.enable_rot
+    min_rot = params.min_rot
+    max_rot = params.max_rot
+    n_frames = params.n_frames
+    start_id = params.start_id
+    end_id = params.end_id
+    enable_labels = params.enable_labels
+
+    src_path = params.src_path
+    labels_path = params.labels_path
 
     if enable_labels:
-        labels_path = os.path.join(db_root_dir, seq_name, 'labels')
+        if not labels_path:
+            labels_path = os.path.join(db_root_dir, seq_name, 'labels')
         if not os.path.isdir(labels_path):
             print('Labels folder does not exist so disabling it')
             enable_labels = 0
@@ -59,15 +97,18 @@ if __name__ == '__main__':
     if enable_rot and not enable_labels:
         raise SystemError('Rotation cannot be enabled without labels')
 
-    src_path = os.path.join(db_root_dir, seq_name, 'images')
+    if not src_path:
+        src_path = os.path.join(db_root_dir, seq_name, 'images')
+
     print('Reading source images from: {}'.format(src_path))
 
     src_files = [k for k in os.listdir(src_path) if k.endswith('.{:s}'.format(img_ext))]
+    assert src_files,  SystemError('No input frames found')
     total_frames = len(src_files)
-    if total_frames <= 0:
-        raise SystemError('No input frames found')
     print('total_frames: {}'.format(total_frames))
     src_files.sort(key=sort_key)
+    
+
     # src_file_list = src_file_list.sort()
 
     if n_frames <= 0:
@@ -279,7 +320,6 @@ if __name__ == '__main__':
                 break
             min_row += random.randint(min_stride, max_stride)
 
-
         # sys.stdout.write('\nDone {:d}/{:d} frames with {:d} patches\n'.format(
         #     img_id + 1, n_frames, out_id))
         # sys.stdout.flush()
@@ -290,3 +330,9 @@ if __name__ == '__main__':
     sys.stdout.write('\n')
     sys.stdout.flush()
     sys.stdout.write('Total frames generated: {}\n'.format(n_out_frames))
+
+
+if __name__ == '__main__':
+    _params = Params()
+
+    paramparse.process(_params)

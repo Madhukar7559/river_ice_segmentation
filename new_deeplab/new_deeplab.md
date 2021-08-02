@@ -3,9 +3,6 @@
 - [build_data](#build_dat_a_)
     - [voc2012       @ build_data](#voc2012___build_data_)
     - [ade20k       @ build_data](#ade20k___build_data_)
-    - [ctc       @ build_data](#ctc___build_data_)
-        - [bf_r       @ ctc/build_data](#bf_r___ctc_build_data_)
-        - [huh_r       @ ctc/build_data](#huh_r___ctc_build_data_)
 - [hnasnet](#hnasnet_)
     - [atrous:6_12_18       @ hnasnet](#atrous_6_12_18___hnasne_t_)
         - [voc2012       @ atrous:6_12_18/hnasnet](#voc2012___atrous_6_12_18_hnasnet_)
@@ -96,17 +93,6 @@ CUDA_VISIBLE_DEVICES=2 python36 datasets/build_voc2012_data.py image_folder=/dat
 ## ade20k       @ build_data-->new_deeplab
 
 CUDA_VISIBLE_DEVICES=2 python36 datasets/build_ade20k_data.py train_image_folder=/data/ade20k/images/training/ train_image_label_folder=/data/ade20k/annotations/training/ val_image_folder=/data/ade20k/images/validation/ val_image_label_folder=/data/ade20k/annotations/validation/ output_dir=/data/ade20k/tfrecord
-
-<a id="ctc___build_data_"></a>
-## ctc       @ build_data-->new_deeplab
-
-<a id="bf_r___ctc_build_data_"></a>
-### bf_r       @ ctc/build_data-->new_deeplab
-python36 datasets/build_ctc_data.py db_split=bf_r
-
-<a id="huh_r___ctc_build_data_"></a>
-### huh_r       @ ctc/build_data-->new_deeplab
-python36 datasets/build_ctc_data.py db_split=huh_r
 
 <a id="hnasnet_"></a>
 # hnasnet

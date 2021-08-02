@@ -84,9 +84,15 @@ def _convert_train_id_to_eval_id(prediction, train_id_to_eval_id):
     return converted_prediction
 
 
-def _process_batch(params, sess, images, original_images, semantic_predictions, image_names,
-                   image_heights, image_widths, image_id_offset, save_dir,
-                   raw_save_dir, stacked_save_dir, train_id_to_eval_id=None):
+def _process_batch(params, sess, images,
+                   # original_images,
+                   semantic_predictions, image_names,
+                   image_heights, image_widths,
+                   # image_id_offset,
+                   save_dir,
+                   raw_save_dir, stacked_save_dir,
+                   # train_id_to_eval_id=None
+                   ):
     """Evaluates one single batch qualitatively.
 
     Args:
@@ -125,10 +131,20 @@ def _process_batch(params, sess, images, original_images, semantic_predictions, 
         #     add_colormap=False)
 
         image_filename = (os.path.splitext(os.path.basename(image_names[i]))[0])
-        image_filename = tf.compat.as_str_any(image_filename)
-        print('image_filename: ', image_filename)
+        image_dir = os.path.basename(os.path.dirname(image_names[i]))
 
-        stacked_path = os.path.join(stacked_save_dir, image_filename + '.jpg')
+        image_dir = tf.compat.as_str_any(image_dir)
+        image_filename = tf.compat.as_str_any(image_filename)
+
+        out_stacked_save_dir = os.path.join(stacked_save_dir, image_dir)
+        out_raw_save_dir = os.path.join(raw_save_dir, image_dir)
+
+        os.makedirs(out_stacked_save_dir, exist_ok=1)
+        os.makedirs(out_raw_save_dir, exist_ok=1)
+
+        print('image_dir, image_filename: {}, {}'.format(image_dir, image_filename))
+
+        stacked_path = os.path.join(out_stacked_save_dir, image_filename + '.jpg')
         mask_img = (crop_semantic_prediction * (255.0 / np.max(crop_semantic_prediction))).astype(np.uint8)
         mask_img = cv2.cvtColor(mask_img, cv2.COLOR_GRAY2BGR)
         stacked_img = np.concatenate((original_image, mask_img), axis=1)
@@ -142,7 +158,7 @@ def _process_batch(params, sess, images, original_images, semantic_predictions, 
         #     colormap_type=FLAGS.colormap_type)
 
         save_annotation.save_annotation(
-            crop_semantic_prediction, raw_save_dir, image_filename,
+            crop_semantic_prediction, out_raw_save_dir, image_filename,
             add_colormap=False)
 
         # Save prediction.
@@ -289,7 +305,7 @@ def run(params):
             with tf.train.MonitoredSession(
                     session_creator=session_creator, hooks=None) as sess:
                 batch = 0
-                image_id_offset = 0
+                # image_id_offset = 0
 
                 while not sess.should_stop():
                     print('Visualizing batch {:d}'.format(batch + 1))
@@ -297,17 +313,18 @@ def run(params):
                         params=params,
                         sess=sess,
                         images=samples[common.IMAGE],
-                        original_images=samples[common.ORIGINAL_IMAGE],
+                        # original_images=samples[common.ORIGINAL_IMAGE],
                         semantic_predictions=predictions,
                         image_names=samples[common.IMAGE_NAME],
                         image_heights=samples[common.HEIGHT],
                         image_widths=samples[common.WIDTH],
-                        image_id_offset=image_id_offset,
+                        # image_id_offset=image_id_offset,
                         save_dir=save_dir,
                         raw_save_dir=raw_save_dir,
                         stacked_save_dir=stacked_save_dir,
-                        train_id_to_eval_id=train_id_to_eval_id)
-                    image_id_offset += params.vis_batch_size
+                        # train_id_to_eval_id=train_id_to_eval_id
+                    )
+                    # image_id_offset += params.vis_batch_size
                     batch += 1
 
             print(
