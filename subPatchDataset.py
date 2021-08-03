@@ -245,7 +245,6 @@ def run(params):
             out_src_img_path = linux_path(out_src_img_dir, out_src_img_fname)
 
             cv2.imwrite(out_src_img_path, src_img)
-
             if enable_labels:
 
                 if proc_labels:
