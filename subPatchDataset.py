@@ -40,6 +40,7 @@ class Params:
         self.cfg = ()
 
         self.enable_labels = 1
+        self.n_classes = 3
         self.allow_missing_labels = 1
 
         self.enable_flip = 0
@@ -93,6 +94,7 @@ def run(params):
     end_id = params.end_id
     enable_labels = params.enable_labels
     allow_missing_labels = params.allow_missing_labels
+    n_classes = params.n_classes
 
     src_path = params.src_path
     labels_path = params.labels_path
@@ -239,9 +241,16 @@ def run(params):
             cv2.imwrite(out_src_img_path, src_img)
 
             if enable_labels:
-                labels_img[labels_img < 64] = 50
-                labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 150
-                labels_img[labels_img >= 192] = 250
+                if n_classes == 3:
+                    labels_img[labels_img < 64] = 50
+                    labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 150
+                    labels_img[labels_img >= 192] = 250
+                elif n_classes == 2:
+                    labels_img[labels_img <= 128] = 50
+                    labels_img[labels_img > 128] = 250
+                else:
+                    raise AssertionError('unsupported number of classes: {}'.format(n_classes))
+
                 labels_img = imutils.rotate_bound(labels_img, rot_angle).astype(np.int32)
 
                 out_labels_img_fname = 'labels_{:d}_rot_{:d}.{:s}'.format(
@@ -268,9 +277,15 @@ def run(params):
             if n_rows != _n_rows or n_rows != _n_rows or n_rows != _n_rows:
                 raise SystemError('Dimension mismatch between image and labels for file: {}'.format(img_fname))
 
-            labels_img[np.logical_and(labels_img >= 0, labels_img < 64)] = 0
-            labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 1
-            labels_img[labels_img >= 192] = 2
+            if n_classes == 3:
+                labels_img[np.logical_and(labels_img >= 0, labels_img < 64)] = 0
+                labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 1
+                labels_img[labels_img >= 192] = 2
+            elif n_classes == 2:
+                labels_img[labels_img <= 128] = 0
+                labels_img[labels_img > 128] = 1
+            else:
+                raise AssertionError('unsupported number of classes: {}'.format(n_classes))
 
         # np.savetxt(linux_path(db_root_dir, seq_name, 'labels_img_{}.txt'.format(img_id + 1)),
         #            labels_img[:, :, 2], fmt='%d')

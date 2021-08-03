@@ -43,6 +43,7 @@ class Params:
         self.image_dir = 'Images'
         self.labels_dir = 'Labels'
         self.seq_name = MultiPath()
+        self.n_classes = 3
 
         self.db_root_dir = ''
         self.src_path = ''
@@ -87,6 +88,7 @@ def run(params):
     end_id = params.end_id
     src_path = params.src_path
     labels_path = params.labels_path
+    n_classes = params.n_classes
 
     if not src_path:
         src_path = linux_path(db_root_dir, seq_name, 'images')
@@ -128,9 +130,9 @@ def run(params):
 
     base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={} img_ext={} labels_ext={} out_ext={} ' \
                'patch_height={} patch_width={} min_stride={} max_stride={} enable_flip={} start_id={} end_id={} ' \
-               'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={}'.format(
+               'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={} n_classes={}'.format(
         db_root_dir, seq_name, img_ext, labels_ext, out_ext, patch_height, patch_width, min_stride, max_stride,
-        enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name, src_path, labels_path)
+        enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name, src_path, labels_path, n_classes)
 
     # out_seq_name_base = '{:s}_{:d}_{:d}_{:d}_{:d}_{:d}_{:d}'.format(
     #     seq_name, start_id, end_id, patch_height, patch_width, min_stride, max_stride)
