@@ -266,7 +266,7 @@ def run(params):
 
                     elif n_classes == 2:
                         labels_img[labels_img == 0] = 50
-                        labels_img[labels_img == 1] = 255
+                        labels_img[labels_img == 1] = 250
 
                 labels_img = imutils.rotate_bound(labels_img, rot_angle).astype(np.int32)
 
@@ -280,7 +280,7 @@ def run(params):
 
                 os.makedirs(out_labels_img_dir, exist_ok=1)
 
-                out_labels_img_path = linux_path(out_labels_img_dir, out_src_img_fname)
+                out_labels_img_path = linux_path(out_labels_img_dir, out_labels_img_fname)
 
                 cv2.imwrite(out_labels_img_path, labels_img)
 
@@ -294,7 +294,7 @@ def run(params):
             if n_rows != _n_rows or n_rows != _n_rows or n_rows != _n_rows:
                 raise SystemError('Dimension mismatch between image and labels for file: {}'.format(img_fname))
 
-            if proc_labels:
+            if proc_labels or enable_rot:
                 if n_classes == 3:
                     labels_img[np.logical_and(labels_img >= 0, labels_img < 64)] = 0
                     labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 1
