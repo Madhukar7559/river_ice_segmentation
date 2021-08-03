@@ -41,6 +41,7 @@ class Params:
 
         self.enable_labels = 1
         self.n_classes = 3
+        self.proc_labels = 0
         self.allow_missing_labels = 1
 
         self.enable_flip = 0
@@ -95,6 +96,7 @@ def run(params):
     enable_labels = params.enable_labels
     allow_missing_labels = params.allow_missing_labels
     n_classes = params.n_classes
+    proc_labels = params.proc_labels
 
     src_path = params.src_path
     labels_path = params.labels_path
@@ -174,12 +176,16 @@ def run(params):
     if enable_labels:
         if db_root_dir:
             out_labels_path = linux_path(db_root_dir, out_seq_name, 'labels')
+            out_labels_vis_path = linux_path(db_root_dir, out_seq_name, 'vis_labels')
         else:
             out_labels_path = linux_path(labels_path_root_dir, out_seq_name)
+            out_labels_vis_path = linux_path(labels_path_root_dir, 'vis', out_seq_name)
 
         print('Writing output labels to: {}'.format(out_labels_path))
-        if not os.path.isdir(out_labels_path):
-            os.makedirs(out_labels_path)
+        os.makedirs(out_labels_path, exist_ok=1)
+
+        print('Writing output visualization labels to: {}'.format(out_labels_vis_path))
+        os.makedirs(out_labels_vis_path, exist_ok=1)
 
     rot_angle = 0
     n_out_frames = 0
@@ -241,15 +247,26 @@ def run(params):
             cv2.imwrite(out_src_img_path, src_img)
 
             if enable_labels:
-                if n_classes == 3:
-                    labels_img[labels_img < 64] = 50
-                    labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 150
-                    labels_img[labels_img >= 192] = 250
-                elif n_classes == 2:
-                    labels_img[labels_img <= 128] = 50
-                    labels_img[labels_img > 128] = 250
+
+                if proc_labels:
+                    if n_classes == 3:
+                        labels_img[labels_img < 64] = 50
+                        labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 150
+                        labels_img[labels_img >= 192] = 250
+                    elif n_classes == 2:
+                        labels_img[labels_img <= 128] = 50
+                        labels_img[labels_img > 128] = 250
+                    else:
+                        raise AssertionError('unsupported number of classes: {}'.format(n_classes))
                 else:
-                    raise AssertionError('unsupported number of classes: {}'.format(n_classes))
+                    if n_classes == 3:
+                        labels_img[labels_img == 0] = 50
+                        labels_img[labels_img == 1] = 150
+                        labels_img[labels_img == 2] = 250
+
+                    elif n_classes == 2:
+                        labels_img[labels_img == 0] = 50
+                        labels_img[labels_img == 1] = 255
 
                 labels_img = imutils.rotate_bound(labels_img, rot_angle).astype(np.int32)
 
@@ -277,15 +294,16 @@ def run(params):
             if n_rows != _n_rows or n_rows != _n_rows or n_rows != _n_rows:
                 raise SystemError('Dimension mismatch between image and labels for file: {}'.format(img_fname))
 
-            if n_classes == 3:
-                labels_img[np.logical_and(labels_img >= 0, labels_img < 64)] = 0
-                labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 1
-                labels_img[labels_img >= 192] = 2
-            elif n_classes == 2:
-                labels_img[labels_img <= 128] = 0
-                labels_img[labels_img > 128] = 1
-            else:
-                raise AssertionError('unsupported number of classes: {}'.format(n_classes))
+            if proc_labels:
+                if n_classes == 3:
+                    labels_img[np.logical_and(labels_img >= 0, labels_img < 64)] = 0
+                    labels_img[np.logical_and(labels_img >= 64, labels_img < 192)] = 1
+                    labels_img[labels_img >= 192] = 2
+                elif n_classes == 2:
+                    labels_img[labels_img <= 128] = 0
+                    labels_img[labels_img > 128] = 1
+                else:
+                    raise AssertionError('unsupported number of classes: {}'.format(n_classes))
 
         # np.savetxt(linux_path(db_root_dir, seq_name, 'labels_img_{}.txt'.format(img_id + 1)),
         #            labels_img[:, :, 2], fmt='%d')
@@ -354,6 +372,11 @@ def run(params):
                         out_labels_img_fname = linux_path(out_labels_path, '{:s}.{:s}'.format(out_img_fname, out_ext))
                         cv2.imwrite(out_labels_img_fname, labels_patch)
 
+                        out_vis_labels_img_fname = linux_path(out_labels_vis_path,
+                                                              '{:s}.{:s}'.format(out_img_fname, out_ext))
+                        labels_patch_vis = labels_patch * (255 / n_classes)
+                        cv2.imwrite(out_vis_labels_img_fname, labels_patch_vis)
+
                     if enable_flip:
                         src_patch_lr = np.fliplr(src_patch)
                         out_src_img_fname = linux_path(out_src_path, '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
@@ -364,15 +387,32 @@ def run(params):
                         cv2.imwrite(out_src_img_fname, src_patch_ud)
 
                         if enable_labels:
+                            """
+                            LR flip
+                            """
                             labels_patch_lr = np.fliplr(labels_patch)
                             out_labels_img_fname = linux_path(out_labels_path,
                                                               '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
                             cv2.imwrite(out_labels_img_fname, labels_patch_lr)
 
+                            out_vis_labels_img_fname = linux_path(out_labels_vis_path,
+                                                                  '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
+                            labels_patch_lr_vis = labels_patch_lr * (255 / n_classes)
+                            cv2.imwrite(out_vis_labels_img_fname, labels_patch_lr_vis)
+
+                            """
+                            UD flip
+                            """
                             labels_patch_ud = np.flipud(labels_patch)
                             out_labels_img_fname = linux_path(out_labels_path,
                                                               '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
                             cv2.imwrite(out_labels_img_fname, labels_patch_ud)
+
+                            out_vis_labels_img_fname = linux_path(out_labels_vis_path,
+                                                                  '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
+                            labels_patch_ud_vis = labels_patch_ud * (255 / n_classes)
+                            cv2.imwrite(out_vis_labels_img_fname, labels_patch_ud_vis)
+
                 min_col += random.randint(min_stride, max_stride)
                 if image_as_patch or max_col >= ncols:
                     break
