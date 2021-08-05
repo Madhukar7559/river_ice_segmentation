@@ -27,8 +27,9 @@ def main():
 
     n_trials = int(1e7)
 
-    min_avg_pairwise_assignments = np.inf
+    # min_avg_pairwise_assignments = np.inf
     max_3_count = 0
+    max_lt3_count = 0
 
     # n_valid_found = 0
 
@@ -87,18 +88,38 @@ def main():
         unique_counts = list(unique_counts)
 
         prefix = 'binary_matrix'
+
+        curr_0_count = 0
+        if 0 in unique_values:
+            curr_0_count = unique_counts[unique_values.index(0)]
+
+        curr_1_count = 0
+        if 1 in unique_values:
+            curr_1_count = unique_counts[unique_values.index(1)]
+
+        curr_2_count = 0
+        if 2 in unique_values:
+            curr_2_count = unique_counts[unique_values.index(2)]
+
         curr_3_count = 0
         if 3 in unique_values:
             curr_3_count = unique_counts[unique_values.index(3)]
 
+        curr_lt3_count = curr_0_count + curr_1_count + curr_2_count + curr_3_count
         # print('\nfound new valid assignment {} in {} trials with {} valid/trial'.format(
         #     n_valid_found, trials_id + 1, valid_per_trial))
 
         save = 0
-        if curr_3_count > max_3_count:
+
+        if curr_lt3_count > max_lt3_count:
+            max_lt3_count = curr_lt3_count
+            prefix = 'max_lt3_count'
+            save = 1
+        elif curr_3_count > max_3_count:
             max_3_count = curr_3_count
             prefix = 'max_3_count'
             save = 1
+
         # if avg_pairwise_assignments < min_avg_pairwise_assignments:
         #     min_avg_pairwise_assignments = avg_pairwise_assignments
         #     prefix = 'min_avg_pairs'
@@ -118,9 +139,10 @@ def main():
             print()
             # print('\nn_pairwise_assignments:  {}'.format(n_pairwise_assignments))
             # print('n_pairwise_assignments_list:  {}'.format(n_pairwise_assignments_list))
+            print('max_lt3_count:  {}'.format(max_lt3_count))
             print('max_3_count:  {}'.format(max_3_count))
-            print('unique_values:  {}'.format(unique_values))
-            print('unique_counts:  {}'.format(unique_counts))
+            # print('unique_values:  {}'.format(unique_values))
+            # print('unique_counts:  {}'.format(unique_counts))
             print('out_fname:  {}'.format(out_fname))
             np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
 
