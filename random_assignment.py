@@ -90,8 +90,8 @@ def main():
             if 3 in unique_values:
                 curr_3_count = unique_counts[unique_values.index(3)]
 
-            print('\nfound new valid assignment {} in {} trials with {} valid/trial'.format(
-                n_valid_found, trials_id + 1, valid_per_trial))
+            # print('\nfound new valid assignment {} in {} trials with {} valid/trial'.format(
+            #     n_valid_found, trials_id + 1, valid_per_trial))
 
             save = 0
             if curr_3_count > max_3_count:
