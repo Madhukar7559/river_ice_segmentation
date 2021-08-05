@@ -103,8 +103,6 @@ def main():
         #     min_avg_pairwise_assignments = avg_pairwise_assignments
         #     prefix = 'min_avg_pairs'
 
-
-
         # out_fname = '{}_{}.csv'.format(out_fname, time_stamp)
         # print('avg_pairwise_assignments:  {}'.format(avg_pairwise_assignments))
         # print('min_avg_pairwise_assignments:  {}'.format(min_avg_pairwise_assignments))
