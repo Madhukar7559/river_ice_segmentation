@@ -30,9 +30,9 @@ def main():
     min_avg_pairwise_assignments = np.inf
     max_3_count = 0
 
-    n_valid_found = 0
+    # n_valid_found = 0
 
-    valid_assignments_list = []
+    # valid_assignments_list = []
 
     for trials_id in tqdm(range(n_trials)):
 
@@ -66,63 +66,64 @@ def main():
 
         is_valid = np.all(col_sum == tasks_per_person)
 
-        if is_valid:
+        if not is_valid:
+            continue
 
-            is_new = all(not np.array_equal(k, binary_matrix) for k in valid_assignments_list)
-            if not is_new:
-                continue
+        # is_new = all(not np.array_equal(k, binary_matrix) for k in valid_assignments_list)
+        # if not is_new:
+        #     continue
+        #
+        # valid_assignments_list.append(binary_matrix)
+        #
+        # n_valid_found += 1
+        #
+        # valid_per_trial = float(n_valid_found) / (trials_id + 1)
+        n_pairwise_assignments, avg_pairwise_assignments = count_pairwise_assignments(binary_matrix)
 
-            valid_assignments_list.append(binary_matrix)
+        n_pairwise_assignments_list = list(n_pairwise_assignments.values())
+        unique_values, unique_counts = np.unique(n_pairwise_assignments_list, return_counts=True)
 
-            n_valid_found += 1
+        unique_values = list(unique_values)
+        unique_counts = list(unique_counts)
 
-            valid_per_trial = float(n_valid_found) / (trials_id + 1)
-            n_pairwise_assignments, avg_pairwise_assignments = count_pairwise_assignments(binary_matrix)
+        prefix = 'binary_matrix'
+        curr_3_count = 0
+        if 3 in unique_values:
+            curr_3_count = unique_counts[unique_values.index(3)]
 
-            n_pairwise_assignments_list = list(n_pairwise_assignments.values())
-            unique_values, unique_counts = np.unique(n_pairwise_assignments_list, return_counts=True)
+        # print('\nfound new valid assignment {} in {} trials with {} valid/trial'.format(
+        #     n_valid_found, trials_id + 1, valid_per_trial))
 
-            unique_values = list(unique_values)
-            unique_counts = list(unique_counts)
+        save = 0
+        if curr_3_count > max_3_count:
+            max_3_count = curr_3_count
+            prefix = 'max_3_count'
+            save = 1
+        if avg_pairwise_assignments < min_avg_pairwise_assignments:
+            min_avg_pairwise_assignments = avg_pairwise_assignments
+            prefix = 'min_avg_pairs'
 
-            prefix = 'binary_matrix'
-            curr_3_count = 0
-            if 3 in unique_values:
-                curr_3_count = unique_counts[unique_values.index(3)]
+        unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
+        time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
+        out_fname = '{}___{}___{}.csv'.format(
+            prefix, unique_counts_str, time_stamp)
 
-            # print('\nfound new valid assignment {} in {} trials with {} valid/trial'.format(
-            #     n_valid_found, trials_id + 1, valid_per_trial))
+        # out_fname = '{}_{}.csv'.format(out_fname, time_stamp)
+        # print('avg_pairwise_assignments:  {}'.format(avg_pairwise_assignments))
+        # print('min_avg_pairwise_assignments:  {}'.format(min_avg_pairwise_assignments))
 
-            save = 0
-            if curr_3_count > max_3_count:
-                max_3_count = curr_3_count
-                prefix = 'max_3_count'
-                save = 1
-            if avg_pairwise_assignments < min_avg_pairwise_assignments:
-                min_avg_pairwise_assignments = avg_pairwise_assignments
-                prefix = 'min_avg_pairs'
+        # print('curr_3_count:  {}'.format(curr_3_count))
 
-            unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
-            time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
-            out_fname = '{}___{}___{}.csv'.format(
-                prefix, unique_counts_str, time_stamp)
+        if save:
+            print()
+            # print('\nn_pairwise_assignments:  {}'.format(n_pairwise_assignments))
+            # print('n_pairwise_assignments_list:  {}'.format(n_pairwise_assignments_list))
+            print('max_3_count:  {}'.format(max_3_count))
+            print('unique_values:  {}'.format(unique_values))
+            print('unique_counts:  {}'.format(unique_counts))
+            print('out_fname:  {}'.format(out_fname))
+            np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
 
-            # out_fname = '{}_{}.csv'.format(out_fname, time_stamp)
-            # print('avg_pairwise_assignments:  {}'.format(avg_pairwise_assignments))
-            # print('min_avg_pairwise_assignments:  {}'.format(min_avg_pairwise_assignments))
-
-            # print('curr_3_count:  {}'.format(curr_3_count))
-
-            if save:
-                # print('\nn_pairwise_assignments:  {}'.format(n_pairwise_assignments))
-                # print('n_pairwise_assignments_list:  {}'.format(n_pairwise_assignments_list))
-                print('max_3_count:  {}'.format(max_3_count))
-                print('unique_values:  {}'.format(unique_values))
-                print('unique_counts:  {}'.format(unique_counts))
-                print('out_fname:  {}'.format(out_fname))
-                np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
-
-            # print()
 
 
 if __name__ == '__main__':
