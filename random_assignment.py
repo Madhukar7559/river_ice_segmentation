@@ -111,12 +111,12 @@ def main():
             # print('avg_pairwise_assignments:  {}'.format(avg_pairwise_assignments))
             # print('min_avg_pairwise_assignments:  {}'.format(min_avg_pairwise_assignments))
 
-            print('curr_3_count:  {}'.format(curr_3_count))
-            print('max_3_count:  {}'.format(max_3_count))
+            # print('curr_3_count:  {}'.format(curr_3_count))
 
             if save:
                 # print('\nn_pairwise_assignments:  {}'.format(n_pairwise_assignments))
                 # print('n_pairwise_assignments_list:  {}'.format(n_pairwise_assignments_list))
+                print('max_3_count:  {}'.format(max_3_count))
                 print('unique_values:  {}'.format(unique_values))
                 print('unique_counts:  {}'.format(unique_counts))
                 print('out_fname:  {}'.format(out_fname))
