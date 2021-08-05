@@ -122,7 +122,7 @@ def main():
                 print('out_fname:  {}'.format(out_fname))
                 np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
 
-            print()
+            # print()
 
 
 if __name__ == '__main__':
