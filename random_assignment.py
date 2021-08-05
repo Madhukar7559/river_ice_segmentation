@@ -99,14 +99,11 @@ def main():
             max_3_count = curr_3_count
             prefix = 'max_3_count'
             save = 1
-        if avg_pairwise_assignments < min_avg_pairwise_assignments:
-            min_avg_pairwise_assignments = avg_pairwise_assignments
-            prefix = 'min_avg_pairs'
+        # if avg_pairwise_assignments < min_avg_pairwise_assignments:
+        #     min_avg_pairwise_assignments = avg_pairwise_assignments
+        #     prefix = 'min_avg_pairs'
 
-        unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
-        time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
-        out_fname = '{}___{}___{}.csv'.format(
-            prefix, unique_counts_str, time_stamp)
+
 
         # out_fname = '{}_{}.csv'.format(out_fname, time_stamp)
         # print('avg_pairwise_assignments:  {}'.format(avg_pairwise_assignments))
@@ -115,6 +112,11 @@ def main():
         # print('curr_3_count:  {}'.format(curr_3_count))
 
         if save:
+            unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
+            time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
+            out_fname = '{}___{}___{}.csv'.format(
+                prefix, unique_counts_str, time_stamp)
+
             print()
             # print('\nn_pairwise_assignments:  {}'.format(n_pairwise_assignments))
             # print('n_pairwise_assignments_list:  {}'.format(n_pairwise_assignments_list))
