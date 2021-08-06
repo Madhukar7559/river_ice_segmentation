@@ -138,6 +138,10 @@ def main():
 
         unique_values, unique_counts, max_3_count = get_metrics(binary_matrix)
 
+        child_trials = 0
+        generation_trials = 0
+        generation_id = 0
+
         if max_3_count > global_max_3_count:
             global_max_3_count = max_3_count
             save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id, generation_id)
@@ -145,11 +149,7 @@ def main():
         parent_binary_matrix = binary_matrix.copy()
         col_idx = list(range(n_tasks))
         row_idx = list(range(n_persons))
-
-        child_trials = 0
-        generation_trials = 0
-        generation_id = 0
-
+        
         while True:
             generation_trials += 1
             child_trials += 1
