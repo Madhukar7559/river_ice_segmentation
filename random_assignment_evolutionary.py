@@ -32,6 +32,8 @@ def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix
     print('out_fname:  {}'.format(out_fname))
     np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
 
+    return out_fname
+
 
 def get_metrics(binary_matrix):
     n_pairwise_assignments, avg_pairwise_assignments = count_pairwise_assignments(binary_matrix)
@@ -93,6 +95,8 @@ def main():
     global_max_3_count = 0
     prefix = 'evo'
     init_id = 0
+    out_fname = None
+
     while True:
 
         if gen_init:
@@ -144,7 +148,7 @@ def main():
 
         if max_3_count > global_max_3_count:
             global_max_3_count = max_3_count
-            save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id, generation_id)
+            out_fname = save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id, generation_id)
 
         parent_binary_matrix = binary_matrix.copy()
         col_idx = list(range(n_tasks))
@@ -195,6 +199,7 @@ def main():
                 init_id, generation_id, generation_trials))
             print('curr_3_count:  {}'.format(curr_3_count))
             print('global_max_3_count:  {}'.format(global_max_3_count))
+            print('out_fname:  {}'.format(out_fname))
 
             generation_trials = 0
 
@@ -203,7 +208,7 @@ def main():
 
             if max_3_count > global_max_3_count:
                 global_max_3_count = max_3_count
-                save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id, generation_id)
+                out_fname = save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id, generation_id)
 
 
 if __name__ == '__main__':
