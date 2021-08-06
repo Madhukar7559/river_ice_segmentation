@@ -20,11 +20,11 @@ def count_pairwise_assignments(binary_matrix):
     return n_pairwise_assignments, avg_pairwise_assignments
 
 
-def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix):
+def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id, generation_id):
     unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
     time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
-    out_fname = '{}___{}___{}.csv'.format(
-        prefix, unique_counts_str, time_stamp)
+    out_fname = '{}_init_{}_gen_{}___{}___{}.csv'.format(
+        prefix, init_id, generation_id, unique_counts_str, time_stamp)
 
     print('max_3_count:  {}'.format(max_3_count))
     # print('unique_values:  {}'.format(unique_values))
@@ -90,6 +90,7 @@ def main():
         binary_matrix = np.loadtxt(load_init)
         gen_init = 0
 
+    global_max_3_count = 0
     prefix = 'evo_max_3_count'
     init_id = 0
     while True:
@@ -137,7 +138,9 @@ def main():
 
         unique_values, unique_counts, max_3_count = get_metrics(binary_matrix)
 
-        save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix)
+        if max_3_count > global_max_3_count:
+            global_max_3_count = max_3_count
+            save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id, generation_id)
 
         parent_binary_matrix = binary_matrix.copy()
         col_idx = list(range(n_tasks))
@@ -194,7 +197,9 @@ def main():
             max_3_count = curr_3_count
             parent_binary_matrix = binary_matrix.copy()
 
-            save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix)
+            if max_3_count > global_max_3_count:
+                global_max_3_count = max_3_count
+                save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id, generation_id)
 
 
 if __name__ == '__main__':
