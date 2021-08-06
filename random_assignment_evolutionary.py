@@ -1,4 +1,5 @@
 import os
+import sys
 
 import numpy as np
 from tqdm import tqdm
@@ -83,6 +84,22 @@ def main():
     load_init = ''
     # load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
 
+    cmd_args = sys.argv[1:]
+    cmd_id = 0
+
+    n_cmd_args = len(cmd_args)
+
+    print('cmd_args: {}'.format(cmd_args))
+    print('n_cmd_args: {}'.format(n_cmd_args))
+
+    if n_cmd_args > cmd_id:
+        max_gen_trials = int(cmd_args[cmd_id])
+        cmd_id += 1
+
+    if n_cmd_args > cmd_id:
+        load_init = cmd_args[cmd_id]
+        cmd_id += 1
+
     if load_init and os.path.isfile(load_init):
         binary_matrix = np.loadtxt(load_init)
         gen_init = 0
@@ -92,9 +109,13 @@ def main():
     init_id = 0
     out_fname = None
 
+    col_idx = list(range(n_tasks))
+    row_idx = list(range(n_persons))
+
     while True:
 
         if gen_init:
+            gen_init = 0
             init_id += 1
             while True:
                 init_trials += 1
@@ -143,11 +164,10 @@ def main():
 
         if max_3_count > global_max_3_count:
             global_max_3_count = max_3_count
-            out_fname = save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id, generation_id)
+            out_fname = save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id,
+                                    generation_id)
 
         parent_binary_matrix = binary_matrix.copy()
-        col_idx = list(range(n_tasks))
-        row_idx = list(range(n_persons))
 
         while True:
             generation_trials += 1
@@ -201,7 +221,8 @@ def main():
 
             if max_3_count > global_max_3_count:
                 global_max_3_count = max_3_count
-                out_fname = save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id, generation_id)
+                out_fname = save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id,
+                                        generation_id)
 
             print('global_max_3_count:  {}'.format(global_max_3_count))
             print('out_fname:  {}'.format(out_fname))
