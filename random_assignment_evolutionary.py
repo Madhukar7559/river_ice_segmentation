@@ -91,7 +91,7 @@ def main():
         gen_init = 0
 
     global_max_3_count = 0
-    prefix = 'evo_max_3_count'
+    prefix = 'evo'
     init_id = 0
     while True:
 
