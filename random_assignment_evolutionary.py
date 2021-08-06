@@ -203,7 +203,7 @@ def main():
                 global_max_3_count = max_3_count
                 out_fname = save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id, generation_id)
 
-            print('global_max_3_count:  {}'.format(max_3_count))
+            print('global_max_3_count:  {}'.format(global_max_3_count))
             print('out_fname:  {}'.format(out_fname))
 
 
