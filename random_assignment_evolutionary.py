@@ -26,7 +26,7 @@ def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix
     out_fname = '{}_init_{}_gen_{}___{}___{}.csv'.format(
         prefix, init_id, generation_id, unique_counts_str, time_stamp)
 
-    print('max_3_count:  {}'.format(max_3_count))
+    print('global_max_3_count:  {}'.format(max_3_count))
     # print('unique_values:  {}'.format(unique_values))
     # print('unique_counts:  {}'.format(unique_counts))
     print('out_fname:  {}'.format(out_fname))
@@ -191,7 +191,9 @@ def main():
 
             generation_id += 1
 
-            print('\n\ninit {} generation {} found in {} trials'.format(init_id, generation_id, generation_trials))
+            print('\n\ninit {} generation {} found in {} trials with curr_3_count {}'.format(
+                init_id, generation_id, generation_trials, curr_3_count))
+
             generation_trials = 0
 
             max_3_count = curr_3_count
