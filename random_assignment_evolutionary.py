@@ -25,11 +25,6 @@ def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix
     time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
     out_fname = '{}_init_{}_gen_{}___{}___{}.csv'.format(
         prefix, init_id, generation_id, unique_counts_str, time_stamp)
-
-    print('global_max_3_count:  {}'.format(max_3_count))
-    # print('unique_values:  {}'.format(unique_values))
-    # print('unique_counts:  {}'.format(unique_counts))
-    print('out_fname:  {}'.format(out_fname))
     np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
 
     return out_fname
@@ -198,8 +193,6 @@ def main():
             print('\n\ninit {} generation {} found in {} trials'.format(
                 init_id, generation_id, generation_trials))
             print('curr_3_count:  {}'.format(curr_3_count))
-            print('global_max_3_count:  {}'.format(global_max_3_count))
-            print('out_fname:  {}'.format(out_fname))
 
             generation_trials = 0
 
@@ -209,6 +202,9 @@ def main():
             if max_3_count > global_max_3_count:
                 global_max_3_count = max_3_count
                 out_fname = save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id, generation_id)
+
+            print('global_max_3_count:  {}'.format(max_3_count))
+            print('out_fname:  {}'.format(out_fname))
 
 
 if __name__ == '__main__':
