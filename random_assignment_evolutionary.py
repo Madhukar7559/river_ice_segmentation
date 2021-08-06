@@ -93,7 +93,7 @@ def main():
     print('n_cmd_args: {}'.format(n_cmd_args))
 
     if n_cmd_args > cmd_id:
-        max_gen_trials = int(cmd_args[cmd_id])
+        max_gen_trials = int(float(cmd_args[cmd_id]))
         cmd_id += 1
 
     if n_cmd_args > cmd_id:
