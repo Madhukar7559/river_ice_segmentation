@@ -149,7 +149,7 @@ def main():
         parent_binary_matrix = binary_matrix.copy()
         col_idx = list(range(n_tasks))
         row_idx = list(range(n_persons))
-        
+
         while True:
             generation_trials += 1
             child_trials += 1
@@ -191,8 +191,10 @@ def main():
 
             generation_id += 1
 
-            print('\n\ninit {} generation {} found in {} trials with curr_3_count {}'.format(
-                init_id, generation_id, generation_trials, curr_3_count))
+            print('\n\ninit {} generation {} found in {} trials'.format(
+                init_id, generation_id, generation_trials))
+            print('curr_3_count:  {}'.format(curr_3_count))
+            print('global_max_3_count:  {}'.format(global_max_3_count))
 
             generation_trials = 0
 
