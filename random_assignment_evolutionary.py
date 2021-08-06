@@ -81,8 +81,8 @@ def main():
 
     init_trials = 0
 
-
-    load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
+    load_init = ''
+    # load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
 
     if load_init and os.path.isfile(load_init):
         binary_matrix = np.loadtxt(load_init)
@@ -172,12 +172,10 @@ def main():
         if curr_3_count <= max_3_count:
             continue
 
-        row_sum = np.count_nonzero(binary_matrix, axis=0)
-        col_sum = np.count_nonzero(binary_matrix, axis=1)
-
-        is_valid = np.all(col_sum == tasks_per_person) and np.all(row_sum == persons_per_task)
-
-        assert is_valid, "invalid assignment matrix generated even by performing valid operations"
+        # row_sum = np.count_nonzero(binary_matrix, axis=0)
+        # col_sum = np.count_nonzero(binary_matrix, axis=1)
+        # is_valid = np.all(col_sum == tasks_per_person) and np.all(row_sum == persons_per_task)
+        # assert is_valid, "invalid assignment matrix generated even by performing valid operations"
 
         generation_id += 1
 
