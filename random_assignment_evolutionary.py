@@ -1,3 +1,5 @@
+import os
+
 import numpy as np
 from tqdm import tqdm
 from datetime import datetime
@@ -79,9 +81,10 @@ def main():
 
     init_trials = 0
 
+
     load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
 
-    if load_init:
+    if load_init and os.path.isfile(load_init):
         binary_matrix = np.loadtxt(load_init)
     else:
         for _ in tqdm(range(n_trials)):
