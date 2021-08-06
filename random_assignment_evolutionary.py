@@ -78,114 +78,123 @@ def main():
     persons_per_task = 5
 
     n_trials = int(1e7)
+    max_gen_trials = int(1e5)
 
     init_trials = 0
+    gen_init = 1
 
     load_init = ''
     # load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
 
     if load_init and os.path.isfile(load_init):
         binary_matrix = np.loadtxt(load_init)
-    else:
-        for _ in tqdm(range(n_trials)):
+        gen_init = 0
 
-            init_trials += 1
+    prefix = 'evo_max_3_count'
+    init_id = 0
+    while True:
 
-            person_to_n_tasks = np.zeros((n_persons,), dtype=np.ubyte)
-            available_persons = list(range(n_persons))
-            binary_matrix = np.zeros((n_persons, n_tasks), dtype=np.ubyte)
+        if gen_init:
+            init_id += 1
+            while True:
+                init_trials += 1
 
-            valid_found = 1
+                person_to_n_tasks = np.zeros((n_persons,), dtype=np.ubyte)
+                available_persons = list(range(n_persons))
+                binary_matrix = np.zeros((n_persons, n_tasks), dtype=np.ubyte)
 
-            for task_id in range(n_tasks):
-                available_persons = [k for k in available_persons if person_to_n_tasks[k] < tasks_per_person]
-                n_available_persons = len(available_persons)
+                valid_found = 1
 
-                if n_available_persons < persons_per_task:
-                    # print('Ran out of available_persons in task_id: {}'.format(task_id + 1))
-                    valid_found = 0
-                    break
+                for task_id in range(n_tasks):
+                    available_persons = [k for k in available_persons if person_to_n_tasks[k] < tasks_per_person]
+                    n_available_persons = len(available_persons)
 
-                person_idx = np.random.permutation(available_persons)[:persons_per_task]
+                    if n_available_persons < persons_per_task:
+                        # print('Ran out of available_persons in task_id: {}'.format(task_id + 1))
+                        valid_found = 0
+                        break
 
-                for i, _idx in enumerate(person_idx):
-                    person_to_n_tasks[_idx] += 1
+                    person_idx = np.random.permutation(available_persons)[:persons_per_task]
 
-                    binary_matrix[_idx, task_id] = 1
+                    for i, _idx in enumerate(person_idx):
+                        person_to_n_tasks[_idx] += 1
 
-            if not valid_found:
+                        binary_matrix[_idx, task_id] = 1
+
+                if not valid_found:
+                    continue
+
+                # row_sum = np.count_nonzero(binary_matrix, axis=0)
+                col_sum = np.count_nonzero(binary_matrix, axis=1)
+
+                is_valid = np.all(col_sum == tasks_per_person)
+
+                if not is_valid:
+                    continue
+                break
+
+            print('initialization {} completed in {} trials'.format(init_id, init_trials))
+
+        unique_values, unique_counts, max_3_count = get_metrics(binary_matrix)
+
+        save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix)
+
+        parent_binary_matrix = binary_matrix.copy()
+        col_idx = list(range(n_tasks))
+        row_idx = list(range(n_persons))
+
+        child_trials = 0
+        generation_trials = 0
+        generation_id = 0
+
+        while True:
+            generation_trials += 1
+            child_trials += 1
+
+            if generation_trials > max_gen_trials > 0:
+                gen_init = 1
+                break
+
+            x1, x2 = np.random.permutation(col_idx)[:2]
+            y1, y2 = np.random.permutation(row_idx)[:2]
+
+            a, b, c, d = parent_binary_matrix[y1, x1], \
+                         parent_binary_matrix[y1, x2], \
+                         parent_binary_matrix[y2, x1], \
+                         parent_binary_matrix[y2, x2]
+
+            if a != d or a == b or b != c:
+                continue
+
+            # print('\nvalid child found in {} trials'.format(child_trials))
+
+            child_trials = 0
+
+            binary_matrix = parent_binary_matrix.copy()
+            binary_matrix[y1, x1] = 1 - binary_matrix[y1, x1]
+            binary_matrix[y2, x1] = 1 - binary_matrix[y2, x1]
+            binary_matrix[y1, x2] = 1 - binary_matrix[y1, x2]
+            binary_matrix[y2, x2] = 1 - binary_matrix[y2, x2]
+
+            unique_values, unique_counts, curr_3_count = get_metrics(binary_matrix)
+
+            if curr_3_count <= max_3_count:
                 continue
 
             # row_sum = np.count_nonzero(binary_matrix, axis=0)
-            col_sum = np.count_nonzero(binary_matrix, axis=1)
+            # col_sum = np.count_nonzero(binary_matrix, axis=1)
+            # is_valid = np.all(col_sum == tasks_per_person) and np.all(row_sum == persons_per_task)
+            # assert is_valid, "invalid assignment matrix generated even by performing valid operations"
 
-            is_valid = np.all(col_sum == tasks_per_person)
+            generation_id += 1
 
-            if not is_valid:
-                continue
+            print('\n\ninit {} generation {} found in {} trials'.format(init_id, generation_id, generation_trials))
+            generation_trials = 0
 
-            break
+            max_3_count = curr_3_count
+            parent_binary_matrix = binary_matrix.copy()
 
-        print('initialization completed in {} trials'.format(init_trials))
-
-    prefix = 'evo_max_3_count'
-
-    unique_values, unique_counts, max_3_count = get_metrics(binary_matrix)
-
-    save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix)
-
-    parent_binary_matrix = binary_matrix.copy()
-    col_idx = list(range(n_tasks))
-    row_idx = list(range(n_persons))
-
-    child_trials = 0
-    generation_trials = 0
-    generation_id = 0
-
-    for _ in tqdm(range(n_trials)):
-        generation_trials += 1
-        child_trials += 1
-
-        x1, x2 = np.random.permutation(col_idx)[:2]
-        y1, y2 = np.random.permutation(row_idx)[:2]
-
-        a, b, c, d = parent_binary_matrix[y1, x1], \
-                     parent_binary_matrix[y1, x2], \
-                     parent_binary_matrix[y2, x1], \
-                     parent_binary_matrix[y2, x2]
-
-        if a != d or a == b or b != c:
-            continue
-
-        # print('\nvalid child found in {} trials'.format(child_trials))
-
-        child_trials = 0
-
-        binary_matrix = parent_binary_matrix.copy()
-        binary_matrix[y1, x1] = 1 - binary_matrix[y1, x1]
-        binary_matrix[y2, x1] = 1 - binary_matrix[y2, x1]
-        binary_matrix[y1, x2] = 1 - binary_matrix[y1, x2]
-        binary_matrix[y2, x2] = 1 - binary_matrix[y2, x2]
-
-        unique_values, unique_counts, curr_3_count = get_metrics(binary_matrix)
-
-        if curr_3_count <= max_3_count:
-            continue
-
-        # row_sum = np.count_nonzero(binary_matrix, axis=0)
-        # col_sum = np.count_nonzero(binary_matrix, axis=1)
-        # is_valid = np.all(col_sum == tasks_per_person) and np.all(row_sum == persons_per_task)
-        # assert is_valid, "invalid assignment matrix generated even by performing valid operations"
-
-        generation_id += 1
-
-        print('\n\ngeneration {} found in {} trials'.format(generation_id, generation_trials))
-        generation_trials = 0
-
-        max_3_count = curr_3_count
-        parent_binary_matrix = binary_matrix.copy()
-
-        save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix)
+            save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix)
 
 
 if __name__ == '__main__':
