@@ -224,6 +224,7 @@ def main():
                 out_fname = save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id,
                                         generation_id)
 
+            print('max_gen_trials:  {:e}'.format(max_gen_trials))
             print('global_max_3_count:  {}'.format(global_max_3_count))
             print('out_fname:  {}'.format(out_fname))
 
