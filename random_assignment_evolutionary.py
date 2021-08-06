@@ -78,7 +78,7 @@ def main():
     persons_per_task = 5
 
     n_trials = int(1e7)
-    max_gen_trials = int(1e5)
+    max_gen_trials = int(5e5)
 
     init_trials = 0
     gen_init = 1
