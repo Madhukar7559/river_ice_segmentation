@@ -57,6 +57,8 @@ class Params:
         self.out_img_ext = 'jpg'
         self.out_labels_ext = 'png'
 
+        self.py_exe = 'python36'
+
         self.start_id = 0
         self.end_id = -1
 
@@ -81,6 +83,7 @@ def run(params):
     :param Params params:
     :return:
     """
+    py_exe = params.py_exe
     db_root_dir = params.db_root_dir
     seq_name = params.seq_name
     img_ext = params.img_ext
@@ -141,11 +144,11 @@ def run(params):
     if enable_flip:
         cmb_out_seq_name = '{}_flip'.format(cmb_out_seq_name)
 
-    base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={}' \
+    base_cmd = '{}} subPatchDataset.py db_root_dir={} seq_name={}' \
                ' img_ext={} labels_ext={} out_img_ext={} out_labels_ext={} ' \
                'patch_height={} patch_width={} min_stride={} max_stride={} enable_flip={} start_id={} end_id={} ' \
                'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={} n_classes={}'.format(
-        db_root_dir, seq_name, img_ext, labels_ext, out_img_ext, out_labels_ext, patch_height, patch_width, min_stride,
+        py_exe, db_root_dir, seq_name, img_ext, labels_ext, out_img_ext, out_labels_ext, patch_height, patch_width, min_stride,
         max_stride,
         enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name, src_path, labels_path, n_classes)
 
