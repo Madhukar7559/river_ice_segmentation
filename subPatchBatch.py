@@ -244,7 +244,7 @@ if __name__ == '__main__':
     paramparse.process(_params)
 
     if _params.dataset == 'ctc':
-        from new_deeplab.datasets.build_ctc_data import CTCInfo
+        from ctc_info import CTCInfo
 
         db_splits = CTCInfo.DBSplits().__dict__
 
