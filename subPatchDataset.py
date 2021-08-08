@@ -69,6 +69,18 @@ class Params:
         self.src_path = ''
         self.labels_path = ''
 
+        self.save_vis = 1
+
+
+def get_vis_image(src_img, labels_img, n_classes, out_fname):
+    labels_patch_ud_vis = labels_img * (255 / n_classes)
+    if len(labels_patch_ud_vis.shape) == 1:
+        labels_patch_ud_vis = cv2.cvtColor(labels_patch_ud_vis, cv2.COLOR_GRAY2BGR)
+    labels_patch_ud_vis = np.concatenate((src_img, labels_patch_ud_vis), axis=1)
+    cv2.imwrite(out_fname, labels_patch_ud_vis)
+
+    return labels_patch_ud_vis
+
 
 def run(params):
     """
@@ -349,32 +361,15 @@ def run(params):
 
                     out_src_img_fname = linux_path(out_src_path, '{:s}.{:s}'.format(out_img_fname, out_ext))
                     cv2.imwrite(out_src_img_fname, src_patch)
-                    if show_img:
-                        disp_img = src_img.copy()
-                        cv2.rectangle(disp_img, (min_col, min_row), (max_col, max_row), (255, 0, 0), 2)
 
-                        # disp_labels_img = labels_img.copy()
-                        # cv2.rectangle(disp_labels_img, (min_col, min_row), (max_col, max_row), (255, 0, 0), 2)
-
-                        cv2.imshow('src_img', disp_img)
-                        cv2.imshow('patch', src_patch)
-                        if enable_labels:
-                            labels_patch_disp = labels_img_orig[min_row:max_row, min_col:max_col, :].astype(np.uint8)
-                            cv2.imshow('patch_labels', labels_patch_disp)
-                        # cv2.imshow('disp_labels_img', disp_labels_img)
-                        k = cv2.waitKey(1 - pause_after_frame)
-                        if k == 27:
-                            sys.exit(0)
-                        elif k == 32:
-                            pause_after_frame = 1 - pause_after_frame
                     if enable_labels:
                         out_labels_img_fname = linux_path(out_labels_path, '{:s}.{:s}'.format(out_img_fname, out_ext))
                         cv2.imwrite(out_labels_img_fname, labels_patch)
 
-                        out_vis_labels_img_fname = linux_path(out_labels_vis_path,
-                                                              '{:s}.{:s}'.format(out_img_fname, out_ext))
-                        labels_patch_vis = labels_patch * (255 / n_classes)
-                        cv2.imwrite(out_vis_labels_img_fname, labels_patch_vis)
+                        if params.save_vis:
+                            out_vis_labels_img_fname = linux_path(out_labels_vis_path,
+                                                                  '{:s}.{:s}'.format(out_img_fname, out_ext))
+                            get_vis_image(src_patch, labels_patch, n_classes, out_vis_labels_img_fname)
 
                     if enable_flip:
                         src_patch_lr = np.fliplr(src_patch)
@@ -394,10 +389,10 @@ def run(params):
                                                               '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
                             cv2.imwrite(out_labels_img_fname, labels_patch_lr)
 
-                            out_vis_labels_img_fname = linux_path(out_labels_vis_path,
-                                                                  '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
-                            labels_patch_lr_vis = labels_patch_lr * (255 / n_classes)
-                            cv2.imwrite(out_vis_labels_img_fname, labels_patch_lr_vis)
+                            if params.save_vis:
+                                out_vis_labels_img_fname = linux_path(out_labels_vis_path,
+                                                                      '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
+                                get_vis_image(src_patch_lr, labels_patch_lr, n_classes, out_vis_labels_img_fname)
 
                             """
                             UD flip
@@ -407,10 +402,29 @@ def run(params):
                                                               '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
                             cv2.imwrite(out_labels_img_fname, labels_patch_ud)
 
-                            out_vis_labels_img_fname = linux_path(out_labels_vis_path,
-                                                                  '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
-                            labels_patch_ud_vis = labels_patch_ud * (255 / n_classes)
-                            cv2.imwrite(out_vis_labels_img_fname, labels_patch_ud_vis)
+                            if params.save_vis:
+                                out_vis_labels_img_fname = linux_path(out_labels_vis_path,
+                                                                      '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
+                                get_vis_image(src_patch_ud, labels_patch_ud, n_classes, out_vis_labels_img_fname)
+
+                    if show_img:
+                        disp_img = src_img.copy()
+                        cv2.rectangle(disp_img, (min_col, min_row), (max_col, max_row), (255, 0, 0), 2)
+
+                        # disp_labels_img = labels_img.copy()
+                        # cv2.rectangle(disp_labels_img, (min_col, min_row), (max_col, max_row), (255, 0, 0), 2)
+
+                        cv2.imshow('src_img', disp_img)
+                        cv2.imshow('patch', src_patch)
+                        if enable_labels:
+                            labels_patch_disp = labels_img_orig[min_row:max_row, min_col:max_col, :].astype(np.uint8)
+                            cv2.imshow('patch_labels', labels_patch_disp)
+                        # cv2.imshow('disp_labels_img', disp_labels_img)
+                        k = cv2.waitKey(1 - pause_after_frame)
+                        if k == 27:
+                            sys.exit(0)
+                        elif k == 32:
+                            pause_after_frame = 1 - pause_after_frame
 
                 min_col += random.randint(min_stride, max_stride)
                 if image_as_patch or max_col >= ncols:

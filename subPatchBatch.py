@@ -1,5 +1,8 @@
-import sys, os
+import sys
+import os
+import shlex
 import subprocess
+from datetime import datetime
 
 import paramparse
 from paramparse import MultiPath
@@ -66,9 +69,17 @@ class Params:
         self.patch_height = 32
         self.patch_width = 0
         self.show_img = 0
+        self.parallel = 1
+        self.log_to_file = 0
+        self.log_dir = 'log'
 
 
 def run(params):
+    """
+
+    :param Params params:
+    :return:
+    """
     db_root_dir = params.db_root_dir
     seq_name = params.seq_name
     img_ext = params.img_ext
@@ -141,9 +152,32 @@ def run(params):
     #     out_seq_name = '{}_flip'.format(out_seq_name_base)
     # out_seq_names.append(out_seq_name)
 
+    processes = []
+    time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
+    tee_log_id = 'sub_patch_batch_{}'.format(time_stamp)
+    os.makedirs(params.log_dir, exist_ok=True)
+
     no_rot_cmd = '{} enable_rot=0'.format(base_cmd)
     print('\n\nRunning:\n {}\n\n'.format(no_rot_cmd))
-    subprocess.check_call(no_rot_cmd, shell=True)
+
+    if params.parallel:
+        args = shlex.split(no_rot_cmd)
+        p = subprocess.Popen(args)
+        if params.log_to_file:
+            out_fname = tee_log_id + '.ansi'
+            zip_fname = out_fname.replace('.ansi', '.zip')
+
+            out_path = linux_path(params.log_dir, out_fname)
+
+            f = open(out_path, 'w')
+            p = subprocess.Popen(args, stdout=f, stderr=f)
+        else:
+            f = out_fname = zip_fname = None
+            p = subprocess.Popen(args)
+
+        processes.append((p, f, out_fname, zip_fname))
+    else:
+        subprocess.check_call(no_rot_cmd, shell=True)
 
     _min_rot = min_rot
 
@@ -154,9 +188,27 @@ def run(params):
             _max_rot = _min_rot + rot_range
 
         rot_cmd = '{} enable_rot=1 min_rot={} max_rot={}'.format(base_cmd, _min_rot, _max_rot)
-        print('\n\nRunning:\n {}\n\n'.format(rot_cmd))
+        print('\n\nrot {} / {}:\n {}\n\n'.format(i, n_rot, rot_cmd))
 
-        subprocess.check_call(rot_cmd, shell=True)
+        if params.parallel:
+            args = shlex.split(rot_cmd)
+            p = subprocess.Popen(args)
+            if params.log_to_file:
+                out_fname = tee_log_id + '_{}.ansi'.format(i)
+                zip_fname = out_fname.replace('.ansi', '.zip')
+
+                out_path = linux_path(params.log_dir, out_fname)
+                # zip_path = os.path.join(params.log_dir, zip_fname)
+
+                f = open(out_path, 'w')
+                p = subprocess.Popen(args, stdout=f, stderr=f)
+            else:
+                f = out_fname = zip_fname = None
+                p = subprocess.Popen(args)
+
+            processes.append((p, f, out_fname, zip_fname))
+        else:
+            subprocess.check_call(rot_cmd, shell=True)
 
         # out_seq_name = '{}_rot_{:d}_{:d}'.format(out_seq_name_base, min_rot, max_rot)
         # if enable_flip:
@@ -172,6 +224,14 @@ def run(params):
         #         merge_base_cmb, out_seq_names[i], cmb_out_seq_name, start_id, end_id)
         #     print('\n\nRunning:\n {}\n\n'.format(merge_cmd))
         #     subprocess.check_call(merge_cmd, shell=True)
+
+    if params.parallel:
+        for p, f, f_name, zip_fname in processes:
+            p.wait()
+            if f is None:
+                continue
+
+            f.close()
 
 
 if __name__ == '__main__':
