@@ -54,7 +54,8 @@ class Params:
 
         self.img_ext = 'tif'
         self.labels_ext = 'jpg'
-        self.out_ext = 'png'
+        self.out_img_ext = 'jpg'
+        self.out_labels_ext = 'png'
 
         self.start_id = 0
         self.end_id = -1
@@ -84,7 +85,8 @@ def run(params):
     seq_name = params.seq_name
     img_ext = params.img_ext
     labels_ext = params.labels_ext
-    out_ext = params.out_ext
+    out_img_ext = params.out_img_ext
+    out_labels_ext = params.out_labels_ext
     show_img = params.show_img
     patch_height = params.patch_height
     patch_width = params.patch_width
@@ -139,10 +141,12 @@ def run(params):
     if enable_flip:
         cmb_out_seq_name = '{}_flip'.format(cmb_out_seq_name)
 
-    base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={} img_ext={} labels_ext={} out_ext={} ' \
+    base_cmd = 'python3 subPatchDataset.py db_root_dir={} seq_name={}' \
+               ' img_ext={} labels_ext={} out_img_ext={} out_labels_ext={} ' \
                'patch_height={} patch_width={} min_stride={} max_stride={} enable_flip={} start_id={} end_id={} ' \
                'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={} n_classes={}'.format(
-        db_root_dir, seq_name, img_ext, labels_ext, out_ext, patch_height, patch_width, min_stride, max_stride,
+        db_root_dir, seq_name, img_ext, labels_ext, out_img_ext, out_labels_ext, patch_height, patch_width, min_stride,
+        max_stride,
         enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name, src_path, labels_path, n_classes)
 
     # out_seq_name_base = '{:s}_{:d}_{:d}_{:d}_{:d}_{:d}_{:d}'.format(

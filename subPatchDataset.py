@@ -63,7 +63,9 @@ class Params:
         self.labels_ext = 'jpg'
 
         self.out_seq_name = ''
-        self.out_ext = 'png'
+        self.out_img_ext = 'jpg'
+        self.out_labels_ext = 'png'
+        self.vis_ext = 'jpg'
 
         self.db_root_dir = ''
         self.src_path = ''
@@ -92,7 +94,8 @@ def run(params):
     seq_name = params.seq_name
     out_seq_name = params.out_seq_name
     img_ext = params.img_ext
-    out_ext = params.out_ext
+    out_ext = params.out_labels_ext
+    vis_ext = params.vis_ext
     show_img = params.show_img
     _patch_height = params.patch_height
     _patch_width = params.patch_width
@@ -225,8 +228,7 @@ def run(params):
                 src_img_fname, src_width, src_height, patch_width, patch_height))
             continue
 
-        if src_img is None:
-            raise SystemError('Source image could not be read from: {}'.format(src_img_fname))
+        assert src_img is not None, 'Source image could not be read from: {}'.format(src_img_fname)
 
         if enable_labels:
             labels_img_fname = linux_path(labels_path, img_fname_no_ext + '.' + params.labels_ext)
@@ -244,21 +246,21 @@ def run(params):
             rot_angle = random.randint(min_rot, max_rot)
             src_img = imutils.rotate_bound(src_img, rot_angle)
 
-            out_src_img_fname = 'img_{:d}_rot_{:d}.{:s}'.format(
-                img_id + 1, rot_angle, out_ext)
+            if not enable_labels:
+                if params.save_vis:
+                    out_src_img_fname = 'img_{:d}_rot_{:d}.{:s}'.format(
+                        img_id + 1, rot_angle, vis_ext)
 
-            if db_root_dir:
-                out_src_img_dir = linux_path(db_root_dir, out_seq_name)
+                    if db_root_dir:
+                        out_src_img_dir = linux_path(db_root_dir, out_seq_name)
+                    else:
+                        out_src_img_dir = linux_path(src_path_root_dir, 'rot', out_seq_name)
+
+                    os.makedirs(out_src_img_dir, exist_ok=1)
+
+                    out_src_img_path = linux_path(out_src_img_dir, out_src_img_fname)
+                    cv2.imwrite(out_src_img_path, src_img)
             else:
-                out_src_img_dir = linux_path(src_path_root_dir, 'rot', out_seq_name)
-
-            os.makedirs(out_src_img_dir, exist_ok=1)
-
-            out_src_img_path = linux_path(out_src_img_dir, out_src_img_fname)
-
-            cv2.imwrite(out_src_img_path, src_img)
-            if enable_labels:
-
                 if proc_labels:
                     if n_classes == 3:
                         labels_img[labels_img < 64] = 50
@@ -281,19 +283,20 @@ def run(params):
 
                 labels_img = imutils.rotate_bound(labels_img, rot_angle).astype(np.int32)
 
-                out_labels_img_fname = 'labels_{:d}_rot_{:d}.{:s}'.format(
-                    img_id + 1, rot_angle, out_ext)
+                if params.save_vis:
+                    out_labels_img_fname = 'labels_{:d}_rot_{:d}.{:s}'.format(
+                        img_id + 1, rot_angle, vis_ext)
 
-                if db_root_dir:
-                    out_labels_img_dir = linux_path(db_root_dir, out_seq_name)
-                else:
-                    out_labels_img_dir = linux_path(labels_path_root_dir, 'rot', out_seq_name)
+                    if db_root_dir:
+                        out_labels_img_dir = linux_path(db_root_dir, out_seq_name)
+                    else:
+                        out_labels_img_dir = linux_path(labels_path_root_dir, 'rot', out_seq_name)
 
-                os.makedirs(out_labels_img_dir, exist_ok=1)
+                    os.makedirs(out_labels_img_dir, exist_ok=1)
 
-                out_labels_img_path = linux_path(out_labels_img_dir, out_labels_img_fname)
-
-                cv2.imwrite(out_labels_img_path, labels_img)
+                    out_labels_img_path = linux_path(out_labels_img_dir, out_labels_img_fname)
+                    labels_img_vis = np.concatenate((src_img, labels_img), axis=1)
+                    cv2.imwrite(out_labels_img_path, labels_img_vis)
 
                 labels_img[labels_img == 0] = -1
 
@@ -368,7 +371,7 @@ def run(params):
 
                         if params.save_vis:
                             out_vis_labels_img_fname = linux_path(out_labels_vis_path,
-                                                                  '{:s}.{:s}'.format(out_img_fname, out_ext))
+                                                                  '{:s}.{:s}'.format(out_img_fname, vis_ext))
                             get_vis_image(src_patch, labels_patch, n_classes, out_vis_labels_img_fname)
 
                     if enable_flip:
@@ -391,7 +394,7 @@ def run(params):
 
                             if params.save_vis:
                                 out_vis_labels_img_fname = linux_path(out_labels_vis_path,
-                                                                      '{:s}_lr.{:s}'.format(out_img_fname, out_ext))
+                                                                      '{:s}_lr.{:s}'.format(out_img_fname, vis_ext))
                                 get_vis_image(src_patch_lr, labels_patch_lr, n_classes, out_vis_labels_img_fname)
 
                             """
@@ -404,7 +407,7 @@ def run(params):
 
                             if params.save_vis:
                                 out_vis_labels_img_fname = linux_path(out_labels_vis_path,
-                                                                      '{:s}_ud.{:s}'.format(out_img_fname, out_ext))
+                                                                      '{:s}_ud.{:s}'.format(out_img_fname, vis_ext))
                                 get_vis_image(src_patch_ud, labels_patch_ud, n_classes, out_vis_labels_img_fname)
 
                     if show_img:
