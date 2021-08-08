@@ -144,7 +144,7 @@ def run(params):
     if enable_flip:
         cmb_out_seq_name = '{}_flip'.format(cmb_out_seq_name)
 
-    base_cmd = '{}} subPatchDataset.py db_root_dir={} seq_name={}' \
+    base_cmd = '{} subPatchDataset.py db_root_dir={} seq_name={}' \
                ' img_ext={} labels_ext={} out_img_ext={} out_labels_ext={} ' \
                'patch_height={} patch_width={} min_stride={} max_stride={} enable_flip={} start_id={} end_id={} ' \
                'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={} n_classes={}'.format(
