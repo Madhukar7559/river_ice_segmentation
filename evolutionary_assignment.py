@@ -21,17 +21,20 @@ def count_pairwise_assignments(binary_matrix):
     return n_pairwise_assignments, avg_pairwise_assignments
 
 
-def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id, generation_id):
+def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, min_total_deviations, prefix, init_id,
+                generation_id):
     unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
     time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
-    out_fname = '{}_init_{}_gen_{}___{}___{}.csv'.format(
-        prefix, init_id, generation_id, unique_counts_str, time_stamp)
+    out_fname = '{}_init_{}_gen_{}___{}___dev-{}___{}.csv'.format(
+        prefix, init_id, generation_id, unique_counts_str, min_total_deviations, time_stamp)
     np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
 
     return out_fname
 
 
 def get_metrics(binary_matrix):
+    n_persons, n_tasks = binary_matrix.shape
+
     n_pairwise_assignments, avg_pairwise_assignments = count_pairwise_assignments(binary_matrix)
 
     n_pairwise_assignments_list = list(n_pairwise_assignments.values())
@@ -65,7 +68,16 @@ def get_metrics(binary_matrix):
     #     prefix = 'max_lt3_count'
     #     save = 1
 
-    return unique_values, unique_counts, curr_3_count
+    n_type_1 = [np.sum(binary_matrix[p, :14]) for p in range(n_persons)]
+    # n_type_2 = [np.sum(binary_matrix[p, 14:]) for p in range(n_persons)]
+
+    n_deviations_type_1 = [abs(5 - k) for k in n_type_1]
+    # n_deviations_type_2 = [abs(5 - k) for k in n_type_2]
+
+    total_deviations = int(sum(n_deviations_type_1))
+
+    return unique_values, unique_counts, curr_3_count, \
+           total_deviations, n_deviations_type_1, n_type_1
 
 
 def main():
@@ -75,6 +87,8 @@ def main():
     tasks_per_person = 10
     persons_per_task = 5
 
+    allow_partial_decrease = 0
+
     n_trials = int(1e7)
     max_gen_trials = int(5e5)
 
@@ -82,6 +96,7 @@ def main():
     gen_init = 1
 
     load_init = ''
+    # load_init = 'log/3-82/evo_init_15_gen_35___2-2__3-82__4-5__5-2___210805_200954.csv'
     # load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
 
     cmd_args = sys.argv[1:]
@@ -101,10 +116,12 @@ def main():
         cmd_id += 1
 
     if load_init and os.path.isfile(load_init):
+        print('loading initial matrix from: {}'.format(load_init))
         binary_matrix = np.loadtxt(load_init)
         gen_init = 0
 
     global_max_3_count = 0
+    global_min_deviations = np.inf
     prefix = 'evo'
     init_id = 0
     out_fname = None
@@ -156,18 +173,38 @@ def main():
 
             print('initialization {} completed in {} trials'.format(init_id, init_trials))
 
-        unique_values, unique_counts, max_3_count = get_metrics(binary_matrix)
+        unique_values, unique_counts, curr_3_count, \
+        curr_deviations, n_deviations_type_1, n_type_1 = get_metrics(binary_matrix)
+        max_3_count = curr_3_count
+        min_deviations = curr_deviations
 
         child_trials = 0
         generation_trials = 0
         generation_id = 0
 
+        save = 0
+
         if max_3_count > global_max_3_count:
             global_max_3_count = max_3_count
-            out_fname = save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, prefix, init_id,
+            prefix = 'max_3_count'
+            save = 1
+
+        if min_deviations < global_min_deviations:
+            global_min_deviations = min_deviations
+            prefix = 'min_deviations'
+            save = 1
+
+        if save:
+            out_fname = save_matrix(binary_matrix, unique_values, unique_counts,
+                                    curr_3_count, curr_deviations, prefix, init_id,
                                     generation_id)
 
         parent_binary_matrix = binary_matrix.copy()
+
+        print('max_gen_trials:  {:e}'.format(max_gen_trials))
+        print('global_min_deviations:  {}'.format(global_min_deviations))
+        print('global_max_3_count:  {}'.format(global_max_3_count))
+        print('out_fname:  {}'.format(out_fname))
 
         while True:
             generation_trials += 1
@@ -198,9 +235,13 @@ def main():
             binary_matrix[y1, x2] = 1 - binary_matrix[y1, x2]
             binary_matrix[y2, x2] = 1 - binary_matrix[y2, x2]
 
-            unique_values, unique_counts, curr_3_count = get_metrics(binary_matrix)
+            unique_values, unique_counts, curr_3_count, \
+            curr_deviations, n_deviations_type_1, n_type_1 = get_metrics(binary_matrix)
 
-            if curr_3_count <= max_3_count:
+            if not allow_partial_decrease and (curr_3_count < max_3_count or curr_deviations > min_deviations):
+                continue
+
+            if curr_3_count <= max_3_count and curr_deviations >= min_deviations:
                 continue
 
             # row_sum = np.count_nonzero(binary_matrix, axis=0)
@@ -212,19 +253,39 @@ def main():
 
             print('\n\ninit {} generation {} found in {} trials'.format(
                 init_id, generation_id, generation_trials))
+
             print('curr_3_count:  {}'.format(curr_3_count))
+            print('curr_deviations:  {}'.format(curr_deviations))
 
             generation_trials = 0
 
-            max_3_count = curr_3_count
+            if curr_3_count > max_3_count:
+                max_3_count = curr_3_count
+
+            if curr_deviations < min_deviations:
+                min_deviations = curr_deviations
+
             parent_binary_matrix = binary_matrix.copy()
+
+            save = 0
 
             if max_3_count > global_max_3_count:
                 global_max_3_count = max_3_count
-                out_fname = save_matrix(binary_matrix, unique_values, unique_counts, curr_3_count, prefix, init_id,
-                                        generation_id)
+                prefix = 'max_3_count'
+                save = 1
 
-            print('max_gen_trials:  {:e}'.format(max_gen_trials))
+            if min_deviations < global_min_deviations:
+                global_min_deviations = min_deviations
+                prefix = 'min_deviations'
+                save = 1
+
+            if save:
+                global_max_3_count = max_3_count
+                out_fname = save_matrix(binary_matrix, unique_values, unique_counts,
+                                        curr_3_count, curr_deviations,
+                                        prefix, init_id, generation_id)
+
+            print('global_min_deviations:  {}'.format(global_min_deviations))
             print('global_max_3_count:  {}'.format(global_max_3_count))
             print('out_fname:  {}'.format(out_fname))
 
