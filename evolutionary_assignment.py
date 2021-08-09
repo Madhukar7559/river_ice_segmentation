@@ -25,9 +25,9 @@ def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, min_to
                 generation_id):
     unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
     time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
-    out_fname = 'log/{}_init_{}_gen_{}___{}___dev-{}___{}.csv'.format(
+    out_fname = '/{}_init_{}_gen_{}___{}___dev-{}___{}.csv'.format(
         prefix, init_id, generation_id, unique_counts_str, min_total_deviations, time_stamp)
-    np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
+    np.savetxt(os.path.join('log', out_fname), binary_matrix, fmt='%d', delimiter='\t')
 
     return out_fname
 
