@@ -268,7 +268,6 @@ def main():
             parent_binary_matrix = binary_matrix.copy()
 
             save = 0
-
             if max_3_count > global_max_3_count:
                 global_max_3_count = max_3_count
                 prefix = 'max_3_count'
@@ -280,7 +279,6 @@ def main():
                 save += 1
 
             if save == 2:
-                global_max_3_count = max_3_count
                 out_fname = save_matrix(binary_matrix, unique_values, unique_counts,
                                         curr_3_count, curr_deviations,
                                         prefix, init_id, generation_id)
