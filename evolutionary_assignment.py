@@ -25,7 +25,7 @@ def save_matrix(binary_matrix, unique_values, unique_counts, max_3_count, min_to
                 generation_id):
     unique_counts_str = '__'.join('{}-{}'.format(val, cnt) for val, cnt in zip(unique_values, unique_counts))
     time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
-    out_fname = '{}_init_{}_gen_{}___{}___dev-{}___{}.csv'.format(
+    out_fname = 'log/{}_init_{}_gen_{}___{}___dev-{}___{}.csv'.format(
         prefix, init_id, generation_id, unique_counts_str, min_total_deviations, time_stamp)
     np.savetxt(out_fname, binary_matrix, fmt='%d', delimiter='\t')
 
@@ -128,6 +128,8 @@ def main():
 
     col_idx = list(range(n_tasks))
     row_idx = list(range(n_persons))
+
+    os.makedirs('log', exist_ok=True)
 
     while True:
 
@@ -276,9 +278,9 @@ def main():
             if min_deviations < global_min_deviations:
                 global_min_deviations = min_deviations
                 prefix = 'min_deviations'
-                save += 1
+                save = 1
 
-            if save == 2:
+            if save:
                 out_fname = save_matrix(binary_matrix, unique_values, unique_counts,
                                         curr_3_count, curr_deviations,
                                         prefix, init_id, generation_id)
