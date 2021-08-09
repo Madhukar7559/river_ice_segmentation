@@ -277,9 +277,9 @@ def main():
             if min_deviations < global_min_deviations:
                 global_min_deviations = min_deviations
                 prefix = 'min_deviations'
-                save = 1
+                save += 1
 
-            if save:
+            if save == 2:
                 global_max_3_count = max_3_count
                 out_fname = save_matrix(binary_matrix, unique_values, unique_counts,
                                         curr_3_count, curr_deviations,
