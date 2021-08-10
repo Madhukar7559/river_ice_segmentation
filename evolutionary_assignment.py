@@ -90,13 +90,14 @@ def main():
     allow_partial_decrease = 0
 
     n_trials = int(1e7)
-    max_gen_trials = int(5e5)
+    max_gen_trials = int(1e7)
 
     init_trials = 0
     gen_init = 1
 
-    load_init = ''
-    # load_init = 'log/3-82/evo_init_15_gen_35___2-2__3-82__4-5__5-2___210805_200954.csv'
+    # load_init = ''
+    # load_init = 'log/max_3_count_init_33_gen_34___2-1__3-82__4-8___dev-4___210809_152458.csv'
+    load_init = 'log/max_3_count_init_241_gen_37__2-2__3-81__4-7__5-1__dev_2__210810_002125.csv'
     # load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
 
     cmd_args = sys.argv[1:]
@@ -115,7 +116,8 @@ def main():
         load_init = cmd_args[cmd_id]
         cmd_id += 1
 
-    if load_init and os.path.isfile(load_init):
+    if load_init:
+        assert os.path.isfile(load_init), "non-existent load_init: {}".format(load_init)
         print('loading initial matrix from: {}'.format(load_init))
         binary_matrix = np.loadtxt(load_init)
         gen_init = 0
