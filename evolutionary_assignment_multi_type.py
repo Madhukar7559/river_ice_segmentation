@@ -147,12 +147,8 @@ def main():
     tasks_per_person_list = [2, ] * (n_persons - 1)
     tasks_per_person_list.append(1)
 
-    type_1_tasks_per_person_list = [1, ] * (n_persons - 1)
-    type_1_tasks_per_person_list.append(2)
-
-    type_2_tasks_per_person_list = [1, ] * (n_persons - 2)
-    type_2_tasks_per_person_list.append(0)
-    type_2_tasks_per_person_list.append(0)
+    type_1_tasks_per_person_list = [1, ] * (n_persons - 1) + [2, ]
+    type_2_tasks_per_person_list = [0, ] * 2 + [1, ] * (n_persons - 2)
 
     all_tasks = list(range(n_tasks))
     while True:
@@ -176,7 +172,8 @@ def main():
 
                     # binary_matrix_type_1 = binary_matrix_type_1[:n_persons, :]
 
-                    col_sum_type_1 = np.count_nonzero(binary_matrix_type_1, axis=1)
+                    # col_sum_type_1 = np.count_nonzero(binary_matrix_type_1, axis=1)
+
                     # print('col_sum_type_1: {}'.format(col_sum_type_1))
 
                     # is_valid_type_1 = np.all(col_sum_type_1 == task_1_per_person)
@@ -190,7 +187,8 @@ def main():
 
                     # binary_matrix_type_2 = binary_matrix_type_2[:n_persons, :type_2_tasks]
 
-                    col_sum_type_2 = np.count_nonzero(binary_matrix_type_2, axis=1)
+                    # col_sum_type_2 = np.count_nonzero(binary_matrix_type_2, axis=1)
+
                     # n_task_2_assigns = np.count_nonzero(col_sum_type_2 == task_2_per_person)
                     # is_valid_type_2 = n_task_2_assigns == n_persons - 1
 
@@ -334,6 +332,26 @@ def main():
             binary_matrix[y1, x2] = 1 - binary_matrix[y1, x2]
             binary_matrix[y2, x2] = 1 - binary_matrix[y2, x2]
 
+            binary_matrix_type_1 = binary_matrix[:, :type_1_tasks]
+            binary_matrix_type_2 = binary_matrix[:, type_1_tasks:]
+
+            col_sum_type_1 = np.count_nonzero(binary_matrix_type_1, axis=1)
+            col_sum_type_2 = np.count_nonzero(binary_matrix_type_2, axis=1)
+
+            col_sum_type_1_sorted = sorted(list(col_sum_type_1))
+
+            is_valid_type_1 = col_sum_type_1_sorted == type_1_tasks_per_person_list
+            if not is_valid_type_1:
+                continue
+
+            col_sum_type_2_sorted = sorted(list(col_sum_type_2))
+            is_valid_type_2 = col_sum_type_2_sorted == type_2_tasks_per_person_list
+            if not is_valid_type_2:
+                continue
+
+            # print('\n\ninit {} valid generation found in {} trials'.format(
+            #     init_id, generation_id, generation_trials))
+
             unique_values, unique_counts, avg_pairwise_assignments, \
             curr_0_count, curr_1_count = get_metrics(binary_matrix)
             curr_01_count = curr_0_count + curr_1_count
@@ -351,7 +369,7 @@ def main():
 
             generation_id += 1
 
-            print('\n\ninit {} generation {} found in {} trials'.format(
+            print('\n\ninit {} improved generation {} found in {} trials'.format(
                 init_id, generation_id, generation_trials))
 
             print('curr_0_count:  {}'.format(curr_0_count))
