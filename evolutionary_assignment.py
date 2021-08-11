@@ -83,7 +83,6 @@ def get_metrics(binary_matrix):
 def main():
     n_tasks = 28
     n_persons = 14
-
     tasks_per_person = 10
     persons_per_task = 5
 
@@ -95,9 +94,10 @@ def main():
     init_trials = 0
     gen_init = 1
 
-    # load_init = ''
+    load_init = ''
+
     # load_init = 'log/max_3_count_init_33_gen_34___2-1__3-82__4-8___dev-4___210809_152458.csv'
-    load_init = 'log/max_3_count_init_241_gen_37__2-2__3-81__4-7__5-1__dev_2__210810_002125.csv'
+    # load_init = 'log/max_3_count_init_241_gen_37__2-2__3-81__4-7__5-1__dev_2__210810_002125.csv'
     # load_init = 'evo_max_3_count___1-1__2-5__3-76__4-4__5-5___210805_181606.csv'
 
     cmd_args = sys.argv[1:]
@@ -120,6 +120,8 @@ def main():
         assert os.path.isfile(load_init), "non-existent load_init: {}".format(load_init)
         print('loading initial matrix from: {}'.format(load_init))
         binary_matrix = np.loadtxt(load_init)
+
+        assert binary_matrix.shape == (n_persons, n_tasks), "loaded matrix has invalid shape"
         gen_init = 0
 
     global_max_3_count = 0
@@ -138,6 +140,9 @@ def main():
         if gen_init:
             gen_init = 0
             init_id += 1
+
+            print('searching for an initial random parent matrix...')
+
             while True:
                 init_trials += 1
 
@@ -173,6 +178,7 @@ def main():
 
                 if not is_valid:
                     continue
+
                 break
 
             print('initialization {} completed in {} trials'.format(init_id, init_trials))
