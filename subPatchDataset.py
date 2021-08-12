@@ -134,6 +134,8 @@ def run(params):
     src_path_root_dir = os.path.dirname(src_path)
 
     print('Reading source images from: {}'.format(src_path))
+    if enable_rot:
+        print('rot: {:d}, {:d}'.format(min_rot, max_rot))
 
     src_files = [k for k in os.listdir(src_path) if k.endswith('.{:s}'.format(img_ext))]
     assert src_files, SystemError('No input frames found')

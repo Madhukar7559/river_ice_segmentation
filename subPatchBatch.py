@@ -207,6 +207,8 @@ def run(params):
                 out_path = linux_path(params.log_dir, out_fname)
                 # zip_path = os.path.join(params.log_dir, zip_fname)
 
+                print('logging to: {}'.format(out_path))
+
                 f = open(out_path, 'w')
                 p = subprocess.Popen(args, stdout=f, stderr=f)
             else:
