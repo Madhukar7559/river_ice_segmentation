@@ -259,19 +259,19 @@ if __name__ == '__main__':
         seq_ids = db_splits[split]
         n_seq = len(seq_ids)
 
-        for seq_id in seq_ids:
+        for __id, seq_id in enumerate(seq_ids):
             seq_name, n_frames = CTCInfo.sequences[seq_id]
 
-            if seq_id != _params.seq_id >= 0:
-                print('skipping sequence {}/{}: {}'.format(seq_id + 1, n_seq, seq_name))
+            if __id != _params.seq_id >= 0:
+                print('skipping sequence {}/{}: {}'.format(__id + 1, n_seq, seq_name))
                 continue
 
-            if seq_id < _params.seq_start_id > 0:
-                print('skipping sequence {}/{}: {}'.format(seq_id + 1, n_seq, seq_name))
+            if __id < _params.seq_start_id > 0:
+                print('skipping sequence {}/{}: {}'.format(__id + 1, n_seq, seq_name))
                 continue
 
-            if seq_id > _params.seq_end_id >= _params.seq_start_id:
-                print('skipping all sequences after {}/{}'.format(seq_id + 1, n_seq))
+            if __id > _params.seq_end_id >= _params.seq_start_id:
+                print('skipping all sequences after {}/{}'.format(__id + 1, n_seq))
                 break
 
             _params.seq_name = seq_name
