@@ -79,7 +79,7 @@ class Params:
         self.log_dir = 'log'
 
 
-def run(params):
+def run(params, processes):
     """
 
     :param Params params:
@@ -150,7 +150,8 @@ def run(params):
                ' img_ext={} labels_ext={} out_img_ext={} out_labels_ext={} ' \
                'patch_height={} patch_width={} min_stride={} max_stride={} enable_flip={} start_id={} end_id={} ' \
                'n_frames={} show_img={} out_seq_name={} src_path={} labels_path={} n_classes={}'.format(
-        py_exe, db_root_dir, seq_name, img_ext, labels_ext, out_img_ext, out_labels_ext, patch_height, patch_width, min_stride,
+        py_exe, db_root_dir, seq_name, img_ext, labels_ext, out_img_ext, out_labels_ext, patch_height, patch_width,
+        min_stride,
         max_stride,
         enable_flip, start_id, end_id, n_frames, show_img, cmb_out_seq_name, src_path, labels_path, n_classes)
 
@@ -161,7 +162,6 @@ def run(params):
     #     out_seq_name = '{}_flip'.format(out_seq_name_base)
     # out_seq_names.append(out_seq_name)
 
-    processes = []
     time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
     tee_log_id = 'sub_patch_batch_{}'.format(time_stamp)
     os.makedirs(params.log_dir, exist_ok=True)
@@ -236,19 +236,13 @@ def run(params):
         #     print('\n\nRunning:\n {}\n\n'.format(merge_cmd))
         #     subprocess.check_call(merge_cmd, shell=True)
 
-    if params.parallel:
-        for p, f, f_name, zip_fname in processes:
-            p.wait()
-            if f is None:
-                continue
-
-            f.close()
-
 
 if __name__ == '__main__':
     _params = Params()
 
     paramparse.process(_params)
+
+    processes = []
 
     if _params.dataset == 'ctc':
         from ctc_info import CTCInfo
@@ -267,7 +261,7 @@ if __name__ == '__main__':
             seq_name, n_frames = CTCInfo.sequences[seq_id]
 
             if seq_id < _params.seq_start_id > 0:
-                print('skipping sequence {}/{}: {}'.format(seq_id+1, n_seq, seq_name))
+                print('skipping sequence {}/{}: {}'.format(seq_id + 1, n_seq, seq_name))
                 continue
 
             _params.seq_name = seq_name
@@ -276,6 +270,14 @@ if __name__ == '__main__':
 
             print('running on sequence {}/{}: {}'.format(seq_id + 1, n_seq, seq_name))
 
-            run(_params)
+            processes = run(_params, processes)
     else:
-        run(_params)
+        processes = run(_params, processes)
+
+    if _params.parallel:
+        for p, f, f_name, zip_fname in processes:
+            p.wait()
+            if f is None:
+                continue
+
+            f.close()
