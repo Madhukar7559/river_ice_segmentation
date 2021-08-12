@@ -61,7 +61,7 @@ class Params:
 
         self.seq_id = -1
         self.seq_start_id = 0
-        self.seq_end_id = 0
+        self.seq_end_id = -1
 
         self.start_id = 0
         self.end_id = -1
