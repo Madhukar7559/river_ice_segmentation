@@ -59,6 +59,8 @@ class Params:
 
         self.py_exe = 'python36'
 
+        self.seq_start_id = 0
+
         self.start_id = 0
         self.end_id = -1
 
@@ -259,12 +261,20 @@ if __name__ == '__main__':
         _params.db_root_dir = ''
 
         seq_ids = db_splits[split]
+        n_seq = len(seq_ids)
+
         for seq_id in seq_ids:
             seq_name, n_frames = CTCInfo.sequences[seq_id]
-            _params.seq_name = seq_name
 
+            if seq_id < _params.seq_start_id > 0:
+                print('skipping sequence {}/{}: {}'.format(seq_id+1, n_seq, seq_name))
+                continue
+
+            _params.seq_name = seq_name
             _params.src_path = linux_path(db_root_dir, _params.image_dir, seq_name)
             _params.labels_path = linux_path(db_root_dir, _params.labels_dir, seq_name)
+
+            print('running on sequence {}/{}: {}'.format(seq_id + 1, n_seq, seq_name))
 
             run(_params)
     else:
