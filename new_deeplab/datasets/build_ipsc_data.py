@@ -44,7 +44,8 @@ class Params:
         self.raad_gt = 0
         self.tra_only = 0
 
-        self.two_classes = 1
+        self.create_raw_seg = 1
+        self.n_classes = 2
 
         self.show_img = 0
         self.save_img = 0
@@ -65,7 +66,7 @@ def linux_path(*args, **kwargs):
     return os.path.join(*args, **kwargs).replace(os.sep, '/')
 
 
-def create_tfrecords(img_src_files, seg_src_files, n_shards, db_split, output_dir):
+def create_tfrecords(img_src_files, seg_src_files, n_classes, n_shards, db_split, output_dir):
     image_reader = build_data.ImageReader('jpeg', channels=1)
 
     label_reader = build_data.ImageReader('png', channels=1)
@@ -133,6 +134,7 @@ def _convert_dataset(params):
 
     n_seq = len(seq_ids)
     img_exts = ('.jpg',)
+    seg_exts = ('.png',)
 
     n_total_src_files = 0
 
@@ -163,17 +165,35 @@ def _convert_dataset(params):
             seg_path = linux_path(params.root_dir, seq_name, 'labels')
 
             assert os.path.exists(seg_path), \
-                "segmentations found for sequence: {}".format(seq_name)
+                "segmentations not found for sequence: {}".format(seq_name)
 
             _seg_src_files = [linux_path(seg_path, k) for k in os.listdir(seg_path) if
-                              os.path.splitext(k.lower())[1] in ('.png',)]
+                              os.path.splitext(k.lower())[1] in seg_exts]
             _seg_src_files.sort()
             n_seg_src_files = len(_seg_src_files)
 
             assert n_img_src_files == n_seg_src_files, "mismatch between number of source and segmentation images"
             seg_src_files += _seg_src_files
 
-    create_tfrecords(img_src_files, seg_src_files, params.num_shards, params.db_split, params.output_dir)
+            if params.create_raw_seg:
+                for seg_src_file in _seg_src_files:
+                    seg_img = cv2.imread(seg_src_file)
+
+                    seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
+                    seg_vals = list(seg_vals)
+                    seg_val_indxs = list(seg_val_indxs)
+
+                    n_seg_vals = len(seg_vals)
+
+                    assert n_seg_vals == params.n_classes, \
+                        "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
+
+                    for seg_val_id, seg_val in enumerate(seg_vals):
+                        print('{} --> {}'.format(seg_val, seg_val_id))
+                        seg_img[seg_img == seg_val] = seg_val_id
+
+    create_tfrecords(img_src_files, seg_src_files, params.n_classes, params.num_shards,
+                     params.db_split, params.output_dir)
 
 
 def main():
