@@ -81,7 +81,7 @@ class Params:
         self.raad_gt = 0
         self.tra_only = 0
 
-        self.create_raw_seg = 1
+        self.create_raw_seg = 0
         self.n_classes = 2
 
         self.show_img = 0

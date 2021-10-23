@@ -17,7 +17,7 @@
 
 <a id="frame_150_end___build_data_"></a>
 ## frame_150_end       @ build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=frame_150_end
+python36 datasets/build_ipsc_data.py db_split=frame_150_end create_raw_seg=1
 
 <a id="hnasnet_"></a>
 # hnasnet
