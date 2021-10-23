@@ -243,11 +243,35 @@ _CTC_INFORMATION = DatasetDescriptor(
     ignore_label=255,
 )
 
+ipsc_splits_to_sizes = {
+    'g1': 6,
+    'g2': 130,
+    'g3': 377,
+    'g4': 149,
+    'g3_4': 526,
+    'g2_4': 656,
+    'all': 668,
+}
+
+# db_splits = CTCInfo.DBSplits().__dict__
+# for db_split in db_splits:
+#     seq_ids = db_splits[db_split]
+#
+#     seq_n_frames = [CTCInfo.sequences[seq_id][1] for seq_id in seq_ids]
+#     ctc_splits_to_sizes[db_split] = sum(seq_n_frames)
+
+_IPSC_INFORMATION = DatasetDescriptor(
+    splits_to_sizes=ipsc_splits_to_sizes,
+    num_classes=2,
+    ignore_label=255,
+)
+
 _DATASETS_INFORMATION = {
     'cityscapes': _CITYSCAPES_INFORMATION,
     'pascal_voc_seg': _PASCAL_VOC_SEG_INFORMATION,
     'ade20k': _ADE20K_INFORMATION,
     'CTC': _CTC_INFORMATION,
+    'IPSC': _IPSC_INFORMATION,
     'training_0_31_49_256_256_25_100_rot_15_125_235_345_flip': _617_256_INFORMATION,
     'training_0_31_49_384_384_25_100_rot_15_345_4_flip': _617_384_INFORMATION,
     'training_0_31_49_512_512_25_100_rot_15_345_4_flip': _617_512_INFORMATION,
@@ -391,7 +415,8 @@ class Dataset(object):
         image = _decode_image(parsed_features['image/encoded'], channels=3)
 
         label = None
-        """mind bogglingly annoying foul scummy hard-coded crappy garbage - what if test split is called something other 
+        """mind bogglingly annoying foul scummy hard-coded crappy garbage - what if test split is called something 
+        other 
         than test ?
         what if there are multiple test splits ?"""
         # if self.split_name != common.TEST_SET:

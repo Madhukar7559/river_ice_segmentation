@@ -17,7 +17,7 @@
 
 <a id="frame_150_end___build_data_"></a>
 ## frame_150_end       @ build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=frame_150_end create_raw_seg=1
+python36 datasets/build_ipsc_data.py db_split=g2_4 create_raw_seg=1
 
 <a id="hnasnet_"></a>
 # hnasnet
@@ -27,7 +27,7 @@ python36 datasets/build_ipsc_data.py db_split=frame_150_end create_raw_seg=1
 
 <a id="huh___atrous_6_12_18_hnasnet_"></a>
 ### huh       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ctc_:train:huh-r:+++vis:huh-e,_train_:b2 start=2
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:huh-r:+++vis:huh-e,_train_:b2 start=2
 
 <a id="on_train___huh_atrous_6_12_18_hnasnet_"></a>
 #### on_train       @ huh/atrous:6_12_18/hnasnet-->new_deeplab_ipsc
