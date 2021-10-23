@@ -40,7 +40,7 @@ def irange(a, b):
 class Params:
 
     def __init__(self):
-        self.db_split = 'huh'
+        self.db_split = 'all'
 
         self.cfg = ()
         self.ignore_missing_gt = 1
@@ -68,12 +68,12 @@ class Params:
         self.disable_seg = 0
         self.disable_tqdm = 0
         self.codec = 'H264'
-        self.use_tif = 0
 
         self.vis_height = 1080
         self.vis_width = 1920
-        self.db_splits = IPSCInfo.DBSplits().__dict__
         self.num_shards = 4
+
+        self.db_splits = IPSCInfo.DBSplits().__dict__
 
 
 def seg_to_png(gold_seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
@@ -239,6 +239,7 @@ def create_tfrecords(img_src_files, seg_src_files, n_shards, sub_seq, output_dir
                     image_data, img_src_path, height, width, seg_data)
 
                 tfrecord_writer.write(example.SerializeToString())
+
 
 def main():
     params = Params()
