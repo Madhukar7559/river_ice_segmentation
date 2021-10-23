@@ -284,7 +284,7 @@ class NewDeeplabVisParams:
 
     def process(self):
         if not self.dataset_dir:
-            self.dataset_dir = linux_path(self.db_root_dir, self.dataset, 'tfrecord')
+            self.dataset_dir = linux_path(self.db_root_dir, 'tfrecord', self.dataset)
 
         if not self.log_dir:
             self.log_dir = linux_path('log', self.train_info, self.model_info)

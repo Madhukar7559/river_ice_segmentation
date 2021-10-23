@@ -105,7 +105,7 @@ def linux_path(*args, **kwargs):
     return os.path.join(*args, **kwargs).replace(os.sep, '/')
 
 
-def create_tfrecords(img_src_files, seg_src_files, n_classes, n_shards, db_split, output_dir):
+def create_tfrecords(img_src_files, seg_src_files, n_shards, db_split, output_dir):
     image_reader = build_data.ImageReader('jpeg', channels=1)
 
     label_reader = build_data.ImageReader('png', channels=1)
@@ -228,6 +228,7 @@ def _convert_dataset(params):
         for seg_src_file_id, seg_src_file in enumerate(tqdm(seg_src_files)):
             seg_img = cv2.imread(seg_src_file)
 
+            """handle annoying nearby pixel values like 254"""
             seg_img[seg_img > 250] = 255
 
             seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
@@ -248,7 +249,7 @@ def _convert_dataset(params):
 
             cv2.imwrite(seg_src_file, seg_img)
 
-    create_tfrecords(img_src_files, seg_src_files, params.n_classes, params.num_shards,
+    create_tfrecords(img_src_files, seg_src_files, params.num_shards,
                      params.db_split, params.output_dir)
 
 
