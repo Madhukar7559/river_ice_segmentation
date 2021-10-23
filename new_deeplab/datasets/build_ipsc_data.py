@@ -194,63 +194,15 @@ def _convert_dataset(params):
 
             assert n_img_src_files == n_seg_src_files, "mismatch between number of source and segmentation images"
 
-        for img_src_file in _img_src_files:
-            img_src_file_no_ext = os.path.splitext(os.path.basename(img_src_file))[0]
-            img_src_file_id = seq_name + '::' + ''.join(k for k in os.path.basename(img_src_file) if k.isdigit())
-            if not params.disable_seg:
-                silver_seg_path = linux_path(tif_labels_root_path, seq_name + '_ST', 'SEG')
-                gold_seg_path = linux_path(tif_labels_root_path, seq_name + '_GT', 'SEG')
-                png_seg_path = linux_path(png_labels_root_path, seq_name)
-                os.makedirs(png_seg_path, exist_ok=True)
-
-                png_seg_src_path = os.path.join(png_seg_path, img_src_file_no_ext + '.png')
-                if not os.path.exists(png_seg_src_path):
-                    segmentation_found = seg_to_png(seg_src_file_ids, silver_seg_src_file_ids, img_src_file_id,
-                                                    silver_seg_path, gold_seg_path, png_seg_src_path, img_src_file,
-                                                    params.two_classes)
-                    if not segmentation_found:
-                        continue
-            else:
-                png_seg_src_path = None
-
-            png_img_dir_path = linux_path(png_img_root_path, seq_name)
-            jpg_img_dir_path = linux_path(jpg_img_root_path, seq_name)
-            tif_img_dir_path = linux_path(tif_img_root_path, seq_name)
-
-            if params.use_tif:
-                png_img_src_path = os.path.join(png_img_dir_path, img_src_file)
-                if not os.path.exists(png_img_src_path):
-                    tif_img_src_path = os.path.join(tif_img_dir_path, img_src_file)
-                    img = cv2.imread(tif_img_src_path, cv2.IMREAD_UNCHANGED)
-                    cv2.imwrite(png_img_src_path, img)
-                img_src_path = png_img_src_path
-            else:
-                jpg_img_src_path = os.path.join(jpg_img_dir_path, img_src_file)
-                img_src_path = jpg_img_src_path
-
-            img_src_files.append(img_src_file)
-            img_src_file_ids[img_src_file] = (img_src_file_id, seq_name, png_seg_src_path, img_src_path)
-
-    n_src_files = len(img_src_files)
-    print('\n\n{}: {} / {}\n\n'.format(params.db_split, n_src_files, n_total_src_files))
-
-    # return
-
-    # output_dir = linux_path(output_root_dir, seq_name)
-    output_dir = output_root_dir
-
-    create_tfrecords(img_src_files, img_src_file_ids, params.num_shards, params.db_split, params.use_tif, output_dir)
+    create_tfrecords(img_src_files, img_src_file_ids, params.num_shards, params.db_split, params.output_dir)
 
 
-def create_tfrecords(src_files, file_ids, n_shards, sub_seq, use_tif, output_dir):
-    if use_tif:
-        image_reader = build_data.ImageReader('png', channels=1)
-    else:
-        image_reader = build_data.ImageReader('jpeg', channels=1)
+def create_tfrecords(img_src_files, seg_src_files, n_shards, sub_seq, output_dir):
+    image_reader = build_data.ImageReader('jpeg', channels=1)
 
     label_reader = build_data.ImageReader('png', channels=1)
 
-    n_images = len(src_files)
+    n_images = len(img_src_files)
     n_per_shard = int(math.ceil(n_images / float(n_shards)))
 
     os.makedirs(output_dir, exist_ok=True)
@@ -269,17 +221,16 @@ def create_tfrecords(src_files, file_ids, n_shards, sub_seq, use_tif, output_dir
 
             for img_id in tqdm(range(start_idx, end_idx), ncols=50):
 
-                img_src_file = src_files[img_id]
-                img_src_file_id, seq_name, seg_src_path, img_src_path = file_ids[img_src_file]
+                img_src_path = img_src_files[img_id]
+
                 image_data = tf.gfile.FastGFile(img_src_path, 'rb').read()
                 height, width = image_reader.read_image_dims(image_data)
 
-                if seg_src_path is not None:
+                if seg_src_files is not None:
+                    seg_src_path = seg_src_files[img_id]
                     seg_data = tf.gfile.FastGFile(seg_src_path, 'rb').read()
                     seg_height, seg_width = label_reader.read_image_dims(seg_data)
-
-                    if height != seg_height or width != seg_width:
-                        raise RuntimeError('Shape mismatch found between image and label')
+                    assert height == seg_height and width == seg_width, 'Shape mismatch found between image and label'
                 else:
                     seg_data = None
 
@@ -289,14 +240,9 @@ def create_tfrecords(src_files, file_ids, n_shards, sub_seq, use_tif, output_dir
 
                 tfrecord_writer.write(example.SerializeToString())
 
-
 def main():
     params = Params()
     paramparse.process(params)
-
-    # for _sub_seq in params.sub_seq_dict:
-    #     params.sub_seq = _sub_seq
-    #     _convert_dataset(params)
 
     _convert_dataset(params)
 
