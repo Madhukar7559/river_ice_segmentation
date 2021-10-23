@@ -7,6 +7,7 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
 import shutil
 import sys
+import random
 import cv2
 import numpy as np
 import tensorflow as tf
@@ -85,6 +86,9 @@ class Params:
 
         self.create_raw_seg = 0
         self.n_classes = 2
+
+        self.shuffle = 1
+        self.train_ratio = 0.7
 
         self.show_img = 0
         self.save_img = 0
@@ -175,31 +179,45 @@ def _convert_dataset(params):
     img_exts = ('.jpg',)
     seg_exts = ('.png',)
 
-    n_total_src_files = 0
+    n_train_files = 0
+    n_test_files = 0
 
-    img_src_files = []
-    seg_src_files = []
-    vis_seg_src_files = []
+    train_img_files = []
+    train_seg_files = []
+
+    test_img_files = []
+    test_seg_files = []
+
+    vis_seg_files = []
+
     for __id, seq_id in enumerate(seq_ids):
 
         seq_name, n_frames = IPSCInfo.sequences[seq_id]
-
         print('\tseq {} / {}\t{}\t{}\t{} frames'.format(__id + 1, n_seq, seq_id, seq_name, n_frames))
 
         img_dir_path = linux_path(params.root_dir, seq_name, 'images')
 
         _img_src_files = [linux_path(img_dir_path, k) for k in os.listdir(img_dir_path) if
                           os.path.splitext(k.lower())[1] in img_exts]
-        _img_src_files.sort()
 
-        img_src_files += _img_src_files
-
-        n_img_src_files = len(_img_src_files)
-
-        n_total_src_files += len(_img_src_files)
-
-        assert n_img_src_files == n_frames, \
+        n_img_files = len(_img_src_files)
+        assert n_img_files == n_frames, \
             "Mismatch between number of the specified frames and number of actual images in folder"
+
+        _img_src_files.sort()
+        rand_indices = None
+        if params.shuffle:
+            rand_indices = list(range(n_img_files))
+            random.shuffle(rand_indices)
+            _img_src_files = [_img_src_files[i] for i in rand_indices]
+
+        _n_train_files = int(n_img_files * params.train_ratio)
+
+        train_img_files += _img_src_files[:_n_train_files]
+        test_img_files += _img_src_files[_n_train_files:]
+
+        n_train_files += _n_train_files
+        n_test_files += n_img_files - _n_train_files
 
         if not params.disable_seg:
             seg_path = linux_path(params.root_dir, seq_name, 'labels')
@@ -212,20 +230,39 @@ def _convert_dataset(params):
 
             _seg_src_fnames = [k for k in os.listdir(seg_path) if
                                os.path.splitext(k.lower())[1] in seg_exts]
+
+            n_seg_src_files = len(_seg_src_fnames)
+
+            assert n_img_files == n_seg_src_files, "mismatch between number of source and segmentation images"
+
             _seg_src_fnames.sort()
+
+            if params.shuffle:
+                _seg_src_fnames = [_seg_src_fnames[i] for i in rand_indices]
 
             _seg_src_files = [linux_path(seg_path, k) for k in _seg_src_fnames]
             _vis_seg_src_files = [linux_path(vis_seg_path, k) for k in _seg_src_fnames]
 
-            n_seg_src_files = len(_seg_src_files)
+            train_seg_files += _seg_src_files[:_n_train_files]
+            test_seg_files += _seg_src_files[_n_train_files:]
 
-            assert n_img_src_files == n_seg_src_files, "mismatch between number of source and segmentation images"
-            seg_src_files += _seg_src_files
-            vis_seg_src_files += _vis_seg_src_files
+            vis_seg_files += _vis_seg_src_files
 
+    n_total_files = n_train_files + n_test_files
+    print('Found {} files with {} training and {} testing files corresponding to a training ratio of {}'.format(
+        n_total_files, n_train_files, n_test_files, params.train_ratio
+    ))
     if params.create_raw_seg:
+        all_seg_files = train_seg_files + test_seg_files
+
         print('creating raw segmentation images')
-        for seg_src_file_id, seg_src_file in enumerate(tqdm(seg_src_files)):
+        for seg_src_file_id, seg_src_file in enumerate(tqdm(all_seg_files)):
+            vis_seg_src_file = vis_seg_files[seg_src_file_id]
+
+            if os.path.exists(vis_seg_src_file):
+                print('vis_seg_src_file already exists so skipping raw segmentation conversion')
+                break
+
             seg_img = cv2.imread(seg_src_file)
 
             """handle annoying nearby pixel values like 254"""
@@ -244,13 +281,23 @@ def _convert_dataset(params):
                 # print('{} --> {}'.format(seg_val, seg_val_id))
                 seg_img[seg_img == seg_val] = seg_val_id
 
-            vis_seg_src_file = vis_seg_src_files[seg_src_file_id]
             shutil.move(seg_src_file, vis_seg_src_file)
 
             cv2.imwrite(seg_src_file, seg_img)
 
-    create_tfrecords(img_src_files, seg_src_files, params.num_shards,
-                     params.db_split, params.output_dir)
+    if train_seg_files:
+        train_output_dir = linux_path(params.output_dir, 'train')
+        print('saving train tfrecords to {}'.format(train_output_dir))
+        os.makedirs(train_output_dir, exist_ok=1)
+        create_tfrecords(train_img_files, train_seg_files, params.num_shards,
+                         params.db_split, train_output_dir)
+
+    if test_img_files:
+        test_output_dir = linux_path(params.output_dir, 'test')
+        os.makedirs(test_output_dir, exist_ok=1)
+        print('saving test tfrecords to {}'.format(test_output_dir))
+        create_tfrecords(test_img_files, test_seg_files, params.num_shards,
+                         params.db_split, test_output_dir)
 
 
 def main():
