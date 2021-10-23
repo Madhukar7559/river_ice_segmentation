@@ -378,7 +378,7 @@ def run(params):
 
             # Soft placement allows placing on CPU ops without GPU implementation.
             session_config = tf.ConfigProto(
-                allow_soft_placement=True, log_device_placement=False)
+                allow_soft_placement=True, log_device_placement=True)
             session_config.gpu_options.allow_growth = params.allow_memory_growth
             session_config.gpu_options.per_process_gpu_memory_fraction = params.gpu_memory_fraction
             last_layers = model.get_extra_layer_scopes(
