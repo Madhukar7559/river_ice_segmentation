@@ -218,7 +218,6 @@ class NewDeeplabVisParams:
         self.atrous_rates = []
         self.colormap_type = 'pascal'
 
-
         self.decoder_output_stride = None
         self.decoder_use_separable_conv = True
         self.dense_prediction_cell_json = ''
@@ -281,14 +280,13 @@ class NewDeeplabVisParams:
         self.checkpoint_dir = ''
         self.vis_logdir = ''
 
-
     def process(self):
         if not self.dataset_dir:
             self.dataset_dir = linux_path(self.db_root_dir, 'tfrecord', self.dataset)
 
         if not self.log_dir:
             self.log_dir = linux_path('log', self.train_info, self.model_info)
-            
+
         if not self.checkpoint_dir:
             self.checkpoint_dir = linux_path('ckpt', self.train_info, self.model_info)
 
