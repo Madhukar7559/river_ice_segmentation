@@ -27,7 +27,7 @@ python36 datasets/build_ipsc_data.py db_split=g2_4 create_raw_seg=1
 
 <a id="huh___atrous_6_12_18_hnasnet_"></a>
 ### huh       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:huh-r:+++vis:huh-e,_train_:b2 start=2
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train+vis:g2_4,_train_:b2 start=0
 
 <a id="on_train___huh_atrous_6_12_18_hnasnet_"></a>
 #### on_train       @ huh/atrous:6_12_18/hnasnet-->new_deeplab_ipsc
