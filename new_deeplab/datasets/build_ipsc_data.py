@@ -5,7 +5,7 @@ import os
 
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
-import random
+import shutil
 import sys
 import cv2
 import numpy as np
@@ -177,6 +177,7 @@ def _convert_dataset(params):
 
     img_src_files = []
     seg_src_files = []
+    vis_seg_src_files = []
     for __id, seq_id in enumerate(seq_ids):
 
         seq_name, n_frames = IPSCInfo.sequences[seq_id]
@@ -200,36 +201,50 @@ def _convert_dataset(params):
 
         if not params.disable_seg:
             seg_path = linux_path(params.root_dir, seq_name, 'labels')
+            vis_seg_path = linux_path(params.root_dir, seq_name, 'vis_labels')
+
+            os.makedirs(vis_seg_path, exist_ok=1)
 
             assert os.path.exists(seg_path), \
                 "segmentations not found for sequence: {}".format(seq_name)
 
-            _seg_src_files = [linux_path(seg_path, k) for k in os.listdir(seg_path) if
-                              os.path.splitext(k.lower())[1] in seg_exts]
-            _seg_src_files.sort()
+            _seg_src_fnames = [k for k in os.listdir(seg_path) if
+                               os.path.splitext(k.lower())[1] in seg_exts]
+            _seg_src_fnames.sort()
+
+            _seg_src_files = [linux_path(seg_path, k) for k in _seg_src_fnames]
+            _vis_seg_src_files = [linux_path(vis_seg_path, k) for k in _seg_src_fnames]
+
             n_seg_src_files = len(_seg_src_files)
 
             assert n_img_src_files == n_seg_src_files, "mismatch between number of source and segmentation images"
             seg_src_files += _seg_src_files
+            vis_seg_src_files += _vis_seg_src_files
 
-            if params.create_raw_seg:
-                for seg_src_file in _seg_src_files:
-                    seg_img = cv2.imread(seg_src_file)
+    if params.create_raw_seg:
+        print('creating raw segmentation images')
+        for seg_src_file_id, seg_src_file in enumerate(tqdm(seg_src_files)):
+            seg_img = cv2.imread(seg_src_file)
 
-                    seg_img[seg_img > 250] = 255
+            seg_img[seg_img > 250] = 255
 
-                    seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
-                    seg_vals = list(seg_vals)
-                    seg_val_indxs = list(seg_val_indxs)
+            seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
+            seg_vals = list(seg_vals)
+            seg_val_indxs = list(seg_val_indxs)
 
-                    n_seg_vals = len(seg_vals)
+            n_seg_vals = len(seg_vals)
 
-                    assert n_seg_vals == params.n_classes, \
-                        "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
+            assert n_seg_vals == params.n_classes, \
+                "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
 
-                    for seg_val_id, seg_val in enumerate(seg_vals):
-                        print('{} --> {}'.format(seg_val, seg_val_id))
-                        seg_img[seg_img == seg_val] = seg_val_id
+            for seg_val_id, seg_val in enumerate(seg_vals):
+                # print('{} --> {}'.format(seg_val, seg_val_id))
+                seg_img[seg_img == seg_val] = seg_val_id
+
+            vis_seg_src_file = vis_seg_src_files[seg_src_file_id]
+            shutil.move(seg_src_file, vis_seg_src_file)
+
+            cv2.imwrite(seg_src_file, seg_img)
 
     create_tfrecords(img_src_files, seg_src_files, params.n_classes, params.num_shards,
                      params.db_split, params.output_dir)
