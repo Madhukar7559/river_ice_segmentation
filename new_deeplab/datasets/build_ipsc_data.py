@@ -179,6 +179,8 @@ def _convert_dataset(params):
                 for seg_src_file in _seg_src_files:
                     seg_img = cv2.imread(seg_src_file)
 
+                    seg_img[seg_img > 250] = 255
+
                     seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
                     seg_vals = list(seg_vals)
                     seg_val_indxs = list(seg_val_indxs)
