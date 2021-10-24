@@ -158,8 +158,8 @@ def _process_batch(params, sess, images,
 
         stacked_img = np.concatenate((unresized_original_image, unresized_mask_img), axis=1)
 
-        cv2.imshow('stacked_img', stacked_img)
-        cv2.waitKey(0)
+        # cv2.imshow('stacked_img', stacked_img)
+        # cv2.waitKey(0)
 
         cv2.imwrite(stacked_path, stacked_img)
         cv2.imwrite(raw_path, unresized_crop_semantic_prediction)
