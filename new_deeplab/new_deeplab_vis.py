@@ -131,7 +131,8 @@ def _process_batch(params, sess, images,
         #     add_colormap=False)
 
         image_filename = (os.path.splitext(os.path.basename(image_names[i]))[0])
-        image_dir = os.path.basename(os.path.dirname(image_names[i]))
+        image_dir_path = os.path.dirname(image_names[i])
+        image_dir = os.path.basename(image_dir_path)
 
         image_dir = tf.compat.as_str_any(image_dir)
         image_filename = tf.compat.as_str_any(image_filename)
@@ -142,7 +143,7 @@ def _process_batch(params, sess, images,
         os.makedirs(out_stacked_save_dir, exist_ok=1)
         os.makedirs(out_raw_save_dir, exist_ok=1)
 
-        print('image_dir, image_filename: {}, {}'.format(image_dir, image_filename))
+        print('image_dir_path, image_filename: {}, {}'.format(image_dir_path, image_filename))
 
         stacked_path = os.path.join(out_stacked_save_dir, image_filename + '.jpg')
         mask_img = (crop_semantic_prediction * (255.0 / np.max(crop_semantic_prediction))).astype(np.uint8)

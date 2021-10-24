@@ -110,7 +110,7 @@ def preprocess_image_and_label(image,
     target_height = image_height + tf.maximum(crop_height - image_height, 0)
     target_width = image_width + tf.maximum(crop_width - image_width, 0)
 
-    # Pad image with mean pixel value.
+    # Pad image with mean pixel value - mind bogglingly annoying bit of gunkyness going on right here
     mean_pixel = tf.reshape(
         feature_extractor.mean_pixel(model_variant), [1, 1, 3])
     processed_image = preprocess_utils.pad_to_bounding_box(
