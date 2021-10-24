@@ -73,6 +73,7 @@ def preprocess_image_and_label(image,
                            'supported model variants.')
 
     # Keep reference to original image.
+    original_image_resized = image
     original_image = image
 
     processed_image = tf.cast(image, tf.float32)
@@ -92,7 +93,7 @@ def preprocess_image_and_label(image,
                 align_corners=True))
 
         """The `original_image` becomes the resized image - what kind of inane foulness is this ?."""
-        # original_image = tf.identity(processed_image)
+        original_image_resized = tf.identity(processed_image)
 
     # Data augmentation by randomly scaling the inputs.
     if is_training:
@@ -135,4 +136,4 @@ def preprocess_image_and_label(image,
         processed_image, label, _ = preprocess_utils.flip_dim(
             [processed_image, label], _PROB_OF_FLIP, dim=1)
 
-    return original_image, processed_image, label
+    return original_image, original_image_resized, processed_image, label

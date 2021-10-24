@@ -468,7 +468,7 @@ class Dataset(object):
         except KeyError:
             label = None
 
-        original_image, image, label = input_preprocess.preprocess_image_and_label(
+        original_image, original_image_resized, image, label = input_preprocess.preprocess_image_and_label(
             image=image,
             label=label,
             crop_height=self.crop_size[0],
@@ -487,7 +487,8 @@ class Dataset(object):
 
         if not self.is_training:
             # Original image is only used during visualization.
-            sample[common.ORIGINAL_IMAGE] = original_image
+            sample[common.ORIGINAL_IMAGE] = original_image_resized
+            sample[common.ACTUAL_ORIGINAL_IMAGE] = original_image
 
         if label is not None:
             sample[common.LABEL] = label

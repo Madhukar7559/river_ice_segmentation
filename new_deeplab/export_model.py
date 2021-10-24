@@ -88,7 +88,7 @@ def _create_input_tensors():
     # Squeeze the dimension in axis=0 since `preprocess_image_and_label` assumes
     # image to be 3-D.
     image = tf.squeeze(input_image, axis=0)
-    resized_image, image, _ = input_preprocess.preprocess_image_and_label(
+    _, resized_image, image, _ = input_preprocess.preprocess_image_and_label(
         image,
         label=None,
         crop_height=FLAGS.crop_size[0],

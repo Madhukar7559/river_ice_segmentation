@@ -133,7 +133,8 @@ HEIGHT = 'height'
 WIDTH = 'width'
 IMAGE_NAME = 'image_name'
 LABEL = 'label'
-ORIGINAL_IMAGE = 'original_image'
+ORIGINAL_IMAGE = 'original_image' # resized image is called original for some unimaginably foul reason
+ACTUAL_ORIGINAL_IMAGE = 'actual_original_image'
 
 # Test set name.
 # TEST_SET = 'test'

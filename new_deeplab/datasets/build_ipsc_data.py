@@ -16,6 +16,7 @@ from tqdm import tqdm
 import paramparse
 
 import build_data
+from build_utils import resize_ar
 
 
 def irange(a, b):
@@ -84,7 +85,7 @@ class Params:
         self.raad_gt = 0
         self.tra_only = 0
 
-        self.create_raw_seg = 0
+        self.preprocess = 0
         self.n_classes = 2
 
         self.shuffle = 1
@@ -97,6 +98,8 @@ class Params:
         self.disable_seg = 0
         self.disable_tqdm = 0
         self.codec = 'H264'
+
+        self.out_size = (513, 513)
 
         self.vis_height = 1080
         self.vis_width = 1920
@@ -195,7 +198,7 @@ def _convert_dataset(params):
         seq_name, n_frames = IPSCInfo.sequences[seq_id]
         print('\tseq {} / {}\t{}\t{}\t{} frames'.format(__id + 1, n_seq, seq_id, seq_name, n_frames))
 
-        img_dir_path = linux_path(params.root_dir, seq_name, 'images')
+        img_dir_path = linux_path(params.root_dir, 'images', seq_name)
 
         _img_src_files = [linux_path(img_dir_path, k) for k in os.listdir(img_dir_path) if
                           os.path.splitext(k.lower())[1] in img_exts]
@@ -211,17 +214,9 @@ def _convert_dataset(params):
             random.shuffle(rand_indices)
             _img_src_files = [_img_src_files[i] for i in rand_indices]
 
-        _n_train_files = int(n_img_files * params.train_ratio)
-
-        train_img_files += _img_src_files[:_n_train_files]
-        test_img_files += _img_src_files[_n_train_files:]
-
-        n_train_files += _n_train_files
-        n_test_files += n_img_files - _n_train_files
-
         if not params.disable_seg:
-            seg_path = linux_path(params.root_dir, seq_name, 'labels')
-            vis_seg_path = linux_path(params.root_dir, seq_name, 'vis_labels')
+            seg_path = linux_path(params.root_dir, 'labels', seq_name)
+            vis_seg_path = linux_path(params.root_dir, 'vis_labels', seq_name)
 
             os.makedirs(vis_seg_path, exist_ok=1)
 
@@ -241,8 +236,58 @@ def _convert_dataset(params):
                 _seg_src_fnames = [_seg_src_fnames[i] for i in rand_indices]
 
             _seg_src_files = [linux_path(seg_path, k) for k in _seg_src_fnames]
-            _vis_seg_src_files = [linux_path(vis_seg_path, k) for k in _seg_src_fnames]
 
+        if params.preprocess:
+            print('creating raw segmentation images')
+            for img_src_file_id, img_src_file in enumerate(tqdm(_img_src_files)):
+
+                img = cv2.imread(img_src_file)
+                img_h, img_w = img.shape[:2]
+
+                bkg_col = [123.15, 115.90, 103.06]
+                bkg_col = [127.5, 127.5, 127.5]
+
+                if params.out_size:
+                    out_w, out_h = params.out_size
+                    img, resize_factor, img_bbox = resize_ar(img, width=out_w, height=out_h, bkg_col=bkg_col)
+                else:
+                    resize_factor = 1.0
+                    img_bbox = [0, 0, img_w, img_h]
+
+                cv2.imwrite(img_src_file, img)
+
+                if not params.disable_seg:
+                    seg_src_file = _seg_src_files[img_src_file_id]
+                    seg_img = cv2.imread(seg_src_file)
+                    """handle annoying nearby pixel values like 254"""
+                    seg_img[seg_img > 250] = 255
+                    seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
+                    seg_vals = list(seg_vals)
+                    seg_val_indxs = list(seg_val_indxs)
+
+                    n_seg_vals = len(seg_vals)
+
+                    assert n_seg_vals == params.n_classes, \
+                        "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
+
+                    for seg_val_id, seg_val in enumerate(seg_vals):
+                        # print('{} --> {}'.format(seg_val, seg_val_id))
+                        seg_img[seg_img == seg_val] = seg_val_id
+
+                    if params.out_size:
+                        seg_img, _, _ = resize_ar(seg_img, width=out_w, height=out_h, bkg_col=(255, 255, 255))
+
+                    cv2.imwrite(seg_src_file, seg_img)
+
+        _n_train_files = int(n_img_files * params.train_ratio)
+
+        train_img_files += _img_src_files[:_n_train_files]
+        test_img_files += _img_src_files[_n_train_files:]
+
+        n_train_files += _n_train_files
+        n_test_files += n_img_files - _n_train_files
+
+        if not params.disable_seg:
             train_seg_files += _seg_src_files[:_n_train_files]
             test_seg_files += _seg_src_files[_n_train_files:]
 
@@ -252,38 +297,6 @@ def _convert_dataset(params):
     print('Found {} files with {} training and {} testing files corresponding to a training ratio of {}'.format(
         n_total_files, n_train_files, n_test_files, params.train_ratio
     ))
-    if params.create_raw_seg:
-        all_seg_files = train_seg_files + test_seg_files
-
-        print('creating raw segmentation images')
-        for seg_src_file_id, seg_src_file in enumerate(tqdm(all_seg_files)):
-            vis_seg_src_file = vis_seg_files[seg_src_file_id]
-
-            if os.path.exists(vis_seg_src_file):
-                print('vis_seg_src_file already exists so skipping raw segmentation conversion')
-                break
-
-            seg_img = cv2.imread(seg_src_file)
-
-            """handle annoying nearby pixel values like 254"""
-            seg_img[seg_img > 250] = 255
-
-            seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
-            seg_vals = list(seg_vals)
-            seg_val_indxs = list(seg_val_indxs)
-
-            n_seg_vals = len(seg_vals)
-
-            assert n_seg_vals == params.n_classes, \
-                "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
-
-            for seg_val_id, seg_val in enumerate(seg_vals):
-                # print('{} --> {}'.format(seg_val, seg_val_id))
-                seg_img[seg_img == seg_val] = seg_val_id
-
-            shutil.move(seg_src_file, vis_seg_src_file)
-
-            cv2.imwrite(seg_src_file, seg_img)
 
     if train_seg_files:
         train_output_dir = linux_path(params.output_dir, 'train')

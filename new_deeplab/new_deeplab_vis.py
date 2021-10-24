@@ -255,27 +255,31 @@ def run(params):
                 add_flipped_images=params.add_flipped_images)
         predictions = predictions[common.OUTPUT_TYPE]
 
-        # if params.min_resize_value and params.max_resize_value:
-        #     # Only support batch_size = 1, since we assume the dimensions of original
-        #     # image after tf.squeeze is [height, width, 3].
-        #     assert params.vis_batch_size == 1
-        #
-        #     # Reverse the resizing and padding operations performed in preprocessing.
-        #     # First, we slice the valid regions (i.e., remove padded region) and then
-        #     # we resize the predictions back.
-        #     original_image = tf.squeeze(samples[common.ORIGINAL_IMAGE])
-        #     original_image_shape = tf.shape(original_image)
-        #     predictions = tf.slice(
-        #         predictions,
-        #         [0, 0, 0],
-        #         [1, original_image_shape[0], original_image_shape[1]])
-        #     resized_shape = tf.to_int32([tf.squeeze(samples[common.HEIGHT]),
-        #                                  tf.squeeze(samples[common.WIDTH])])
-        #     predictions = tf.squeeze(
-        #         tf.image.resize_images(tf.expand_dims(predictions, 3),
-        #                                resized_shape,
-        #                                method=tf.image.ResizeMethod.NEAREST_NEIGHBOR,
-        #                                align_corners=True), 3)
+        if params.min_resize_value and params.max_resize_value:
+            """
+            foul buggy garbage since v1.12: https://github.com/tensorflow/tensorflow/issues/38694
+            as is so typical of the gynky piece of crap that is tensorflow 
+            """
+            # Only support batch_size = 1, since we assume the dimensions of original
+            # image after tf.squeeze is [height, width, 3].
+            assert params.vis_batch_size == 1
+
+            # Reverse the resizing and padding operations performed in preprocessing.
+            # First, we slice the valid regions (i.e., remove padded region) and then
+            # we resize the predictions back.
+            original_image = tf.squeeze(samples[common.ORIGINAL_IMAGE])
+            original_image_shape = tf.shape(original_image)
+            predictions = tf.slice(
+                predictions,
+                [0, 0, 0],
+                [1, original_image_shape[0], original_image_shape[1]])
+            resized_shape = tf.to_int32([tf.squeeze(samples[common.HEIGHT]),
+                                         tf.squeeze(samples[common.WIDTH])])
+            predictions = tf.squeeze(
+                tf.image.resize_images(tf.expand_dims(predictions, 3),
+                                       resized_shape,
+                                       method=tf.image.ResizeMethod.BILINEAR,
+                                       align_corners=True), 3)
 
         tf.train.get_or_create_global_step()
         if params.quantize_delay_step >= 0:
