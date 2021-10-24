@@ -291,8 +291,6 @@ def _convert_dataset(params):
             train_seg_files += _seg_src_files[:_n_train_files]
             test_seg_files += _seg_src_files[_n_train_files:]
 
-            vis_seg_files += _vis_seg_src_files
-
     n_total_files = n_train_files + n_test_files
     print('Found {} files with {} training and {} testing files corresponding to a training ratio of {}'.format(
         n_total_files, n_train_files, n_test_files, params.train_ratio

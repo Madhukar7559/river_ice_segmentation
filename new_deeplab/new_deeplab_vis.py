@@ -40,6 +40,7 @@ from new_deeplab import model
 
 from new_deeplab.datasets import data_generator
 from new_deeplab.utils import save_annotation, linux_path
+from new_deeplab.datasets.build_utils import undo_resize_ar
 
 from new_deeplab_vis_params import NewDeeplabVisParams
 
@@ -146,10 +147,21 @@ def _process_batch(params, sess, images,
         print('image_dir_path, image_filename: {}, {}'.format(image_dir_path, image_filename))
 
         stacked_path = os.path.join(out_stacked_save_dir, image_filename + '.jpg')
+        raw_path = os.path.join(out_raw_save_dir, image_filename + '.png')
+
         mask_img = (crop_semantic_prediction * (255.0 / np.max(crop_semantic_prediction))).astype(np.uint8)
         mask_img = cv2.cvtColor(mask_img, cv2.COLOR_GRAY2BGR)
-        stacked_img = np.concatenate((original_image, mask_img), axis=1)
+
+        unresized_original_image = undo_resize_ar(original_image, image_width, image_height)
+        unresized_mask_img = undo_resize_ar(mask_img, image_width, image_height)
+        unresized_crop_semantic_prediction = undo_resize_ar(crop_semantic_prediction, image_width, image_height)
+
+        stacked_img = np.concatenate((unresized_original_image, unresized_mask_img), axis=1)
         cv2.imwrite(stacked_path, stacked_img)
+        cv2.imwrite(raw_path, unresized_crop_semantic_prediction)
+
+        """more mind-bogglingly annoying gunky foulness - if ever there was horribly designed meaninglessly 
+        complicated piece of crappy garbage, then this is it"""
 
         # Save prediction.
         # save_annotation.save_annotation(
@@ -158,16 +170,16 @@ def _process_batch(params, sess, images,
         #     add_colormap=True,
         #     colormap_type=FLAGS.colormap_type)
 
-        save_annotation.save_annotation(
-            crop_semantic_prediction, out_raw_save_dir, image_filename,
-            add_colormap=False)
+        # save_annotation.save_annotation(
+        #     crop_semantic_prediction, out_raw_save_dir, image_filename,
+        #     add_colormap=False)
 
         # Save prediction.
-        if params.also_save_vis_predictions:
-            save_annotation.save_annotation(
-                crop_semantic_prediction, save_dir, image_filename,
-                # _PREDICTION_FORMAT % (image_id_offset + i), add_colormap=True,
-                colormap_type=params.colormap_type)
+        # if params.also_save_vis_predictions:
+        #     save_annotation.save_annotation(
+        #         crop_semantic_prediction, save_dir, image_filename,
+        #         # _PREDICTION_FORMAT % (image_id_offset + i), add_colormap=True,
+        #         colormap_type=params.colormap_type)
 
         # if FLAGS.also_save_raw_predictions:
         #     image_filename = os.path.basename(image_names[i])
@@ -258,7 +270,7 @@ def run(params):
         if params.min_resize_value and params.max_resize_value:
             """
             foul buggy garbage since v1.12: https://github.com/tensorflow/tensorflow/issues/38694
-            as is so typical of the gynky piece of crap that is tensorflow 
+            as is so typical of the gynky piece of crap that is tensorflow
             """
             # Only support batch_size = 1, since we assume the dimensions of original
             # image after tf.squeeze is [height, width, 3].
@@ -340,7 +352,6 @@ def run(params):
 
 
 if __name__ == '__main__':
-
     params = NewDeeplabVisParams()
     paramparse.process(params)
 

@@ -2,6 +2,54 @@ import numpy as np
 import cv2
 
 
+def undo_resize_ar(resized_img, src_width, src_height, placement_type=0):
+    height, width = resized_img.shape[:2]
+    src_aspect_ratio = float(src_width) / float(src_height)
+    aspect_ratio = float(width) / float(height)
+
+    if src_aspect_ratio == aspect_ratio:
+        dst_width = src_width
+        dst_height = src_height
+        start_row = start_col = 0
+    elif src_aspect_ratio > aspect_ratio:
+        dst_width = src_width
+        dst_height = int(src_width / aspect_ratio)
+        start_row = int((dst_height - src_height) / 2.0)
+        if placement_type == 0:
+            start_row = 0
+        elif placement_type == 1:
+            start_row = int((dst_height - src_height) / 2.0)
+        elif placement_type == 2:
+            start_row = int(dst_height - src_height)
+        start_col = 0
+    else:
+        dst_height = src_height
+        dst_width = int(src_height * aspect_ratio)
+        start_col = int((dst_width - src_width) / 2.0)
+        if placement_type == 0:
+            start_col = 0
+        elif placement_type == 1:
+            start_col = int((dst_width - src_width) / 2.0)
+        elif placement_type == 2:
+            start_col = int(dst_width - src_width)
+        start_row = 0
+
+    height_resize_factor = float(dst_height) / float(height)
+    width_resize_factor = float(dst_width) / float(width)
+
+    assert height_resize_factor == width_resize_factor, "mismatch between height and width resize_factors"
+
+    unscaled_img = cv2.resize(resized_img, (dst_width, dst_height))
+    unpadded_img = unscaled_img[start_row:start_row + src_height, start_col:start_col + src_width, ...]
+
+    cv2.imshow('resized_img', resized_img)
+    cv2.imshow('unpadded_img', unpadded_img)
+
+    cv2.waitKey(0)
+
+    return unpadded_img
+
+
 def resize_ar(src_img, width=0, height=0, placement_type=0, bkg_col=None):
     """
     resize an image to the given size while maintaining its aspect ratio and adding a black border as needed;
