@@ -86,7 +86,7 @@ def _convert_train_id_to_eval_id(prediction, train_id_to_eval_id):
 
 
 def _process_batch(params, sess, images,
-                   # original_images,
+                   original_images_resized,
                    semantic_predictions, image_names,
                    image_heights, image_widths,
                    # image_id_offset,
@@ -123,6 +123,7 @@ def _process_batch(params, sess, images,
         image_height = np.squeeze(image_heights[i])
         image_width = np.squeeze(image_widths[i])
         original_image = np.squeeze(original_images[i])
+        original_image_resized = np.squeeze(original_images_resized[i])
         semantic_prediction = np.squeeze(semantic_predictions[i])
         crop_semantic_prediction = semantic_prediction[:image_height, :image_width]
 
@@ -130,6 +131,8 @@ def _process_batch(params, sess, images,
         # save_annotation.save_annotation(
         #     original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
         #     add_colormap=False)
+
+        print('original_image_resized shape: {}'.format(original_image_resized.shape[:2]))
 
         image_filename = (os.path.splitext(os.path.basename(image_names[i]))[0])
         image_dir_path = os.path.dirname(image_names[i])
@@ -334,7 +337,7 @@ def run(params):
                         params=params,
                         sess=sess,
                         images=samples[common.IMAGE],
-                        # original_images=samples[common.ORIGINAL_IMAGE],
+                        original_images_resized=samples[common.ORIGINAL_IMAGE],
                         semantic_predictions=predictions,
                         image_names=samples[common.IMAGE_NAME],
                         image_heights=samples[common.HEIGHT],
