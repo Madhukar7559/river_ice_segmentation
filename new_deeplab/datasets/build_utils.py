@@ -38,12 +38,14 @@ def undo_resize_ar(resized_img, src_width, src_height, placement_type=0):
     width_resize_factor = float(dst_width) / float(width)
 
     assert height_resize_factor == width_resize_factor, "mismatch between height and width resize_factors"
-
+    resized_img = resized_img.astype(np.uint8)
     unscaled_img = cv2.resize(resized_img, (dst_width, dst_height))
     unpadded_img = unscaled_img[start_row:start_row + src_height, start_col:start_col + src_width, ...]
 
+    unpadded_img_disp, _, _ = resize_ar(unpadded_img, 1280)
+
     cv2.imshow('resized_img', resized_img)
-    cv2.imshow('unpadded_img', unpadded_img)
+    cv2.imshow('unpadded_img', unpadded_img_disp)
 
     cv2.waitKey(0)
 
