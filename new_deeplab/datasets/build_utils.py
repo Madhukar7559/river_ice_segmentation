@@ -42,11 +42,11 @@ def undo_resize_ar(resized_img, src_width, src_height, placement_type=0):
     unscaled_img = cv2.resize(resized_img, (dst_width, dst_height))
     unpadded_img = unscaled_img[start_row:start_row + src_height, start_col:start_col + src_width, ...]
 
-    unpadded_img_disp, _, _ = resize_ar(unpadded_img, 1280)
+    unpadded_img_disp, _, _ = resize_ar(unpadded_img, 640)
 
-    print('width, height: {}'.format((width, height)))
-    print('dst_width, dst_height: {}'.format((dst_width, dst_height)))
-    print('src_width, src_height: {}'.format((src_width, src_height)))
+    # print('width, height: {}'.format((width, height)))
+    # print('dst_width, dst_height: {}'.format((dst_width, dst_height)))
+    # print('src_width, src_height: {}'.format((src_width, src_height)))
 
     # cv2.imshow('resized_img', resized_img)
     # cv2.imshow('unpadded_img', unpadded_img_disp)

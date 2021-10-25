@@ -112,11 +112,16 @@ def _process_batch(params, sess, images,
 
     """
     (original_images,
+     original_images_resized,
      semantic_predictions,
      image_names,
      image_heights,
-     image_widths) = sess.run([images, semantic_predictions,
-                               image_names, image_heights, image_widths])
+     image_widths) = sess.run([images,
+                               original_images_resized,
+                               semantic_predictions,
+                               image_names,
+                               image_heights,
+                               image_widths])
 
     num_image = semantic_predictions.shape[0]
     for i in range(num_image):
@@ -132,22 +137,31 @@ def _process_batch(params, sess, images,
         #     original_image, save_dir, _IMAGE_FORMAT % (image_id_offset + i),
         #     add_colormap=False)
 
-        print('original_image_resized shape: {}'.format(original_image_resized.shape[:2]))
+        # res_h, res_w = original_image_resized.shape[:2]
+        # print('\n\noriginal_image_resized: {}'.format((res_w, res_h)))
 
         image_filename = (os.path.splitext(os.path.basename(image_names[i]))[0])
         image_dir_path = os.path.dirname(image_names[i])
         image_dir = os.path.basename(image_dir_path)
+        image_dir_root = os.path.basename(os.path.dirname(iimage_dir_path))
+
 
         image_dir = tf.compat.as_str_any(image_dir)
+        image_dir_root = tf.compat.as_str_any(image_dir_root)
         image_filename = tf.compat.as_str_any(image_filename)
 
-        out_stacked_save_dir = os.path.join(stacked_save_dir, image_dir)
-        out_raw_save_dir = os.path.join(raw_save_dir, image_dir)
+        if image_dir == 'images':
+            seq_name = image_dir_root
+        else:
+            seq_name = image_dir
+
+        out_stacked_save_dir = os.path.join(stacked_save_dir, seq_name)
+        out_raw_save_dir = os.path.join(raw_save_dir, seq_name)
 
         os.makedirs(out_stacked_save_dir, exist_ok=1)
         os.makedirs(out_raw_save_dir, exist_ok=1)
 
-        print('image_dir_path, image_filename: {}, {}'.format(image_dir_path, image_filename))
+        # print('image_dir_path, image_filename: {}, {}'.format(image_dir_path, image_filename))
 
         stacked_path = os.path.join(out_stacked_save_dir, image_filename + '.jpg')
         raw_path = os.path.join(out_raw_save_dir, image_filename + '.png')

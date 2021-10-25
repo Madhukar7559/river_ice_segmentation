@@ -262,7 +262,7 @@ class NewDeeplabVisParams:
         self.use_cprofile_for_profiling = True
         self.v = -1
         self.verbosity = -1
-        self.vis_batch_size = 2
+        self.vis_batch_size = 1
         self.vis_crop_size = [513, 513]
 
         self.model_info = MultiPath()
