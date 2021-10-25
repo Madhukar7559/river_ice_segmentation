@@ -47,11 +47,11 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_
 
 <a id="g3_4___atrous_6_12_18_hnasnet_"></a>
 ### g3_4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3_4,_train_:b2 start=0
+python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3_4,_train_:b2 start=1
 
 <a id="g2___atrous_6_12_18_hnasnet_"></a>
 ### g2       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2,_train_:b2 start=0
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2,_train_:b2 start=1
 
 <a id="g3___atrous_6_12_18_hnasnet_"></a>
 ### g3       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
