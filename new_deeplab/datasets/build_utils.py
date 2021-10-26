@@ -68,7 +68,7 @@ def convert_to_raw_mask(seg_img, n_classes, seg_src_file):
         "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
 
     for seg_val_id, seg_val in enumerate(seg_vals):
-        print('{} --> {}'.format(seg_val, seg_val_id))
+        # print('{} --> {}'.format(seg_val, seg_val_id))
         seg_img[seg_img == seg_val] = seg_val_id
 
     return seg_img
