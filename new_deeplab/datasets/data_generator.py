@@ -253,6 +253,16 @@ ipsc_splits_to_sizes = {
     'all': 668,
 }
 
+ipsc_patches_splits_to_sizes = {
+    'g1': 794,
+    'g2': 948,
+    'g3': 2952,
+    'g4': 868,
+    'g3_4': 3820,
+    'g2_4': 4768,
+    'all': 5562,
+}
+
 # db_splits = CTCInfo.DBSplits().__dict__
 # for db_split in db_splits:
 #     seq_ids = db_splits[db_split]
@@ -266,12 +276,19 @@ _IPSC_INFORMATION = DatasetDescriptor(
     ignore_label=255,
 )
 
+_IPSC_PATCHES_INFORMATION = DatasetDescriptor(
+    splits_to_sizes=ipsc_patches_splits_to_sizes,
+    num_classes=2,
+    ignore_label=255,
+)
+
 _DATASETS_INFORMATION = {
     'cityscapes': _CITYSCAPES_INFORMATION,
     'pascal_voc_seg': _PASCAL_VOC_SEG_INFORMATION,
     'ade20k': _ADE20K_INFORMATION,
     'ctc': _CTC_INFORMATION,
     'ipsc': _IPSC_INFORMATION,
+    'ipsc_patches': _IPSC_PATCHES_INFORMATION,
     'training_0_31_49_256_256_25_100_rot_15_125_235_345_flip': _617_256_INFORMATION,
     'training_0_31_49_384_384_25_100_rot_15_345_4_flip': _617_384_INFORMATION,
     'training_0_31_49_512_512_25_100_rot_15_345_4_flip': _617_512_INFORMATION,

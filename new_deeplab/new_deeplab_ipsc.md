@@ -12,6 +12,7 @@
 - [hnasnet](#hnasnet_)
     - [atrous:6_12_18       @ hnasnet](#atrous_6_12_18___hnasne_t_)
         - [g2_4       @ atrous:6_12_18/hnasnet](#g2_4___atrous_6_12_18_hnasnet_)
+        - [patches       @ atrous:6_12_18/hnasnet](#patches___atrous_6_12_18_hnasnet_)
         - [g3_4       @ atrous:6_12_18/hnasnet](#g3_4___atrous_6_12_18_hnasnet_)
         - [g2       @ atrous:6_12_18/hnasnet](#g2___atrous_6_12_18_hnasnet_)
         - [on_g3       @ atrous:6_12_18/hnasnet](#on_g3___atrous_6_12_18_hnasnet_)
@@ -33,14 +34,14 @@
 
 <a id="patches___g1_build_dat_a_"></a>
 ### patches       @ g1/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1 patches=1 root_dir=/data/ipsc_patches
+python36 datasets/build_ipsc_data.py db_split=g1 preprocess=0 patches=1 root_dir=/data/ipsc_patches
 
 <a id="g2_4___build_data_"></a>
 ## g2_4       @ build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0
 <a id="patches___g2_4_build_dat_a_"></a>
 ### patches       @ g2_4/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1 patches=1 root_dir=/data/ipsc_patches
+python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0 patches=1 root_dir=/data/ipsc_patches
 
 <a id="g3_4___build_data_"></a>
 ## g3_4       @ build_data-->new_deeplab_ipsc
@@ -66,6 +67,10 @@ python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0
 <a id="g2_4___atrous_6_12_18_hnasnet_"></a>
 ### g2_4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_4,_train_:b2 start=2
+<a id="patches___atrous_6_12_18_hnasnet_"></a>
+### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g2_4,_train_:b2 start=0
 
 <a id="g3_4___atrous_6_12_18_hnasnet_"></a>
 ### g3_4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
