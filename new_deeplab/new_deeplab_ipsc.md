@@ -1,6 +1,8 @@
 <!-- MarkdownTOC -->
 
 - [build_data](#build_dat_a_)
+    - [g1       @ build_data](#g1___build_data_)
+        - [patches       @ g1/build_data](#patches___g1_build_dat_a_)
     - [g2_4       @ build_data](#g2_4___build_data_)
         - [patches       @ g2_4/build_data](#patches___g2_4_build_dat_a_)
     - [g3_4       @ build_data](#g3_4___build_data_)
@@ -26,12 +28,19 @@
 <a id="build_dat_a_"></a>
 # build_data
 
+<a id="g1___build_data_"></a>
+## g1       @ build_data-->new_deeplab_ipsc
+
+<a id="patches___g1_build_dat_a_"></a>
+### patches       @ g1/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1 patches=1 root_dir=/data/ipsc_patches
+
 <a id="g2_4___build_data_"></a>
 ## g2_4       @ build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0
 <a id="patches___g2_4_build_dat_a_"></a>
 ### patches       @ g2_4/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0 patches=1 root_dir=/data/ipsc_patches
+python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1 patches=1 root_dir=/data/ipsc_patches
 
 <a id="g3_4___build_data_"></a>
 ## g3_4       @ build_data-->new_deeplab_ipsc
