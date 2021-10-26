@@ -508,6 +508,10 @@ class Dataset(object):
 
         files = self._get_all_files()
 
+        assert files, "no valid files found"
+
+        print('found files:\n{}'.format(files))
+
         dataset = (
             tf.data.TFRecordDataset(
                 files, num_parallel_reads=self.num_readers
@@ -538,4 +542,6 @@ class Dataset(object):
         file_pattern = _FILE_PATTERN
         file_pattern = os.path.join(self.dataset_dir,
                                     file_pattern % self.split_name)
+
+        print('looking for file_pattern: {}'.format(file_pattern))
         return tf.gfile.Glob(file_pattern)

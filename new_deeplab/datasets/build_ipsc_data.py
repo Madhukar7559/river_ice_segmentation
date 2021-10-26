@@ -13,8 +13,8 @@ from tqdm import tqdm
 
 import paramparse
 
-from .build_data import ImageReader, image_seg_to_tfexample
-from .build_utils import resize_ar
+from build_data import ImageReader, image_seg_to_tfexample
+from build_utils import resize_ar, convert_to_raw_mask
 
 
 def irange(a, b):
@@ -61,10 +61,52 @@ class IPSCInfo:
     }
 
 
+class IPSCPatchesInfo:
+    class DBSplits:
+        def __init__(self):
+            self.all = irange(0, 19)
+            self.g1 = irange(0, 2)
+            self.g2 = irange(3, 5)
+            self.g3 = irange(6, 13)
+            self.g4 = irange(14, 19)
+
+            self.g2_4 = self.g2 + self.g3 + self.g4
+            self.g3_4 = self.g3 + self.g4
+
+    sequences = {
+        # g1
+        0: ('Frame_101_150_roi_7777_10249_10111_13349', 250),
+        1: ('Frame_101_150_roi_12660_17981_16026_20081', 352),
+        2: ('Frame_101_150_roi_14527_18416_16361_19582', 192),
+        # g2
+        3: ('Frame_150_200_roi_7644_10549_9778_13216', 269),
+        4: ('Frame_150_200_roi_9861_9849_12861_11516', 446),
+        5: ('Frame_150_200_roi_12994_10915_15494_12548', 233),
+        # g3
+        6: ('Frame_201_250_roi_7711_10716_9778_13082', 351),
+        7: ('Frame_201_250_roi_8094_13016_11228_15282', 350),
+        8: ('Frame_201_250_roi_10127_9782_12527_11782', 274),
+        9: ('Frame_201_250_roi_11927_12517_15394_15550', 725),
+        10: ('Frame_201_250_roi_12461_17182_15894_20449_1', 345),
+        11: ('Frame_201_250_roi_12527_11015_14493_12615', 293),
+        12: ('Frame_201_250_roi_12794_8282_14661_10116', 357),
+        13: ('Frame_201_250_roi_16493_11083_18493_12549', 257),
+        # g4
+        14: ('Frame_251__roi_7578_10616_9878_13149', 125),
+        15: ('Frame_251__roi_10161_9883_13561_12050', 143),
+        16: ('Frame_251__roi_12094_17082_16427_20915', 150),
+        17: ('Frame_251__roi_12161_12649_15695_15449', 225),
+        18: ('Frame_251__roi_12827_8249_14594_9816', 100),
+        19: ('Frame_251__roi_16627_11116_18727_12582', 125),
+    }
+
+
 class Params:
 
     def __init__(self):
         self.db_split = 'all'
+
+        self.patches = 0
 
         self.cfg = ()
         self.ignore_missing_gt = 1
@@ -72,7 +114,7 @@ class Params:
         self.ignored_region_only = 0
 
         self.resize = 0
-        self.root_dir = '/data/ipsc/201020/masks'
+        self.root_dir = '/data/ipsc'
         self.output_dir = '/data/tfrecord/ipsc'
 
         self.start_id = 0
@@ -163,6 +205,10 @@ def _convert_dataset(params):
 
     seq_ids = params.db_splits[params.db_split]
 
+    if params.patches:
+        print('using version with patches')
+        params.output_dir += '_patches'
+
     print('root_dir: {}'.format(params.root_dir))
     print('db_split: {}'.format(params.db_split))
     print('seq_ids: {}'.format(seq_ids))
@@ -193,7 +239,11 @@ def _convert_dataset(params):
 
     for __id, seq_id in enumerate(seq_ids):
 
-        seq_name, n_frames = IPSCInfo.sequences[seq_id]
+        if params.patches:
+            seq_name, n_frames = IPSCPatchesInfo.sequences[seq_id]
+        else:
+            seq_name, n_frames = IPSCInfo.sequences[seq_id]
+
         print('\tseq {} / {}\t{}\t{}\t{} frames'.format(__id + 1, n_seq, seq_id, seq_name, n_frames))
 
         img_dir_path = linux_path(params.root_dir, 'images', seq_name)
@@ -239,41 +289,29 @@ def _convert_dataset(params):
             print('creating raw segmentation images')
             for img_src_file_id, img_src_file in enumerate(tqdm(_img_src_files)):
 
-                img = cv2.imread(img_src_file)
-                img_h, img_w = img.shape[:2]
+                # img = cv2.imread(img_src_file)
+                # img_h, img_w = img.shape[:2]
+                #
+                # if params.out_size:
+                #     bkg_col = [123.15, 115.90, 103.06]
+                #     bkg_col = [127.5, 127.5, 127.5]
+                #     out_w, out_h = params.out_size
+                #     img, resize_factor, img_bbox = resize_ar(img, width=out_w, height=out_h, bkg_col=bkg_col)
+                # else:
+                #     resize_factor = 1.0
+                #     img_bbox = [0, 0, img_w, img_h]
 
-                bkg_col = [123.15, 115.90, 103.06]
-                bkg_col = [127.5, 127.5, 127.5]
 
-                if params.out_size:
-                    out_w, out_h = params.out_size
-                    img, resize_factor, img_bbox = resize_ar(img, width=out_w, height=out_h, bkg_col=bkg_col)
-                else:
-                    resize_factor = 1.0
-                    img_bbox = [0, 0, img_w, img_h]
-
-                cv2.imwrite(img_src_file, img)
+                # cv2.imwrite(img_src_file, img)
 
                 if not params.disable_seg:
                     seg_src_file = _seg_src_files[img_src_file_id]
                     seg_img = cv2.imread(seg_src_file)
-                    """handle annoying nearby pixel values like 254"""
-                    seg_img[seg_img > 250] = 255
-                    seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
-                    seg_vals = list(seg_vals)
-                    seg_val_indxs = list(seg_val_indxs)
 
-                    n_seg_vals = len(seg_vals)
+                    seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_src_file)
 
-                    assert n_seg_vals == params.n_classes, \
-                        "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
-
-                    for seg_val_id, seg_val in enumerate(seg_vals):
-                        # print('{} --> {}'.format(seg_val, seg_val_id))
-                        seg_img[seg_img == seg_val] = seg_val_id
-
-                    if params.out_size:
-                        seg_img, _, _ = resize_ar(seg_img, width=out_w, height=out_h, bkg_col=(255, 255, 255))
+                    # if params.out_size:
+                    #     seg_img, _, _ = resize_ar(seg_img, width=out_w, height=out_h, bkg_col=(255, 255, 255))
 
                     cv2.imwrite(seg_src_file, seg_img)
 

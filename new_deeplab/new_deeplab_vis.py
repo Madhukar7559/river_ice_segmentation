@@ -225,6 +225,9 @@ def run(params):
 
     # paramparse.from_flags(FLAGS, to_clipboard=1)
 
+    print('reading input images from {}'.format(params.dataset_dir))
+
+
     # Get dataset-dependent information.
     dataset = data_generator.Dataset(
         dataset_name=params.dataset,
