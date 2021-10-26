@@ -43,20 +43,20 @@ python36 datasets/build_ipsc_data.py db_split=g4 create_raw_seg=0
 
 <a id="g2_4___atrous_6_12_18_hnasnet_"></a>
 ### g2_4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_4,_train_:b2 start=1
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_4,_train_:b2 start=2
 
 <a id="g3_4___atrous_6_12_18_hnasnet_"></a>
 ### g3_4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3_4,_train_:b2 start=1
+python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3_4,_train_:b2 start=2
 
 <a id="g2___atrous_6_12_18_hnasnet_"></a>
 ### g2       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2,_train_:b2 start=1
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2,_train_:b2 start=2
 
 <a id="g3___atrous_6_12_18_hnasnet_"></a>
 ### g3       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3,_train_:b2 start=0
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3,_train_:b2 start=2
 
 <a id="g4___atrous_6_12_18_hnasnet_"></a>
 ### g4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g4,_train_:b2 start=0
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g4,_train_:b2 start=2

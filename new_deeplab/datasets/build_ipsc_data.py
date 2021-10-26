@@ -15,8 +15,8 @@ from tqdm import tqdm
 
 import paramparse
 
-import build_data
-from build_utils import resize_ar
+from .build_data import ImageReader, image_seg_to_tfexample
+from .build_utils import resize_ar
 
 
 def irange(a, b):
@@ -113,9 +113,9 @@ def linux_path(*args, **kwargs):
 
 
 def create_tfrecords(img_src_files, seg_src_files, n_shards, db_split, output_dir):
-    image_reader = build_data.ImageReader('jpeg', channels=1)
+    image_reader = ImageReader('jpeg', channels=1)
 
-    label_reader = build_data.ImageReader('png', channels=1)
+    label_reader = ImageReader('png', channels=1)
 
     n_images = len(img_src_files)
     n_per_shard = int(math.ceil(n_images / float(n_shards)))
@@ -150,7 +150,7 @@ def create_tfrecords(img_src_files, seg_src_files, n_shards, db_split, output_di
                     seg_data = None
 
                 # Convert to tf example.
-                example = build_data.image_seg_to_tfexample(
+                example = image_seg_to_tfexample(
                     image_data, img_src_path, height, width, seg_data)
 
                 tfrecord_writer.write(example.SerializeToString())
