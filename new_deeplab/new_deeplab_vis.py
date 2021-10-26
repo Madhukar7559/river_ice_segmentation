@@ -145,7 +145,6 @@ def _process_batch(params, sess, images,
         image_dir = os.path.basename(image_dir_path)
         image_dir_root = os.path.basename(os.path.dirname(image_dir_path))
 
-
         image_dir = tf.compat.as_str_any(image_dir)
         image_dir_root = tf.compat.as_str_any(image_dir_root)
         image_filename = tf.compat.as_str_any(image_filename)

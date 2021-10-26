@@ -5,7 +5,7 @@ import imageio
 from paramparse import MultiPath
 
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import readData, getDateTime, print_and_write, linux_path
+from densenet.utils import read_data, getDateTime, print_and_write, linux_path
 
 import cv2
 
@@ -90,13 +90,16 @@ class VisParams:
         self.stitch_seg = 1
         self.no_labels = 1
 
+        self.multi_sequence_db = 0
+        self.seg_on_subset = 0
+
         self.log_root_dir = 'log'
         self.db_root_dir = '/data'
 
         self.images_path = ''
         self.labels_path = ''
-        self.labels_dir = 'Labels'
-        self.images_dir = 'Images'
+        self.labels_dir = 'labels'
+        self.images_dir = 'images'
 
         self.dataset = ''
 
@@ -129,26 +132,35 @@ def run(params):
     :return:
     """
 
-    if params.dataset.lower() == 'ctc':
-        from new_deeplab.datasets.build_ctc_data import CTCInfo
-
+    if params.multi_sequence_db:
         assert params.vis_split, "vis_split must be provided for CTC"
 
-        db_splits = CTCInfo.DBSplits().__dict__
+        if params.dataset.lower() == 'ctc':
+            from new_deeplab.datasets.build_ctc_data import CTCInfo
+            db_splits = CTCInfo.DBSplits().__dict__
+            sequences = CTCInfo.sequences
+        elif params.dataset.lower() == 'ipsc':
+            """some repeated code to allow better IntelliSense"""
+            from new_deeplab.datasets.build_ipsc_data import IPSCInfo
+            db_splits = IPSCInfo.DBSplits().__dict__
+            sequences = IPSCInfo.sequences
+        else:
+            raise AssertionError('multi_sequence_db {} is not supported yet'.format(params.dataset))
 
         seq_ids = db_splits[params.vis_split]
 
         src_files = []
+        seg_labels_list = []
         if params.no_labels:
-            src_labels_list = []
-        else:
             src_labels_list = None
+        else:
+            src_labels_list = []
 
         total_frames = 0
         seg_total_frames = 0
 
         for seq_id in seq_ids:
-            seq_name, n_frames = CTCInfo.sequences[seq_id]
+            seq_name, n_frames = sequences[seq_id]
 
             images_path = os.path.join(params.images_path, seq_name)
 
@@ -157,40 +169,65 @@ def run(params):
             else:
                 labels_path = os.path.join(params.labels_path, seq_name)
 
-            _src_files, _src_labels_list, _total_frames = readData(images_path, params.images_ext,
-                                                                   labels_path,
-                                                                   params.labels_ext)
+            _src_files, _src_labels_list, _total_frames = read_data(images_path, params.images_ext,
+                                                                    labels_path,
+                                                                    params.labels_ext)
 
-            src_files += _src_files
+            _src_filenames = [os.path.splitext(os.path.basename(k))[0] for k in _src_files]
 
             if not params.no_labels:
-                src_labels_list += _src_labels_list
+                _src_labels_filenames = [os.path.splitext(os.path.basename(k))[0] for k in _src_labels_list]
+
+                assert _src_labels_filenames == _src_filenames, "mismatch between image and label filenames"
 
             eval_mode = False
             if params.seg_path and params.seg_ext:
                 seg_path = os.path.join(params.seg_path, seq_name)
 
-                _, seg_labels_list, _seg_total_frames = readData(labels_path=seg_path, labels_ext=params.seg_ext,
-                                                                labels_type='seg')
+                _, _seg_labels_list, _seg_total_frames = read_data(labels_path=seg_path, labels_ext=params.seg_ext,
+                                                                   labels_type='seg')
+
+                _seg_labels__filenames = [os.path.splitext(os.path.basename(k))[0] for k in _seg_labels_list]
+
                 if _seg_total_frames != _total_frames:
-                    raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
-                        total_frames, _seg_total_frames))
+
+                    if params.seg_on_subset and _seg_total_frames < _total_frames:
+                        matching_ids = [_src_filenames.index(k) for k in _seg_labels__filenames]
+
+                        _src_files = [_src_files[i] for i in matching_ids]
+                        if not params.no_labels:
+                            _src_labels_list = [_src_labels_list[i] for i in matching_ids]
+
+                        _total_frames = _seg_total_frames
+
+                    else:
+                        raise AssertionError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
+                            _total_frames, _seg_total_frames))
+
+                    seg_labels_list += _seg_labels_list
+
                 seg_total_frames += _seg_total_frames
                 eval_mode = True
+
+            src_files += _src_files
+            if not params.no_labels:
+                src_labels_list += _src_labels_list
+
+
             else:
                 params.stitch = params.save_stitched = 1
 
             total_frames += _total_frames
     else:
-        src_files, src_labels_list, total_frames = readData(params.images_path, params.images_ext, params.labels_path,
-                                                            params.labels_ext)
+        src_files, src_labels_list, total_frames = read_data(params.images_path, params.images_ext, params.labels_path,
+                                                             params.labels_ext)
         if params.end_id < params.start_id:
             params.end_id = total_frames - 1
 
         eval_mode = False
         if params.labels_path and params.seg_path and params.seg_ext:
-            _, seg_labels_list, seg_total_frames = readData(labels_path=params.seg_path, labels_ext=params.seg_ext,
-                                                            labels_type='seg')
+            _, seg_labels_list, seg_total_frames = read_data(labels_path=params.seg_path, labels_ext=params.seg_ext,
+                                                             labels_type='seg')
             if seg_total_frames != total_frames:
                 raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
                     total_frames, seg_total_frames))

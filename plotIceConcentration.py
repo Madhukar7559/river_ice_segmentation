@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 # plt.style.use('presentation')
 
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import readData, getDateTime, print_and_write, resize_ar, put_text_with_background, col_rgb
+from densenet.utils import read_data, getDateTime, print_and_write, resize_ar, put_text_with_background, col_rgb
 from dictances import bhattacharyya, euclidean, mae, mse
 
 
@@ -185,8 +185,8 @@ def main():
 
     print('ice_type_str: {}'.format(ice_type_str))
 
-    src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
-                                                        labels_ext)
+    src_files, src_labels_list, total_frames = read_data(images_path, images_ext, labels_path,
+                                                         labels_ext)
     if end_id < start_id:
         end_id = total_frames - 1
 

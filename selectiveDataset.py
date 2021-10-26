@@ -1,7 +1,7 @@
 import os
 import sys
 import numpy as np
-from densenet.utils import processArguments, readData
+from densenet.utils import processArguments, read_data
 from imageio import imread, imsave
 
 params = {
@@ -36,8 +36,8 @@ if __name__ == '__main__':
     images_path = os.path.abspath(images_path)
     labels_path = os.path.abspath(labels_path)
 
-    src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
-                                                        labels_ext)
+    src_files, src_labels_list, total_frames = read_data(images_path, images_ext, labels_path,
+                                                         labels_ext)
     if start_id < 0:
         if end_id < 0:
             raise AssertionError('end_id must be non negative for random selection')

@@ -2,7 +2,6 @@ import os, time, sys
 import numpy as np
 import cv2
 
-
 col_rgb = {
     'snow': (250, 250, 255),
     'snow_2': (233, 233, 238),
@@ -160,7 +159,6 @@ col_rgb = {
 }
 
 
-
 def processArguments(args, params):
     # arguments specified as 'arg_name=argv_val'
     no_of_args = len(args)
@@ -257,8 +255,10 @@ def print_and_write(_str, fname=None):
     if fname is not None:
         open(fname, 'a').write(_str + '\n')
 
+
 def linux_path(*args, **kwargs):
     return os.path.join(*args, **kwargs).replace(os.sep, '/')
+
 
 def sort_key(fname):
     fname = os.path.splitext(fname)[0]
@@ -340,7 +340,6 @@ def put_text_with_background(img, text, fmt=None):
 
 
 def resize_ar(src_img, width=0, height=0, return_factors=False, bkg_col=0):
-
     src_height, src_width, n_channels = src_img.shape
     src_aspect_ratio = float(src_width) / float(src_height)
 
@@ -378,8 +377,9 @@ def resize_ar(src_img, width=0, height=0, return_factors=False, bkg_col=0):
     else:
         return dst_img
 
-def readData(images_path='', images_ext='', labels_path='', labels_ext='',
-             images_type='source', labels_type='labels'):
+
+def read_data(images_path='', images_ext='', labels_path='', labels_ext='',
+              images_type='source', labels_type='labels'):
     src_file_list = src_labels_list = None
     total_frames = 0
 
@@ -387,8 +387,8 @@ def readData(images_path='', images_ext='', labels_path='', labels_ext='',
         print('Reading {} images from: {}'.format(images_type, images_path))
         src_file_list = [k for k in os.listdir(images_path) if k.endswith('.{:s}'.format(images_ext))]
         total_frames = len(src_file_list)
-        if total_frames <= 0:
-            raise SystemError('No input frames found')
+
+        assert total_frames > 0, 'No input frames found'
 
         print('total_frames: {}'.format(total_frames))
         src_file_list.sort(key=sort_key)
@@ -397,8 +397,7 @@ def readData(images_path='', images_ext='', labels_path='', labels_ext='',
         print('Reading {} images from: {}'.format(labels_type, labels_path))
         src_labels_list = [k for k in os.listdir(labels_path) if k.endswith('.{:s}'.format(labels_ext))]
         if src_file_list is not None:
-            if total_frames != len(src_labels_list):
-                raise SystemError('Mismatch between no. of labels and images')
+            assert total_frames == len(src_labels_list), 'Mismatch between no. of labels and images'
         else:
             total_frames = len(src_labels_list)
 

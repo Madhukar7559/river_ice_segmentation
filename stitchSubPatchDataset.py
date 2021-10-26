@@ -7,7 +7,7 @@ import numpy as np
 
 from paramparse import MultiPath
 
-from densenet.utils import linux_path, sort_key, resize_ar, readData, print_and_write, getDateTime
+from densenet.utils import linux_path, sort_key, resize_ar, read_data, print_and_write, getDateTime
 
 
 class StitchParams:
@@ -143,7 +143,7 @@ def run(params):
 
     eval_mode = False
     if params.labels_path and params.labels_ext:
-        _, labels_list, labels_total_frames = readData(labels_path=params.labels_path, labels_ext=params.labels_ext)
+        _, labels_list, labels_total_frames = read_data(labels_path=params.labels_path, labels_ext=params.labels_ext)
         if labels_total_frames != total_frames:
             raise SystemError('Mismatch between no. of frames in GT and seg labels')
         eval_mode = True

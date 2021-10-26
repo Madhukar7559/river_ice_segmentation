@@ -1,6 +1,6 @@
 import argparse, os, sys
 import numpy as np
-from densenet.utils import readData
+from densenet.utils import read_data
 from scipy.misc.pilutil import imread, imsave
 import cv2
 
@@ -63,8 +63,8 @@ save_stitched = args.save_stitched
 normalize_labels = args.normalize_labels
 resize_factor = args.resize_factor
 
-src_files, src_labels_list, total_frames = readData(images_path, images_ext, labels_path,
-                                                    labels_ext)
+src_files, src_labels_list, total_frames = read_data(images_path, images_ext, labels_path,
+                                                     labels_ext)
 if end_id < start_id:
     end_id = total_frames - 1
 
