@@ -212,8 +212,6 @@ def run(params):
             src_files += _src_files
             if not params.no_labels:
                 src_labels_list += _src_labels_list
-
-
             else:
                 params.stitch = params.save_stitched = 1
 
@@ -314,7 +312,9 @@ def run(params):
         if not params.labels_path:
             stitched = src_img
         else:
-            labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
+            # labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
+            labels_img_fname = src_labels_list[img_id]
+
             labels_img_orig = imageio.imread(labels_img_fname)
             if labels_img_orig is None:
                 raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
@@ -345,7 +345,9 @@ def run(params):
                 stitched = np.concatenate((src_img, labels_img), axis=1)
 
             if eval_mode:
-                seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
+                # seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
+                seg_img_fname = seg_labels_list[img_id]
+
                 seg_img = imageio.imread(seg_img_fname)
                 if seg_img is None:
                     raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
