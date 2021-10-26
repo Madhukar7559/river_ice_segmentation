@@ -55,6 +55,25 @@ def undo_resize_ar(resized_img, src_width, src_height, placement_type=0):
     return unpadded_img
 
 
+def convert_to_raw_mask(seg_img, n_classes, seg_src_file):
+    """handle annoying nearby pixel values like 254"""
+    seg_img[seg_img > 250] = 255
+    seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
+    seg_vals = list(seg_vals)
+    seg_val_indxs = list(seg_val_indxs)
+
+    n_seg_vals = len(seg_vals)
+
+    assert n_seg_vals == n_classes, \
+        "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
+
+    for seg_val_id, seg_val in enumerate(seg_vals):
+        print('{} --> {}'.format(seg_val, seg_val_id))
+        seg_img[seg_img == seg_val] = seg_val_id
+
+    return seg_img
+
+
 def resize_ar(src_img, width=0, height=0, placement_type=0, bkg_col=None):
     """
     resize an image to the given size while maintaining its aspect ratio and adding a black border as needed;

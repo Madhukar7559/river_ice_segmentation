@@ -385,7 +385,7 @@ def read_data(images_path='', images_ext='', labels_path='', labels_ext='',
 
     if images_path and images_ext:
         print('Reading {} images from: {}'.format(images_type, images_path))
-        src_file_list = [k for k in os.listdir(images_path) if k.endswith('.{:s}'.format(images_ext))]
+        src_file_list = [os.path.join(images_path, k) for k in os.listdir(images_path) if k.endswith('.{:s}'.format(images_ext))]
         total_frames = len(src_file_list)
 
         assert total_frames > 0, 'No input frames found'
@@ -395,7 +395,7 @@ def read_data(images_path='', images_ext='', labels_path='', labels_ext='',
 
     if labels_path and labels_ext:
         print('Reading {} images from: {}'.format(labels_type, labels_path))
-        src_labels_list = [k for k in os.listdir(labels_path) if k.endswith('.{:s}'.format(labels_ext))]
+        src_labels_list = [os.path.join(labels_path, k) for k in os.listdir(labels_path) if k.endswith('.{:s}'.format(labels_ext))]
         if src_file_list is not None:
             assert total_frames == len(src_labels_list), 'Mismatch between no. of labels and images'
         else:

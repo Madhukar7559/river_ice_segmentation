@@ -6,6 +6,7 @@ from paramparse import MultiPath
 
 import densenet.evaluation.eval_segm as eval
 from densenet.utils import read_data, getDateTime, print_and_write, linux_path
+from datasets.build_utils import convert_to_raw_mask
 
 import cv2
 
@@ -219,8 +220,6 @@ def run(params):
     else:
         src_files, src_labels_list, total_frames = read_data(params.images_path, params.images_ext, params.labels_path,
                                                              params.labels_ext)
-        if params.end_id < params.start_id:
-            params.end_id = total_frames - 1
 
         eval_mode = False
         if params.labels_path and params.seg_path and params.seg_ext:
@@ -232,6 +231,9 @@ def run(params):
             eval_mode = True
         else:
             params.stitch = params.save_stitched = 1
+
+    if params.end_id < params.start_id:
+        params.end_id = total_frames - 1
 
     if not params.save_path:
         if eval_mode:
@@ -291,11 +293,13 @@ def run(params):
     for img_id in range(params.start_id, params.end_id + 1):
 
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
-        img_fname = src_files[img_id]
+        src_img_fname = src_files[img_id]
+        img_fname = os.path.basename(src_img_fname)
+
         img_fname_no_ext = os.path.splitext(img_fname)[0]
 
         if params.stitch or params.show_img:
-            src_img_fname = os.path.join(params.images_path, img_fname)
+            # src_img_fname = os.path.join(params.images_path, img_fname)
             src_img = imageio.imread(src_img_fname)
             if src_img is None:
                 raise SystemError('Source image could not be read from: {}'.format(src_img_fname))
@@ -318,6 +322,7 @@ def run(params):
             labels_img_orig = imageio.imread(labels_img_fname)
             if labels_img_orig is None:
                 raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
+
             _, src_width = labels_img_orig.shape[:2]
 
             if len(labels_img_orig.shape) == 3:
@@ -326,17 +331,21 @@ def run(params):
             if params.show_img:
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
-            if params.normalize_labels:
-                if params.selective_mode:
-                    selective_idx = (labels_img_orig == 255)
-                    print('labels_img_orig.shape: {}'.format(labels_img_orig.shape))
-                    print('selective_idx count: {}'.format(np.count_nonzero(selective_idx)))
-                    labels_img_orig[selective_idx] = params.n_classes
-                    if params.show_img:
-                        cv2.imshow('labels_img_orig norm', labels_img_orig)
-                labels_img = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
-            else:
-                labels_img = np.copy(labels_img_orig)
+            labels_img_orig = convert_to_raw_mask(labels_img_orig, params.n_classes, labels_img_fname)
+
+            labels_img = np.copy(labels_img_orig)
+            # if params.normalize_labels:
+            #     if params.selective_mode:
+            #         selective_idx = (labels_img_orig == 255)
+            #         print('labels_img_orig.shape: {}'.format(labels_img_orig.shape))
+            #         print('selective_idx count: {}'.format(np.count_nonzero(selective_idx)))
+            #         labels_img_orig[selective_idx] = params.n_classes
+            #         if params.show_img:
+            #             cv2.imshow('labels_img_orig norm', labels_img_orig)
+            #     labels_img = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
+            # else:
+            #     labels_img = np.copy(labels_img_orig)
+
 
             if len(labels_img.shape) != 3:
                 labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
@@ -351,6 +360,8 @@ def run(params):
                 seg_img = imageio.imread(seg_img_fname)
                 if seg_img is None:
                     raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
+
+                seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_img_fname)
 
                 if len(seg_img.shape) == 3:
                     seg_img = np.squeeze(seg_img[:, :, 0])
