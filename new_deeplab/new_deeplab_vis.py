@@ -251,8 +251,10 @@ def run(params):
 
     # Prepare for visualization.
     os.makedirs(params.vis_logdir, exist_ok=1)
-    save_dir = os.path.join(params.vis_logdir, _SEMANTIC_PREDICTION_SAVE_FOLDER)
-    os.makedirs(save_dir, exist_ok=1)
+
+    # save_dir = os.path.join(params.vis_logdir, _SEMANTIC_PREDICTION_SAVE_FOLDER)
+    # os.makedirs(save_dir, exist_ok=1)
+    
     raw_save_dir = os.path.join(
         params.vis_logdir, _RAW_SEMANTIC_PREDICTION_SAVE_FOLDER)
     stacked_save_dir = os.path.join(

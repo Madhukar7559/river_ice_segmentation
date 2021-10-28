@@ -136,15 +136,19 @@ def run(params):
     if params.multi_sequence_db:
         assert params.vis_split, "vis_split must be provided for CTC"
 
+        """some repeated code here to allow better IntelliSense"""
         if params.dataset.lower() == 'ctc':
             from new_deeplab.datasets.build_ctc_data import CTCInfo
             db_splits = CTCInfo.DBSplits().__dict__
             sequences = CTCInfo.sequences
         elif params.dataset.lower() == 'ipsc':
-            """some repeated code to allow better IntelliSense"""
             from new_deeplab.datasets.build_ipsc_data import IPSCInfo
             db_splits = IPSCInfo.DBSplits().__dict__
             sequences = IPSCInfo.sequences
+        elif params.dataset.lower() == 'ipsc_patches':
+            from new_deeplab.datasets.build_ipsc_data import IPSCPatchesInfo
+            db_splits = IPSCPatchesInfo.DBSplits().__dict__
+            sequences = IPSCPatchesInfo.sequences
         else:
             raise AssertionError('multi_sequence_db {} is not supported yet'.format(params.dataset))
 
@@ -361,7 +365,7 @@ def run(params):
                 if seg_img is None:
                     raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
 
-                seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_img_fname)
+                # seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_img_fname)
 
                 if len(seg_img.shape) == 3:
                     seg_img = np.squeeze(seg_img[:, :, 0])
