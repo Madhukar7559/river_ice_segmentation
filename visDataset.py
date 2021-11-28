@@ -10,65 +10,6 @@ from datasets.build_utils import convert_to_raw_mask
 
 import cv2
 
-
-#
-# parser = argparse.ArgumentParser()
-# parser.add_argument("--log_dir", type=str)
-#
-# parser.add_argument("--images_path", type=str)
-# parser.add_argument("--images_ext", type=str, default='png')
-# parser.add_argument("--labels_path", type=str, default='')
-# parser.add_argument("--labels_ext", type=str, default='png')
-# parser.add_argument("--seg_path", type=str, default='')
-# parser.add_argument("--seg_ext", type=str, default='png')
-#
-# parser.add_argument("--out_ext", type=str, default='png')
-#
-# parser.add_argument("--save_path", type=str, default='')
-#
-# parser.add_argument("--n_classes", type=int)
-#
-# parser.add_argument("--save_stitched", type=int, default=0)
-#
-# parser.add_argument("--start_id", type=int, default=0)
-# parser.add_argument("--end_id", type=int, default=-1)
-#
-# parser.add_argument("--show_img", type=int, default=0)
-# parser.add_argument("--stitch", type=int, default=0)
-# parser.add_argument("--stitch_seg", type=int, default=1)
-#
-# parser.add_argument("--normalize_labels", type=int, default=1)
-# parser.add_argument("--selective_mode", type=int, default=0)
-#
-# paramparse.from_parser(parser, to_clipboard=True)
-# exit()
-# args = parser.parse_args()
-# args.images_path = args.images_path
-# args.images_ext = args.images_ext
-# args.labels_path = args.labels_path
-# args.labels_ext = args.labels_ext
-#
-# args.seg_path = args.seg_path
-# args.seg_ext = args.seg_ext
-#
-# args.out_ext = args.out_ext
-#
-# args.save_path = args.save_path
-#
-# args.n_classes = args.n_classes
-#
-# args.end_id = args.end_id
-# args.start_id = args.start_id
-#
-# args.show_img = args.show_img
-# args.stitch = args.stitch
-# args.stitch_seg = args.stitch_seg
-# args.save_stitched = args.save_stitched
-#
-# args.normalize_labels = args.normalize_labels
-# args.selective_mode = args.selective_mode
-
-
 class VisParams:
 
     def __init__(self):
@@ -142,11 +83,11 @@ def run(params):
             db_splits = CTCInfo.DBSplits().__dict__
             sequences = CTCInfo.sequences
         elif params.dataset.lower() == 'ipsc':
-            from new_deeplab.datasets.build_ipsc_data import IPSCInfo
+            from new_deeplab.datasets.ipsc_info import IPSCInfo
             db_splits = IPSCInfo.DBSplits().__dict__
             sequences = IPSCInfo.sequences
         elif params.dataset.lower() == 'ipsc_patches':
-            from new_deeplab.datasets.build_ipsc_data import IPSCPatchesInfo
+            from new_deeplab.datasets.ipsc_info import IPSCPatchesInfo
             db_splits = IPSCPatchesInfo.DBSplits().__dict__
             sequences = IPSCPatchesInfo.sequences
         else:
