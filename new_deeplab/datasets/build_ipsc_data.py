@@ -258,8 +258,6 @@ def _convert_dataset(params):
 
                     seg_img, raw_seg_img, class_to_ids = remove_fuzziness_in_mask(seg_img_orig, params.n_classes,
                                                                                   class_to_color, params.fuzziness)
-                    seg_img_raw_min = np.amin(raw_seg_img)
-                    seg_img_raw_max = np.amax(raw_seg_img)
 
                     raw_seg_vals = np.unique(raw_seg_img, return_index=0)
                     raw_seg_vals = list(raw_seg_vals)
@@ -270,9 +268,27 @@ def _convert_dataset(params):
                     seg_vals = list(seg_vals)
                     n_seg_vals = len(seg_vals)
 
+                    if n_seg_vals != n_raw_seg_vals:
+                        print("number of classes is original and raw  segmentation masks do not match")
+                        print('seg_vals: {}'.format(seg_vals))
+                        print('raw_seg_vals: {}'.format(raw_seg_vals))
+
+                        _seg_img_orig = resize_ar(seg_img_orig, 900, 900)[0]
+                        _seg_img = resize_ar(seg_img, 900, 900)[0]
+
+                        cv2.imshow('seg_img_orig', _seg_img_orig)
+                        cv2.imshow('seg_img', _seg_img)
+
+                        cv2.waitKey(0)
+
                     if n_seg_vals > params.n_classes or n_raw_seg_vals > params.n_classes:
                         print("number of classes is less than the number of unique pixel values in {}".format(
                             seg_src_file))
+
+                        seg_img_raw_min = np.amin(raw_seg_img)
+                        seg_img_raw_max = np.amax(raw_seg_img)
+                        print('seg_img_raw_min: {}'.format(seg_img_raw_min))
+                        print('seg_img_raw_max: {}'.format(seg_img_raw_max))
 
                         _seg_img_orig = resize_ar(seg_img_orig, 900, 900)[0]
                         _seg_img = resize_ar(seg_img, 900, 900)[0]
@@ -292,7 +308,7 @@ def _convert_dataset(params):
                     # if params.out_size:
                     #     seg_img, _, _ = resize_ar(seg_img, width=out_w, height=out_h, bkg_col=(255, 255, 255))
 
-                    # cv2.imwrite(raw_seg_src_file, raw_seg_img)
+                    cv2.imwrite(raw_seg_src_file, raw_seg_img)
             else:
                 raw_seg_src_files = _seg_src_files
 
