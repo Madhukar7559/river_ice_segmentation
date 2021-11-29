@@ -15,7 +15,7 @@ import paramparse
 
 from build_data import ImageReader, image_seg_to_tfexample
 from build_utils import resize_ar, convert_to_raw_mask, remove_fuzziness_in_mask, col_bgr
-from ipsc_info import IPSCInfo
+from ipsc_info import IPSCInfo, IPSCPatchesInfo
 
 
 class Params:
@@ -44,7 +44,7 @@ class Params:
 
         self.preprocess = 0
         self.n_classes = 2
-        self.class_names_path = ''
+        self.class_names_path = 'data/predefined_classes_ipsc.txt'
 
         """uncertainty in mask pixel values for each class"""
         self.fuzziness = 5
@@ -158,22 +158,31 @@ def _convert_dataset(params):
 
     vis_seg_files = []
 
+    class_to_color = {
+        0: (0, 0, 0)
+    }
+
     if params.class_names_path:
         classes = [k.strip() for k in open(params.class_names_path, 'r').readlines() if k.strip()]
         classes, class_cols = zip(*[k.split('\t') for k in classes])
-        class_to_color = {
-            _class_id: col_bgr[class_cols[_class_id]]
-            for _class_id, _class in enumerate(classes)
-        }
+        class_to_color.update(
+            {
+                _class_id + 1: col_bgr[class_cols[_class_id]]
+                for _class_id, _class in enumerate(classes)
+            }
+        )
     else:
         col_diff = 255.0 / params.n_classes
         class_id_to_col_gs = {
-            _id: int(col_diff * (_id + 1)) for _id in range(params.n_classes)
+            _id + 1: int(col_diff * (_id + 1)) for _id in range(params.n_classes)
         }
-        class_to_color = {
-            _id: (col, col, col) for _id, col in class_id_to_col_gs.items()
-        }
-        print('using default class colors:\n{}'.format(class_to_color))
+        class_to_color.update(
+            {
+                _id: (col, col, col) for _id, col in class_id_to_col_gs.items()
+            }
+        )
+
+    print('using class colors:\n{}'.format(class_to_color))
 
     for __id, seq_id in enumerate(seq_ids):
 
@@ -209,6 +218,8 @@ def _convert_dataset(params):
             assert os.path.exists(seg_path), \
                 "segmentations not found for sequence: {}".format(seq_name)
 
+            print('reading segmentations from: {}'.format(seg_path))
+
             _seg_src_fnames = [k for k in os.listdir(seg_path) if
                                os.path.splitext(k.lower())[1] in seg_exts]
 
@@ -239,7 +250,6 @@ def _convert_dataset(params):
                 #     resize_factor = 1.0
                 #     img_bbox = [0, 0, img_w, img_h]
 
-
                 # cv2.imwrite(img_src_file, img)
 
                 if not params.disable_seg:
@@ -248,7 +258,7 @@ def _convert_dataset(params):
 
                     remove_fuzziness_in_mask(seg_img, params.n_classes, class_to_color, params.fuzziness)
 
-                    seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_src_file)
+                    seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_src_file, class_to_color)
 
                     # if params.out_size:
                     #     seg_img, _, _ = resize_ar(seg_img, width=out_w, height=out_h, bkg_col=(255, 255, 255))

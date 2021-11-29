@@ -217,39 +217,53 @@ def undo_resize_ar(resized_img, src_width, src_height, placement_type=0):
 def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness):
     """handle annoying nearby pixel values to each actual class label, e.g. 253, 254 for actual label 255"""
 
+    seg_img_min = np.amin(seg_img)
+    seg_img_max = np.amax(seg_img)
+
     for _id in range(n_classes):
         actual_col = class_to_color[_id]
 
         fuzzy_range = [(k - fuzziness, k + fuzziness) for k in actual_col]
 
         seg_img_red = seg_img[..., 0]
-        seg_img_blue = seg_img[..., 1]
-        seg_img_green = seg_img[..., 2]
+        seg_img_green = seg_img[..., 1]
+        seg_img_blue = seg_img[..., 2]
 
-        fuzzy_ids_red = np.logical_and(seg_img_red > fuzzy_range[0][0], seg_img_red < fuzzy_range[0][1])
-        fuzzy_ids_blue = np.logical_and(seg_img_blue > fuzzy_range[1][0], seg_img_blue < fuzzy_range[1][1])
-        fuzzy_ids_green = np.logical_and(seg_img_green > fuzzy_range[2][0], seg_img_green < fuzzy_range[2][1])
+        fuzzy_ids_red = np.logical_and(seg_img_red >= fuzzy_range[0][0], seg_img_red <= fuzzy_range[0][1])
+        fuzzy_ids_green = np.logical_and(seg_img_green >= fuzzy_range[1][0], seg_img_green <= fuzzy_range[1][1])
+        fuzzy_ids_blue = np.logical_and(seg_img_blue >= fuzzy_range[2][0], seg_img_blue <= fuzzy_range[2][1])
 
-        fuzzy_ids = np.logical_and(fuzzy_ids_red, fuzzy_ids_blue, fuzzy_ids_green)
+        fuzzy_ids = np.logical_and(fuzzy_ids_red, fuzzy_ids_green, fuzzy_ids_blue)
 
-        seg_img_red[fuzzy_ids] = actual_col[0]
-        seg_img_blue[fuzzy_ids] = actual_col[1]
-        seg_img_green[fuzzy_ids] = actual_col[2]
+        fuzzy_ids_red_int = np.flatnonzero(fuzzy_ids_red)
+        fuzzy_ids_green_int = np.flatnonzero(fuzzy_ids_green)
+        fuzzy_ids_blue_int = np.flatnonzero(fuzzy_ids_blue)
+        fuzzy_ids_int = np.flatnonzero(fuzzy_ids)
+
+        seg_img[fuzzy_ids] = actual_col
+
+        print()
 
 
-def convert_to_raw_mask(seg_img, n_classes, seg_src_file):
-    seg_vals, seg_val_indxs = np.unique(seg_img, return_index=1)
+def convert_to_raw_mask(seg_img, n_classes, seg_src_file, class_to_color):
+    seg_img_flat = seg_img.reshape((-1, 3))
+    seg_vals, seg_val_indxs = np.unique(seg_img_flat, return_index=1, axis=0)
     seg_vals = list(seg_vals)
     seg_val_indxs = list(seg_val_indxs)
 
     n_seg_vals = len(seg_vals)
 
-    assert n_seg_vals == n_classes, \
-        "mismatch between number classes and unique pixel values in {}".format(seg_src_file)
+    assert n_seg_vals <= n_classes, \
+        "number of classes is less than the number of unique pixel values in {}".format(seg_src_file)
+
+    color_to_class = {
+        v: k for k, v in class_to_color.items()
+    }
 
     for seg_val_id, seg_val in enumerate(seg_vals):
         # print('{} --> {}'.format(seg_val, seg_val_id))
-        seg_img[seg_img == seg_val] = seg_val_id
+        class_id = color_to_class[tuple(seg_val)]
+        seg_img_flat[seg_img_flat == seg_val] = class_id
 
     return seg_img
 

@@ -3,7 +3,9 @@
 - [build_data](#build_dat_a_)
     - [g1       @ build_data](#g1___build_data_)
         - [patches       @ g1/build_data](#patches___g1_build_dat_a_)
+        - [masks_rgb       @ g1/build_data](#masks_rgb___g1_build_dat_a_)
     - [g2_4       @ build_data](#g2_4___build_data_)
+        - [masks_rgb       @ g2_4/build_data](#masks_rgb___g2_4_build_dat_a_)
         - [patches       @ g2_4/build_data](#patches___g2_4_build_dat_a_)
     - [g3_4       @ build_data](#g3_4___build_data_)
         - [patches       @ g3_4/build_data](#patches___g3_4_build_dat_a_)
@@ -44,9 +46,18 @@
 ### patches       @ g1/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g1 preprocess=0 patches=1 root_dir=/data/ipsc_patches
 
+<a id="masks_rgb___g1_build_dat_a_"></a>
+### masks_rgb       @ g1/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1  root_dir=/data/ipsc/201020/masks_rgb n_classes=3 
+
 <a id="g2_4___build_data_"></a>
 ## g2_4       @ build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0
+
+<a id="masks_rgb___g2_4_build_dat_a_"></a>
+### masks_rgb       @ g2_4/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1  root_dir=/data/ipsc/201020/masks_rgb n_classes=3 
+
 <a id="patches___g2_4_build_dat_a_"></a>
 ### patches       @ g2_4/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0 patches=1 root_dir=/data/ipsc_patches
