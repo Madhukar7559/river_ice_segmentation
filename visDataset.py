@@ -10,6 +10,7 @@ from datasets.build_utils import convert_to_raw_mask
 
 import cv2
 
+
 class VisParams:
 
     def __init__(self):
@@ -290,7 +291,6 @@ def run(params):
             #     labels_img = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
             # else:
             #     labels_img = np.copy(labels_img_orig)
-
 
             if len(labels_img.shape) != 3:
                 labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)

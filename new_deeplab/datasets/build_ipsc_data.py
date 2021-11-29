@@ -194,6 +194,7 @@ def _convert_dataset(params):
         print('\tseq {} / {}\t{}\t{}\t{} frames'.format(__id + 1, n_seq, seq_id, seq_name, n_frames))
 
         img_dir_path = linux_path(params.root_dir, 'images', seq_name)
+        print('reading images from: {}'.format(img_dir_path))
 
         _img_src_files = [linux_path(img_dir_path, k) for k in os.listdir(img_dir_path) if
                           os.path.splitext(k.lower())[1] in img_exts]
@@ -208,6 +209,14 @@ def _convert_dataset(params):
             rand_indices = list(range(n_img_files))
             random.shuffle(rand_indices)
             _img_src_files = [_img_src_files[i] for i in rand_indices]
+
+        _n_train_files = int(n_img_files * params.train_ratio)
+
+        train_img_files += _img_src_files[:_n_train_files]
+        test_img_files += _img_src_files[_n_train_files:]
+
+        n_train_files += _n_train_files
+        n_test_files += n_img_files - _n_train_files
 
         if not params.disable_seg:
             seg_path = linux_path(params.root_dir, 'labels', seq_name)
@@ -234,48 +243,61 @@ def _convert_dataset(params):
 
             _seg_src_files = [linux_path(seg_path, k) for k in _seg_src_fnames]
 
-        if params.preprocess:
-            print('creating raw segmentation images')
-            for img_src_file_id, img_src_file in enumerate(tqdm(_img_src_files)):
+            if params.preprocess:
+                raw_seg_path = linux_path(params.root_dir, 'raw_labels', seq_name)
 
-                # img = cv2.imread(img_src_file)
-                # img_h, img_w = img.shape[:2]
-                #
-                # if params.out_size:
-                #     bkg_col = [123.15, 115.90, 103.06]
-                #     bkg_col = [127.5, 127.5, 127.5]
-                #     out_w, out_h = params.out_size
-                #     img, resize_factor, img_bbox = resize_ar(img, width=out_w, height=out_h, bkg_col=bkg_col)
-                # else:
-                #     resize_factor = 1.0
-                #     img_bbox = [0, 0, img_w, img_h]
+                print('writing raw segmentation images to {}'.format(raw_seg_path))
 
-                # cv2.imwrite(img_src_file, img)
+                os.makedirs(raw_seg_path, exist_ok=1)
+                raw_seg_src_files = [linux_path(raw_seg_path, k) for k in _seg_src_fnames]
 
-                if not params.disable_seg:
+                for img_src_file_id, img_src_file in enumerate(tqdm(_img_src_files)):
                     seg_src_file = _seg_src_files[img_src_file_id]
-                    seg_img = cv2.imread(seg_src_file)
+                    raw_seg_src_file = raw_seg_src_files[img_src_file_id]
+                    seg_img_orig = cv2.imread(seg_src_file)
 
-                    remove_fuzziness_in_mask(seg_img, params.n_classes, class_to_color, params.fuzziness)
+                    seg_img, raw_seg_img, class_to_ids = remove_fuzziness_in_mask(seg_img_orig, params.n_classes,
+                                                                                  class_to_color, params.fuzziness)
+                    seg_img_raw_min = np.amin(raw_seg_img)
+                    seg_img_raw_max = np.amax(raw_seg_img)
 
-                    seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_src_file, class_to_color)
+                    raw_seg_vals = np.unique(raw_seg_img, return_index=0)
+                    raw_seg_vals = list(raw_seg_vals)
+                    n_raw_seg_vals = len(raw_seg_vals)
+
+                    seg_img_flat = seg_img.reshape((-1, 3))
+                    seg_vals = np.unique(seg_img_flat, return_index=0, axis=0)
+                    seg_vals = list(seg_vals)
+                    n_seg_vals = len(seg_vals)
+
+                    if n_seg_vals > params.n_classes or n_raw_seg_vals > params.n_classes:
+                        print("number of classes is less than the number of unique pixel values in {}".format(
+                            seg_src_file))
+
+                        _seg_img_orig = resize_ar(seg_img_orig, 900, 900)[0]
+                        _seg_img = resize_ar(seg_img, 900, 900)[0]
+
+                        cv2.imshow('seg_img_orig', _seg_img_orig)
+                        cv2.imshow('seg_img', _seg_img)
+
+                        cv2.waitKey(0)
+
+                    # raw_seg_img, raw_seg_vals = convert_to_raw_mask(seg_img, params.n_classes, seg_src_file,
+                    # class_to_color,
+                    #                                             class_to_ids)
+
+                    # raw_seg_img_min = np.amin(raw_seg_img)
+                    # raw_seg_img_max = np.amax(raw_seg_img)
 
                     # if params.out_size:
                     #     seg_img, _, _ = resize_ar(seg_img, width=out_w, height=out_h, bkg_col=(255, 255, 255))
 
-                    cv2.imwrite(seg_src_file, seg_img)
+                    # cv2.imwrite(raw_seg_src_file, raw_seg_img)
+            else:
+                raw_seg_src_files = _seg_src_files
 
-        _n_train_files = int(n_img_files * params.train_ratio)
-
-        train_img_files += _img_src_files[:_n_train_files]
-        test_img_files += _img_src_files[_n_train_files:]
-
-        n_train_files += _n_train_files
-        n_test_files += n_img_files - _n_train_files
-
-        if not params.disable_seg:
-            train_seg_files += _seg_src_files[:_n_train_files]
-            test_seg_files += _seg_src_files[_n_train_files:]
+            train_seg_files += raw_seg_src_files[:_n_train_files]
+            test_seg_files += raw_seg_src_files[_n_train_files:]
 
     n_total_files = n_train_files + n_test_files
     print('Found {} files with {} training and {} testing files corresponding to a training ratio of {}'.format(

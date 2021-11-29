@@ -48,7 +48,7 @@ python36 datasets/build_ipsc_data.py db_split=g1 preprocess=0 patches=1 root_dir
 
 <a id="masks_rgb___g1_build_dat_a_"></a>
 ### masks_rgb       @ g1/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1  root_dir=/data/ipsc/201020/masks_rgb n_classes=3 
+python36 datasets/build_ipsc_data.py db_split=g1 preprocess=1  root_dir=/data/ipsc/201020/masks_rgb n_classes=3 
 
 <a id="g2_4___build_data_"></a>
 ## g2_4       @ build_data-->new_deeplab_ipsc

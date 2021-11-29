@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 
-
 # BGR values for different colors
 col_bgr = {
     'snow': (250, 250, 255),
@@ -220,40 +219,76 @@ def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness):
     seg_img_min = np.amin(seg_img)
     seg_img_max = np.amax(seg_img)
 
+    seg_img_out = np.copy(seg_img)
+    seg_img_raw = np.zeros(seg_img.shape[:2], dtype=np.uint8)
+
+    class_to_ids = {}
+
     for _id in range(n_classes):
         actual_col = class_to_color[_id]
 
-        fuzzy_range = [(k - fuzziness, k + fuzziness) for k in actual_col]
+        fuzzy_range = [(max(0, k - fuzziness), min(255, k + fuzziness)) for k in actual_col]
+        fuzzy_range_red, fuzzy_range_green, fuzzy_range_blue = fuzzy_range
 
         seg_img_red = seg_img[..., 0]
         seg_img_green = seg_img[..., 1]
         seg_img_blue = seg_img[..., 2]
 
-        fuzzy_ids_red = np.logical_and(seg_img_red >= fuzzy_range[0][0], seg_img_red <= fuzzy_range[0][1])
-        fuzzy_ids_green = np.logical_and(seg_img_green >= fuzzy_range[1][0], seg_img_green <= fuzzy_range[1][1])
-        fuzzy_ids_blue = np.logical_and(seg_img_blue >= fuzzy_range[2][0], seg_img_blue <= fuzzy_range[2][1])
+        fuzzy_ids_red1 = seg_img_red >= fuzzy_range_red[0]
+        fuzzy_ids_red2 = seg_img_red <= fuzzy_range_red[1]
+        fuzzy_ids_red = np.logical_and(fuzzy_ids_red1, fuzzy_ids_red2)
 
-        fuzzy_ids = np.logical_and(fuzzy_ids_red, fuzzy_ids_green, fuzzy_ids_blue)
+        fuzzy_ids_green = np.logical_and(seg_img_green >= fuzzy_range_green[0], seg_img_green <= fuzzy_range_green[1])
 
-        fuzzy_ids_red_int = np.flatnonzero(fuzzy_ids_red)
-        fuzzy_ids_green_int = np.flatnonzero(fuzzy_ids_green)
-        fuzzy_ids_blue_int = np.flatnonzero(fuzzy_ids_blue)
-        fuzzy_ids_int = np.flatnonzero(fuzzy_ids)
+        fuzzy_ids_blue1 = (seg_img_blue >= fuzzy_range_blue[0])
+        fuzzy_ids_blue2 = (seg_img_blue <= fuzzy_range_blue[1])
+        fuzzy_ids_blue = np.logical_and(fuzzy_ids_blue1, fuzzy_ids_blue2)
 
-        seg_img[fuzzy_ids] = actual_col
+        fuzzy_ids = np.logical_and(fuzzy_ids_red, fuzzy_ids_green)
+        fuzzy_ids = np.logical_and(fuzzy_ids, fuzzy_ids_blue)
 
-        print()
+        # fuzzy_ids_red1_int = np.flatnonzero(fuzzy_ids_red1).size
+        # fuzzy_ids_red2_int = np.flatnonzero(fuzzy_ids_red2).size
+        # fuzzy_ids_red_int = np.flatnonzero(fuzzy_ids_red).size
+        #
+        # fuzzy_ids_green_int = np.flatnonzero(fuzzy_ids_green).size
+        #
+        # fuzzy_ids_blue1_int = np.flatnonzero(fuzzy_ids_blue1).size
+        # fuzzy_ids_blue2_int = np.flatnonzero(fuzzy_ids_blue2).size
+        # fuzzy_ids_blue_int = np.flatnonzero(fuzzy_ids_blue).size
+        #
+        # fuzzy_ids_int = np.flatnonzero(fuzzy_ids).size
 
 
-def convert_to_raw_mask(seg_img, n_classes, seg_src_file, class_to_color):
+        # print('actual_col: {}'.format(actual_col))
+        #
+        # print('fuzzy_range_red: {}'.format(fuzzy_range_red))
+        # print('fuzzy_range_blue: {}'.format(fuzzy_range_blue))
+        #
+        # print('fuzzy_ids_red: {}, {}, {}'.format(fuzzy_ids_red1_int, fuzzy_ids_red2_int, fuzzy_ids_red_int))
+        # print('fuzzy_ids_blue: {}, {}, {}'.format(fuzzy_ids_blue1_int, fuzzy_ids_blue2_int, fuzzy_ids_blue_int))
+
+        seg_img_out[fuzzy_ids] = actual_col
+        seg_img_raw[fuzzy_ids] = _id
+
+        class_to_ids[_id] = fuzzy_ids
+
+        # print()
+
+    return seg_img_out, seg_img_raw, class_to_ids
+
+
+def convert_to_raw_mask(seg_img, n_classes, seg_src_file, class_to_color, class_to_ids):
     seg_img_flat = seg_img.reshape((-1, 3))
     seg_vals, seg_val_indxs = np.unique(seg_img_flat, return_index=1, axis=0)
     seg_vals = list(seg_vals)
-    seg_val_indxs = list(seg_val_indxs)
+    # seg_val_indxs = list(seg_val_indxs)
+
+    seg_img_raw = np.zeros(seg_img.shape[:2], dtype=np.uint8)
 
     n_seg_vals = len(seg_vals)
 
-    assert n_seg_vals <= n_classes, \
+    assert n_seg_vals == n_classes, \
         "number of classes is less than the number of unique pixel values in {}".format(seg_src_file)
 
     color_to_class = {
@@ -263,9 +298,10 @@ def convert_to_raw_mask(seg_img, n_classes, seg_src_file, class_to_color):
     for seg_val_id, seg_val in enumerate(seg_vals):
         # print('{} --> {}'.format(seg_val, seg_val_id))
         class_id = color_to_class[tuple(seg_val)]
-        seg_img_flat[seg_img_flat == seg_val] = class_id
+        _ids = class_to_ids[class_id]
+        seg_img_raw[_ids] = class_id
 
-    return seg_img
+    return seg_img_raw, seg_vals
 
 
 def resize_ar(src_img, width=0, height=0, placement_type=0, bkg_col=None):
