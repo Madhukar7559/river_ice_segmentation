@@ -23,6 +23,7 @@ class Params:
     def __init__(self):
         self.db_split = 'all'
 
+        self.multi = 0
         self.patches = 0
 
         self.cfg = ()
@@ -32,7 +33,8 @@ class Params:
 
         self.resize = 0
         self.root_dir = '/data/ipsc'
-        self.output_dir = '/data/tfrecord/ipsc'
+        self.output_root_dir = '/data/tfrecord'
+        self.output_dir = 'ipsc'
 
         self.start_id = 0
         self.end_id = -1
@@ -126,16 +128,26 @@ def _convert_dataset(params):
 
     seq_ids = params.db_splits[params.db_split]
 
+    output_dir = params.output_dir
+
+    if params.multi:
+        print('using version with multiple classes')
+        output_dir += '_multi'
+
     if params.patches:
         print('using version with patches')
-        params.output_dir += '_patches'
+        output_dir += '_patches'
 
     print('root_dir: {}'.format(params.root_dir))
     print('db_split: {}'.format(params.db_split))
     print('seq_ids: {}'.format(seq_ids))
-    print('output_dir: {}'.format(params.output_dir))
 
-    os.makedirs(params.output_dir, exist_ok=True)
+    if params.output_root_dir:
+        output_dir = linux_path(params.output_root_dir, output_dir)
+
+    print('output_dir: {}'.format(output_dir))
+
+    os.makedirs(output_dir, exist_ok=True)
 
     if params.disable_seg:
         print('\nSegmentations are disabled\n')
@@ -321,14 +333,14 @@ def _convert_dataset(params):
     ))
 
     if train_seg_files:
-        train_output_dir = linux_path(params.output_dir, 'train')
+        train_output_dir = linux_path(output_dir, 'train')
         print('saving train tfrecords to {}'.format(train_output_dir))
         os.makedirs(train_output_dir, exist_ok=1)
         create_tfrecords(train_img_files, train_seg_files, params.num_shards,
                          params.db_split, train_output_dir)
 
     if test_img_files:
-        test_output_dir = linux_path(params.output_dir, 'test')
+        test_output_dir = linux_path(output_dir, 'test')
         os.makedirs(test_output_dir, exist_ok=1)
         print('saving test tfrecords to {}'.format(test_output_dir))
         create_tfrecords(test_img_files, test_seg_files, params.num_shards,

@@ -58,7 +58,7 @@ python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0
 
 <a id="ipsc_multi___g2_4_build_dat_a_"></a>
 ### ipsc_multi       @ g2_4/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=1 root_dir=/data/ipsc_multi n_classes=3 
+python36 datasets/build_ipsc_data.py db_split=g2_4 preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
 
 <a id="patches___g2_4_build_dat_a_"></a>
 ### patches       @ g2_4/build_data-->new_deeplab_ipsc
@@ -111,7 +111,7 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_
 
 <a id="ipsc_multi___atrous_6_12_18_hnasnet_"></a>
 ### ipsc_multi       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=1
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=0
 
 <a id="patches___atrous_6_12_18_hnasnet_"></a>
 ### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
