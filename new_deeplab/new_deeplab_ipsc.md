@@ -11,10 +11,13 @@
         - [ipsc_multi       @ g3_4/build_data](#ipsc_multi___g3_4_build_dat_a_)
         - [patches       @ g3_4/build_data](#patches___g3_4_build_dat_a_)
     - [g2       @ build_data](#g2___build_data_)
+        - [ipsc_multi       @ g2/build_data](#ipsc_multi___g2_build_dat_a_)
         - [patches       @ g2/build_data](#patches___g2_build_dat_a_)
     - [g3       @ build_data](#g3___build_data_)
+        - [ipsc_multi       @ g3/build_data](#ipsc_multi___g3_build_dat_a_)
         - [patches       @ g3/build_data](#patches___g3_build_dat_a_)
     - [g4       @ build_data](#g4___build_data_)
+        - [ipsc_multi       @ g4/build_data](#ipsc_multi___g4_build_dat_a_)
         - [patches       @ g4/build_data](#patches___g4_build_dat_a_)
 - [hnasnet](#hnasnet_)
     - [atrous:6_12_18       @ hnasnet](#atrous_6_12_18___hnasne_t_)
@@ -80,6 +83,10 @@ python36 datasets/build_ipsc_data.py db_split=g3_4 preprocess=0 patches=1 root_d
 ## g2       @ build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g2 preprocess=0
 
+<a id="ipsc_multi___g2_build_dat_a_"></a>
+### ipsc_multi       @ g2/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g2 preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
+
 <a id="patches___g2_build_dat_a_"></a>
 ### patches       @ g2/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g2 preprocess=0 patches=1 root_dir=/data/ipsc_patches
@@ -87,6 +94,11 @@ python36 datasets/build_ipsc_data.py db_split=g2 preprocess=0 patches=1 root_dir
 <a id="g3___build_data_"></a>
 ## g3       @ build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g3 preprocess=0
+
+<a id="ipsc_multi___g3_build_dat_a_"></a>
+### ipsc_multi       @ g3/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g3 preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
+
 <a id="patches___g3_build_dat_a_"></a>
 ### patches       @ g3/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g3 preprocess=0 patches=1 root_dir=/data/ipsc_patches
@@ -94,6 +106,11 @@ python36 datasets/build_ipsc_data.py db_split=g3 preprocess=0 patches=1 root_dir
 <a id="g4___build_data_"></a>
 ## g4       @ build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0
+
+<a id="ipsc_multi___g4_build_dat_a_"></a>
+### ipsc_multi       @ g4/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
+
 
 <a id="patches___g4_build_dat_a_"></a>
 ### patches       @ g4/build_data-->new_deeplab_ipsc
