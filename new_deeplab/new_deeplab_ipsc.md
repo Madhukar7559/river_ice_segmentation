@@ -70,7 +70,7 @@ python36 datasets/build_ipsc_data.py db_split=g3_4 preprocess=0
 
 <a id="ipsc_multi___g3_4_build_dat_a_"></a>
 ### ipsc_multi       @ g3_4/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=g3_4 preprocess=1 root_dir=/data/ipsc_multi n_classes=3 
+python36 datasets/build_ipsc_data.py db_split=g3_4 preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
 
 <a id="patches___g3_4_build_dat_a_"></a>
 ### patches       @ g3_4/build_data-->new_deeplab_ipsc
