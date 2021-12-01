@@ -276,6 +276,12 @@ _IPSC_INFORMATION = DatasetDescriptor(
     ignore_label=255,
 )
 
+_IPSC_MULTI_INFORMATION = DatasetDescriptor(
+    splits_to_sizes=ipsc_splits_to_sizes,
+    num_classes=3,
+    ignore_label=255,
+)
+
 _IPSC_PATCHES_INFORMATION = DatasetDescriptor(
     splits_to_sizes=ipsc_patches_splits_to_sizes,
     num_classes=2,
@@ -288,6 +294,7 @@ _DATASETS_INFORMATION = {
     'ade20k': _ADE20K_INFORMATION,
     'ctc': _CTC_INFORMATION,
     'ipsc': _IPSC_INFORMATION,
+    'ipsc_multi': _IPSC_MULTI_INFORMATION,
     'ipsc_patches': _IPSC_PATCHES_INFORMATION,
     'training_0_31_49_256_256_25_100_rot_15_125_235_345_flip': _617_256_INFORMATION,
     'training_0_31_49_384_384_25_100_rot_15_345_4_flip': _617_384_INFORMATION,
