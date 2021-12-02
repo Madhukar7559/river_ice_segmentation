@@ -5,7 +5,7 @@ import imageio
 from paramparse import MultiPath
 
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import read_data, getDateTime, print_and_write, linux_path
+from densenet.utils import read_data, getDateTime, print_and_write, linux_path, col_bgr
 from datasets.build_utils import convert_to_raw_mask
 
 import cv2
@@ -32,6 +32,7 @@ class VisParams:
         self.stitch = 0
         self.stitch_seg = 1
         self.no_labels = 1
+        self.class_names_path = 'data/classes_ice.txt'
 
         self.multi_sequence_db = 0
         self.seg_on_subset = 0
@@ -74,6 +75,7 @@ def run(params):
     :param VisParams params:
     :return:
     """
+
 
     if params.multi_sequence_db:
         assert params.vis_split, "vis_split must be provided for CTC"
@@ -181,6 +183,15 @@ def run(params):
     if params.end_id < params.start_id:
         params.end_id = total_frames - 1
 
+    class_to_color = {}
+    classes = [k.strip() for k in open(params.class_names_path, 'r').readlines() if k.strip()]
+    classes, class_cols = zip(*[k.split('\t') for k in classes])
+    class_to_color.update(
+        {
+            _class_id + 1: col_bgr[class_cols[_class_id]]
+            for _class_id, _class in enumerate(classes)
+        }
+    )
     if not params.save_path:
         if eval_mode:
             params.save_path = os.path.join(os.path.dirname(params.seg_path), 'vis')

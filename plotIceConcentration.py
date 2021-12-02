@@ -14,7 +14,7 @@ from matplotlib.figure import Figure
 # plt.style.use('presentation')
 
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import read_data, getDateTime, print_and_write, resize_ar, put_text_with_background, col_rgb
+from densenet.utils import read_data, getDateTime, print_and_write, resize_ar, put_text_with_background, col_bgr
 from dictances import bhattacharyya, euclidean, mae, mse
 
 
@@ -178,8 +178,8 @@ def main():
 
     video_exts = ['mp4', 'mkv', 'avi', 'mpg', 'mpeg', 'mjpg']
 
-    labels_col_rgb = col_rgb[labels_col]
-    seg_cols_rgb = [col_rgb[seg_col] for seg_col in seg_cols]
+    labels_col_rgb = col_bgr[labels_col]
+    seg_cols_rgb = [col_bgr[seg_col] for seg_col in seg_cols]
 
     ice_type_str = ice_types[ice_type]
 

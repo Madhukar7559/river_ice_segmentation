@@ -2,7 +2,7 @@ import os, time, sys
 import numpy as np
 import cv2
 
-col_rgb = {
+col_bgr = {
     'snow': (250, 250, 255),
     'snow_2': (233, 233, 238),
     'snow_3': (201, 201, 205),
