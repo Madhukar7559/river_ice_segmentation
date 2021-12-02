@@ -40,7 +40,13 @@
         - [g4       @ atrous:6_12_18/hnasnet](#g4___atrous_6_12_18_hnasnet_)
         - [on_g2       @ atrous:6_12_18/hnasnet](#on_g2___atrous_6_12_18_hnasnet__1)
         - [on_g3       @ atrous:6_12_18/hnasnet](#on_g3___atrous_6_12_18_hnasnet__1)
+        - [ipsc_multi       @ atrous:6_12_18/hnasnet](#ipsc_multi___atrous_6_12_18_hnasnet__4)
         - [patches       @ atrous:6_12_18/hnasnet](#patches___atrous_6_12_18_hnasnet__4)
+- [resnet101](#resnet101_)
+    - [atrous:6_12_18       @ resnet101](#atrous_6_12_18___resnet10_1_)
+        - [g2_4       @ atrous:6_12_18/resnet101](#g2_4___atrous_6_12_18_resnet101_)
+        - [ipsc_multi       @ atrous:6_12_18/resnet101](#ipsc_multi___atrous_6_12_18_resnet101_)
+        - [patches       @ atrous:6_12_18/resnet101](#patches___atrous_6_12_18_resnet101_)
 
 <!-- /MarkdownTOC -->
 
@@ -201,7 +207,28 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g4:+++v
 ### on_g3       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g4:+++vis:g3,_train_:b2 start=1
 
+<a id="ipsc_multi___atrous_6_12_18_hnasnet__4"></a>
+### ipsc_multi       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g4,_train_:b2 start=0
+
 <a id="patches___atrous_6_12_18_hnasnet__4"></a>
 ### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g4,_train_:b2 start=1
 
+<a id="resnet101_"></a>
+# resnet101
+
+<a id="atrous_6_12_18___resnet10_1_"></a>
+## atrous:6_12_18       @ resnet101-->new_deeplab_ipsc
+
+<a id="g2_4___atrous_6_12_18_resnet101_"></a>
+### g2_4       @ atrous:6_12_18/resnet101-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:train:vis:g2_4,_train_:b2 start=0
+
+<a id="ipsc_multi___atrous_6_12_18_resnet101_"></a>
+### ipsc_multi       @ atrous:6_12_18/resnet101-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=0
+
+<a id="patches___atrous_6_12_18_resnet101_"></a>
+### patches       @ atrous:6_12_18/resnet101-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:patches:train:vis:g2_4,_train_:b2 start=0

@@ -361,7 +361,7 @@ class NewDeeplabTrainParams:
         self.image_pooling_stride = [1, 1]
         self.aspp_with_batch_norm = True
         self.aspp_with_separable_conv = True
-        self.multi_grid = []
+        self.multi_grid = None
         self.depth_multiplier = 1.0
         self.divisible_by = None
         self.decoder_output_stride = None
