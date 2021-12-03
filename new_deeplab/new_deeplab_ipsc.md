@@ -20,33 +20,31 @@
         - [ipsc_multi       @ g4/build_data](#ipsc_multi___g4_build_dat_a_)
         - [patches       @ g4/build_data](#patches___g4_build_dat_a_)
 - [hnasnet](#hnasnet_)
-    - [atrous:6_12_18       @ hnasnet](#atrous_6_12_18___hnasne_t_)
-        - [g2_4       @ atrous:6_12_18/hnasnet](#g2_4___atrous_6_12_18_hnasnet_)
-        - [ipsc_multi       @ atrous:6_12_18/hnasnet](#ipsc_multi___atrous_6_12_18_hnasnet_)
-        - [patches       @ atrous:6_12_18/hnasnet](#patches___atrous_6_12_18_hnasnet_)
-        - [g3_4       @ atrous:6_12_18/hnasnet](#g3_4___atrous_6_12_18_hnasnet_)
-        - [ipsc_multi       @ atrous:6_12_18/hnasnet](#ipsc_multi___atrous_6_12_18_hnasnet__1)
-        - [patches       @ atrous:6_12_18/hnasnet](#patches___atrous_6_12_18_hnasnet__1)
-        - [g2       @ atrous:6_12_18/hnasnet](#g2___atrous_6_12_18_hnasnet_)
-        - [on_g3       @ atrous:6_12_18/hnasnet](#on_g3___atrous_6_12_18_hnasnet_)
-        - [on_g4       @ atrous:6_12_18/hnasnet](#on_g4___atrous_6_12_18_hnasnet_)
-        - [ipsc_multi       @ atrous:6_12_18/hnasnet](#ipsc_multi___atrous_6_12_18_hnasnet__2)
-        - [patches       @ atrous:6_12_18/hnasnet](#patches___atrous_6_12_18_hnasnet__2)
-        - [g3       @ atrous:6_12_18/hnasnet](#g3___atrous_6_12_18_hnasnet_)
-        - [on_g2       @ atrous:6_12_18/hnasnet](#on_g2___atrous_6_12_18_hnasnet_)
-        - [on_g4       @ atrous:6_12_18/hnasnet](#on_g4___atrous_6_12_18_hnasnet__1)
-        - [ipsc_multi       @ atrous:6_12_18/hnasnet](#ipsc_multi___atrous_6_12_18_hnasnet__3)
-        - [patches       @ atrous:6_12_18/hnasnet](#patches___atrous_6_12_18_hnasnet__3)
-        - [g4       @ atrous:6_12_18/hnasnet](#g4___atrous_6_12_18_hnasnet_)
-        - [on_g2       @ atrous:6_12_18/hnasnet](#on_g2___atrous_6_12_18_hnasnet__1)
-        - [on_g3       @ atrous:6_12_18/hnasnet](#on_g3___atrous_6_12_18_hnasnet__1)
-        - [ipsc_multi       @ atrous:6_12_18/hnasnet](#ipsc_multi___atrous_6_12_18_hnasnet__4)
-        - [patches       @ atrous:6_12_18/hnasnet](#patches___atrous_6_12_18_hnasnet__4)
+    - [g2_4       @ hnasnet](#g2_4___hnasne_t_)
+        - [ipsc_multi       @ g2_4/hnasnet](#ipsc_multi___g2_4_hnasnet_)
+        - [patches       @ g2_4/hnasnet](#patches___g2_4_hnasnet_)
+    - [g3_4       @ hnasnet](#g3_4___hnasne_t_)
+        - [ipsc_multi       @ g3_4/hnasnet](#ipsc_multi___g3_4_hnasnet_)
+        - [patches       @ g3_4/hnasnet](#patches___g3_4_hnasnet_)
+    - [g2       @ hnasnet](#g2___hnasne_t_)
+        - [on_g3       @ g2/hnasnet](#on_g3___g2_hnasnet_)
+        - [on_g4       @ g2/hnasnet](#on_g4___g2_hnasnet_)
+        - [ipsc_multi       @ g2/hnasnet](#ipsc_multi___g2_hnasnet_)
+        - [patches       @ g2/hnasnet](#patches___g2_hnasnet_)
+    - [g3       @ hnasnet](#g3___hnasne_t_)
+        - [on_g2       @ g3/hnasnet](#on_g2___g3_hnasnet_)
+        - [on_g4       @ g3/hnasnet](#on_g4___g3_hnasnet_)
+        - [ipsc_multi       @ g3/hnasnet](#ipsc_multi___g3_hnasnet_)
+        - [patches       @ g3/hnasnet](#patches___g3_hnasnet_)
+    - [g4       @ hnasnet](#g4___hnasne_t_)
+        - [on_g2       @ g4/hnasnet](#on_g2___g4_hnasnet_)
+        - [on_g3       @ g4/hnasnet](#on_g3___g4_hnasnet_)
+        - [ipsc_multi       @ g4/hnasnet](#ipsc_multi___g4_hnasnet_)
+        - [patches       @ g4/hnasnet](#patches___g4_hnasnet_)
 - [resnet101](#resnet101_)
-    - [atrous:6_12_18       @ resnet101](#atrous_6_12_18___resnet10_1_)
-        - [g2_4       @ atrous:6_12_18/resnet101](#g2_4___atrous_6_12_18_resnet101_)
-        - [ipsc_multi       @ atrous:6_12_18/resnet101](#ipsc_multi___atrous_6_12_18_resnet101_)
-        - [patches       @ atrous:6_12_18/resnet101](#patches___atrous_6_12_18_resnet101_)
+    - [g2_4       @ resnet101](#g2_4___resnet10_1_)
+    - [ipsc_multi       @ resnet101](#ipsc_multi___resnet10_1_)
+    - [patches       @ resnet101](#patches___resnet10_1_)
 
 <!-- /MarkdownTOC -->
 
@@ -128,107 +126,101 @@ python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0 patches=1 root_dir
 <a id="hnasnet_"></a>
 # hnasnet
 
-<a id="atrous_6_12_18___hnasne_t_"></a>
-## atrous:6_12_18       @ hnasnet-->new_deeplab_ipsc
-
-<a id="g2_4___atrous_6_12_18_hnasnet_"></a>
-### g2_4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="g2_4___hnasne_t_"></a>
+## g2_4       @ hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_4,_train_:b2 start=2
 
-<a id="ipsc_multi___atrous_6_12_18_hnasnet_"></a>
-### ipsc_multi       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="ipsc_multi___g2_4_hnasnet_"></a>
+### ipsc_multi       @ g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=0
 
-<a id="patches___atrous_6_12_18_hnasnet_"></a>
-### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="patches___g2_4_hnasnet_"></a>
+### patches       @ g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g2_4,_train_:b2 start=1
 
-<a id="g3_4___atrous_6_12_18_hnasnet_"></a>
-### g3_4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="g3_4___hnasne_t_"></a>
+## g3_4       @ hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3_4,_train_:b2 start=2
 
-<a id="ipsc_multi___atrous_6_12_18_hnasnet__1"></a>
-### ipsc_multi       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="ipsc_multi___g3_4_hnasnet_"></a>
+### ipsc_multi       @ g3_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g3_4,_train_:b2 start=0
 
-<a id="patches___atrous_6_12_18_hnasnet__1"></a>
-### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="patches___g3_4_hnasnet_"></a>
+### patches       @ g3_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g3_4,_train_:b2 start=1
 
-<a id="g2___atrous_6_12_18_hnasnet_"></a>
-### g2       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="g2___hnasne_t_"></a>
+## g2       @ hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2,_train_:b2 start=2
 
-<a id="on_g3___atrous_6_12_18_hnasnet_"></a>
-### on_g3       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="on_g3___g2_hnasnet_"></a>
+### on_g3       @ g2/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g2:+++vis:g3,_train_:b2 start=1
 
-<a id="on_g4___atrous_6_12_18_hnasnet_"></a>
-### on_g4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="on_g4___g2_hnasnet_"></a>
+### on_g4       @ g2/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g2:+++vis:g4,_train_:b2 start=1
 
-<a id="ipsc_multi___atrous_6_12_18_hnasnet__2"></a>
-### ipsc_multi       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="ipsc_multi___g2_hnasnet_"></a>
+### ipsc_multi       @ g2/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2,_train_:b2 start=0
 
-<a id="patches___atrous_6_12_18_hnasnet__2"></a>
-### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="patches___g2_hnasnet_"></a>
+### patches       @ g2/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g2,_train_:b2 start=1
 
-<a id="g3___atrous_6_12_18_hnasnet_"></a>
-### g3       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="g3___hnasne_t_"></a>
+## g3       @ hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g3,_train_:b2 start=2
 
-<a id="on_g2___atrous_6_12_18_hnasnet_"></a>
-### on_g2       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="on_g2___g3_hnasnet_"></a>
+### on_g2       @ g3/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g3:+++vis:g2,_train_:b2 start=1
 
-<a id="on_g4___atrous_6_12_18_hnasnet__1"></a>
-### on_g4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="on_g4___g3_hnasnet_"></a>
+### on_g4       @ g3/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g3:+++vis:g4,_train_:b2 start=1
 
-<a id="ipsc_multi___atrous_6_12_18_hnasnet__3"></a>
-### ipsc_multi       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="ipsc_multi___g3_hnasnet_"></a>
+### ipsc_multi       @ g3/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g3,_train_:b2 start=0
 
-<a id="patches___atrous_6_12_18_hnasnet__3"></a>
-### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="patches___g3_hnasnet_"></a>
+### patches       @ g3/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g3,_train_:b2 start=1
 
-<a id="g4___atrous_6_12_18_hnasnet_"></a>
-### g4       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="g4___hnasne_t_"></a>
+## g4       @ hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g4,_train_:b2 start=2
 
-<a id="on_g2___atrous_6_12_18_hnasnet__1"></a>
-### on_g2       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="on_g2___g4_hnasnet_"></a>
+### on_g2       @ g4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g4:+++vis:g2,_train_:b2 start=1
 
-<a id="on_g3___atrous_6_12_18_hnasnet__1"></a>
-### on_g3       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="on_g3___g4_hnasnet_"></a>
+### on_g3       @ g4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g4:+++vis:g3,_train_:b2 start=1
 
-<a id="ipsc_multi___atrous_6_12_18_hnasnet__4"></a>
-### ipsc_multi       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="ipsc_multi___g4_hnasnet_"></a>
+### ipsc_multi       @ g4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g4,_train_:b2 start=0
 
-<a id="patches___atrous_6_12_18_hnasnet__4"></a>
-### patches       @ atrous:6_12_18/hnasnet-->new_deeplab_ipsc
+<a id="patches___g4_hnasnet_"></a>
+### patches       @ g4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g4,_train_:b2 start=1
 
 <a id="resnet101_"></a>
 # resnet101
 
-<a id="atrous_6_12_18___resnet10_1_"></a>
-## atrous:6_12_18       @ resnet101-->new_deeplab_ipsc
-
-<a id="g2_4___atrous_6_12_18_resnet101_"></a>
-### g2_4       @ atrous:6_12_18/resnet101-->new_deeplab_ipsc
+<a id="g2_4___resnet10_1_"></a>
+## g2_4       @ resnet101-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:train:vis:g2_4,_train_:b2 start=0
 
-<a id="ipsc_multi___atrous_6_12_18_resnet101_"></a>
-### ipsc_multi       @ atrous:6_12_18/resnet101-->new_deeplab_ipsc
+<a id="ipsc_multi___resnet10_1_"></a>
+## ipsc_multi       @ resnet101-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=0
 
-<a id="patches___atrous_6_12_18_resnet101_"></a>
-### patches       @ atrous:6_12_18/resnet101-->new_deeplab_ipsc
+<a id="patches___resnet10_1_"></a>
+## patches       @ resnet101-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:patches:train:vis:g2_4,_train_:b2 start=0
