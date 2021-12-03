@@ -132,7 +132,7 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_
 
 <a id="ipsc_multi___g2_4_hnasnet_"></a>
 ### ipsc_multi       @ g2_4/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=0
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=1
 
 <a id="patches___g2_4_hnasnet_"></a>
 ### patches       @ g2_4/hnasnet-->new_deeplab_ipsc

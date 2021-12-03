@@ -76,7 +76,6 @@ def run(params):
     :return:
     """
 
-
     if params.multi_sequence_db:
         assert params.vis_split, "vis_split must be provided for CTC"
 
@@ -85,7 +84,7 @@ def run(params):
             from new_deeplab.datasets.build_ctc_data import CTCInfo
             db_splits = CTCInfo.DBSplits().__dict__
             sequences = CTCInfo.sequences
-        elif params.dataset.lower() == 'ipsc':
+        elif params.dataset.lower() in ('ipsc', 'ipsc_multi'):
             from new_deeplab.datasets.ipsc_info import IPSCInfo
             db_splits = IPSCInfo.DBSplits().__dict__
             sequences = IPSCInfo.sequences
