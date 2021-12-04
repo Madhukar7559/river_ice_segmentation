@@ -271,17 +271,6 @@ def _convert_dataset(params):
                     seg_img, raw_seg_img, class_to_ids = remove_fuzziness_in_mask(seg_img_orig, params.n_classes,
                                                                                   class_to_color, params.fuzziness)
 
-                    seg_img_rec = np.zeros_like(seg_img)
-                    for _class_id, _col in class_to_color.items():
-                        seg_img_rec[raw_seg_img == _class_id] = _col
-
-                    if not np.array_equal(seg_img, seg_img_rec):
-                        cv2.imshow('seg_img', seg_img)
-                        cv2.imshow('seg_img_rec', seg_img_rec)
-
-                        cv2.waitKey(0)
-                        raise AssertionError("seg_img and seg_img_rec are not equal")
-
                     raw_seg_vals = np.unique(raw_seg_img, return_index=0)
                     raw_seg_vals = list(raw_seg_vals)
                     n_raw_seg_vals = len(raw_seg_vals)

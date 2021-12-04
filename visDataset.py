@@ -5,8 +5,8 @@ import imageio
 from paramparse import MultiPath
 
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import read_data, getDateTime, print_and_write, linux_path, col_bgr
-from datasets.build_utils import convert_to_raw_mask
+from densenet.utils import read_data, getDateTime, print_and_write, linux_path, read_class_info
+from datasets.build_utils import remove_fuzziness_in_mask
 
 import cv2
 
@@ -19,7 +19,6 @@ class VisParams:
         self.images_ext = 'png'
         self.labels_ext = 'png'
         self.log_dir = ''
-        self.n_classes = 3
         self.normalize_labels = 1
         self.out_ext = 'png'
         self.save_path = ''
@@ -182,15 +181,13 @@ def run(params):
     if params.end_id < params.start_id:
         params.end_id = total_frames - 1
 
-    class_to_color = {}
-    classes = [k.strip() for k in open(params.class_names_path, 'r').readlines() if k.strip()]
-    classes, class_cols = zip(*[k.split('\t') for k in classes])
-    class_to_color.update(
-        {
-            _class_id + 1: col_bgr[class_cols[_class_id]]
-            for _class_id, _class in enumerate(classes)
-        }
-    )
+    class_info, composite_class_info, class_name_to_id = read_class_info(params.class_names_path)
+    n_classes = len(class_info)
+
+    class_to_color = {
+        k[0]: k[1] for k in class_info.values()
+    }
+
     if not params.save_path:
         if eval_mode:
             params.save_path = os.path.join(os.path.dirname(params.seg_path), 'vis')
@@ -212,9 +209,9 @@ def run(params):
     templ = '{}_{}'.format(templ_1, templ_2)
 
     if params.selective_mode:
-        label_diff = int(255.0 / params.n_classes)
+        label_diff = int(255.0 / n_classes)
     else:
-        label_diff = int(255.0 / (params.n_classes - 1))
+        label_diff = int(255.0 / (n_classes - 1))
 
     print('templ: {}'.format(templ))
     print('label_diff: {}'.format(label_diff))
@@ -234,15 +231,24 @@ def run(params):
     # mean_IU_ice_2 = np.zeros((n_frames,))
 
     fw_IU = np.zeros((n_frames,))
-    fw_sum = np.zeros((params.n_classes,))
+    fw_sum = np.zeros((n_classes,))
 
     print_diff = max(1, int(n_frames * 0.01))
 
-    avg_mean_acc_ice = avg_mean_acc_ice_1 = avg_mean_acc_ice_2 = 0
-    avg_mean_IU_ice = avg_mean_IU_ice_1 = avg_mean_IU_ice_2 = 0
+    avg_mean_acc = {
+        class_name: 0 for class_name in class_name_to_id
+    }
+    avg_mean_IU = {
+        class_name: 0 for class_name in class_name_to_id
+    }
 
-    skip_mean_acc_ice_1 = skip_mean_acc_ice_2 = 0
-    skip_mean_IU_ice_1 = skip_mean_IU_ice_2 = 0
+    skip_mean_acc = {
+        class_name: 0 for class_name in class_name_to_id
+    }
+    skip_mean_IU = {
+        class_name: 0 for class_name in class_name_to_id
+    }
+
     _pause = 1
     labels_img = None
 
@@ -287,15 +293,15 @@ def run(params):
             if params.show_img:
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
-            labels_img_orig = convert_to_raw_mask(labels_img_orig, params.n_classes, labels_img_fname)
-
+            labels_img_orig, raw_seg_img, class_to_ids = remove_fuzziness_in_mask(labels_img_orig, n_classes,
+                                                                                  class_to_color, fuzziness=5)
             labels_img = np.copy(labels_img_orig)
             # if params.normalize_labels:
             #     if params.selective_mode:
             #         selective_idx = (labels_img_orig == 255)
             #         print('labels_img_orig.shape: {}'.format(labels_img_orig.shape))
             #         print('selective_idx count: {}'.format(np.count_nonzero(selective_idx)))
-            #         labels_img_orig[selective_idx] = params.n_classes
+            #         labels_img_orig[selective_idx] = n_classes
             #         if params.show_img:
             #             cv2.imshow('labels_img_orig norm', labels_img_orig)
             #     labels_img = (labels_img_orig.astype(np.float64) * label_diff).astype(np.uint8)
@@ -316,7 +322,7 @@ def run(params):
                 if seg_img is None:
                     raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
 
-                # seg_img = convert_to_raw_mask(seg_img, params.n_classes, seg_img_fname)
+                # seg_img = convert_to_raw_mask(seg_img, n_classes, seg_img_fname)
 
                 if len(seg_img.shape) == 3:
                     seg_img = np.squeeze(seg_img[:, :, 0])
@@ -324,7 +330,7 @@ def run(params):
                 eval_cl, _ = eval.extract_classes(seg_img)
                 gt_cl, _ = eval.extract_classes(labels_img_orig)
 
-                if seg_img.max() > params.n_classes - 1:
+                if seg_img.max() > n_classes - 1:
                     seg_img = (seg_img.astype(np.float64) / label_diff).astype(np.uint8)
 
                 seg_height, seg_width = seg_img.shape
@@ -355,35 +361,31 @@ def run(params):
                     print('gt_cl: {}'.format(gt_cl))
 
                     raise ValueError(e)
-                mean_acc_ice = np.mean(list(_acc.values())[1:])
-                avg_mean_acc_ice += (mean_acc_ice - avg_mean_acc_ice) / (img_id + 1)
-                try:
-                    mean_acc_ice_1 = _acc[1]
-                    avg_mean_acc_ice_1 += (mean_acc_ice_1 - avg_mean_acc_ice_1) / (img_id - skip_mean_acc_ice_1 + 1)
-                except KeyError:
-                    print('\nskip_mean_acc_ice_1: {}'.format(img_id))
-                    skip_mean_acc_ice_1 += 1
-                try:
-                    mean_acc_ice_2 = _acc[2]
-                    avg_mean_acc_ice_2 += (mean_acc_ice_2 - avg_mean_acc_ice_2) / (img_id - skip_mean_acc_ice_2 + 1)
-                except KeyError:
-                    print('\nskip_mean_acc_ice_2: {}'.format(img_id))
-                    skip_mean_acc_ice_2 += 1
+                for _class_name, _, base_ids in composite_class_info.values():
+                    _acc_list = np.asarray(list(_acc.values()))
+                    mean_acc = np.mean(_acc_list[base_ids])
+                    avg_mean_acc[_class_name] += (mean_acc - avg_mean_acc[_class_name]) / (img_id + 1)
 
-                mean_IU_ice = np.mean(list(_IU.values())[1:])
-                avg_mean_IU_ice += (mean_IU_ice - avg_mean_IU_ice) / (img_id + 1)
-                try:
-                    mean_IU_ice_1 = _IU[1]
-                    avg_mean_IU_ice_1 += (mean_IU_ice_1 - avg_mean_IU_ice_1) / (img_id - skip_mean_IU_ice_1 + 1)
-                except KeyError:
-                    print('\nskip_mean_IU_ice_1: {}'.format(img_id))
-                    skip_mean_IU_ice_1 += 1
-                try:
-                    mean_IU_ice_2 = _IU[2]
-                    avg_mean_IU_ice_2 += (mean_IU_ice_2 - avg_mean_IU_ice_2) / (img_id - skip_mean_IU_ice_2 + 1)
-                except KeyError:
-                    print('\nskip_mean_IU_ice_2: {}'.format(img_id))
-                    skip_mean_IU_ice_2 += 1
+                    _IU_list = np.asarray(list(_IU.values()))
+                    mean_IU = np.mean(_IU_list[base_ids])
+                    avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (img_id + 1)
+
+                for _class_id, _class_data in class_info.items():
+                    _class_name = _class_data[0]
+                    try:
+                        mean_acc = _acc[_class_id]
+                        avg_mean_acc[_class_name] += (mean_acc - avg_mean_acc[_class_name]) / (
+                                    img_id - skip_mean_acc[_class_name] + 1)
+                    except KeyError:
+                        print('\nskip_mean_acc {}: {}'.format(_class_name, img_id))
+                        skip_mean_acc[_class_name] += 1
+                    try:
+                        mean_IU = _IU[_class_id]
+                        avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (
+                                    img_id - skip_mean_IU[_class_name] + 1)
+                    except KeyError:
+                        print('\nskip_mean_IU {}: {}'.format(_class_name, img_id))
+                        skip_mean_IU[_class_name] += 1
 
                 seg_img = (seg_img * label_diff).astype(np.uint8)
                 if len(seg_img.shape) != 3:
@@ -403,7 +405,7 @@ def run(params):
 
                     gt_cl, _ = eval.extract_classes(labels_img_orig)
                     print('gt_cl: {}'.format(gt_cl))
-                    for k in range(params.n_classes):
+                    for k in range(n_classes):
                         if k not in gt_cl:
                             _fw.insert(k, 0)
 

@@ -259,7 +259,6 @@ def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness):
         #
         # fuzzy_ids_int = np.flatnonzero(fuzzy_ids).size
 
-
         # print('actual_col: {}'.format(actual_col))
         #
         # print('fuzzy_range_red: {}'.format(fuzzy_range_red))
@@ -274,6 +273,17 @@ def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness):
         class_to_ids[_id] = fuzzy_ids
 
         # print()
+
+    seg_img_rec = np.zeros_like(seg_img)
+    for _class_id, _col in class_to_color.items():
+        seg_img_rec[seg_img_raw == _class_id] = _col
+
+    if not np.array_equal(seg_img, seg_img_rec):
+        cv2.imshow('seg_img', seg_img)
+        cv2.imshow('seg_img_rec', seg_img_rec)
+
+        cv2.waitKey(0)
+        raise AssertionError("seg_img and seg_img_rec are not equal")
 
     return seg_img_out, seg_img_raw, class_to_ids
 

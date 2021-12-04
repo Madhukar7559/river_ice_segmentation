@@ -256,6 +256,47 @@ def print_and_write(_str, fname=None):
         open(fname, 'a').write(_str + '\n')
 
 
+def read_class_info(class_info_path):
+    is_composite = 0
+    class_info = {}
+    composite_class_info = {}
+    class_lines = [k.strip() for k in open(class_info_path, 'r').readlines()]
+
+    _class_name_to_id = {}
+
+    _class_id = _composite_class_id = 0
+
+    for line in class_lines:
+        if not line:
+            is_composite = 1
+            continue
+        if is_composite:
+            _class, _class_col, _base_classes = line.split('\t')
+            _base_classes = _base_classes.split(',')
+
+            assert len(_base_classes) >= 2, "composite class must have at least 2 base classes"
+
+            _base_class_ids = []
+            for _base_class in _base_classes:
+                try:
+                    _base_class_id = _class_name_to_id[_base_class]
+                except KeyError:
+                    raise AssertionError("invalid base_class: {} for composite_class: {}".format(
+                        _base_class, _class))
+                _base_class_ids.append(_base_class_id)
+
+            composite_class_info[_composite_class_id] = (_class, _class_col, _base_class_ids)
+            _class_name_to_id[_class] = _composite_class_id
+            _composite_class_id += 1
+        else:
+            _class, _class_col = line.split('\t')
+            class_info[_class_id] = (_class, _class_col)
+            _class_name_to_id[_class] = _class_id
+            _class_id += 1
+
+    return class_info, composite_class_info, _class_name_to_id
+
+
 def linux_path(*args, **kwargs):
     return os.path.join(*args, **kwargs).replace(os.sep, '/')
 
@@ -385,7 +426,8 @@ def read_data(images_path='', images_ext='', labels_path='', labels_ext='',
 
     if images_path and images_ext:
         print('Reading {} images from: {}'.format(images_type, images_path))
-        src_file_list = [os.path.join(images_path, k) for k in os.listdir(images_path) if k.endswith('.{:s}'.format(images_ext))]
+        src_file_list = [os.path.join(images_path, k) for k in os.listdir(images_path) if
+                         k.endswith('.{:s}'.format(images_ext))]
         total_frames = len(src_file_list)
 
         assert total_frames > 0, 'No input frames found'
@@ -395,7 +437,8 @@ def read_data(images_path='', images_ext='', labels_path='', labels_ext='',
 
     if labels_path and labels_ext:
         print('Reading {} images from: {}'.format(labels_type, labels_path))
-        src_labels_list = [os.path.join(labels_path, k) for k in os.listdir(labels_path) if k.endswith('.{:s}'.format(labels_ext))]
+        src_labels_list = [os.path.join(labels_path, k) for k in os.listdir(labels_path) if
+                           k.endswith('.{:s}'.format(labels_ext))]
         if src_file_list is not None:
             assert total_frames == len(src_labels_list), 'Mismatch between no. of labels and images'
         else:
