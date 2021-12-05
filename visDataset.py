@@ -31,7 +31,7 @@ class VisParams:
         self.stitch = 0
         self.stitch_seg = 1
         self.no_labels = 1
-        self.class_names_path = 'data/classes_ice.txt'
+        self.class_info_path = 'data/classes_ice.txt'
 
         self.multi_sequence_db = 0
         self.seg_on_subset = 0
@@ -181,12 +181,11 @@ def run(params):
     if params.end_id < params.start_id:
         params.end_id = total_frames - 1
 
-    class_info, composite_class_info, class_name_to_id = read_class_info(params.class_names_path)
-    n_classes = len(class_info)
+    classes, composite_classes = read_class_info(params.class_info_path)
+    n_classes = len(classes)
+    class_id_to_color = {i: k[1] for i, k in enumerate(classes)}
 
-    class_to_color = {
-        k[0]: k[1] for k in class_info.values()
-    }
+    all_classes = [k[0] for k in classes + composite_classes]
 
     if not params.save_path:
         if eval_mode:
@@ -235,19 +234,10 @@ def run(params):
 
     print_diff = max(1, int(n_frames * 0.01))
 
-    avg_mean_acc = {
-        class_name: 0 for class_name in class_name_to_id
-    }
-    avg_mean_IU = {
-        class_name: 0 for class_name in class_name_to_id
-    }
-
-    skip_mean_acc = {
-        class_name: 0 for class_name in class_name_to_id
-    }
-    skip_mean_IU = {
-        class_name: 0 for class_name in class_name_to_id
-    }
+    avg_mean_acc = {c: 0 for c in all_classes}
+    avg_mean_IU = {c: 0 for c in all_classes}
+    skip_mean_acc = {c: 0 for c in all_classes}
+    skip_mean_IU = {c: 0 for c in all_classes}
 
     _pause = 1
     labels_img = None
@@ -293,8 +283,8 @@ def run(params):
             if params.show_img:
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
-            labels_img_orig, raw_seg_img, class_to_ids = remove_fuzziness_in_mask(labels_img_orig, n_classes,
-                                                                                  class_to_color, fuzziness=5)
+            labels_img_orig, raw_seg_img, class_to_ids = remove_fuzziness_in_mask(
+                labels_img_orig, n_classes, class_id_to_color, fuzziness=5)
             labels_img = np.copy(labels_img_orig)
             # if params.normalize_labels:
             #     if params.selective_mode:
@@ -361,7 +351,7 @@ def run(params):
                     print('gt_cl: {}'.format(gt_cl))
 
                     raise ValueError(e)
-                for _class_name, _, base_ids in composite_class_info.values():
+                for _class_name, _, base_ids in composite_classes.values():
                     _acc_list = np.asarray(list(_acc.values()))
                     mean_acc = np.mean(_acc_list[base_ids])
                     avg_mean_acc[_class_name] += (mean_acc - avg_mean_acc[_class_name]) / (img_id + 1)
@@ -370,19 +360,19 @@ def run(params):
                     mean_IU = np.mean(_IU_list[base_ids])
                     avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (img_id + 1)
 
-                for _class_id, _class_data in class_info.items():
+                for _class_id, _class_data in classes.items():
                     _class_name = _class_data[0]
                     try:
                         mean_acc = _acc[_class_id]
                         avg_mean_acc[_class_name] += (mean_acc - avg_mean_acc[_class_name]) / (
-                                    img_id - skip_mean_acc[_class_name] + 1)
+                                img_id - skip_mean_acc[_class_name] + 1)
                     except KeyError:
                         print('\nskip_mean_acc {}: {}'.format(_class_name, img_id))
                         skip_mean_acc[_class_name] += 1
                     try:
                         mean_IU = _IU[_class_id]
                         avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (
-                                    img_id - skip_mean_IU[_class_name] + 1)
+                                img_id - skip_mean_IU[_class_name] + 1)
                     except KeyError:
                         print('\nskip_mean_IU {}: {}'.format(_class_name, img_id))
                         skip_mean_IU[_class_name] += 1
@@ -442,13 +432,14 @@ def run(params):
         if img_done % print_diff == 0:
             log_txt = 'Done {:5d}/{:5d} frames'.format(img_done, n_frames)
             if eval_mode:
-                log_txt = '{:s} pix_acc: {:.5f} mean_acc: {:.5f} mean_IU: {:.5f} fw_IU: {:.5f}' \
-                          ' acc_ice: {:.5f} acc_ice_1: {:.5f} acc_ice_2: {:.5f}' \
-                          ' IU_ice: {:.5f} IU_ice_1: {:.5f} IU_ice_2: {:.5f}'.format(
-                    log_txt, pix_acc[img_id], mean_acc[img_id], mean_IU[img_id], fw_IU[img_id],
-                    avg_mean_acc_ice, avg_mean_acc_ice_1, avg_mean_acc_ice_2,
-                    avg_mean_IU_ice, avg_mean_IU_ice_1, avg_mean_IU_ice_2,
-                )
+                log_txt = '{:s} pix_acc: {:.5f} mean_acc: {:.5f} mean_IU: {:.5f} fw_IU: {:.5f}'.format(
+                    log_txt, pix_acc[img_id], mean_acc[img_id], mean_IU[img_id], fw_IU[img_id])
+                for _class in all_classes:
+                    log_txt += ' acc {}: {:.5f} '.format(_class, avg_mean_acc[_class])
+
+                for _class in all_classes:
+                    log_txt += ' IU {}: {:.5f} '.format(_class, avg_mean_acc[_class])
+
             print_and_write(log_txt, log_fname)
 
     sys.stdout.write('\n')
@@ -457,20 +448,40 @@ def run(params):
     if eval_mode:
         log_txt = "pix_acc\t mean_acc\t mean_IU\t fw_IU\n{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n".format(
             np.mean(pix_acc), np.mean(mean_acc), np.mean(mean_IU), np.mean(fw_IU))
-        log_txt += "mean_acc_ice\t mean_acc_ice_1\t mean_acc_ice_2\n{:.5f}\t{:.5f}\t{:.5f}\n".format(
-            avg_mean_acc_ice, avg_mean_acc_ice_1, avg_mean_acc_ice_2)
-        log_txt += "mean_IU_ice\t mean_IU_ice_1\t mean_IU_ice_2\n{:.5f}\t{:.5f}\t{:.5f}\n".format(
-            avg_mean_IU_ice, avg_mean_IU_ice_1, avg_mean_IU_ice_2)
+
+        for _class in all_classes:
+            log_txt += ' mean_acc {}\t'.format(_class)
+        log_txt += '\n'
+
+        for _class in all_classes:
+            log_txt += ' {:.5f}\t'.format(avg_mean_acc[_class])
+        log_txt += '\n'
+
+        for _class in all_classes:
+            log_txt += ' mean_IU {}\t'.format(_class)
+        log_txt += '\n'
+
+        for _class in all_classes:
+            log_txt += ' {:.5f}\t'.format(avg_mean_IU[_class])
+        log_txt += '\n'
+
         print_and_write(log_txt, log_fname)
 
-        log_txt = "{}\n\tanchor_ice\t frazil_ice\t ice+water\t ice+water(fw)\n" \
-                  "recall\t{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n" \
-                  "precision\t{:.5f}\t{:.5f}\t{:.5f}\t{:.5f}\n".format(templ,
-                                                                       avg_mean_acc_ice_1, avg_mean_acc_ice_2,
-                                                                       np.mean(mean_acc), np.mean(pix_acc),
-                                                                       avg_mean_IU_ice_1, avg_mean_IU_ice_2,
-                                                                       np.mean(mean_IU), np.mean(fw_IU),
-                                                                       )
+        log_txt = templ + '\n\t'
+        for _class in classes:
+            log_txt += '{}\t '.format(_class[0])
+        log_txt += 'all_classes\t all_classes(fw)\n'
+
+        log_txt += 'recall\t'
+        for _class in classes:
+            log_txt += '{:.5f}\t'.format(avg_mean_acc[_class[0]])
+        log_txt += '{:.5f}\t{:.5f}\n'.format(np.mean(mean_acc), np.mean(pix_acc))
+
+        log_txt += 'precision\t'
+        for _class in classes:
+            log_txt += '{:.5f}\t'.format(avg_mean_IU[_class[0]])
+        log_txt += '{:.5f}\t{:.5f}\n'.format(np.mean(mean_IU), np.mean(fw_IU))
+
         print_and_write(log_txt, log_fname)
 
     fw_sum_total = np.sum(fw_sum)
