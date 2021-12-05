@@ -40,7 +40,7 @@ from new_deeplab import model
 
 from new_deeplab.datasets import data_generator
 from new_deeplab.utils import save_annotation, linux_path
-from new_deeplab.datasets.build_utils import undo_resize_ar
+from new_deeplab.datasets.build_utils import undo_resize_ar, read_class_info
 
 from new_deeplab_vis_params import NewDeeplabVisParams
 
@@ -92,6 +92,7 @@ def _process_batch(params, sess, images,
                    # image_id_offset,
                    save_dir,
                    raw_save_dir, stacked_save_dir,
+                   class_to_color,
                    # train_id_to_eval_id=None
                    ):
     """Evaluates one single batch qualitatively.
@@ -128,9 +129,11 @@ def _process_batch(params, sess, images,
         image_height = np.squeeze(image_heights[i])
         image_width = np.squeeze(image_widths[i])
         original_image = np.squeeze(original_images[i])
-        original_image_resized = np.squeeze(original_images_resized[i])
+        # original_image_resized = np.squeeze(original_images_resized[i])
         semantic_prediction = np.squeeze(semantic_predictions[i])
         crop_semantic_prediction = semantic_prediction[:image_height, :image_width]
+
+
 
         # Save image.
         # save_annotation.save_annotation(
@@ -161,24 +164,30 @@ def _process_batch(params, sess, images,
         os.makedirs(out_raw_save_dir, exist_ok=1)
 
         # print('image_dir_path, image_filename: {}, {}'.format(image_dir_path, image_filename))
-
         stacked_path = os.path.join(out_stacked_save_dir, image_filename + '.jpg')
         raw_path = os.path.join(out_raw_save_dir, image_filename + '.png')
 
-        mask_img = (crop_semantic_prediction * (255.0 / np.max(crop_semantic_prediction))).astype(np.uint8)
-        mask_img = cv2.cvtColor(mask_img, cv2.COLOR_GRAY2BGR)
+        unresized_crop_semantic_prediction = undo_resize_ar(crop_semantic_prediction, image_width, image_height)
+        cv2.imwrite(raw_path, unresized_crop_semantic_prediction)
+
+        mask_img = np.zeros_like(original_image)
+        for _class_id, _col in class_to_color.items():
+            mask_img[crop_semantic_prediction == _class_id] = _col
+
+        _max = np.max(crop_semantic_prediction)
+        _min = np.min(crop_semantic_prediction)
+
+        # mask_img = (crop_semantic_prediction * (255.0 / np.max(crop_semantic_prediction))).astype(np.uint8)
+        # mask_img = cv2.cvtColor(mask_img, cv2.COLOR_GRAY2BGR)
 
         unresized_original_image = undo_resize_ar(original_image, image_width, image_height)
         unresized_mask_img = undo_resize_ar(mask_img, image_width, image_height)
-        unresized_crop_semantic_prediction = undo_resize_ar(crop_semantic_prediction, image_width, image_height)
-
         stacked_img = np.concatenate((unresized_original_image, unresized_mask_img), axis=1)
 
         # cv2.imshow('stacked_img', stacked_img)
         # cv2.waitKey(0)
 
         cv2.imwrite(stacked_path, stacked_img)
-        cv2.imwrite(raw_path, unresized_crop_semantic_prediction)
 
         """more mind-bogglingly annoying gunky foulness - if ever there was horribly designed meaninglessly 
         complicated piece of crappy garbage, then this is it"""
@@ -219,14 +228,13 @@ def run(params):
     :param NewDeeplabVisParams params:
     """
 
-    paramparse.to_flags(tf.app.flags.FLAGS, params, verbose=1, allow_missing=1)
+    paramparse.to_flags(tf.app.flags.FLAGS, params, verbose=0, allow_missing=1)
 
     tf.logging.set_verbosity(tf.logging.INFO)
 
     # paramparse.from_flags(FLAGS, to_clipboard=1)
 
     print('reading input images from {}'.format(params.dataset_dir))
-
 
     # Get dataset-dependent information.
     dataset = data_generator.Dataset(
@@ -264,6 +272,9 @@ def run(params):
 
     print('Visualizing on set: {} with split: {}'.format(params.dataset, params.vis_split))
 
+    classes, composite_classes = read_class_info(params.class_info_path)
+    class_to_color = {i: k[1] for i, k in enumerate(classes)}
+
     with tf.Graph().as_default():
         samples = dataset.get_one_shot_iterator().get_next()
 
@@ -295,7 +306,7 @@ def run(params):
         # if params.min_resize_value and params.max_resize_value:
         #     """
         #     foul buggy garbage since v1.12: https://github.com/tensorflow/tensorflow/issues/38694
-        #     as is so typical of the gynky piece of crap that is tensorflow
+        #     as is so typical of the gunky piece of crap that is tensorflow
         #     """
         #     # Only support batch_size = 1, since we assume the dimensions of original
         #     # image after tf.squeeze is [height, width, 3].
@@ -364,6 +375,7 @@ def run(params):
                         save_dir=save_dir,
                         raw_save_dir=raw_save_dir,
                         stacked_save_dir=stacked_save_dir,
+                        class_to_color=class_to_color,
                         # train_id_to_eval_id=train_id_to_eval_id
                     )
                     # image_id_offset += params.vis_batch_size

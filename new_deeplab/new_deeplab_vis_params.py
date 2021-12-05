@@ -280,6 +280,9 @@ class NewDeeplabVisParams:
         self.checkpoint_dir = ''
         self.vis_logdir = ''
 
+        self.class_info_path = 'data/classes_ice.txt'
+
+
     def process(self):
         if not self.dataset_dir:
             self.dataset_dir = linux_path(self.db_root_dir, 'tfrecord', self.dataset, 'test')

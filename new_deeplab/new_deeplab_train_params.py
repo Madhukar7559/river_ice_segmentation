@@ -387,6 +387,9 @@ class NewDeeplabTrainParams:
         self.tb_dir = ''
         self.checkpoint_dir = ''
 
+        self.class_info_path = 'data/classes_ice.txt'
+
+
     def process(self):
         if not self.dataset_dir:
             self.dataset_dir = linux_path(self.db_root_dir, 'tfrecord', self.dataset, 'train')

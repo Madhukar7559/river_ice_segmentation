@@ -1,12 +1,11 @@
 import os, sys
 import numpy as np
-import imageio
 
 from paramparse import MultiPath
 
 import densenet.evaluation.eval_segm as eval
-from densenet.utils import read_data, getDateTime, print_and_write, linux_path, read_class_info
-from datasets.build_utils import remove_fuzziness_in_mask
+from densenet.utils import read_data, getDateTime, print_and_write, linux_path
+from datasets.build_utils import remove_fuzziness_in_mask, read_class_info
 
 import cv2
 
@@ -207,13 +206,13 @@ def run(params):
 
     templ = '{}_{}'.format(templ_1, templ_2)
 
-    if params.selective_mode:
-        label_diff = int(255.0 / n_classes)
-    else:
-        label_diff = int(255.0 / (n_classes - 1))
+    # if params.selective_mode:
+    #     label_diff = int(255.0 / n_classes)
+    # else:
+    #     label_diff = int(255.0 / (n_classes - 1))
 
     print('templ: {}'.format(templ))
-    print('label_diff: {}'.format(label_diff))
+    # print('label_diff: {}'.format(label_diff))
 
     n_frames = params.end_id - params.start_id + 1
 
@@ -252,7 +251,7 @@ def run(params):
 
         if params.stitch or params.show_img:
             # src_img_fname = os.path.join(params.images_path, img_fname)
-            src_img = imageio.imread(src_img_fname)
+            src_img = cv2.imread(src_img_fname)
             if src_img is None:
                 raise SystemError('Source image could not be read from: {}'.format(src_img_fname))
 
@@ -271,19 +270,19 @@ def run(params):
             # labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
             labels_img_fname = src_labels_list[img_id]
 
-            labels_img_orig = imageio.imread(labels_img_fname)
+            labels_img_orig = cv2.imread(labels_img_fname)
             if labels_img_orig is None:
                 raise SystemError('Labels image could not be read from: {}'.format(labels_img_fname))
 
             _, src_width = labels_img_orig.shape[:2]
 
-            if len(labels_img_orig.shape) == 3:
-                labels_img_orig = np.squeeze(labels_img_orig[:, :, 0])
+            # if len(labels_img_orig.shape) == 3:
+            #     labels_img_orig = np.squeeze(labels_img_orig[:, :, 0])
 
             if params.show_img:
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
-            labels_img_orig, raw_seg_img, class_to_ids = remove_fuzziness_in_mask(
+            labels_img_orig, label_img_raw, class_to_ids = remove_fuzziness_in_mask(
                 labels_img_orig, n_classes, class_id_to_color, fuzziness=5)
             labels_img = np.copy(labels_img_orig)
             # if params.normalize_labels:
@@ -298,8 +297,8 @@ def run(params):
             # else:
             #     labels_img = np.copy(labels_img_orig)
 
-            if len(labels_img.shape) != 3:
-                labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
+            # if len(labels_img.shape) != 3:
+            #     labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
 
             if params.stitch:
                 stitched = np.concatenate((src_img, labels_img), axis=1)
@@ -308,7 +307,7 @@ def run(params):
                 # seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
                 seg_img_fname = seg_labels_list[img_id]
 
-                seg_img = imageio.imread(seg_img_fname)
+                seg_img = cv2.imread(seg_img_fname)
                 if seg_img is None:
                     raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
 
@@ -318,10 +317,10 @@ def run(params):
                     seg_img = np.squeeze(seg_img[:, :, 0])
 
                 eval_cl, _ = eval.extract_classes(seg_img)
-                gt_cl, _ = eval.extract_classes(labels_img_orig)
+                gt_cl, _ = eval.extract_classes(label_img_raw)
 
-                if seg_img.max() > n_classes - 1:
-                    seg_img = (seg_img.astype(np.float64) / label_diff).astype(np.uint8)
+                # if seg_img.max() > n_classes - 1:
+                #     seg_img = (seg_img.astype(np.float64) / label_diff).astype(np.uint8)
 
                 seg_height, seg_width = seg_img.shape
 
@@ -332,10 +331,10 @@ def run(params):
                 # print('seg_img.shape: ', seg_img.shape)
                 # print('labels_img_orig.shape: ', labels_img_orig.shape)
 
-                pix_acc[img_id] = eval.pixel_accuracy(seg_img, labels_img_orig)
-                _acc, mean_acc[img_id] = eval.mean_accuracy(seg_img, labels_img_orig, return_acc=1)
-                _IU, mean_IU[img_id] = eval.mean_IU(seg_img, labels_img_orig, return_iu=1)
-                fw_IU[img_id], _fw = eval.frequency_weighted_IU(seg_img, labels_img_orig, return_freq=1)
+                pix_acc[img_id] = eval.pixel_accuracy(seg_img, label_img_raw)
+                _acc, mean_acc[img_id] = eval.mean_accuracy(seg_img, label_img_raw, return_acc=1)
+                _IU, mean_IU[img_id] = eval.mean_IU(seg_img, label_img_raw, return_iu=1)
+                fw_IU[img_id], _fw = eval.frequency_weighted_IU(seg_img, label_img_raw, return_freq=1)
                 try:
                     fw_sum += _fw
                 except ValueError as e:
@@ -343,7 +342,7 @@ def run(params):
                     print('_fw: {}'.format(_fw))
 
                     eval_cl, _ = eval.extract_classes(seg_img)
-                    gt_cl, _ = eval.extract_classes(labels_img_orig)
+                    gt_cl, _ = eval.extract_classes(label_img_raw)
                     cl = np.union1d(eval_cl, gt_cl)
 
                     print('cl: {}'.format(cl))
@@ -377,7 +376,7 @@ def run(params):
                         print('\nskip_mean_IU {}: {}'.format(_class_name, img_id))
                         skip_mean_IU[_class_name] += 1
 
-                seg_img = (seg_img * label_diff).astype(np.uint8)
+                # seg_img = (seg_img * label_diff).astype(np.uint8)
                 if len(seg_img.shape) != 3:
                     seg_img = np.stack((seg_img, seg_img, seg_img), axis=2)
 
@@ -386,14 +385,14 @@ def run(params):
                 if not params.stitch and params.show_img:
                     cv2.imshow('seg_img', seg_img)
             else:
-                _, _fw = eval.frequency_weighted_IU(labels_img_orig, labels_img_orig, return_freq=1)
+                _, _fw = eval.frequency_weighted_IU(label_img_raw, label_img_raw, return_freq=1)
                 try:
                     fw_sum += _fw
                 except ValueError as e:
                     print('fw_sum: {}'.format(fw_sum))
                     print('_fw: {}'.format(_fw))
 
-                    gt_cl, _ = eval.extract_classes(labels_img_orig)
+                    gt_cl, _ = eval.extract_classes(label_img_raw)
                     print('gt_cl: {}'.format(gt_cl))
                     for k in range(n_classes):
                         if k not in gt_cl:
@@ -413,7 +412,7 @@ def run(params):
         if params.stitch:
             if params.save_stitched:
                 seg_save_path = os.path.join(params.save_path, '{}.{}'.format(img_fname_no_ext, params.out_ext))
-                imageio.imsave(seg_save_path, stitched)
+                cv2.imwrite(seg_save_path, stitched)
             if params.show_img:
                 cv2.imshow('stitched', stitched)
         else:

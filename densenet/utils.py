@@ -256,42 +256,6 @@ def print_and_write(_str, fname=None):
         open(fname, 'a').write(_str + '\n')
 
 
-def read_class_info(class_info_path):
-    is_composite = 0
-    class_info = []
-    composite_class_info = []
-    class_lines = [k.strip() for k in open(class_info_path, 'r').readlines()]
-
-    classes = []
-
-    for line in class_lines:
-        if not line:
-            is_composite = 1
-            continue
-
-        if is_composite:
-            _class, _class_col, _base_classes = line.split('\t')
-            _base_classes = _base_classes.split(',')
-
-            assert len(_base_classes) >= 2, "composite class must have at least 2 base classes"
-
-            _base_class_ids = []
-            for _base_class in _base_classes:
-                try:
-                    _base_class_id = classes.index(_base_class)
-                except IndexError:
-                    raise AssertionError("invalid base_class: {} for composite_class: {}".format(
-                        _base_class, _class))
-                _base_class_ids.append(_base_class_id)
-            composite_class_info.append((_class, col_bgr[_class_col], _base_class_ids))
-        else:
-            _class, _class_col = line.split('\t')
-
-            class_info.append((_class, col_bgr[_class_col]))
-            classes.append(_class)
-
-    return class_info, composite_class_info
-
 
 def linux_path(*args, **kwargs):
     return os.path.join(*args, **kwargs).replace(os.sep, '/')

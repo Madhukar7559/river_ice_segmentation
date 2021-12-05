@@ -52,6 +52,8 @@ class StitchParams:
         self.labels_dir = 'Labels'
         self.images_dir = 'Images'
 
+        self.class_info_path = 'data/classes_ice.txt'
+
         self.width = 1280
 
         self.model_info = MultiPath()
