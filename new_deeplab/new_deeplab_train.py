@@ -273,10 +273,16 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
             tf.summary.scalar('class {} label_mask_max'.format(_class_id), label_mask_max)
             tf.summary.scalar('class {} n_label_mask_unique'.format(_class_id), n_label_mask_unique)
 
-            tf.summary.image('class {} label_mask'.format(_class_id), label_mask2)
-            # tf.summary.image('class {} label_red'.format(_class_id), label_red)
-            # tf.summary.image('class {} label_green'.format(_class_id), label_green)
-            # tf.summary.image('class {} label_blue'.format(_class_id), label_blue)
+            label_mask3 = tf.multiply(label_mask2, 255)
+            tf.summary.image('class {} label_mask'.format(_class_id), label_mask3)
+
+            label_red2 = tf.expand_dims(label_red, axis=3)
+            label_green2 = tf.expand_dims(label_green, axis=3)
+            label_blue2 = tf.expand_dims(label_blue, axis=3)
+
+            tf.summary.image('class {} label_red'.format(_class_id), label_red2)
+            tf.summary.image('class {} label_green'.format(_class_id), label_green2)
+            tf.summary.image('class {} label_blue'.format(_class_id), label_blue2)
 
             summary_label_resized_rgb = tf.stack([label_red, label_green, label_blue], axis=3)
 
