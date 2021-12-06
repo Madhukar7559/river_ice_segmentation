@@ -221,6 +221,11 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
         summary_label_resized = tf.cast(summary_label_resized, tf.uint8)
         summary_predictions_resized = tf.cast(summary_predictions_resized, tf.uint8)
 
+        summary_label_orig_min = tf.reduce_min(summary_label)
+        summary_label_orig_max = tf.reduce_max(summary_label)
+        summary_label_orig_unique, _ = tf.unique(tf.reshape(summary_label, shape=(-1,)))
+        n_summary_label_orig_unique = tf.size(summary_label_orig_unique)
+
         summary_label_min = tf.reduce_min(summary_label_resized)
         summary_label_max = tf.reduce_max(summary_label_resized)
         summary_label_unique, _ = tf.unique(tf.reshape(summary_label_resized, shape=(-1,)))
@@ -242,25 +247,50 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
         tf.summary.scalar('summary_pred_max', summary_pred_max)
         tf.summary.scalar('n_summary_pred_unique', n_summary_pred_unique)
 
+        tf.summary.scalar('summary_label_orig_min', summary_label_orig_min)
+        tf.summary.scalar('summary_label_orig_max', summary_label_orig_max)
+        tf.summary.scalar('n_summary_label_orig_unique', n_summary_label_orig_unique)
+
         # if n_channels == 3:
         # summary_label_resized_rgb = tf.image.grayscale_to_rgb(summary_label_resized)
         # summary_predictions_resized_rgb = tf.image.grayscale_to_rgb(summary_predictions_resized)
 
         for _class_id, _col in class_to_color.items():
-            mask = tf.squeeze(tf.cast(tf.equal(summary_label_resized, _class_id), tf.uint8))
+            label_mask1 = tf.equal(summary_label_resized, _class_id)
+            label_mask2 = tf.cast(label_mask1, tf.uint8)
+            label_mask = tf.squeeze(label_mask2)
             # slice_y_greater_than_one = tf.boolean_mask(summary_label_resized_rgb, mask)
-            _red = tf.multiply(mask,  _col[2])
-            _green = tf.multiply(mask, _col[1])
-            _blue = tf.multiply(mask, _col[0])
+            label_red = tf.multiply(label_mask, _col[2])
+            label_green = tf.multiply(label_mask, _col[1])
+            label_blue = tf.multiply(label_mask, _col[0])
 
-            summary_label_resized_rgb = tf.stack([_red, _green, _blue], axis=3)
+            label_mask_min = tf.reduce_min(label_mask)
+            label_mask_max = tf.reduce_max(label_mask)
+            label_mask_unique, _ = tf.unique(tf.reshape(label_mask, shape=(-1,)))
+            n_label_mask_unique = tf.size(label_mask_unique)
 
-            mask = tf.squeeze(tf.cast(tf.equal(summary_predictions_resized, _class_id), tf.uint8))
-            _red = tf.multiply(mask,  _col[2])
-            _green = tf.multiply(mask, _col[1])
-            _blue = tf.multiply(mask, _col[0])
+            tf.summary.scalar('class {} label_mask_min'.format(_class_id), label_mask_min)
+            tf.summary.scalar('class {} label_mask_max'.format(_class_id), label_mask_max)
+            tf.summary.scalar('class {} n_label_mask_unique'.format(_class_id), n_label_mask_unique)
 
-            summary_predictions_resized_rgb = tf.stack([_red, _green, _blue], axis=3)
+            tf.summary.image('class {} label_mask'.format(_class_id), label_mask2)
+            # tf.summary.image('class {} label_red'.format(_class_id), label_red)
+            # tf.summary.image('class {} label_green'.format(_class_id), label_green)
+            # tf.summary.image('class {} label_blue'.format(_class_id), label_blue)
+
+            summary_label_resized_rgb = tf.stack([label_red, label_green, label_blue], axis=3)
+
+            pred_mask = tf.squeeze(tf.cast(tf.equal(summary_predictions_resized, _class_id), tf.uint8))
+            pred_red = tf.multiply(pred_mask, _col[2])
+            pred_green = tf.multiply(pred_mask, _col[1])
+            pred_blue = tf.multiply(pred_mask, _col[0])
+
+            # tf.summary.image('class {} pred_mask'.format(_class_id), pred_mask)
+            # tf.summary.image('class {} pred_red'.format(_class_id), pred_red)
+            # tf.summary.image('class {} pred_green'.format(_class_id), pred_green)
+            # tf.summary.image('class {} pred_blue'.format(_class_id), pred_blue)
+
+            summary_predictions_resized_rgb = tf.stack([pred_red, pred_green, pred_blue], axis=3)
 
         # else:
         #     summary_label_resized_rgb = summary_label_resized
@@ -411,12 +441,12 @@ def run(params):
                 max_scale_factor=params.max_scale_factor,
                 scale_factor_step_size=params.scale_factor_step_size,
                 model_variant=params.model_variant,
-                num_readers=2,
+                num_readers=1,
                 is_training=True,
                 should_shuffle=True,
                 should_repeat=True)
 
-            samples = dataset.get_one_shot_iterator().get_next()
+            # samples = dataset.get_one_shot_iterator().get_next()
 
             train_tensor, summary_op = _train_deeplab_model(params, dataset.get_one_shot_iterator(),
                                                             dataset.num_of_classes,

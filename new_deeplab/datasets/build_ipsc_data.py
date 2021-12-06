@@ -304,27 +304,26 @@ def _convert_dataset(params):
                     #     seg_img, _, _ = resize_ar(seg_img, width=out_w, height=out_h, bkg_col=(255, 255, 255))
 
                     cv2.imwrite(raw_seg_src_file, raw_seg_img)
-            else:
-                assert os.path.isdir(raw_seg_path), "raw_seg_path does not exist"
-                print('reading raw segmentations from: {}'.format(raw_seg_path))
 
-                raw_seg_src_fnames = [k for k in os.listdir(raw_seg_path) if
-                                   os.path.splitext(k.lower())[1] in seg_exts]
-                raw_seg_src_files = [linux_path(raw_seg_path, k) for k in raw_seg_src_fnames]
+            assert os.path.isdir(raw_seg_path), "raw_seg_path does not exist"
+            print('reading raw segmentations from: {}'.format(raw_seg_path))
 
-            n_seg_src_files = len(_seg_src_fnames)
+            raw_seg_src_fnames = [k for k in os.listdir(raw_seg_path) if
+                               os.path.splitext(k.lower())[1] in seg_exts]
+
+            n_seg_src_files = len(raw_seg_src_fnames)
 
             assert n_img_files == n_seg_src_files, "mismatch between number of source and segmentation images"
 
-            _seg_src_fnames.sort()
+            raw_seg_src_fnames.sort()
 
             if params.shuffle:
-                _seg_src_fnames = [_seg_src_fnames[i] for i in rand_indices]
+                raw_seg_src_fnames = [raw_seg_src_fnames[i] for i in rand_indices]
+
+            raw_seg_src_files = [linux_path(raw_seg_path, k) for k in raw_seg_src_fnames]
 
             train_seg_files += raw_seg_src_files[:_n_train_files]
             test_seg_files += raw_seg_src_files[_n_train_files:]
-
-
 
     n_total_files = n_train_files + n_test_files
     print('Found {} files with {} training and {} testing files corresponding to a training ratio of {}'.format(
