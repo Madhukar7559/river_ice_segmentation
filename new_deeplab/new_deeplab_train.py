@@ -224,12 +224,12 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
         summary_label_min = tf.reduce_min(summary_label_resized)
         summary_label_max = tf.reduce_max(summary_label_resized)
         summary_label_unique, _ = tf.unique(tf.reshape(summary_label_resized, shape=(-1,)))
-        n_summary_label_unique = summary_label_unique.size
+        n_summary_label_unique = tf.size(summary_label_unique)
 
         summary_pred_min = tf.reduce_min(summary_predictions_resized)
         summary_pred_max = tf.reduce_max(summary_predictions_resized)
         summary_pred_unique, _ = tf.unique(tf.reshape(summary_predictions_resized, shape=(-1,)))
-        n_summary_pred_unique = summary_pred_unique.size
+        n_summary_pred_unique = tf.size(summary_pred_unique)
 
         # print('summary_label: {}, {}'.format(summary_label_min, summary_label_max))
         # print('summary_pred: {}, {}'.format(summary_pred_min, summary_pred_max))
