@@ -89,7 +89,7 @@ def _build_deeplab(params, iterator, outputs_to_num_classes, ignore_label, class
         fine_tune_batch_norm=params.fine_tune_batch_norm,
         nas_training_hyper_parameters={
             'drop_path_keep_prob': params.drop_path_keep_prob,
-            'total_training_steps': params.training_number_of_steps,
+            'total_training_steps': params.train_steps,
         })
 
     # Add name to graph node so we can add to summary.
@@ -255,6 +255,9 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
         # summary_label_resized_rgb = tf.image.grayscale_to_rgb(summary_label_resized)
         # summary_predictions_resized_rgb = tf.image.grayscale_to_rgb(summary_predictions_resized)
 
+        summary_predictions_resized_list = []
+        summary_label_resized_list = []
+
         for _class_id, _col in class_to_color.items():
             label_mask1 = tf.equal(summary_label_resized, _class_id)
             label_mask2 = tf.cast(label_mask1, tf.uint8)
@@ -284,7 +287,7 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
             tf.summary.image('class {} label_green'.format(_class_id), label_green2)
             tf.summary.image('class {} label_blue'.format(_class_id), label_blue2)
 
-            summary_label_resized_rgb = tf.stack([label_red, label_green, label_blue], axis=3)
+            _summary_label_resized = tf.stack([label_red, label_green, label_blue], axis=3)
 
             pred_mask = tf.squeeze(tf.cast(tf.equal(summary_predictions_resized, _class_id), tf.uint8))
             pred_red = tf.multiply(pred_mask, _col[2])
@@ -296,11 +299,17 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
             # tf.summary.image('class {} pred_green'.format(_class_id), pred_green)
             # tf.summary.image('class {} pred_blue'.format(_class_id), pred_blue)
 
-            summary_predictions_resized_rgb = tf.stack([pred_red, pred_green, pred_blue], axis=3)
+            _summary_predictions_resized = tf.stack([pred_red, pred_green, pred_blue], axis=3)
+
+            summary_predictions_resized_list.append(_summary_predictions_resized)
+            summary_label_resized_list.append(_summary_label_resized)
 
         # else:
         #     summary_label_resized_rgb = summary_label_resized
         #     summary_predictions_resized_rgb = summary_predictions_resized
+
+        summary_label_resized_rgb = tf.add_n(summary_label_resized_list)
+        summary_predictions_resized_rgb = tf.add_n(summary_predictions_resized_list)
 
         concat_tensor = tf.concat((summary_image, summary_label_resized_rgb, summary_predictions_resized_rgb), axis=2)
         tf.summary.image('img_gt_pred/%s' % common.OUTPUT_TYPE, concat_tensor)
@@ -330,7 +339,7 @@ def _train_deeplab_model(params, iterator, num_of_classes, ignore_label, class_t
     learning_rate = train_utils.get_model_learning_rate(
         params.learning_policy, params.base_learning_rate,
         params.learning_rate_decay_step, params.learning_rate_decay_factor,
-        params.training_number_of_steps, params.learning_power,
+        params.train_steps, params.learning_power,
         params.slow_start_step, params.slow_start_learning_rate)
     tf.summary.scalar('learning_rate', learning_rate)
 
@@ -481,7 +490,7 @@ def run(params):
             )
 
             stop_hook = tf.train.StopAtStepHook(
-                last_step=params.training_number_of_steps)
+                last_step=params.train_steps)
 
             profile_dir = params.profile_logdir
             if profile_dir is not None:

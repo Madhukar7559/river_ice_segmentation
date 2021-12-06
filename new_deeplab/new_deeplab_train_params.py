@@ -125,8 +125,8 @@ class NewDeeplabTrainParams:
     :ivar learning_power:  The power value used in the poly learning policy. (default: '0.9') (a number)
     :type learning_power: float
 
-    :ivar training_number_of_steps:  The number of steps used for training (default: '30000') (an integer)
-    :type training_number_of_steps: int
+    :ivar train_steps:  The number of steps used for training (default: '30000') (an integer)
+    :type train_steps: int
 
     :ivar momentum:  The momentum value to use (default: '0.9') (a number)
     :type momentum: float
@@ -326,7 +326,7 @@ class NewDeeplabTrainParams:
         self.learning_rate_decay_factor = 0.1
         self.learning_rate_decay_step = 2000
         self.learning_power = 0.9
-        self.training_number_of_steps = 5000
+        self.train_steps = 5000
         self.momentum = 0.9
         self.weight_decay = 4e-05
         self.train_crop_size = [513, 513]
