@@ -22,6 +22,9 @@
 - [hnasnet](#hnasnet_)
     - [g1       @ hnasnet](#g1___hnasne_t_)
         - [ipsc_multi       @ g1/hnasnet](#ipsc_multi___g1_hnasnet_)
+        - [steps-100       @ g1/hnasnet](#steps_100___g1_hnasnet_)
+        - [steps-200       @ g1/hnasnet](#steps_200___g1_hnasnet_)
+        - [steps-500       @ g1/hnasnet](#steps_500___g1_hnasnet_)
     - [g2_4       @ hnasnet](#g2_4___hnasne_t_)
         - [ipsc_multi       @ g2_4/hnasnet](#ipsc_multi___g2_4_hnasnet_)
         - [steps-100       @ g2_4/hnasnet](#steps_100___g2_4_hnasnet_)
@@ -142,6 +145,20 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g1,
 <a id="ipsc_multi___g1_hnasnet_"></a>
 ### ipsc_multi       @ g1/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g1,_train_:b2 start=0
+
+
+<a id="steps_100___g1_hnasnet_"></a>
+### steps-100       @ g1/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g1,_train_:b2:steps-100 start=0
+
+<a id="steps_200___g1_hnasnet_"></a>
+### steps-200       @ g1/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g1,_train_:b2:steps-200 start=0
+
+<a id="steps_500___g1_hnasnet_"></a>
+### steps-500       @ g1/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g1,_train_:b2:steps-500 start=0
+
 
 <a id="g2_4___hnasne_t_"></a>
 ## g2_4       @ hnasnet-->new_deeplab_ipsc
