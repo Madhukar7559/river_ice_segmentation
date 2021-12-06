@@ -440,8 +440,7 @@ class Dataset(object):
 
         label = None
         """mind bogglingly annoying foul scummy hard-coded crappy garbage - what if test split is called something 
-        other 
-        than test ?
+        other than test ?
         what if there are multiple test splits ?"""
         # if self.split_name != common.TEST_SET:
         if not self.is_test:

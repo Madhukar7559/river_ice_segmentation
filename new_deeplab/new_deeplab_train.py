@@ -223,12 +223,24 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
 
         summary_label_min = tf.reduce_min(summary_label_resized)
         summary_label_max = tf.reduce_max(summary_label_resized)
+        summary_label_unique, _ = tf.unique(tf.reshape(summary_label_resized, shape=(-1,)))
+        n_summary_label_unique = summary_label_unique.size
 
         summary_pred_min = tf.reduce_min(summary_predictions_resized)
         summary_pred_max = tf.reduce_max(summary_predictions_resized)
+        summary_pred_unique, _ = tf.unique(tf.reshape(summary_predictions_resized, shape=(-1,)))
+        n_summary_pred_unique = summary_pred_unique.size
 
-        print('summary_label: {}, {}'.format(summary_label_min, summary_label_max))
-        print('summary_pred: {}, {}'.format(summary_pred_min, summary_pred_max))
+        # print('summary_label: {}, {}'.format(summary_label_min, summary_label_max))
+        # print('summary_pred: {}, {}'.format(summary_pred_min, summary_pred_max))
+
+        tf.summary.scalar('summary_label_min', summary_label_min)
+        tf.summary.scalar('summary_label_max', summary_label_max)
+        tf.summary.scalar('n_summary_label_unique', n_summary_label_unique)
+
+        tf.summary.scalar('summary_pred_min', summary_pred_min)
+        tf.summary.scalar('summary_pred_max', summary_pred_max)
+        tf.summary.scalar('n_summary_pred_unique', n_summary_pred_unique)
 
         # if n_channels == 3:
         # summary_label_resized_rgb = tf.image.grayscale_to_rgb(summary_label_resized)
