@@ -14,7 +14,7 @@ from tqdm import tqdm
 import paramparse
 
 from build_data import ImageReader, image_seg_to_tfexample
-from build_utils import resize_ar, convert_to_raw_mask, remove_fuzziness_in_mask, col_bgr
+from build_utils import resize_ar, read_class_info, remove_fuzziness_in_mask, col_bgr
 from ipsc_info import IPSCInfo, IPSCPatchesInfo
 
 
@@ -46,7 +46,7 @@ class Params:
 
         self.preprocess = 0
         self.n_classes = 2
-        self.class_names_path = 'data/predefined_classes_ipsc.txt'
+        self.class_info_path = '../data/classes_ipsc_multi.txt'
 
         """uncertainty in mask pixel values for each class"""
         self.fuzziness = 5
@@ -174,15 +174,9 @@ def _convert_dataset(params):
         0: (0, 0, 0)
     }
 
-    if params.class_names_path:
-        classes = [k.strip() for k in open(params.class_names_path, 'r').readlines() if k.strip()]
-        classes, class_cols = zip(*[k.split('\t') for k in classes])
-        class_to_color.update(
-            {
-                _class_id + 1: col_bgr[class_cols[_class_id]]
-                for _class_id, _class in enumerate(classes)
-            }
-        )
+    if params.class_info_path:
+        classes, _ = read_class_info(params.class_info_path)
+        class_to_color = {i: k[1] for i, k in enumerate(classes)}
     else:
         col_diff = 255.0 / params.n_classes
         class_id_to_col_gs = {
@@ -231,36 +225,25 @@ def _convert_dataset(params):
         n_test_files += n_img_files - _n_train_files
 
         if not params.disable_seg:
-            seg_path = linux_path(params.root_dir, 'labels', seq_name)
             vis_seg_path = linux_path(params.root_dir, 'vis_labels', seq_name)
-
             os.makedirs(vis_seg_path, exist_ok=1)
 
-            assert os.path.exists(seg_path), \
-                "segmentations not found for sequence: {}".format(seq_name)
-
-            print('reading segmentations from: {}'.format(seg_path))
-
-            _seg_src_fnames = [k for k in os.listdir(seg_path) if
-                               os.path.splitext(k.lower())[1] in seg_exts]
-
-            n_seg_src_files = len(_seg_src_fnames)
-
-            assert n_img_files == n_seg_src_files, "mismatch between number of source and segmentation images"
-
-            _seg_src_fnames.sort()
-
-            if params.shuffle:
-                _seg_src_fnames = [_seg_src_fnames[i] for i in rand_indices]
-
-            _seg_src_files = [linux_path(seg_path, k) for k in _seg_src_fnames]
+            raw_seg_path = linux_path(params.root_dir, 'raw_labels', seq_name)
 
             if params.preprocess:
-                raw_seg_path = linux_path(params.root_dir, 'raw_labels', seq_name)
+                seg_path = linux_path(params.root_dir, 'labels', seq_name)
+                print('reading segmentations from: {}'.format(seg_path))
+                assert os.path.exists(seg_path), \
+                    "segmentations not found for sequence: {}".format(seq_name)
+
+                _seg_src_fnames = [k for k in os.listdir(seg_path) if
+                                   os.path.splitext(k.lower())[1] in seg_exts]
+                _seg_src_files = [linux_path(seg_path, k) for k in _seg_src_fnames]
 
                 print('writing raw segmentation images to {}'.format(raw_seg_path))
 
                 os.makedirs(raw_seg_path, exist_ok=1)
+
                 raw_seg_src_files = [linux_path(raw_seg_path, k) for k in _seg_src_fnames]
 
                 for img_src_file_id, img_src_file in enumerate(tqdm(_img_src_files)):
@@ -322,10 +305,26 @@ def _convert_dataset(params):
 
                     cv2.imwrite(raw_seg_src_file, raw_seg_img)
             else:
-                raw_seg_src_files = _seg_src_files
+                assert os.path.isdir(raw_seg_path), "raw_seg_path does not exist"
+                print('reading raw segmentations from: {}'.format(raw_seg_path))
+
+                raw_seg_src_fnames = [k for k in os.listdir(raw_seg_path) if
+                                   os.path.splitext(k.lower())[1] in seg_exts]
+                raw_seg_src_files = [linux_path(raw_seg_path, k) for k in raw_seg_src_fnames]
+
+            n_seg_src_files = len(_seg_src_fnames)
+
+            assert n_img_files == n_seg_src_files, "mismatch between number of source and segmentation images"
+
+            _seg_src_fnames.sort()
+
+            if params.shuffle:
+                _seg_src_fnames = [_seg_src_fnames[i] for i in rand_indices]
 
             train_seg_files += raw_seg_src_files[:_n_train_files]
             test_seg_files += raw_seg_src_files[_n_train_files:]
+
+
 
     n_total_files = n_train_files + n_test_files
     print('Found {} files with {} training and {} testing files corresponding to a training ratio of {}'.format(

@@ -44,6 +44,7 @@ from new_deeplab import common
 from new_deeplab import model
 from new_deeplab.datasets import data_generator
 from new_deeplab.utils import train_utils, linux_path
+from new_deeplab.datasets.build_utils import read_class_info
 
 from new_deeplab_train_params import NewDeeplabTrainParams
 
@@ -53,7 +54,7 @@ from new_deeplab_train_params import NewDeeplabTrainParams
 print()
 
 
-def _build_deeplab(params, iterator, outputs_to_num_classes, ignore_label):
+def _build_deeplab(params, iterator, outputs_to_num_classes, ignore_label, class_to_color):
     """Builds a clone of DeepLab.
 
     Args:
@@ -111,10 +112,12 @@ def _build_deeplab(params, iterator, outputs_to_num_classes, ignore_label):
         # Log the summary
         _log_summaries(samples[common.IMAGE], samples[common.LABEL], num_classes,
                        output_type_dict[model.MERGED_LOGITS_SCOPE],
-                       save_summaries_images=params.save_summaries_images)
+                       save_summaries_images=params.save_summaries_images,
+                       class_to_color=class_to_color,
+                       )
 
 
-def _tower_loss(params, iterator, num_of_classes, ignore_label, scope, reuse_variable):
+def _tower_loss(params, iterator, num_of_classes, ignore_label, scope, reuse_variable, class_to_color):
     """Calculates the total loss on a single tower running the deeplab model.
 
     Args:
@@ -129,7 +132,7 @@ def _tower_loss(params, iterator, num_of_classes, ignore_label, scope, reuse_var
     """
     with tf.variable_scope(
             tf.get_variable_scope(), reuse=True if reuse_variable else None):
-        _build_deeplab(params, iterator, {common.OUTPUT_TYPE: num_of_classes}, ignore_label)
+        _build_deeplab(params, iterator, {common.OUTPUT_TYPE: num_of_classes}, ignore_label, class_to_color)
 
     losses = tf.losses.get_losses(scope=scope)
     for loss in losses:
@@ -172,7 +175,7 @@ def _average_gradients(tower_grads):
     return average_grads
 
 
-def _log_summaries(input_image, label, num_of_classes, output, save_summaries_images):
+def _log_summaries(input_image, label, num_of_classes, output, save_summaries_images, class_to_color):
     """Logs the summaries for the model.
 
     Args:
@@ -197,19 +200,19 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
         summary_image = tf.cast(input_image, tf.uint8)
 
         # Scale up summary image pixel values for better visualization.
-        pixel_scaling = max(1, 255 // num_of_classes)
-        summary_label = tf.cast(label * pixel_scaling, tf.uint8)
+        # pixel_scaling = max(1, 255 // num_of_classes)
+        summary_label = tf.cast(label, tf.uint8)
         # tf.summary.image('samples/%s' % common.LABEL, summary_label)
 
         print('num_of_classes: {}'.format(num_of_classes))
-        print('pixel_scaling: {}'.format(pixel_scaling))
+        # print('pixel_scaling: {}'.format(pixel_scaling))
         print('batch_size: {}'.format(batch_size))
         print('input_h: {}'.format(input_h))
         print('input_w: {}'.format(input_w))
         print('n_channels: {}'.format(n_channels))
 
         predictions = tf.expand_dims(tf.argmax(output, 3), -1)
-        summary_predictions = tf.cast(predictions * pixel_scaling, tf.uint8)
+        summary_predictions = tf.cast(predictions, tf.uint8)
         # tf.summary.image('samples/%s' % common.OUTPUT_TYPE, summary_predictions)
 
         summary_label_resized = tf.image.resize(summary_label, (input_h, input_w))
@@ -218,18 +221,44 @@ def _log_summaries(input_image, label, num_of_classes, output, save_summaries_im
         summary_label_resized = tf.cast(summary_label_resized, tf.uint8)
         summary_predictions_resized = tf.cast(summary_predictions_resized, tf.uint8)
 
-        if n_channels == 3:
-            summary_label_resized_rgb = tf.image.grayscale_to_rgb(summary_label_resized)
-            summary_predictions_resized_rgb = tf.image.grayscale_to_rgb(summary_predictions_resized)
-        else:
-            summary_label_resized_rgb = summary_label_resized
-            summary_predictions_resized_rgb = summary_predictions_resized
+        summary_label_min = tf.reduce_min(summary_label_resized)
+        summary_label_max = tf.reduce_max(summary_label_resized)
+
+        summary_pred_min = tf.reduce_min(summary_predictions_resized)
+        summary_pred_max = tf.reduce_max(summary_predictions_resized)
+
+        print('summary_label: {}, {}'.format(summary_label_min, summary_label_max))
+        print('summary_pred: {}, {}'.format(summary_pred_min, summary_pred_max))
+
+        # if n_channels == 3:
+        # summary_label_resized_rgb = tf.image.grayscale_to_rgb(summary_label_resized)
+        # summary_predictions_resized_rgb = tf.image.grayscale_to_rgb(summary_predictions_resized)
+
+        for _class_id, _col in class_to_color.items():
+            mask = tf.squeeze(tf.cast(tf.equal(summary_label_resized, _class_id), tf.uint8))
+            # slice_y_greater_than_one = tf.boolean_mask(summary_label_resized_rgb, mask)
+            _red = tf.multiply(mask,  _col[2])
+            _green = tf.multiply(mask, _col[1])
+            _blue = tf.multiply(mask, _col[0])
+
+            summary_label_resized_rgb = tf.stack([_red, _green, _blue], axis=3)
+
+            mask = tf.squeeze(tf.cast(tf.equal(summary_predictions_resized, _class_id), tf.uint8))
+            _red = tf.multiply(mask,  _col[2])
+            _green = tf.multiply(mask, _col[1])
+            _blue = tf.multiply(mask, _col[0])
+
+            summary_predictions_resized_rgb = tf.stack([_red, _green, _blue], axis=3)
+
+        # else:
+        #     summary_label_resized_rgb = summary_label_resized
+        #     summary_predictions_resized_rgb = summary_predictions_resized
 
         concat_tensor = tf.concat((summary_image, summary_label_resized_rgb, summary_predictions_resized_rgb), axis=2)
         tf.summary.image('img_gt_pred/%s' % common.OUTPUT_TYPE, concat_tensor)
 
 
-def _train_deeplab_model(params, iterator, num_of_classes, ignore_label):
+def _train_deeplab_model(params, iterator, num_of_classes, ignore_label, class_to_color):
     """
 
     Trains the deeplab model.
@@ -272,7 +301,9 @@ def _train_deeplab_model(params, iterator, num_of_classes, ignore_label):
                     num_of_classes=num_of_classes,
                     ignore_label=ignore_label,
                     scope=scope,
-                    reuse_variable=(i != 0))
+                    reuse_variable=(i != 0),
+                    class_to_color=class_to_color)
+
                 tower_losses.append(loss)
 
     if params.quantize_delay_step >= 0:
@@ -338,12 +369,15 @@ def run(params):
     :return:
     """
 
-    paramparse.to_flags(tf.app.flags.FLAGS, params, verbose=1, allow_missing=1)
+    paramparse.to_flags(tf.app.flags.FLAGS, params, verbose=0, allow_missing=1)
 
     # tf.logging.set_verbosity(tf.logging.INFO)
 
     os.makedirs(params.log_dir, exist_ok=1)
     print('Training on set: {} with split: {}'.format(params.dataset, params.train_split))
+
+    classes, composite_classes = read_class_info(params.class_info_path)
+    class_to_color = {i: k[1] for i, k in enumerate(classes)}
 
     graph = tf.Graph()
     with graph.as_default():
@@ -372,9 +406,10 @@ def run(params):
 
             samples = dataset.get_one_shot_iterator().get_next()
 
-            train_tensor, summary_op = _train_deeplab_model(params,dataset.get_one_shot_iterator(),
+            train_tensor, summary_op = _train_deeplab_model(params, dataset.get_one_shot_iterator(),
                                                             dataset.num_of_classes,
-                                                            dataset.ignore_label)
+                                                            dataset.ignore_label,
+                                                            class_to_color)
 
             # Soft placement allows placing on CPU ops without GPU implementation.
             session_config = tf.ConfigProto(
@@ -425,7 +460,6 @@ def run(params):
 
 
 if __name__ == '__main__':
-
     _params = NewDeeplabTrainParams()
     paramparse.process(_params)
 
