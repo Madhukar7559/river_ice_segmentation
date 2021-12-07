@@ -361,7 +361,7 @@ def run(params):
                     mean_IU = np.mean(_IU_list[base_ids])
                     avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (img_id + 1)
 
-                for _class_id, _class_data in classes:
+                for _class_id, _class_data in enumerate(classes):
                     _class_name = _class_data[0]
                     try:
                         mean_acc = _acc[_class_id]
