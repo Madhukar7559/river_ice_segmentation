@@ -354,25 +354,25 @@ def run(params):
 
                 for _class_name, _, base_ids in composite_classes:
                     _acc_list = np.asarray(list(_acc.values()))
-                    mean_acc = np.mean(_acc_list[base_ids])
-                    avg_mean_acc[_class_name] += (mean_acc - avg_mean_acc[_class_name]) / (img_id + 1)
+                    _mean_acc = np.mean(_acc_list[base_ids])
+                    avg_mean_acc[_class_name] += (_mean_acc - avg_mean_acc[_class_name]) / (img_id + 1)
 
                     _IU_list = np.asarray(list(_IU.values()))
-                    mean_IU = np.mean(_IU_list[base_ids])
-                    avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (img_id + 1)
+                    _mean_IU = np.mean(_IU_list[base_ids])
+                    avg_mean_IU[_class_name] += (_mean_IU - avg_mean_IU[_class_name]) / (img_id + 1)
 
                 for _class_id, _class_data in enumerate(classes):
                     _class_name = _class_data[0]
                     try:
-                        mean_acc = _acc[_class_id]
-                        avg_mean_acc[_class_name] += (mean_acc - avg_mean_acc[_class_name]) / (
+                        _mean_acc = _acc[_class_id]
+                        avg_mean_acc[_class_name] += (_mean_acc - avg_mean_acc[_class_name]) / (
                                 img_id - skip_mean_acc[_class_name] + 1)
                     except KeyError:
                         print('\nskip_mean_acc {}: {}'.format(_class_name, img_id))
                         skip_mean_acc[_class_name] += 1
                     try:
-                        mean_IU = _IU[_class_id]
-                        avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (
+                        _mean_IU = _IU[_class_id]
+                        avg_mean_IU[_class_name] += (_mean_IU - avg_mean_IU[_class_name]) / (
                                 img_id - skip_mean_IU[_class_name] + 1)
                     except KeyError:
                         print('\nskip_mean_IU {}: {}'.format(_class_name, img_id))
