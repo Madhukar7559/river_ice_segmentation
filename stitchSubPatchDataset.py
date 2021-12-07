@@ -8,6 +8,7 @@ import numpy as np
 from paramparse import MultiPath
 
 from densenet.utils import linux_path, sort_key, resize_ar, read_data, print_and_write, getDateTime
+from datasets.build_utils import read_class_info
 
 
 class StitchParams:
@@ -66,6 +67,7 @@ class StitchParams:
         if not self.src_path:
             self.src_path = linux_path(self.db_root_dir, self.dataset, self.images_dir)
 
+
 def run(params):
     """
 
@@ -90,6 +92,10 @@ def run(params):
 
     print('total_frames: {}'.format(total_frames))
 
+    classes, composite_classes = read_class_info(params.class_info_path)
+    n_classes = len(classes)
+    class_ids = list(range(n_classes))
+
     src_files.sort(key=sort_key)
 
     if params.n_frames <= 0:
@@ -104,7 +110,8 @@ def run(params):
     if not params.patch_seq_path:
         if not params.patch_seq_name:
             params.patch_seq_name = '{:s}_{:d}_{:d}_{:d}_{:d}_{:d}_{:d}'.format(
-                params.seq_name, params.start_id, params.end_id, params.patch_height, params.patch_width, params.patch_height, params.patch_width)
+                params.seq_name, params.start_id, params.end_id, params.patch_height, params.patch_width,
+                params.patch_height, params.patch_width)
         params.patch_seq_path = os.path.join(params.db_root_dir, params.patch_seq_name, params.patch_seq_type)
         if not os.path.isdir(params.patch_seq_path):
             raise SystemError('params.patch_seq_path does not exist: {}'.format(params.patch_seq_path))
@@ -183,7 +190,8 @@ def run(params):
 
         enable_stitching = 1
         if params.method == -1:
-            patch_src_img_fname = os.path.join(params.patch_seq_path, '{:s}.{:s}'.format(img_fname_no_ext, params.patch_ext))
+            patch_src_img_fname = os.path.join(params.patch_seq_path,
+                                               '{:s}.{:s}'.format(img_fname_no_ext, params.patch_ext))
             if not os.path.exists(patch_src_img_fname):
                 raise SystemError('Patch image does not exist: {}'.format(patch_src_img_fname))
             stitched_img = cv2.imread(patch_src_img_fname)
@@ -210,7 +218,8 @@ def run(params):
                     max_col -= diff
 
                 patch_img_fname = '{:s}_{:d}'.format(img_fname_no_ext, out_id + 1)
-                patch_src_img_fname = os.path.join(params.patch_seq_path, '{:s}.{:s}'.format(patch_img_fname, params.patch_ext))
+                patch_src_img_fname = os.path.join(params.patch_seq_path,
+                                                   '{:s}.{:s}'.format(patch_img_fname, params.patch_ext))
 
                 if not os.path.exists(patch_src_img_fname):
                     raise SystemError('Patch image does not exist: {}'.format(patch_src_img_fname))
@@ -244,7 +253,8 @@ def run(params):
 
                     stitched_img_disp = stitched_img
                     if params.disp_resize_factor != 1:
-                        disp_img = cv2.resize(disp_img, (0, 0), fx=params.disp_resize_factor, fy=params.disp_resize_factor)
+                        disp_img = cv2.resize(disp_img, (0, 0), fx=params.disp_resize_factor,
+                                              fy=params.disp_resize_factor)
                         if stitched_img_disp is not None:
                             stitched_img_disp = cv2.resize(stitched_img_disp, (0, 0), fx=params.disp_resize_factor,
                                                            fy=params.disp_resize_factor)
@@ -296,10 +306,10 @@ def run(params):
 
             seg_labels = np.squeeze(stitched_img[:, :, 0])
 
-            pix_acc = eval_segm.pixel_accuracy(seg_labels, gt_labels)
-            _acc, mean_acc = eval_segm.mean_accuracy(seg_labels, gt_labels, return_acc=1)
-            _IU, mean_IU = eval_segm.mean_IU(seg_labels, gt_labels, return_iu=1)
-            fw_IU = eval_segm.frequency_weighted_IU(seg_labels, gt_labels)
+            pix_acc = eval_segm.pixel_accuracy(seg_labels, gt_labels, class_ids)
+            _acc, mean_acc = eval_segm.mean_accuracy(seg_labels, gt_labels, class_ids, return_acc=1)
+            _IU, mean_IU = eval_segm.mean_IU(seg_labels, gt_labels, class_ids, return_iu=1)
+            fw_IU = eval_segm.frequency_weighted_IU(seg_labels, gt_labels, class_ids)
 
             avg_pix_acc += (pix_acc - avg_pix_acc) / (img_id + 1)
             avg_mean_acc += (mean_acc - avg_mean_acc) / (img_id + 1)
@@ -433,8 +443,6 @@ if __name__ == '__main__':
     _params.process()
 
     run(_params)
-
-
 
 #
 # params = {

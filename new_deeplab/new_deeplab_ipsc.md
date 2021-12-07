@@ -27,13 +27,13 @@
         - [steps-500       @ g1/hnasnet](#steps_500___g1_hnasnet_)
     - [g2_4       @ hnasnet](#g2_4___hnasne_t_)
         - [ipsc_multi       @ g2_4/hnasnet](#ipsc_multi___g2_4_hnasnet_)
-        - [steps-100       @ g2_4/hnasnet](#steps_100___g2_4_hnasnet_)
-        - [steps-200       @ g2_4/hnasnet](#steps_200___g2_4_hnasnet_)
-        - [steps-500       @ g2_4/hnasnet](#steps_500___g2_4_hnasnet_)
-        - [steps-1000       @ g2_4/hnasnet](#steps_1000___g2_4_hnasnet_)
-        - [steps-2000       @ g2_4/hnasnet](#steps_2000___g2_4_hnasnet_)
-        - [steps-5000       @ g2_4/hnasnet](#steps_5000___g2_4_hnasnet_)
-        - [steps-20000       @ g2_4/hnasnet](#steps_20000___g2_4_hnasnet_)
+            - [steps-100       @ ipsc_multi/g2_4/hnasnet](#steps_100___ipsc_multi_g2_4_hnasne_t_)
+            - [steps-200       @ ipsc_multi/g2_4/hnasnet](#steps_200___ipsc_multi_g2_4_hnasne_t_)
+            - [steps-500       @ ipsc_multi/g2_4/hnasnet](#steps_500___ipsc_multi_g2_4_hnasne_t_)
+            - [steps-1000       @ ipsc_multi/g2_4/hnasnet](#steps_1000___ipsc_multi_g2_4_hnasne_t_)
+            - [steps-2000       @ ipsc_multi/g2_4/hnasnet](#steps_2000___ipsc_multi_g2_4_hnasne_t_)
+            - [steps-5000       @ ipsc_multi/g2_4/hnasnet](#steps_5000___ipsc_multi_g2_4_hnasne_t_)
+            - [steps-20000       @ ipsc_multi/g2_4/hnasnet](#steps_20000___ipsc_multi_g2_4_hnasne_t_)
         - [patches       @ g2_4/hnasnet](#patches___g2_4_hnasnet_)
     - [g3_4       @ hnasnet](#g3_4___hnasne_t_)
         - [ipsc_multi       @ g3_4/hnasnet](#ipsc_multi___g3_4_hnasnet_)
@@ -72,7 +72,7 @@ python36 datasets/build_ipsc_data.py db_split=g1 preprocess=1 patches=1 root_dir
 
 <a id="ipsc_multi___g1_build_dat_a_"></a>
 ### ipsc_multi       @ g1/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=g1 preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
+python36 datasets/build_ipsc_data.py db_split=g1 preprocess=1 root_dir=/data/ipsc_multi n_classes=3 multi=1
 
 <a id="g2_4___build_data_"></a>
 ## g2_4       @ build_data-->new_deeplab_ipsc
@@ -168,32 +168,32 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_
 ### ipsc_multi       @ g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2 start=1
 
-<a id="steps_100___g2_4_hnasnet_"></a>
-### steps-100       @ g2_4/hnasnet-->new_deeplab_ipsc
+<a id="steps_100___ipsc_multi_g2_4_hnasne_t_"></a>
+#### steps-100       @ ipsc_multi/g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-100 start=0
 
-<a id="steps_200___g2_4_hnasnet_"></a>
-### steps-200       @ g2_4/hnasnet-->new_deeplab_ipsc
+<a id="steps_200___ipsc_multi_g2_4_hnasne_t_"></a>
+#### steps-200       @ ipsc_multi/g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-200 start=0
 
-<a id="steps_500___g2_4_hnasnet_"></a>
-### steps-500       @ g2_4/hnasnet-->new_deeplab_ipsc
+<a id="steps_500___ipsc_multi_g2_4_hnasne_t_"></a>
+#### steps-500       @ ipsc_multi/g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-500 start=0
 
-<a id="steps_1000___g2_4_hnasnet_"></a>
-### steps-1000       @ g2_4/hnasnet-->new_deeplab_ipsc
+<a id="steps_1000___ipsc_multi_g2_4_hnasne_t_"></a>
+#### steps-1000       @ ipsc_multi/g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-1000 start=0
 
-<a id="steps_2000___g2_4_hnasnet_"></a>
-### steps-2000       @ g2_4/hnasnet-->new_deeplab_ipsc
+<a id="steps_2000___ipsc_multi_g2_4_hnasne_t_"></a>
+#### steps-2000       @ ipsc_multi/g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-2000 start=0
 
-<a id="steps_5000___g2_4_hnasnet_"></a>
-### steps-5000       @ g2_4/hnasnet-->new_deeplab_ipsc
+<a id="steps_5000___ipsc_multi_g2_4_hnasne_t_"></a>
+#### steps-5000       @ ipsc_multi/g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-5000 start=0
 
-<a id="steps_20000___g2_4_hnasnet_"></a>
-### steps-20000       @ g2_4/hnasnet-->new_deeplab_ipsc
+<a id="steps_20000___ipsc_multi_g2_4_hnasne_t_"></a>
+#### steps-20000       @ ipsc_multi/g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-20000 start=0
 
 <a id="patches___g2_4_hnasnet_"></a>

@@ -182,6 +182,7 @@ def run(params):
 
     classes, composite_classes = read_class_info(params.class_info_path)
     n_classes = len(classes)
+    class_ids = list(range(n_classes))
     class_id_to_color = {i: k[1] for i, k in enumerate(classes)}
 
     all_classes = [k[0] for k in classes + composite_classes]
@@ -331,26 +332,27 @@ def run(params):
                 # print('seg_img.shape: ', seg_img.shape)
                 # print('labels_img_orig.shape: ', labels_img_orig.shape)
 
-                pix_acc[img_id] = eval.pixel_accuracy(seg_img, label_img_raw)
-                _acc, mean_acc[img_id] = eval.mean_accuracy(seg_img, label_img_raw, return_acc=1)
-                _IU, mean_IU[img_id] = eval.mean_IU(seg_img, label_img_raw, return_iu=1)
-                fw_IU[img_id], _fw = eval.frequency_weighted_IU(seg_img, label_img_raw, return_freq=1)
-                try:
-                    fw_sum += _fw
-                except ValueError as e:
-                    print('fw_sum: {}'.format(fw_sum))
-                    print('_fw: {}'.format(_fw))
+                pix_acc[img_id] = eval.pixel_accuracy(seg_img, label_img_raw, class_ids)
+                _acc, mean_acc[img_id] = eval.mean_accuracy(seg_img, label_img_raw, class_ids, return_acc=1)
+                _IU, mean_IU[img_id] = eval.mean_IU(seg_img, label_img_raw, class_ids, return_iu=1)
+                fw_IU[img_id], _fw = eval.frequency_weighted_IU(seg_img, label_img_raw, class_ids, return_freq=1)
+                # try:
+                #     fw_sum += _fw
+                # except ValueError as e:
+                #     print('fw_sum: {}'.format(fw_sum))
+                #     print('_fw: {}'.format(_fw))
+                #
+                #     eval_cl, _ = eval.extract_classes(seg_img)
+                #     gt_cl, _ = eval.extract_classes(label_img_raw)
+                #     cl = np.union1d(eval_cl, gt_cl)
+                #
+                #     print('cl: {}'.format(cl))
+                #     print('eval_cl: {}'.format(eval_cl))
+                #     print('gt_cl: {}'.format(gt_cl))
+                #
+                #     raise ValueError(e)
 
-                    eval_cl, _ = eval.extract_classes(seg_img)
-                    gt_cl, _ = eval.extract_classes(label_img_raw)
-                    cl = np.union1d(eval_cl, gt_cl)
-
-                    print('cl: {}'.format(cl))
-                    print('eval_cl: {}'.format(eval_cl))
-                    print('gt_cl: {}'.format(gt_cl))
-
-                    raise ValueError(e)
-                for _class_name, _, base_ids in composite_classes.values():
+                for _class_name, _, base_ids in composite_classes:
                     _acc_list = np.asarray(list(_acc.values()))
                     mean_acc = np.mean(_acc_list[base_ids])
                     avg_mean_acc[_class_name] += (mean_acc - avg_mean_acc[_class_name]) / (img_id + 1)
@@ -359,7 +361,7 @@ def run(params):
                     mean_IU = np.mean(_IU_list[base_ids])
                     avg_mean_IU[_class_name] += (mean_IU - avg_mean_IU[_class_name]) / (img_id + 1)
 
-                for _class_id, _class_data in classes.items():
+                for _class_id, _class_data in classes:
                     _class_name = _class_data[0]
                     try:
                         mean_acc = _acc[_class_id]
@@ -384,30 +386,30 @@ def run(params):
                     stitched = np.concatenate((stitched, seg_img), axis=1)
                 if not params.stitch and params.show_img:
                     cv2.imshow('seg_img', seg_img)
-            else:
-                _, _fw = eval.frequency_weighted_IU(label_img_raw, label_img_raw, return_freq=1)
-                try:
-                    fw_sum += _fw
-                except ValueError as e:
-                    print('fw_sum: {}'.format(fw_sum))
-                    print('_fw: {}'.format(_fw))
+            # else:
+                # _, _fw = eval.frequency_weighted_IU(label_img_raw, label_img_raw, return_freq=1)
+                # try:
+                #     fw_sum += _fw
+                # except ValueError as e:
+                #     print('fw_sum: {}'.format(fw_sum))
+                #     print('_fw: {}'.format(_fw))
+                #
+                #     gt_cl, _ = eval.extract_classes(label_img_raw)
+                #     print('gt_cl: {}'.format(gt_cl))
+                #     for k in range(n_classes):
+                #         if k not in gt_cl:
+                #             _fw.insert(k, 0)
+                #
+                #     fw_sum += _fw
 
-                    gt_cl, _ = eval.extract_classes(label_img_raw)
-                    print('gt_cl: {}'.format(gt_cl))
-                    for k in range(n_classes):
-                        if k not in gt_cl:
-                            _fw.insert(k, 0)
-
-                    fw_sum += _fw
-
-            _fw_total = np.sum(_fw)
+            # _fw_total = np.sum(_fw)
 
             # print('_fw: {}'.format(_fw))
             # print('_fw_total: {}'.format(_fw_total))
 
-            _fw_frac = np.array(_fw) / float(_fw_total)
+            # _fw_frac = np.array(_fw) / float(_fw_total)
 
-            print('_fw_frac: {}'.format(_fw_frac))
+            # print('_fw_frac: {}'.format(_fw_frac))
 
         if params.stitch:
             if params.save_stitched:
@@ -483,11 +485,11 @@ def run(params):
 
         print_and_write(log_txt, log_fname)
 
-    fw_sum_total = np.sum(fw_sum)
-    fw_sum_frac = fw_sum / float(fw_sum_total)
+    # fw_sum_total = np.sum(fw_sum)
+    # fw_sum_frac = fw_sum / float(fw_sum_total)
 
-    print('fw_sum_total: {}'.format(fw_sum_total))
-    print('fw_sum_frac: {}'.format(fw_sum_frac))
+    # print('fw_sum_total: {}'.format(fw_sum_total))
+    # print('fw_sum_frac: {}'.format(fw_sum_frac))
 
     print('Wrote log to: {}'.format(log_fname))
 

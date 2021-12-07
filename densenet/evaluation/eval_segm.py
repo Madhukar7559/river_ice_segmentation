@@ -10,26 +10,31 @@ paper Fully Convolutional Networks for Semantic Segmentation.
 
 import numpy as np
 
-def pixel_accuracy(eval_segm, gt_segm):
+
+def pixel_accuracy(eval_segm, gt_segm, cl):
     '''
     sum_i(n_ii) / sum_i(t_i)
     '''
 
     check_size(eval_segm, gt_segm)
 
-    cl, n_cl = extract_classes(gt_segm)
+    if cl is None:
+        cl, n_cl = extract_classes(gt_segm)
+    else:
+        n_cl = len(cl)
+
     eval_mask, gt_mask = extract_both_masks(eval_segm, gt_segm, cl, n_cl)
 
     sum_n_ii = 0
-    sum_t_i  = 0
+    sum_t_i = 0
 
     for i, c in enumerate(cl):
         curr_eval_mask = eval_mask[i, :, :]
         curr_gt_mask = gt_mask[i, :, :]
 
         sum_n_ii += np.sum(np.logical_and(curr_eval_mask, curr_gt_mask))
-        sum_t_i  += np.sum(curr_gt_mask)
- 
+        sum_t_i += np.sum(curr_gt_mask)
+
     if (sum_t_i == 0):
         pixel_accuracy_ = 0
     else:
@@ -37,14 +42,19 @@ def pixel_accuracy(eval_segm, gt_segm):
 
     return pixel_accuracy_
 
-def mean_accuracy(eval_segm, gt_segm, return_acc=0):
+
+def mean_accuracy(eval_segm, gt_segm, cl, return_acc=0):
     '''
     (1/n_cl) sum_i(n_ii/t_i)
     '''
 
     check_size(eval_segm, gt_segm)
 
-    cl, n_cl = extract_classes(gt_segm)
+    if cl is None:
+        cl, n_cl = extract_classes(gt_segm)
+    else:
+        n_cl = len(cl)
+
     eval_mask, gt_mask = extract_both_masks(eval_segm, gt_segm, cl, n_cl)
 
     accuracy = list([0]) * n_cl
@@ -54,8 +64,8 @@ def mean_accuracy(eval_segm, gt_segm, return_acc=0):
         curr_gt_mask = gt_mask[i, :, :]
 
         n_ii = np.sum(np.logical_and(curr_eval_mask, curr_gt_mask))
-        t_i  = np.sum(curr_gt_mask)
- 
+        t_i = np.sum(curr_gt_mask)
+
         if (t_i != 0):
             accuracy[i] = n_ii / t_i
 
@@ -66,14 +76,19 @@ def mean_accuracy(eval_segm, gt_segm, return_acc=0):
     else:
         return mean_accuracy_
 
-def mean_IU(eval_segm, gt_segm, return_iu=0):
+
+def mean_IU(eval_segm, gt_segm, cl, return_iu=0):
     '''
     (1/n_cl) * sum_i(n_ii / (t_i + sum_j(n_ji) - n_ii))
     '''
 
     check_size(eval_segm, gt_segm)
 
-    cl, n_cl   = union_classes(eval_segm, gt_segm)
+    if cl is None:
+        cl, n_cl = union_classes(eval_segm, gt_segm)
+    else:
+        n_cl = len(cl)
+
     _, n_cl_gt = extract_classes(gt_segm)
     eval_mask, gt_mask = extract_both_masks(eval_segm, gt_segm, cl, n_cl)
 
@@ -82,30 +97,35 @@ def mean_IU(eval_segm, gt_segm, return_iu=0):
     for i, c in enumerate(cl):
         curr_eval_mask = eval_mask[i, :, :]
         curr_gt_mask = gt_mask[i, :, :]
- 
+
         if (np.sum(curr_eval_mask) == 0) or (np.sum(curr_gt_mask) == 0):
             continue
 
         n_ii = np.sum(np.logical_and(curr_eval_mask, curr_gt_mask))
-        t_i  = np.sum(curr_gt_mask)
+        t_i = np.sum(curr_gt_mask)
         n_ij = np.sum(curr_eval_mask)
 
         IU[i] = n_ii / (t_i + n_ij - n_ii)
- 
+
     mean_IU_ = np.sum(IU) / n_cl_gt
     if return_iu:
         return dict(zip(cl, IU)), mean_IU_
     else:
         return mean_IU_
 
-def frequency_weighted_IU(eval_segm, gt_segm,  return_freq=0):
+
+def frequency_weighted_IU(eval_segm, gt_segm, cl, return_freq=0):
     '''
     sum_k(t_k)^(-1) * sum_i((t_i*n_ii)/(t_i + sum_j(n_ji) - n_ii))
     '''
 
     check_size(eval_segm, gt_segm)
 
-    cl, n_cl = union_classes(eval_segm, gt_segm)
+    if cl is None:
+        cl, n_cl = union_classes(eval_segm, gt_segm)
+    else:
+        n_cl = len(cl)
+
     eval_mask, gt_mask = extract_both_masks(eval_segm, gt_segm, cl, n_cl)
 
     frequency_weighted_IU_ = list([0]) * n_cl
@@ -114,36 +134,41 @@ def frequency_weighted_IU(eval_segm, gt_segm,  return_freq=0):
     for i, c in enumerate(cl):
         curr_eval_mask = eval_mask[i, :, :]
         curr_gt_mask = gt_mask[i, :, :]
- 
+
         if (np.sum(curr_eval_mask) == 0) or (np.sum(curr_gt_mask) == 0):
             continue
 
         n_ii = np.sum(np.logical_and(curr_eval_mask, curr_gt_mask))
-        t_i  = np.sum(curr_gt_mask)
+        t_i = np.sum(curr_gt_mask)
         n_ij = np.sum(curr_eval_mask)
 
         frequency_weighted_IU_[i] = (t_i * n_ii) / (t_i + n_ij - n_ii)
         t_i_list[i] = t_i
- 
+
     sum_k_t_k = get_pixel_area(eval_segm)
-    
+
     frequency_weighted_IU_ = np.sum(frequency_weighted_IU_) / sum_k_t_k
     if return_freq:
         return frequency_weighted_IU_, t_i_list
     else:
         return frequency_weighted_IU_
 
+
 '''
 Auxiliary functions used during evaluation.
 '''
+
+
 def get_pixel_area(segm):
     return segm.shape[0] * segm.shape[1]
 
+
 def extract_both_masks(eval_segm, gt_segm, cl, n_cl):
     eval_mask = extract_masks(eval_segm, cl, n_cl)
-    gt_mask   = extract_masks(gt_segm, cl, n_cl)
+    gt_mask = extract_masks(gt_segm, cl, n_cl)
 
     return eval_mask, gt_mask
+
 
 def extract_classes(segm):
     cl = np.unique(segm)
@@ -151,17 +176,19 @@ def extract_classes(segm):
 
     return cl, n_cl
 
+
 def union_classes(eval_segm, gt_segm):
     eval_cl, _ = extract_classes(eval_segm)
-    gt_cl, _   = extract_classes(gt_segm)
+    gt_cl, _ = extract_classes(gt_segm)
 
     cl = np.union1d(eval_cl, gt_cl)
     n_cl = len(cl)
 
     return cl, n_cl
 
+
 def extract_masks(segm, cl, n_cl):
-    h, w  = segm_size(segm)
+    h, w = segm_size(segm)
     masks = np.zeros((n_cl, h, w))
 
     for i, c in enumerate(cl):
@@ -169,14 +196,16 @@ def extract_masks(segm, cl, n_cl):
 
     return masks
 
+
 def segm_size(segm):
     try:
         height = segm.shape[0]
-        width  = segm.shape[1]
+        width = segm.shape[1]
     except IndexError:
         raise
 
     return height, width
+
 
 def check_size(eval_segm, gt_segm):
     h_e, w_e = segm_size(eval_segm)
@@ -185,9 +214,12 @@ def check_size(eval_segm, gt_segm):
     if (h_e != h_g) or (w_e != w_g):
         raise EvalSegErr("DiffDim: Different dimensions of matrices!")
 
+
 '''
 Exceptions
 '''
+
+
 class EvalSegErr(Exception):
     def __init__(self, value):
         self.value = value
