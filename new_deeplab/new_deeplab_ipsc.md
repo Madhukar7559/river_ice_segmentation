@@ -62,6 +62,9 @@
     - [g2_4       @ resnet101](#g2_4___resnet10_1_)
         - [ipsc_multi       @ g2_4/resnet101](#ipsc_multi___g2_4_resnet101_)
             - [steps-50000       @ ipsc_multi/g2_4/resnet101](#steps_50000___ipsc_multi_g2_4_resnet10_1_)
+    - [g3_4       @ resnet101](#g3_4___resnet10_1_)
+        - [ipsc_multi       @ g3_4/resnet101](#ipsc_multi___g3_4_resnet101_)
+            - [steps-50000       @ ipsc_multi/g3_4/resnet101](#steps_50000___ipsc_multi_g3_4_resnet10_1_)
     - [g2       @ resnet101](#g2___resnet10_1_)
         - [ipsc_multi       @ g2/resnet101](#ipsc_multi___g2_resnet101_)
             - [steps-50000       @ ipsc_multi/g2/resnet101](#steps_50000___ipsc_multi_g2_resnet10_1_)
@@ -321,6 +324,15 @@ python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train
 #### steps-50000       @ ipsc_multi/g2_4/resnet101-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g2_4,_train_:b2:steps-50000 start=0
 
+<a id="g3_4___resnet10_1_"></a>
+## g3_4       @ resnet101-->new_deeplab_ipsc
+
+<a id="ipsc_multi___g3_4_resnet101_"></a>
+### ipsc_multi       @ g3_4/resnet101-->new_deeplab_ipsc
+
+<a id="steps_50000___ipsc_multi_g3_4_resnet10_1_"></a>
+#### steps-50000       @ ipsc_multi/g3_4/resnet101-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g3_4,_train_:b2:steps-50000 start=0
 
 <a id="g2___resnet10_1_"></a>
 ## g2       @ resnet101-->new_deeplab_ipsc
@@ -340,7 +352,7 @@ python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:multi:train
 
 <a id="steps_50000___ipsc_multi_g3_resnet10_1_"></a>
 #### steps-50000       @ ipsc_multi/g3/resnet101-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g2,_train_:b2:steps-50000 start=0
+python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g3,_train_:b2:steps-50000 start=0
 
 <a id="g4___resnet10_1_"></a>
 ## g4       @ resnet101-->new_deeplab_ipsc
@@ -350,4 +362,4 @@ python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:multi:train
 
 <a id="steps_50000___ipsc_multi_g4_resnet10_1_"></a>
 #### steps-50000       @ ipsc_multi/g4/resnet101-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g2,_train_:b2:steps-50000 start=0
+python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:multi:train:vis:g4,_train_:b2:steps-50000 start=0
