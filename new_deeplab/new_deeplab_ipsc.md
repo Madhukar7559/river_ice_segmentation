@@ -18,6 +18,7 @@
         - [patches       @ g3/build_data](#patches___g3_build_dat_a_)
     - [g4       @ build_data](#g4___build_data_)
         - [ipsc_multi       @ g4/build_data](#ipsc_multi___g4_build_dat_a_)
+            - [test       @ ipsc_multi/g4/build_data](#test___ipsc_multi_g4_build_data_)
         - [patches       @ g4/build_data](#patches___g4_build_dat_a_)
 - [hnasnet](#hnasnet_)
     - [g1       @ hnasnet](#g1___hnasne_t_)
@@ -146,6 +147,10 @@ python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0
 <a id="ipsc_multi___g4_build_dat_a_"></a>
 ### ipsc_multi       @ g4/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
+
+<a id="test___ipsc_multi_g4_build_data_"></a>
+#### test       @ ipsc_multi/g4/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
 
 
 <a id="patches___g4_build_dat_a_"></a>
