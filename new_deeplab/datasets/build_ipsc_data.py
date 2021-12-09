@@ -104,7 +104,7 @@ def create_tfrecords(img_src_files, seg_src_files, n_shards, db_split, output_di
                 image_data = tf.gfile.FastGFile(img_src_path, 'rb').read()
                 height, width = image_reader.read_image_dims(image_data)
 
-                if seg_src_files is not None:
+                if seg_src_files is not None and seg_src_files:
                     seg_src_path = seg_src_files[img_id]
                     seg_data = tf.gfile.FastGFile(seg_src_path, 'rb').read()
                     seg_height, seg_width = label_reader.read_image_dims(seg_data)

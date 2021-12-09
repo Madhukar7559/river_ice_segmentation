@@ -150,7 +150,7 @@ python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0 root_dir=/data/ips
 
 <a id="test___ipsc_multi_g4_build_data_"></a>
 #### test       @ ipsc_multi/g4/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1
+python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_multi n_classes=3 multi=1 disable_seg=1 train_ratio=0
 
 
 <a id="patches___g4_build_dat_a_"></a>
