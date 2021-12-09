@@ -1,6 +1,6 @@
-
 def irange(a, b):
     return list(range(a, b + 1))
+
 
 class IPSCInfo:
     class DBSplits:
@@ -39,6 +39,8 @@ class IPSCInfo:
         17: ('Frame_251__roi_12161_12649_15695_15449', 25),
         18: ('Frame_251__roi_12827_8249_14594_9816', 25),
         19: ('Frame_251__roi_16627_11116_18727_12582', 25),
+        # test
+        20: ('Test_211208', 59),
     }
 
 
@@ -50,6 +52,7 @@ class IPSCPatchesInfo:
             self.g2 = irange(3, 5)
             self.g3 = irange(6, 13)
             self.g4 = irange(14, 19)
+            self.test = [20, ]
 
             self.g2_4 = self.g2 + self.g3 + self.g4
             self.g3_4 = self.g3 + self.g4
@@ -80,4 +83,3 @@ class IPSCPatchesInfo:
         18: ('Frame_251__roi_12827_8249_14594_9816', 100),
         19: ('Frame_251__roi_16627_11116_18727_12582', 125),
     }
-
