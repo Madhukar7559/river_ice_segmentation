@@ -251,6 +251,7 @@ ipsc_splits_to_sizes = {
     'g3_4': 526,
     'g2_4': 656,
     'all': 668,
+    'test': 59,
 }
 
 ipsc_patches_splits_to_sizes = {
