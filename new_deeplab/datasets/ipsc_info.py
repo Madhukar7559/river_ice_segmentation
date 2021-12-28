@@ -10,6 +10,7 @@ class IPSCInfo:
             self.g2 = irange(3, 5)
             self.g3 = irange(6, 13)
             self.g4 = irange(14, 19)
+            self.g4s = irange(14, 18)
             self.test = [20, ]
 
             self.g2_4 = self.g2 + self.g3 + self.g4
@@ -53,6 +54,7 @@ class IPSCPatchesInfo:
             self.g2 = irange(3, 5)
             self.g3 = irange(6, 13)
             self.g4 = irange(14, 19)
+            self.g4s = irange(14, 18)
             self.test = [20, ]
 
             self.g2_4 = self.g2 + self.g3 + self.g4

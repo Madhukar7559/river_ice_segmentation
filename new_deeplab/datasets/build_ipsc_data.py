@@ -23,7 +23,6 @@ class Params:
     def __init__(self):
         self.db_split = 'all'
 
-        self.multi = 0
         self.patches = 0
 
         self.cfg = ()
@@ -46,7 +45,7 @@ class Params:
 
         self.preprocess = 0
         self.n_classes = 2
-        self.class_info_path = '../data/classes_ipsc_multi.txt'
+        self.class_info_path = '../data/classes_ipsc_5_class.txt'
 
         """uncertainty in mask pixel values for each class"""
         self.fuzziness = 5
@@ -130,12 +129,12 @@ def _convert_dataset(params):
 
     output_dir = params.output_dir
 
-    if params.multi:
-        print('using version with multiple classes')
-        output_dir += '_multi'
+    if params.n_classes > 2:
+        print('using {} class version'.format(params.n_classes - 1))
+        output_dir += '_{}_class'.format(params.n_classes - 1)
 
     if params.patches:
-        print('using version with patches')
+        print('using patch version')
         output_dir += '_patches'
 
     print('root_dir: {}'.format(params.root_dir))
@@ -175,6 +174,7 @@ def _convert_dataset(params):
     }
 
     if params.class_info_path:
+        print('reading class info from: {}'.format(params.class_info_path))
         classes, _ = read_class_info(params.class_info_path)
         class_to_color = {i: k[1] for i, k in enumerate(classes)}
     else:
@@ -309,7 +309,7 @@ def _convert_dataset(params):
             print('reading raw segmentations from: {}'.format(raw_seg_path))
 
             raw_seg_src_fnames = [k for k in os.listdir(raw_seg_path) if
-                               os.path.splitext(k.lower())[1] in seg_exts]
+                                  os.path.splitext(k.lower())[1] in seg_exts]
 
             n_seg_src_files = len(raw_seg_src_fnames)
 

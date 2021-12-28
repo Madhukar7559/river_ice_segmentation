@@ -44,10 +44,9 @@ def pixel_accuracy(eval_segm, gt_segm, cl):
 
 
 def mean_accuracy(eval_segm, gt_segm, cl, return_acc=0):
-    '''
+    """
     (1/n_cl) sum_i(n_ii/t_i)
-    '''
-
+    """
     check_size(eval_segm, gt_segm)
 
     if cl is None:
@@ -66,7 +65,7 @@ def mean_accuracy(eval_segm, gt_segm, cl, return_acc=0):
         n_ii = np.sum(np.logical_and(curr_eval_mask, curr_gt_mask))
         t_i = np.sum(curr_gt_mask)
 
-        if (t_i != 0):
+        if t_i != 0:
             accuracy[i] = n_ii / t_i
 
     mean_accuracy_ = np.mean(accuracy)
