@@ -15,6 +15,7 @@ class IPSCInfo:
 
             self.g2_4 = self.g2 + self.g3 + self.g4
             self.g3_4 = self.g3 + self.g4
+            self.g3_4s = self.g3 + self.g4s
 
     sequences = {
         # g1

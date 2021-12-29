@@ -11,6 +11,8 @@
     - [g3_4       @ build_data](#g3_4___build_data_)
         - [2_class       @ g3_4/build_data](#2_class___g3_4_build_dat_a_)
         - [patches       @ g3_4/build_data](#patches___g3_4_build_dat_a_)
+    - [g3_4s       @ build_data](#g3_4s___build_data_)
+        - [5_class       @ g3_4s/build_data](#5_class___g3_4s_build_data_)
     - [g2       @ build_data](#g2___build_data_)
         - [2_class       @ g2/build_data](#2_class___g2_build_dat_a_)
         - [patches       @ g2/build_data](#patches___g2_build_dat_a_)
@@ -129,6 +131,13 @@ python36 datasets/build_ipsc_data.py db_split=g3_4 preprocess=0 root_dir=/data/i
 <a id="patches___g3_4_build_dat_a_"></a>
 ### patches       @ g3_4/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g3_4 preprocess=0 patches=1 root_dir=/data/ipsc_patches
+
+<a id="g3_4s___build_data_"></a>
+## g3_4s       @ build_data-->new_deeplab_ipsc
+
+<a id="5_class___g3_4s_build_data_"></a>
+### 5_class       @ g3_4s/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g3_4s preprocess=0 root_dir=/data/ipsc_5_class n_classes=6
 
 <a id="g2___build_data_"></a>
 ## g2       @ build_data-->new_deeplab_ipsc
@@ -314,11 +323,11 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:2_class:train
 
 <a id="steps_50000___2_class_g3_hnasnet_"></a>
 #### steps-50000       @ 2_class/g3/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:2_class:train:vis:g3,_train_:b2:steps-50000 start=0
+python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:2_class:train:vis:g3,_train_:b2:steps-50000 start=2
 
 <a id="5_class___g3_hnasnet_"></a>
 ### 5_class       @ g3/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g3,_train_:b2 start=0
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g3,_train_:b2 start=2
 
 <a id="patches___g3_hnasnet_"></a>
 ### patches       @ g3/hnasnet-->new_deeplab_ipsc

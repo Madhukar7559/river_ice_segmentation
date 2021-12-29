@@ -250,6 +250,19 @@ def undo_resize_ar(resized_img, src_width, src_height, placement_type=0):
     return unpadded_img
 
 
+def raw_seg_to_rgb(raw_seg_img, class_to_color):
+    seg_img = raw_seg_img.copy()
+    if len(seg_img.shape) != 3:
+        seg_img = np.stack((seg_img, seg_img, seg_img), axis=2)
+    else:
+        raw_seg_img = raw_seg_img[..., :0].squeeze()
+
+    for _id, _col in class_to_color.items():
+        seg_img[raw_seg_img == _id] = _col
+
+    return seg_img
+
+
 def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness):
     """handle annoying nearby pixel values to each actual class label, e.g. 253, 254 for actual label 255"""
 

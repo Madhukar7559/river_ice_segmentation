@@ -5,7 +5,7 @@ from paramparse import MultiPath
 
 import densenet.evaluation.eval_segm as eval
 from densenet.utils import read_data, getDateTime, print_and_write, linux_path
-from datasets.build_utils import remove_fuzziness_in_mask, read_class_info
+from datasets.build_utils import remove_fuzziness_in_mask, raw_seg_to_rgb, read_class_info
 
 import cv2
 
@@ -196,7 +196,7 @@ def run(params):
 
     if not os.path.isdir(params.save_path):
         os.makedirs(params.save_path)
-        
+
     if params.stitch and params.save_stitched:
         print('Saving visualization images to: {}'.format(params.save_path))
 
@@ -385,14 +385,14 @@ def run(params):
                         skip_mean_IU[_class_name] += 1
 
                 # seg_img = (seg_img * label_diff).astype(np.uint8)
-                if len(seg_img.shape) != 3:
-                    seg_img = np.stack((seg_img, seg_img, seg_img), axis=2)
+
+                seg_img_vis = raw_seg_to_rgb(seg_img, class_id_to_color)
 
                 if params.stitch and params.stitch_seg:
-                    stitched.append(seg_img)
+                    stitched.append(seg_img_vis)
 
                 if not params.stitch and params.show_img:
-                    cv2.imshow('seg_img', seg_img)
+                    cv2.imshow('seg_img', seg_img_vis)
             # else:
                 # _, _fw = eval.frequency_weighted_IU(label_img_raw, label_img_raw, return_freq=1)
                 # try:
