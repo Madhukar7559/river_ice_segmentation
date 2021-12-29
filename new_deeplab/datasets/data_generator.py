@@ -248,9 +248,19 @@ ipsc_splits_to_sizes = {
     'g2': 130,
     'g3': 377,
     'g4': 149,
+    'g4s': 124,
     'g3_4': 526,
+    'g3_4s': 501,
     'g2_4': 656,
     'all': 668,
+    'test': 59,
+}
+
+ipsc_5_class_splits_to_sizes = {
+    'g3': 377,
+    'g4s': 124,
+    'g3_4s': 501,
+    'all': 501,
     'test': 59,
 }
 
@@ -259,7 +269,18 @@ ipsc_patches_splits_to_sizes = {
     'g2': 948,
     'g3': 2952,
     'g4': 868,
+    'g4s': 748,
     'g3_4': 3820,
+    'g3_4s': 3820,
+    'g2_4': 4768,
+    'all': 5562,
+}
+
+ipsc_patches_5_class_splits_to_sizes = {
+    'g3': 2952,
+    'g4s': 748,
+    'g3_4': 3820,
+    'g3_4s': 3820,
     'g2_4': 4768,
     'all': 5562,
 }
@@ -291,7 +312,7 @@ _IPSC_2_CLASS_INFORMATION = DatasetDescriptor(
 )
 
 _IPSC_5_CLASS_INFORMATION = DatasetDescriptor(
-    splits_to_sizes=ipsc_splits_to_sizes,
+    splits_to_sizes=ipsc_5_class_splits_to_sizes,
     num_classes=6,
     ignore_label=255,
 )

@@ -16,11 +16,13 @@
         - [patches       @ g2/build_data](#patches___g2_build_dat_a_)
     - [g3       @ build_data](#g3___build_data_)
         - [2_class       @ g3/build_data](#2_class___g3_build_dat_a_)
-        - [ipsc_5_class       @ g3/build_data](#ipsc_5_class___g3_build_dat_a_)
+        - [5_class       @ g3/build_data](#5_class___g3_build_dat_a_)
         - [patches       @ g3/build_data](#patches___g3_build_dat_a_)
     - [g4       @ build_data](#g4___build_data_)
         - [2_class       @ g4/build_data](#2_class___g4_build_dat_a_)
         - [patches       @ g4/build_data](#patches___g4_build_dat_a_)
+    - [g4s       @ build_data](#g4s___build_data_)
+        - [5_class       @ g4s/build_data](#5_class___g4s_build_data_)
     - [test       @ build_data](#test___build_data_)
         - [2_class       @ test/build_data](#2_class___test_build_dat_a_)
 - [hnasnet](#hnasnet_)
@@ -146,8 +148,8 @@ python36 datasets/build_ipsc_data.py db_split=g3 preprocess=0
 ### 2_class       @ g3/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g3 preprocess=0 root_dir=/data/ipsc_2_class n_classes=3
 
-<a id="ipsc_5_class___g3_build_dat_a_"></a>
-### ipsc_5_class       @ g3/build_data-->new_deeplab_ipsc
+<a id="5_class___g3_build_dat_a_"></a>
+### 5_class       @ g3/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g3 preprocess=1 root_dir=/data/ipsc_5_class n_classes=6
 
 <a id="patches___g3_build_dat_a_"></a>
@@ -166,6 +168,13 @@ python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0 root_dir=/data/ips
 ### patches       @ g4/build_data-->new_deeplab_ipsc
 python36 datasets/build_ipsc_data.py db_split=g4 preprocess=0 patches=1 root_dir=/data/ipsc_patches
 
+<a id="g4s___build_data_"></a>
+## g4s       @ build_data-->new_deeplab_ipsc
+<a id="5_class___g4s_build_data_"></a>
+### 5_class       @ g4s/build_data-->new_deeplab_ipsc
+python36 datasets/build_ipsc_data.py db_split=g4s preprocess=1 root_dir=/data/ipsc_5_class n_classes=6
+
+
 <a id="test___build_data_"></a>
 ## test       @ build_data-->new_deeplab_ipsc
 
@@ -175,6 +184,7 @@ python36 datasets/build_ipsc_data.py db_split=test preprocess=0 disable_seg=1 tr
 ### 2_class       @ test/build_data-->new_deeplab_ipsc
 
 python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_2_class n_classes=3 disable_seg=1 train_ratio=0
+
 
 
 <a id="hnasnet_"></a>
@@ -308,7 +318,6 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:2_class:train
 <a id="5_class___g3_hnasnet_"></a>
 ### 5_class       @ g3/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g3,_train_:b2 start=0
-
 
 <a id="patches___g3_hnasnet_"></a>
 ### patches       @ g3/hnasnet-->new_deeplab_ipsc
