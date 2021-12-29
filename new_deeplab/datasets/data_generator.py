@@ -256,14 +256,6 @@ ipsc_splits_to_sizes = {
     'test': 59,
 }
 
-ipsc_5_class_splits_to_sizes = {
-    'g3': 377,
-    'g4s': 124,
-    'g3_4s': 501,
-    'all': 501,
-    'test': 59,
-}
-
 ipsc_patches_splits_to_sizes = {
     'g1': 794,
     'g2': 948,
@@ -276,12 +268,18 @@ ipsc_patches_splits_to_sizes = {
     'all': 5562,
 }
 
+ipsc_5_class_splits_to_sizes = {
+    'g3': 377,
+    'g4s': 124,
+    'g3_4s': 501,
+    'all': 501,
+    'test': 59,
+}
+
 ipsc_patches_5_class_splits_to_sizes = {
     'g3': 2952,
     'g4s': 748,
-    'g3_4': 3820,
     'g3_4s': 3820,
-    'g2_4': 4768,
     'all': 5562,
 }
 
