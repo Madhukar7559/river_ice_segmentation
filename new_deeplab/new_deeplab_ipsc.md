@@ -363,7 +363,6 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:patches:train
 ### 5_class       @ g4s/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g4s,_train_:b2 start=0
 
-
 <a id="resnet101_"></a>
 # resnet101
 

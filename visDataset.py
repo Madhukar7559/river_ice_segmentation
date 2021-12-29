@@ -82,7 +82,7 @@ def run(params):
             from new_deeplab.datasets.build_ctc_data import CTCInfo
             db_splits = CTCInfo.DBSplits().__dict__
             sequences = CTCInfo.sequences
-        elif params.dataset.lower() in ('ipsc', 'ipsc_multi'):
+        elif params.dataset.lower() in ('ipsc', 'ipsc_2_class', 'ipsc_5_class'):
             from new_deeplab.datasets.ipsc_info import IPSCInfo
             db_splits = IPSCInfo.DBSplits().__dict__
             sequences = IPSCInfo.sequences
