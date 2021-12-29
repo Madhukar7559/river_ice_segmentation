@@ -62,6 +62,7 @@
         - [2_class       @ g3/hnasnet](#2_class___g3_hnasnet_)
             - [steps-50000       @ 2_class/g3/hnasnet](#steps_50000___2_class_g3_hnasnet_)
         - [5_class       @ g3/hnasnet](#5_class___g3_hnasnet_)
+            - [steps-50000       @ 5_class/g3/hnasnet](#steps_50000___5_class_g3_hnasnet_)
         - [patches       @ g3/hnasnet](#patches___g3_hnasnet_)
     - [g4       @ hnasnet](#g4___hnasne_t_)
         - [on_g2       @ g4/hnasnet](#on_g2___g4_hnasnet_)
@@ -73,6 +74,7 @@
         - [patches       @ g4/hnasnet](#patches___g4_hnasnet_)
     - [g4s       @ hnasnet](#g4s___hnasne_t_)
         - [5_class       @ g4s/hnasnet](#5_class___g4s_hnasne_t_)
+            - [steps-50000       @ 5_class/g4s/hnasnet](#steps_50000___5_class_g4s_hnasne_t_)
 - [resnet101](#resnet101_)
     - [g2_4       @ resnet101](#g2_4___resnet10_1_)
         - [2_class       @ g2_4/resnet101](#2_class___g2_4_resnet101_)
@@ -86,9 +88,12 @@
     - [g3       @ resnet101](#g3___resnet10_1_)
         - [2_class       @ g3/resnet101](#2_class___g3_resnet101_)
             - [steps-50000       @ 2_class/g3/resnet101](#steps_50000___2_class_g3_resnet101_)
+        - [5_class       @ g3/resnet101](#5_class___g3_resnet101_)
     - [g4       @ resnet101](#g4___resnet10_1_)
         - [2_class       @ g4/resnet101](#2_class___g4_resnet101_)
             - [steps-50000       @ 2_class/g4/resnet101](#steps_50000___2_class_g4_resnet101_)
+    - [g4s       @ resnet101](#g4s___resnet10_1_)
+        - [5_class       @ g4s/resnet101](#5_class___g4s_resnet10_1_)
 
 <!-- /MarkdownTOC -->
 
@@ -338,6 +343,10 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:2_class:train
 ### 5_class       @ g3/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g3,_train_:b2 start=2
 
+<a id="steps_50000___5_class_g3_hnasnet_"></a>
+#### steps-50000       @ 5_class/g3/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g3,_train_:b2:steps-50000 start=0
+
 <a id="patches___g3_hnasnet_"></a>
 ### patches       @ g3/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:patches:train:vis:g3,_train_:b2 start=1
@@ -380,6 +389,10 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:patches:train
 <a id="5_class___g4s_hnasne_t_"></a>
 ### 5_class       @ g4s/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g4s,_train_:b2 start=0
+
+<a id="steps_50000___5_class_g4s_hnasne_t_"></a>
+#### steps-50000       @ 5_class/g4s/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g4s,_train_:b2:steps-50000 start=0
 
 <a id="resnet101_"></a>
 # resnet101
@@ -426,6 +439,10 @@ python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:2_class:tra
 #### steps-50000       @ 2_class/g3/resnet101-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:2_class:train:vis:g3,_train_:b2:steps-50000 start=0
 
+<a id="5_class___g3_resnet101_"></a>
+### 5_class       @ g3/resnet101-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:5_class:train:vis:g3,_train_:b2:steps-50000 start=0
+
 <a id="g4___resnet10_1_"></a>
 ## g4       @ resnet101-->new_deeplab_ipsc
 
@@ -435,3 +452,10 @@ python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:2_class:tra
 <a id="steps_50000___2_class_g4_resnet101_"></a>
 #### steps-50000       @ 2_class/g4/resnet101-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:2_class:train:vis:g4,_train_:b2:steps-50000 start=0
+
+<a id="g4s___resnet10_1_"></a>
+## g4s       @ resnet101-->new_deeplab_ipsc
+
+<a id="5_class___g4s_resnet10_1_"></a>
+### 5_class       @ g4s/resnet101-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:5_class:train:vis:g4s,_train_:b2:steps-50000 start=0
