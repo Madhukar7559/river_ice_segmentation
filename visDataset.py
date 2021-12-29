@@ -19,15 +19,15 @@ class VisParams:
         self.labels_ext = 'png'
         self.log_dir = ''
         self.normalize_labels = 1
-        self.out_ext = 'png'
+        self.out_ext = 'jpg'
         self.save_path = ''
-        self.save_stitched = 0
+        self.save_stitched = 1
         self.seg_ext = 'png'
         self.seg_path = ''
         self.selective_mode = 0
         self.show_img = 0
         self.start_id = 0
-        self.stitch = 0
+        self.stitch = 1
         self.stitch_seg = 1
         self.no_labels = 1
         self.class_info_path = 'data/classes_ice.txt'
@@ -73,6 +73,7 @@ def run(params):
     :param VisParams params:
     :return:
     """
+    eval_mode = False
 
     if params.multi_sequence_db:
         assert params.vis_split, "vis_split must be provided for CTC"
@@ -195,6 +196,7 @@ def run(params):
 
     if not os.path.isdir(params.save_path):
         os.makedirs(params.save_path)
+        
     if params.stitch and params.save_stitched:
         print('Saving visualization images to: {}'.format(params.save_path))
 
@@ -244,11 +246,15 @@ def run(params):
 
     for img_id in range(params.start_id, params.end_id + 1):
 
+        stitched = []
+
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
         src_img_fname = src_files[img_id]
         img_fname = os.path.basename(src_img_fname)
 
         img_fname_no_ext = os.path.splitext(img_fname)[0]
+
+        src_img = None
 
         if params.stitch or params.show_img:
             # src_img_fname = os.path.join(params.images_path, img_fname)
@@ -265,9 +271,9 @@ def run(params):
                 print('error: {}'.format(e))
                 sys.exit(1)
 
-        if not params.labels_path:
-            stitched = src_img
-        else:
+            stitched.append(src_img)
+
+        if params.labels_path:
             # labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
             labels_img_fname = src_labels_list[img_id]
 
@@ -302,7 +308,7 @@ def run(params):
             #     labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
 
             if params.stitch:
-                stitched = np.concatenate((src_img, labels_img), axis=1)
+                stitched.append(labels_img)
 
             if eval_mode:
                 # seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
@@ -383,7 +389,8 @@ def run(params):
                     seg_img = np.stack((seg_img, seg_img, seg_img), axis=2)
 
                 if params.stitch and params.stitch_seg:
-                    stitched = np.concatenate((stitched, seg_img), axis=1)
+                    stitched.append(seg_img)
+
                 if not params.stitch and params.show_img:
                     cv2.imshow('seg_img', seg_img)
             # else:
@@ -412,9 +419,11 @@ def run(params):
             # print('_fw_frac: {}'.format(_fw_frac))
 
         if params.stitch:
+            stitched = np.concatenate(stitched, axis=1)
             if params.save_stitched:
                 seg_save_path = os.path.join(params.save_path, '{}.{}'.format(img_fname_no_ext, params.out_ext))
                 cv2.imwrite(seg_save_path, stitched)
+
             if params.show_img:
                 cv2.imshow('stitched', stitched)
         else:
