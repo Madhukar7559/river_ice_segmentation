@@ -198,20 +198,16 @@ python36 datasets/build_ipsc_data.py db_split=g4s preprocess=1 root_dir=/data/ip
 
 <a id="test___build_data_"></a>
 ## test       @ build_data-->new_deeplab_ipsc
-
 python36 datasets/build_ipsc_data.py db_split=test preprocess=0 disable_seg=1 train_ratio=0
 
 <a id="2_class___test_build_dat_a_"></a>
 ### 2_class       @ test/build_data-->new_deeplab_ipsc
-
 python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_2_class n_classes=3 disable_seg=1 train_ratio=0
 
 
 <a id="5_class___test_build_dat_a_"></a>
 ### 5_class       @ test/build_data-->new_deeplab_ipsc
-
 python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_5_class n_classes=6 disable_seg=1 train_ratio=0
-
 
 
 <a id="hnasnet_"></a>
