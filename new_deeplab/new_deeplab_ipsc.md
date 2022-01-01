@@ -27,6 +27,7 @@
         - [5_class       @ g4s/build_data](#5_class___g4s_build_data_)
     - [test       @ build_data](#test___build_data_)
         - [2_class       @ test/build_data](#2_class___test_build_dat_a_)
+        - [5_class       @ test/build_data](#5_class___test_build_dat_a_)
 - [hnasnet](#hnasnet_)
     - [g1       @ hnasnet](#g1___hnasne_t_)
         - [2_class       @ g1/hnasnet](#2_class___g1_hnasnet_)
@@ -204,6 +205,12 @@ python36 datasets/build_ipsc_data.py db_split=test preprocess=0 disable_seg=1 tr
 ### 2_class       @ test/build_data-->new_deeplab_ipsc
 
 python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_2_class n_classes=3 disable_seg=1 train_ratio=0
+
+
+<a id="5_class___test_build_dat_a_"></a>
+### 5_class       @ test/build_data-->new_deeplab_ipsc
+
+python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/ipsc_5_class n_classes=6 disable_seg=1 train_ratio=0
 
 
 
@@ -399,7 +406,7 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:5_class:train
 
 <a id="on_test___g4s_hnasne_t_"></a>
 ### on_test       @ g4s/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:g4s:+++vis:test,_train_:b2 start=1
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:g4s:+++vis:test,_train_:b2:steps-50000 start=1
 
 <a id="resnet101_"></a>
 # resnet101

@@ -272,6 +272,7 @@ class NewDeeplabVisParams:
         self.vis_split = MultiPath()
 
         self.dataset = ''
+        self.vis_type = 'test'
         self.dataset_dir = ''
         self.db_root_dir = '/data'
         self.xml_output_file = ''
@@ -285,7 +286,7 @@ class NewDeeplabVisParams:
 
     def process(self):
         if not self.dataset_dir:
-            self.dataset_dir = linux_path(self.db_root_dir, 'tfrecord', self.dataset, 'test')
+            self.dataset_dir = linux_path(self.db_root_dir, 'tfrecord', self.dataset, self.vis_type)
 
         if not self.log_dir:
             self.log_dir = linux_path('log', self.train_info, self.model_info)
