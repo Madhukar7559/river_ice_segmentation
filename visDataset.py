@@ -277,7 +277,7 @@ def run(params):
             border_img = np.full_like(src_img, 255)
             border_img = border_img[:5, :, ...]
 
-        if params.labels_path:
+        if not params.no_labels:
             # labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
             labels_img_fname = src_labels_list[img_id]
 
