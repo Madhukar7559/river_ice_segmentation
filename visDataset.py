@@ -255,6 +255,7 @@ def run(params):
         img_fname_no_ext = os.path.splitext(img_fname)[0]
 
         src_img = None
+        border_img = None
 
         if params.stitch or params.show_img:
             # src_img_fname = os.path.join(params.images_path, img_fname)
@@ -272,6 +273,9 @@ def run(params):
                 sys.exit(1)
 
             stitched.append(src_img)
+
+            border_img = np.full_like(src_img, 255)
+            border_img = border_img[:5, :, ...]
 
         if params.labels_path:
             # labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
@@ -308,6 +312,7 @@ def run(params):
             #     labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
 
             if params.stitch:
+                stitched.append(border_img)
                 stitched.append(labels_img)
 
             if eval_mode:
@@ -389,6 +394,7 @@ def run(params):
                 seg_img_vis = raw_seg_to_rgb(seg_img, class_id_to_color)
 
                 if params.stitch and params.stitch_seg:
+                    stitched.append(border_img)
                     stitched.append(seg_img_vis)
 
                 if not params.stitch and params.show_img:

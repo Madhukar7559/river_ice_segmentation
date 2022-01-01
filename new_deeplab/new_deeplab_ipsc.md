@@ -75,6 +75,7 @@
     - [g4s       @ hnasnet](#g4s___hnasne_t_)
         - [5_class       @ g4s/hnasnet](#5_class___g4s_hnasne_t_)
             - [steps-50000       @ 5_class/g4s/hnasnet](#steps_50000___5_class_g4s_hnasne_t_)
+        - [on_test       @ g4s/hnasnet](#on_test___g4s_hnasne_t_)
 - [resnet101](#resnet101_)
     - [g2_4       @ resnet101](#g2_4___resnet10_1_)
         - [2_class       @ g2_4/resnet101](#2_class___g2_4_resnet101_)
@@ -94,6 +95,8 @@
             - [steps-50000       @ 2_class/g4/resnet101](#steps_50000___2_class_g4_resnet101_)
     - [g4s       @ resnet101](#g4s___resnet10_1_)
         - [5_class       @ g4s/resnet101](#5_class___g4s_resnet10_1_)
+    - [g3_4s       @ resnet101](#g3_4s___resnet10_1_)
+        - [5_class       @ g3_4s/resnet101](#5_class___g3_4s_resnet10_1_)
 
 <!-- /MarkdownTOC -->
 
@@ -394,6 +397,10 @@ python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:5_class:train
 #### steps-50000       @ 5_class/g4s/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:1,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:vis:g4s,_train_:b2:steps-50000 start=0
 
+<a id="on_test___g4s_hnasne_t_"></a>
+### on_test       @ g4s/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:5_class:train:g4s:+++vis:test,_train_:b2 start=1
+
 <a id="resnet101_"></a>
 # resnet101
 
@@ -458,4 +465,11 @@ python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:2_class:tra
 
 <a id="5_class___g4s_resnet10_1_"></a>
 ### 5_class       @ g4s/resnet101-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:5_class:train:vis:g4s,_train_:b2:steps-50000 start=0
+python36 new_deeplab_run.py cfg=gpu:1,_resnet_:atrous-6_12_18,_ipsc_:5_class:train:vis:g4s,_train_:b2:steps-50000 start=0
+
+<a id="g3_4s___resnet10_1_"></a>
+## g3_4s       @ resnet101-->new_deeplab_ipsc
+
+<a id="5_class___g3_4s_resnet10_1_"></a>
+### 5_class       @ g3_4s/resnet101-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_resnet_:atrous-6_12_18,_ipsc_:5_class:train:vis:g3_4s,_train_:b2:steps-50000 start=0
