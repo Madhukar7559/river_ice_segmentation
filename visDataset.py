@@ -34,6 +34,8 @@ class VisParams:
 
         self.multi_sequence_db = 0
         self.seg_on_subset = 0
+        self.add_border = 0
+        self.blended = 1
 
         self.log_root_dir = 'log'
         self.db_root_dir = '/data'
@@ -250,6 +252,8 @@ def run(params):
 
         # img_fname = '{:s}_{:d}.{:s}'.format(fname_templ, img_id + 1, img_ext)
         src_img_fname = src_files[img_id]
+        img_dir = os.path.dirname(src_img_fname)
+        seq_name = os.path.basename(img_dir)
         img_fname = os.path.basename(src_img_fname)
 
         img_fname_no_ext = os.path.splitext(img_fname)[0]
@@ -272,10 +276,11 @@ def run(params):
                 print('error: {}'.format(e))
                 sys.exit(1)
 
-            stitched.append(src_img)
+            if not params.blended:
+                stitched.append(src_img)
 
             border_img = np.full_like(src_img, 255)
-            border_img = border_img[:5, :, ...]
+            border_img = border_img[:, :5, ...]
 
         if not params.no_labels:
             # labels_img_fname = os.path.join(params.labels_path, img_fname_no_ext + '.{}'.format(params.labels_ext))
@@ -294,7 +299,7 @@ def run(params):
                 cv2.imshow('labels_img_orig', labels_img_orig)
 
             labels_img_orig, label_img_raw, class_to_ids = remove_fuzziness_in_mask(
-                labels_img_orig, n_classes, class_id_to_color, fuzziness=5)
+                labels_img_orig, n_classes, class_id_to_color, fuzziness=5, check_equality=0)
             labels_img = np.copy(labels_img_orig)
             # if params.normalize_labels:
             #     if params.selective_mode:
@@ -312,8 +317,17 @@ def run(params):
             #     labels_img = np.stack((labels_img, labels_img, labels_img), axis=2)
 
             if params.stitch:
-                stitched.append(border_img)
-                stitched.append(labels_img)
+                if params.blended:
+                    full_mask_gs = cv2.cvtColor(labels_img, cv2.COLOR_BGR2GRAY)
+                    mask_binary = full_mask_gs == 0
+                    labels_img_vis = (0.5 * src_img + 0.5 * labels_img).astype(np.uint8)
+                    labels_img_vis[mask_binary] = src_img[mask_binary]
+                else:
+                    labels_img_vis = labels_img
+
+                if params.add_border:
+                    stitched.append(border_img)
+                stitched.append(labels_img_vis)
 
             if eval_mode:
                 # seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
@@ -394,7 +408,14 @@ def run(params):
                 seg_img_vis = raw_seg_to_rgb(seg_img, class_id_to_color)
 
                 if params.stitch and params.stitch_seg:
-                    stitched.append(border_img)
+                    if params.blended:
+                        full_mask_gs = cv2.cvtColor(seg_img_vis, cv2.COLOR_BGR2GRAY)
+                        mask_binary = full_mask_gs == 0
+                        seg_img_vis = (0.5 * src_img + 0.5 * seg_img_vis).astype(np.uint8)
+                        seg_img_vis[mask_binary] = src_img[mask_binary]
+
+                    if params.add_border:
+                        stitched.append(border_img)
                     stitched.append(seg_img_vis)
 
                 if not params.stitch and params.show_img:
@@ -427,7 +448,7 @@ def run(params):
         if params.stitch:
             stitched = np.concatenate(stitched, axis=1)
             if params.save_stitched:
-                seg_save_path = os.path.join(params.save_path, '{}.{}'.format(img_fname_no_ext, params.out_ext))
+                seg_save_path = os.path.join(params.save_path, '{}_{}.{}'.format(seq_name, img_fname_no_ext, params.out_ext))
                 cv2.imwrite(seg_save_path, stitched)
 
             if params.show_img:
