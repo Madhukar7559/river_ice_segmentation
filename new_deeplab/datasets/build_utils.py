@@ -263,7 +263,7 @@ def raw_seg_to_rgb(raw_seg_img, class_to_color):
     return seg_img
 
 
-def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness):
+def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness, check_equality=1):
     """handle annoying nearby pixel values to each actual class label, e.g. 253, 254 for actual label 255"""
 
     seg_img_min = np.amin(seg_img)
@@ -324,16 +324,19 @@ def remove_fuzziness_in_mask(seg_img, n_classes, class_to_color, fuzziness):
 
         # print()
 
-    seg_img_rec = np.zeros_like(seg_img)
-    for _class_id, _col in class_to_color.items():
-        seg_img_rec[seg_img_raw == _class_id] = _col
+    if check_equality:
+        seg_img_rec = np.zeros_like(seg_img)
+        for _class_id, _col in class_to_color.items():
+            seg_img_rec[seg_img_raw == _class_id] = _col
 
-    if not np.array_equal(seg_img, seg_img_rec):
-        cv2.imshow('seg_img', seg_img)
-        cv2.imshow('seg_img_rec', seg_img_rec)
+        if not np.array_equal(seg_img, seg_img_rec):
+            print("seg_img and seg_img_rec are not equal")
 
-        cv2.waitKey(0)
-        raise AssertionError("seg_img and seg_img_rec are not equal")
+            cv2.imshow('seg_img', seg_img)
+            cv2.imshow('seg_img_rec', seg_img_rec)
+
+            cv2.waitKey(0)
+            raise AssertionError("seg_img and seg_img_rec are not equal")
 
     return seg_img_out, seg_img_raw, class_to_ids
 
