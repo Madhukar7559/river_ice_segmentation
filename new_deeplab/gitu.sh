@@ -9,4 +9,4 @@ else
 		git commit -m "$1"
 	fi
 fi
-git push
+git push origin master
