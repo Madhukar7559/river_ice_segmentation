@@ -27,7 +27,7 @@ class VisParams:
         self.selective_mode = 0
         self.show_img = 0
         self.start_id = 0
-        self.stitch = 1
+        self.stitch = 0
         self.stitch_seg = 1
         self.no_labels = 1
         self.class_info_path = 'data/classes_ice.txt'
@@ -161,8 +161,8 @@ def run(params):
             src_files += _src_files
             if not params.no_labels:
                 src_labels_list += _src_labels_list
-            else:
-                params.stitch = params.save_stitched = 1
+            # else:
+            #     params.stitch = params.save_stitched = 1
 
             total_frames += _total_frames
     else:
@@ -177,8 +177,8 @@ def run(params):
                 raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
                     total_frames, seg_total_frames))
             eval_mode = True
-        else:
-            params.stitch = params.save_stitched = 1
+        # else:
+        #     params.stitch = params.save_stitched = 1
 
     if params.end_id < params.start_id:
         params.end_id = total_frames - 1

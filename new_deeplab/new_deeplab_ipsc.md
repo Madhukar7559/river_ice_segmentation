@@ -296,7 +296,7 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:2_class:train
 
 <a id="nd03___steps_50000_2_class_g2_4_hnasnet_"></a>
 ##### nd03       @ steps-50000/2_class/g2_4/hnasnet-->new_deeplab_ipsc
-python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:2_class:train:g2_4:+++vis:nd03,_train_:b2:steps-50000 start=1
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:2_class:train:g2_4:+++vis:nd03,_train_:b2:steps-50000 start=2 vis.blended=1 vis.stitch=0
 
 
 <a id="patches___g2_4_hnasnet_"></a>
