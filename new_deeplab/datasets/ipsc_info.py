@@ -57,6 +57,7 @@ class IPSCPatchesInfo:
             self.g4 = irange(14, 19)
             self.g4s = irange(14, 18)
             self.test = [20, ]
+            self.nd03 = [21, ]
 
             self.g2_4 = self.g2 + self.g3 + self.g4
             self.g3_4 = self.g3 + self.g4
@@ -88,4 +89,7 @@ class IPSCPatchesInfo:
         19: ('Frame_251__roi_16627_11116_18727_12582', 125),
         # test
         20: ('Test_211208', 59),
+        # test
+        21: ('nd03', 414),
+
     }
