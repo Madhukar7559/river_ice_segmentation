@@ -153,7 +153,7 @@ def run(params):
                         raise AssertionError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
                             _total_frames, _seg_total_frames))
 
-                    seg_labels_list += _seg_labels_list
+                seg_labels_list += _seg_labels_list
 
                 seg_total_frames += _seg_total_frames
                 eval_mode = True
@@ -161,8 +161,8 @@ def run(params):
             src_files += _src_files
             if not params.no_labels:
                 src_labels_list += _src_labels_list
-            # else:
-            #     params.stitch = params.save_stitched = 1
+            else:
+                params.stitch = params.save_stitched = 1
 
             total_frames += _total_frames
     else:
@@ -177,8 +177,8 @@ def run(params):
                 raise SystemError('Mismatch between no. of frames in GT and seg labels: {} and {}'.format(
                     total_frames, seg_total_frames))
             eval_mode = True
-        # else:
-        #     params.stitch = params.save_stitched = 1
+        else:
+            params.stitch = params.save_stitched = 1
 
     if params.end_id < params.start_id:
         params.end_id = total_frames - 1
@@ -329,53 +329,34 @@ def run(params):
                     stitched.append(border_img)
                 stitched.append(labels_img_vis)
 
-            if eval_mode:
-                # seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
-                seg_img_fname = seg_labels_list[img_id]
+        if eval_mode:
+            # seg_img_fname = os.path.join(params.seg_path, img_fname_no_ext + '.{}'.format(params.seg_ext))
+            seg_img_fname = seg_labels_list[img_id]
 
-                seg_img = cv2.imread(seg_img_fname)
-                if seg_img is None:
-                    raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
+            seg_img = cv2.imread(seg_img_fname)
+            if seg_img is None:
+                raise SystemError('Segmentation image could not be read from: {}'.format(seg_img_fname))
 
-                # seg_img = convert_to_raw_mask(seg_img, n_classes, seg_img_fname)
+            # seg_img = convert_to_raw_mask(seg_img, n_classes, seg_img_fname)
 
-                if len(seg_img.shape) == 3:
-                    seg_img = np.squeeze(seg_img[:, :, 0])
+            if len(seg_img.shape) == 3:
+                seg_img = np.squeeze(seg_img[:, :, 0])
 
+            seg_height, seg_width = seg_img.shape
+
+            if seg_width == 2 * src_width or seg_width == 3 * src_width:
+                _start_id = seg_width - src_width
+                seg_img = seg_img[:, _start_id:]
+
+
+            if not params.no_labels:
                 eval_cl, _ = eval.extract_classes(seg_img)
                 gt_cl, _ = eval.extract_classes(label_img_raw)
-
-                # if seg_img.max() > n_classes - 1:
-                #     seg_img = (seg_img.astype(np.float64) / label_diff).astype(np.uint8)
-
-                seg_height, seg_width = seg_img.shape
-
-                if seg_width == 2 * src_width or seg_width == 3 * src_width:
-                    _start_id = seg_width - src_width
-                    seg_img = seg_img[:, _start_id:]
-
-                # print('seg_img.shape: ', seg_img.shape)
-                # print('labels_img_orig.shape: ', labels_img_orig.shape)
 
                 pix_acc[img_id] = eval.pixel_accuracy(seg_img, label_img_raw, class_ids)
                 _acc, mean_acc[img_id] = eval.mean_accuracy(seg_img, label_img_raw, class_ids, return_acc=1)
                 _IU, mean_IU[img_id] = eval.mean_IU(seg_img, label_img_raw, class_ids, return_iu=1)
                 fw_IU[img_id], _fw = eval.frequency_weighted_IU(seg_img, label_img_raw, class_ids, return_freq=1)
-                # try:
-                #     fw_sum += _fw
-                # except ValueError as e:
-                #     print('fw_sum: {}'.format(fw_sum))
-                #     print('_fw: {}'.format(_fw))
-                #
-                #     eval_cl, _ = eval.extract_classes(seg_img)
-                #     gt_cl, _ = eval.extract_classes(label_img_raw)
-                #     cl = np.union1d(eval_cl, gt_cl)
-                #
-                #     print('cl: {}'.format(cl))
-                #     print('eval_cl: {}'.format(eval_cl))
-                #     print('gt_cl: {}'.format(gt_cl))
-                #
-                #     raise ValueError(e)
 
                 for _class_name, _, base_ids in composite_classes:
                     _acc_list = np.asarray(list(_acc.values()))
@@ -405,45 +386,21 @@ def run(params):
 
                 # seg_img = (seg_img * label_diff).astype(np.uint8)
 
-                seg_img_vis = raw_seg_to_rgb(seg_img, class_id_to_color)
+        seg_img_vis = raw_seg_to_rgb(seg_img, class_id_to_color)
 
-                if params.stitch and params.stitch_seg:
-                    if params.blended:
-                        full_mask_gs = cv2.cvtColor(seg_img_vis, cv2.COLOR_BGR2GRAY)
-                        mask_binary = full_mask_gs == 0
-                        seg_img_vis = (0.5 * src_img + 0.5 * seg_img_vis).astype(np.uint8)
-                        seg_img_vis[mask_binary] = src_img[mask_binary]
+        if params.stitch and params.stitch_seg:
+            if params.blended:
+                full_mask_gs = cv2.cvtColor(seg_img_vis, cv2.COLOR_BGR2GRAY)
+                mask_binary = full_mask_gs == 0
+                seg_img_vis = (0.5 * src_img + 0.5 * seg_img_vis).astype(np.uint8)
+                seg_img_vis[mask_binary] = src_img[mask_binary]
 
-                    if params.add_border:
-                        stitched.append(border_img)
-                    stitched.append(seg_img_vis)
+            if params.add_border:
+                stitched.append(border_img)
+            stitched.append(seg_img_vis)
 
-                if not params.stitch and params.show_img:
-                    cv2.imshow('seg_img', seg_img_vis)
-            # else:
-                # _, _fw = eval.frequency_weighted_IU(label_img_raw, label_img_raw, return_freq=1)
-                # try:
-                #     fw_sum += _fw
-                # except ValueError as e:
-                #     print('fw_sum: {}'.format(fw_sum))
-                #     print('_fw: {}'.format(_fw))
-                #
-                #     gt_cl, _ = eval.extract_classes(label_img_raw)
-                #     print('gt_cl: {}'.format(gt_cl))
-                #     for k in range(n_classes):
-                #         if k not in gt_cl:
-                #             _fw.insert(k, 0)
-                #
-                #     fw_sum += _fw
-
-            # _fw_total = np.sum(_fw)
-
-            # print('_fw: {}'.format(_fw))
-            # print('_fw_total: {}'.format(_fw_total))
-
-            # _fw_frac = np.array(_fw) / float(_fw_total)
-
-            # print('_fw_frac: {}'.format(_fw_frac))
+        if not params.stitch and params.show_img:
+            cv2.imshow('seg_img', seg_img_vis)
 
         if params.stitch:
             stitched = np.concatenate(stitched, axis=1)

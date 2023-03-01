@@ -39,6 +39,7 @@
         - [steps-500       @ g1/hnasnet](#steps_500___g1_hnasnet_)
     - [g2_4       @ hnasnet](#g2_4___hnasne_t_)
         - [1_class       @ g2_4/hnasnet](#1_class___g2_4_hnasnet_)
+                - [nd03       @ 1_class/g2_4/hnasnet](#nd03___1_class_g2_4_hnasnet_)
         - [2_class       @ g2_4/hnasnet](#2_class___g2_4_hnasnet_)
             - [steps-100       @ 2_class/g2_4/hnasnet](#steps_100___2_class_g2_4_hnasnet_)
             - [steps-200       @ 2_class/g2_4/hnasnet](#steps_200___2_class_g2_4_hnasnet_)
@@ -218,12 +219,11 @@ python36 datasets/build_ipsc_data.py db_split=test preprocess=0 root_dir=/data/i
 
 <a id="nd03___build_data_"></a>
 ## nd03       @ build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=nd03 preprocess=0 disable_seg=1 train_ratio=0
+python36 datasets/build_ipsc_data.py db_split=nd03 preprocess=0 disable_seg=1 train_ratio=0 n_classes=2 class_info_path=../data/classes_ipsc.txt
 
 <a id="2_class___nd03_build_dat_a_"></a>
 ### 2_class       @ nd03/build_data-->new_deeplab_ipsc
-python36 datasets/build_ipsc_data.py db_split=nd03 preprocess=0 root_dir=/data/ipsc_2_class n_classes=3 disable_seg=1 train_ratio=0
-
+python36 datasets/build_ipsc_data.py db_split=nd03 preprocess=0 root_dir=/data/ipsc_2_class n_classes=3 disable_seg=1 train_ratio=0 class_info_path=../data/classes_ipsc_2_class.txt
 
 <a id="5_class___nd03_build_dat_a_"></a>
 ### 5_class       @ nd03/build_data-->new_deeplab_ipsc
@@ -257,6 +257,10 @@ python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:2_class:train
 <a id="1_class___g2_4_hnasnet_"></a>
 ### 1_class       @ g2_4/hnasnet-->new_deeplab_ipsc
 python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:vis:g2_4,_train_:b2 start=2
+
+<a id="nd03___1_class_g2_4_hnasnet_"></a>
+##### nd03       @ 1_class/g2_4/hnasnet-->new_deeplab_ipsc
+python36 new_deeplab_run.py cfg=gpu:0,_hnas_:atrous-6_12_18,_ipsc_:train:g2_4:+++vis:nd03,_train_:b2 start=1
 
 <a id="2_class___g2_4_hnasnet_"></a>
 ### 2_class       @ g2_4/hnasnet-->new_deeplab_ipsc
