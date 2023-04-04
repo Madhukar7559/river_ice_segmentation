@@ -12,51 +12,47 @@ rec_prec_mode = 0: plot each column as one line
 rec_prec_mode > 0 and thresh_mode > 0: plot triplets of columns
     conf_thresh: column 1, rec: column 2, prec: column 3
 
-    rec_prec_mode = 1 / thresh_mode = 3
-        rec on y axis and prec on x axis
-        first line: plot title + legend for each line separated by spaces
-                    or
-        first line: plot title
-        second line: legend for each line separated by spaces / tabs
+    thresh_mode = 3
+		rec_prec_mode = 1
+			rec on y axis and prec on x axis
+			first line: plot title + legend for each line separated by spaces
+						or
+			first line: plot title
+			second line: legend for each line separated by spaces / tabs
 
-    rec_prec_mode = 2 / thresh_mode = 3
-        rec on x axis and prec on y axis
+		rec_prec_mode = 2
+			rec on x axis and prec on y axis
 
-    plot_title_override and y_label_override for custom values
+    	plot_title_override and y_label_override for custom values
 
     thresh_mode 1: thresh vs rec
     thresh_mode 2: thresh vs prec
 
-rec_prec_mode = 2 / thresh_mode = 0: plot pairs of columns - first col on x axis, second on y axis
+thresh_mode = 0: 
+	rec_prec_mode = 2	
+		plot pairs of columns - first col on x axis, second on y axis
 %}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if ~exist('no_clear', 'var')
-    clear all;
+    clearvars -except prev_fname;
 end
 
-rec_prec_mode = 2;
+%Get input filename from clipboard
+cb = 1;
+paper = 1;
+
+rec_prec_mode = 1;
 thresh_mode = 3;
 % 1: normalize by max_x 2: normalize by norm_factor
 enable_auc = 1;
 norm_factor = 100;
 
-adjust_y = 1;
+adjust_y = 0;
 sort_x = 1;
 
-bar_plot = 0;
+bar_plot = 1;
 bar_vals = 1;
-bar_vals_font_size=20;
-
-hide_grid = 1;
-
-colRGBDefs;
-
-fname = 'combined_summary.txt';
-out_dir='C:/UofA/PhD/Reports/plots';
-line_width = 3;
-enable_markers = 0;
-
-enable_ap = 0;
+bar_vals_font_size=12;
 
 y_limits = [0, 100];
 enable_y_label = 1;
@@ -68,12 +64,41 @@ add_ylabel_to_title = 0;
 transparent_bkg = 1;
 transparent_legend = 1;
 white_text = 1;
+grey_text = 0;
 
 axes_font_size = 24;
-legend_font_size = 30;
+legend_font_size = 24;
 title_font_size = 30;
 % title_interpreter = 'tex';
 title_interpreter = 'none';
+
+hide_grid = 1;
+
+colRGBDefs;
+
+fname = 'combined_summary.txt';
+
+if cb
+	fname = clipboard('paste')
+	if isfile(fname)
+		prev_fname = fname
+	else
+		fname = prev_fname
+	end
+end
+
+out_dir='C:/UofA/PhD/Reports/plots';
+line_width = 3;
+enable_markers = 0;
+
+enable_ap = 0;
+
+if paper
+	transparent_bkg=0;
+	transparent_legend=0;
+	white_text=0;
+	grey_text=0;
+end
 
 mode = 0;
 if mode == 0
@@ -217,24 +242,31 @@ end
 
 if bar_plot
     rec_prec_mode=0;
+	y_label_override='metric(%)';
 end
 
 
 set(0,'DefaultAxesFontSize', axes_font_size);
 set(0,'DefaultAxesFontWeight', 'bold');
 
-if white_text
+if grey_text
+    set(0,'DefaultAxesXColor', col_rgb{strcmp(col_names,'light_slate_gray')});
+	set(0,'DefaultAxesYColor', col_rgb{strcmp(col_names,'light_slate_gray')});
+elseif white_text
+    set(0,'DefaultAxesXColor', col_rgb{strcmp(col_names,'white')});
     set(0,'DefaultAxesXColor', col_rgb{strcmp(col_names,'white')});
     set(0,'DefaultAxesYColor', col_rgb{strcmp(col_names,'white')});
+else
+	set(0,'DefaultAxesXColor', col_rgb{strcmp(col_names,'black')});
+    set(0,'DefaultAxesXColor', col_rgb{strcmp(col_names,'black')});
+    set(0,'DefaultAxesYColor', col_rgb{strcmp(col_names,'black')});
 end
 
-if white_text
-    set(0,'DefaultAxesLineWidth', 2.0);
-    set(0,'DefaultAxesGridLineStyle', ':');    
+set(0,'DefaultAxesLineWidth', 2.0);
+% set(0,'DefaultAxesGridLineStyle', ':');    
 %     set(0,'DefaultAxesGridAlpha', 1.0);
 %     set(0, 'DefaultAxesGridColor', col_rgb{strcmp(col_names,'white')});
 %     set(0,'DefaultAxesMinorGridColor', col_rgb{strcmp(col_names,'white')});
-end
 
  
 
@@ -262,6 +294,7 @@ if rec_prec_mode
             thresh_data = k.data(:, 3*(line_id-1)+1);
             rec_data = k.data(:, 3*(line_id-1)+2);
             prec_data = k.data(:, 3*(line_id-1)+3);
+
             if thresh_mode==1
                 x_data(:, line_id) = thresh_data;
                 y_data(:, line_id) = rec_data;
@@ -273,23 +306,13 @@ if rec_prec_mode
                 rec_header = k.colheaders{2};
                 prec_header = k.colheaders{3};
 
-                if strcmp(rec_header, 'TP')
-                    if rec_prec_mode==2
-                        x_data(:, line_id) = prec_data;
-                        y_data(:, line_id) = rec_data;
-                    else
-                        x_data(:, line_id) = rec_data;
-                        y_data(:, line_id) = prec_data;
-                    end
-                else
-                    if rec_prec_mode==2
-                        x_data(:, line_id) = rec_data;
-                        y_data(:, line_id) = prec_data;
-                    else
-                        x_data(:, line_id) = prec_data;
-                        y_data(:, line_id) = rec_data;
-                    end
-                end
+				if rec_prec_mode==2
+					x_data(:, line_id) = rec_data;
+					y_data(:, line_id) = prec_data;
+				else
+					x_data(:, line_id) = prec_data;
+					y_data(:, line_id) = rec_data;
+				end
             else
                 error('Invalid thresh_mode: %d', thresh_mode)
             end
@@ -302,13 +325,60 @@ if rec_prec_mode
         if enable_auc
             X = x_data(:, line_id);
             Y = y_data(:, line_id);
-            max_x = max(X);
 
-            auc = trapz(X,Y);
+			valid = isfinite(Y);
+
+			X = X(valid);
+			Y = Y(valid);	
+								
+			max_x = max(X);
+			min_x = min(X);
+
+		
             if enable_auc==1
-                norm_auc = auc / max_x;
-            else                
-                norm_auc = auc / norm_factor
+                [unique_X, unique_X_idx] = unique(X, 'stable');
+                [unique_Y, unique_Y_idx] = unique(Y, 'stable');
+
+
+                unique_idx = intersect(unique_X_idx,unique_Y_idx);
+
+                X_u = X(unique_idx);
+                Y_u = Y(unique_idx);
+
+				% XY = cat(2, X, Y);
+				% XY_u = unique(XY,'rows');
+				% X_u = XY_u(:, 1);
+				% Y_u = XY_u(:, 2);
+
+				X_i = X_u;
+				Y_i = Y_u;
+
+				if max_x < 100
+					x_i = linspace(max_x+0.01, 100, 50)';
+					y_i = interp1(X_u,Y_u,x_i,'linear','extrap');
+					X_i = cat(1, X_i, x_i);
+					Y_i = cat(1, Y_i, y_i);
+				end
+
+				if min_x > 0
+					x_i = linspace(0, min_x-0.01, 50)';
+					y_i = interp1(X_u,Y_u,x_i,'linear','extrap');
+					X_i = cat(1, x_i, X_i);
+					Y_i = cat(1, y_i, Y_i);
+				end
+
+				figure;
+				plot(X_i, Y_i);
+
+				auc = trapz(X_i,Y_i);
+
+                norm_auc = auc / norm_factor;
+			elseif enable_auc==2
+				auc = trapz(X,Y);
+				range_x = max_x - min_x
+                norm_auc = auc / range_x;
+			else
+				error('invalid enable_auc')
             end
             if norm_auc < 0
                 norm_auc = -norm_auc;
@@ -342,11 +412,11 @@ if rec_prec_mode
             y_label = prec_label;
         elseif thresh_mode==3
             if rec_prec_mode==2
+				x_label = rec_label;
+                y_label = prec_label;
+            else
                 x_label = prec_label;
                 y_label = rec_label;
-            else
-                x_label = rec_label;
-                y_label = prec_label;
             end
 
         else
@@ -487,7 +557,13 @@ if bar_plot
         for k1 = 1:size(y1,2)
             ctr(k1,:) = bsxfun(@plus, bar_plt(1).XData, bar_plt(k1).XOffset');    % Note: ‘XOffset’ Is An Undocumented Feature, This Selects The ‘bar’ Centres
             ydt(k1,:) = bar_plt(k1).YData;                                     % Individual Bar Heights
-            text(ctr(k1,:), ydt(k1,:), sprintfc('%.1f', ydt(k1,:)), 'HorizontalAlignment','center', 'VerticalAlignment','bottom', 'FontSize', bar_vals_font_size, 'Color','w', 'FontWeight', 'bold')
+			if white_text
+				text_col = 'w';
+			else
+				text_col = 'k';
+			end
+
+            text(ctr(k1,:), ydt(k1,:), sprintfc('%.1f', ydt(k1,:)), 'HorizontalAlignment','center', 'VerticalAlignment','bottom', 'FontSize', bar_vals_font_size, 'Color',text_col, 'FontWeight', 'bold')
         end
 		h=gca; h.XAxis.TickLength = [0 0];
     end
@@ -591,9 +667,14 @@ hold off
 h_legend=legend(final_legend, 'Interpreter','none');
 set(h_legend,'FontSize', legend_font_size);
 set(h_legend,'FontWeight','bold');
-if white_text
+set(h_legend,'LineWidth', 1.0);
+
+if grey_text
+    set(h_legend,'TextColor', col_rgb{strcmp(col_names,'light_slate_gray')});
+elseif white_text
     set(h_legend,'TextColor', col_rgb{strcmp(col_names,'white')});
-    set(h_legend,'LineWidth', 1.0);
+else
+	set(h_legend,'TextColor', col_rgb{strcmp(col_names,'black')});
 end
 %     grid on;   
 
@@ -632,6 +713,7 @@ if exist('xtick_labels', 'var')
             xtick_label_col='black';
         end
 
+
 %         
 %         if contains(curr_x_label, '@')
 %             split_x_label = split(curr_x_label, '@');
@@ -641,7 +723,8 @@ if exist('xtick_labels', 'var')
 %             new_x_label = curr_x_label;
 %             xtick_label_col='black';
 %         end
-%         
+
+		new_x_label = strrep(new_x_label,'_','-');
         xtick_labels{x_label_id} = new_x_label;
         xtick_label_cols{x_label_id} = col_rgb{strcmp(col_names,xtick_label_col)};        
     end
@@ -675,10 +758,12 @@ catch
 end
 % ylabel('metric value');
 if exist('y_label_override', 'var')
-    y_label = y_label_override
+    y_label = y_label_override;
 end
 y_label = strtrim(y_label);
 if enable_y_label
+	% y_label=y_label{1};
+	y_label=sprintf("%s (%%)", y_label);
     ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
 end
 
@@ -694,6 +779,8 @@ end
 
 x_label = strtrim(x_label);
 if enable_x_label
+	% x_label=x_label{1};
+	x_label=sprintf('%s (%%)', x_label);
     xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
 end
 if colored_x_label
@@ -717,9 +804,15 @@ end
 plot_title = strtrim(plot_title);
 title_obj = title(plot_title, 'fontsize',title_font_size, 'FontWeight','bold',...
     'Interpreter', title_interpreter);    
-if white_text
+
+if grey_text
+    set(title_obj,'Color', col_rgb{strcmp(col_names,'light_slate_gray')});
+elseif white_text
     set(title_obj,'Color', col_rgb{strcmp(col_names,'white')});
+else
+    set(title_obj,'Color', col_rgb{strcmp(col_names,'black')});
 end
+
 if transparent_bkg
     set(gca,'color','none')
     if transparent_legend
@@ -731,18 +824,21 @@ if hide_grid
     grid off;
 end
 % out_path=sprintf('%s/%s.png', out_dir, plot_title)
+if paper
+	fprintf('export_fig %s/%s.eps\n', out_dir, plot_title);
+else	
+	fprintf('export_fig %s/%s.eps -transparent\n', out_dir, plot_title);
+	fprintf('export_fig %s/%s.eps -transparent -painters\n', out_dir, plot_title);
+end
 
-fprintf('export_fig %s/%s.png -transparent\n', out_dir, plot_title);
-fprintf('export_fig %s/%s.png -transparent -painters\n', out_dir, plot_title);
 
 
-
-%     if white_text
-%         ax = gca;
-%         set(0,'DefaultAxesGridAlpha', 1.0);
-%         set(0, 'DefaultAxesGridColor', col_rgb{strcmp(col_names,'white')});
-%         set(0,'DefaultAxesMinorGridColor', col_rgb{strcmp(col_names,'white')});
-%     end
+% if white_text
+% 	ax = gca;
+% 	set(0,'DefaultAxesGridAlpha', 1.0);
+% 	set(0, 'DefaultAxesGridColor', col_rgb{strcmp(col_names,'white')});
+% 	set(0,'DefaultAxesMinorGridColor', col_rgb{strcmp(col_names,'white')});
+% end
 
 
 

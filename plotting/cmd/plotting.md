@@ -11,3 +11,5 @@
 5. run plot_summary with
     rec_prec_mode = 2;
     thresh_mode = 3;
+6. plots go to:
+    Z:\UofA\PhD\Reports\plots
