@@ -39,18 +39,20 @@ end
 
 %Get input filename from clipboard
 cb = 1;
-paper = 1;
+paper = 0;
+metric='rec_prec';
+% metric='tp_fp_uex'
 
-rec_prec_mode = 1;
+rec_prec_mode = 2;
 thresh_mode = 3;
 % 1: normalize by max_x 2: normalize by norm_factor
-enable_auc = 1;
+enable_auc = 2;
 norm_factor = 100;
 
-adjust_y = 0;
+adjust_y = 1;
 sort_x = 1;
 
-bar_plot = 1;
+bar_plot = 0;
 bar_vals = 1;
 bar_vals_font_size=12;
 
@@ -80,8 +82,11 @@ fname = 'combined_summary.txt';
 
 if cb
 	fname = clipboard('paste')
-	if isfile(fname)
-		prev_fname = fname
+	if isdir(fname)
+		fname = sprintf('%s/%s.csv', fname, metric);
+		prev_fname = fname;
+	elseif isfile(fname)
+		prev_fname = fname;
 	else
 		fname = prev_fname
 	end
@@ -242,7 +247,8 @@ end
 
 if bar_plot
     rec_prec_mode=0;
-	y_label_override='metric(%)';
+	y_label_override='metric';
+	enable_x_label=0;
 end
 
 
@@ -273,7 +279,7 @@ set(0,'DefaultAxesLineWidth', 2.0);
 k = importdata(fname);
 
 if rec_prec_mode
-    n_items = size(k.data, 1)
+    n_items = size(k.data, 1);
     
     if thresh_mode
         n_lines = int32(size(k.data, 2) / 3);
@@ -287,6 +293,12 @@ if rec_prec_mode
     fileID = fopen(fname,'r');
     plot_title = fscanf(fileID,'%s', 1);
     plot_legend = cell(n_lines, 1);
+
+	if enable_auc
+		auc_out_path = sprintf('%s.auc%d', fname, enable_auc)
+		auc_out_fid = fopen(auc_out_path,'w');
+	end
+
     for line_id = 1:n_lines
         plot_legend{line_id} = fscanf(fileID,'%s', 1);
         
@@ -367,15 +379,15 @@ if rec_prec_mode
 					Y_i = cat(1, y_i, Y_i);
 				end
 
-				figure;
-				plot(X_i, Y_i);
+				% figure;
+				% plot(X_i, Y_i);
 
 				auc = trapz(X_i,Y_i);
 
                 norm_auc = auc / norm_factor;
 			elseif enable_auc==2
 				auc = trapz(X,Y);
-				range_x = max_x - min_x
+				range_x = max_x - min_x;
                 norm_auc = auc / range_x;
 			else
 				error('invalid enable_auc')
@@ -383,8 +395,8 @@ if rec_prec_mode
             if norm_auc < 0
                 norm_auc = -norm_auc;
             end
-            plot_legend{line_id} = sprintf('%s (%.2f)', plot_legend{line_id}, norm_auc);
-            
+			fprintf(auc_out_fid,'%s\t%.2f\n', plot_legend{line_id}, norm_auc);
+            plot_legend{line_id} = sprintf('%s (%.2f)', plot_legend{line_id}, norm_auc);            
         end
     end
     if enable_ap
@@ -399,6 +411,9 @@ if rec_prec_mode
 
     % plot_legend
     fclose(fileID);
+	if enable_auc
+    	fclose(auc_out_fid);
+	end
 
     if thresh_mode
         thresh_label = k.colheaders(1);
@@ -548,7 +563,26 @@ end
 %     line_styles
 % n_lines
 
+figure_handle = figure;
+propertyeditor(figure_handle,'on');
+
 if bar_plot
+	if adjust_y & exist('y_limits', 'var')
+		n_groups = size(k.data, 1);
+		n_bars = size(k.data, 2);
+		for k1 = 1:n_groups
+			datum = k.data(k1, :);
+			max_datum = max(datum);
+			max_y_lim = y_limits(2);
+			if max_datum > max_y_lim;
+				mult_ratio = max_datum / max_y_lim;
+				mult_ratio_int = ceil(mult_ratio/10)*10;
+				k.data(k1, :) = datum / mult_ratio_int;
+				xtick_labels{k1} = sprintf('%s (/%d)', xtick_labels{k1}, mult_ratio_int);
+			end
+		end
+	end
+
     bar_plt = bar(k.data);
     % bar_child=get(bar_plt,'Children');
 
@@ -567,9 +601,6 @@ if bar_plot
         end
 		h=gca; h.XAxis.TickLength = [0 0];
     end
-else
-	figure_handle = figure;
-	propertyeditor(figure_handle,'on');
 end
 
 % Y_as = k.data ;
@@ -600,12 +631,12 @@ for i = 1:n_lines
 		y_datum = y_datum(idx);
 	end
 
-	if adjust_y & exist('y_limits', 'var')
+	if ~bar_plot & adjust_y & exist('y_limits', 'var')
 		max_y_datum = max(y_datum);
 		max_y_lim = y_limits(2);
-		if max_y_datum > max_y_lim
-			mult_ratio = max_y_datum / max_y_lim
-			mult_ratio_int = ceil(mult_ratio/10)*10
+		if max_y_datum > max_y_lim;
+			mult_ratio = max_y_datum / max_y_lim;
+			mult_ratio_int = ceil(mult_ratio/10)*10;
 			y_datum = y_datum / mult_ratio_int;
 			plot_legend{i} = sprintf('%s (/%d)', plot_legend{i}, mult_ratio_int);
 		end
@@ -759,13 +790,14 @@ end
 % ylabel('metric value');
 if exist('y_label_override', 'var')
     y_label = y_label_override;
+else
+	y_label = strtrim(y_label);
+	%y_label=sprintf("%s (%%)", y_label);
 end
-y_label = strtrim(y_label);
 if enable_y_label
-	% y_label=y_label{1};
-	y_label=sprintf("%s (%%)", y_label);
-    ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
+	ylabel(y_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
 end
+
 
 %     ax = gca;
 %     outerpos = ax.OuterPosition;
@@ -780,7 +812,7 @@ end
 x_label = strtrim(x_label);
 if enable_x_label
 	% x_label=x_label{1};
-	x_label=sprintf('%s (%%)', x_label);
+	% x_label=sprintf('%s (%%)', x_label);
     xlabel(x_label, 'fontsize',20, 'FontWeight','bold', 'Interpreter', 'none');
 end
 if colored_x_label
@@ -825,10 +857,12 @@ if hide_grid
 end
 % out_path=sprintf('%s/%s.png', out_dir, plot_title)
 if paper
-	fprintf('export_fig %s/%s.eps\n', out_dir, plot_title);
+	fprintf('export_fig %s/%s.png\n', out_dir, plot_title);
+	set(gcf,'color','w');
 else	
-	fprintf('export_fig %s/%s.eps -transparent\n', out_dir, plot_title);
-	fprintf('export_fig %s/%s.eps -transparent -painters\n', out_dir, plot_title);
+	fprintf('export_fig %s/%s.png -transparent\n', out_dir, plot_title);
+	fprintf('export_fig %s/%s.png -transparent -painters\n', out_dir, plot_title);
+	set(gcf,'color','k');
 end
 
 

@@ -13,9 +13,10 @@ class Params:
 
     def __init__(self):
         """1-based ID of files within "in_dir" in lexical order"""
-        self.list_path_id = 3
+        self.list_from_cb = 1
+        self.list_path_id = 21
 
-        # self.cfg = 'tp_fp_rec_prec'
+        self.cfg = 'tp_fp_rec_prec'
         # self.cfg = 'tp_fp'
         # self.cfg = 'roc_auc'
         # self.cfg = 'rec_prec'
@@ -23,12 +24,15 @@ class Params:
         # self.cfg = 'roc_auc_iw'
         # self.cfg = 'auc_iw'
 
-        self.cfg = 'cls_summary:all'
-
+        # self.cfg = 'cls_summary:all'
+        # self.cfg = 'cls_summary:all-count'
+        # self.cfg = 'cls_summary:n_fp_fn'
         # self.cfg = 'cls_summary:f1_tp_to_fp'
         # self.cfg = 'cls_summary:rec_prec'
         # self.cfg = 'cls_summary:tp_tn'
         # self.cfg = 'cls_summary:count'
+
+        # self.cfg = 'cls_summary:gt'
 
         self.cfg_ext = 'cfg'
         self.cfg_root = 'cfg'
@@ -70,8 +74,6 @@ class Params:
         """
         self.axis = 0
 
-        self.clipboard = 0
-
         self.csv_metrics = [
             # 'tp_fp_cls',
 
@@ -92,27 +94,33 @@ def linux_path(*args, **kwargs):
     return os.path.join(*args, **kwargs).replace(os.sep, '/')
 
 
+def remove_repeated_substr(in_str, sep='_', other_seps=(':', '-')):
+    for other_sep in other_seps:
+        in_str = in_str.replace(other_sep, sep)
+
+    words = in_str.split('_')
+    out_str = sep.join(sorted(set(words), key=words.index))
+
+    return out_str
+
+
 def main():
     params = Params()
     paramparse.process(params)
 
     in_dirs = []
-    if params.clipboard:
-        try:
-            from Tkinter import Tk
-        except ImportError:
-            from tkinter import Tk
-        try:
-            in_txt = Tk().clipboard_get()  # type: str
-        except BaseException as e:
-            print('Tk().clipboard_get() failed: {}'.format(e))
-        else:
-            in_dirs = [k.strip() for k in in_txt.split('\n') if k.strip() and not k.startswith('#')]
 
     time_stamp = datetime.now().strftime("%y%m%d_%H%M%S")
     out_name = time_stamp
 
-    if params.list_path_id > 0:
+    if params.list_from_cb > 0:
+        try:
+            from Tkinter import Tk
+        except ImportError:
+            from tkinter import Tk
+        list_path = Tk().clipboard_get()
+        list_path = linux_path(list_path)
+    elif params.list_path_id > 0:
         list_files = glob.glob(os.path.join(params.list_dir, f'**/*.{params.list_ext}'), recursive=True)
         list_files = sorted(list_files)
         list_path = list_files[params.list_path_id - 1]
@@ -129,22 +137,28 @@ def main():
         in_dirs = [k.strip() for k in in_dirs if k.strip() and not k.startswith('#')]
 
         in_name = os.path.splitext(os.path.basename(list_path))[0]
-        out_name = f'{out_name}_{in_name}'
-
         if params.cfg:
-            out_name = f'{out_name}_{params.cfg}'
+            in_name = f'{in_name}_{params.cfg}'
 
+        out_name = f'{out_name}_{in_name}'
     else:
         in_name = ''
 
     filter_info_list = []
     models = []
+    prev_in_dir = None
     for in_dir_id, in_dir in enumerate(in_dirs):
         filter_info = model = None
         if '\t' in in_dir:
             model, in_dir = in_dir.split('\t')
         if '::' in in_dir:
             in_dir, filter_info = in_dir.split('::')
+
+        if in_dir == '__':
+            assert prev_in_dir is not None, "repeated in_dir cannot be on first line"
+            in_dir = prev_in_dir
+        else:
+            prev_in_dir = in_dir
 
         if model is None:
             model = os.path.basename(in_dir)
@@ -207,8 +221,6 @@ def main():
 
                 metric_df = pd.read_csv(csv_path, sep='\t')
 
-                metric_df = metric_df.drop_duplicates()
-
                 if filter_col is not None:
                     if exclude_mode:
                         metric_df = metric_df.loc[~metric_df[filter_col].str.contains(filter_str)].reset_index(
@@ -222,7 +234,13 @@ def main():
                 if params.sort_by:
                     metric_df = metric_df.sort_values(params.sort_by).reset_index(drop=True)
 
+                metric_df = metric_df.drop_duplicates().reset_index(drop=True)
+
                 if params.max_by:
+                    max_by_col = metric_df[[params.max_by, ]]
+                    inf_idx = max_by_col.index[np.isinf(max_by_col).any(axis=1)]
+                    if inf_idx.size > 0:
+                        metric_df[params.max_by][inf_idx] = np.nan
                     max_idx = metric_df[params.max_by].idxmax()
                     max_row = metric_df.iloc[[max_idx]]
 
@@ -255,12 +273,18 @@ def main():
     if params.iw:
         out_name = f'{out_name}-iw'
 
-    out_name = out_name.replace(':', '-')
+    out_name = remove_repeated_substr(out_name)
+    in_name = remove_repeated_substr(in_name)
 
     out_dir = linux_path(params.out_dir, out_name)
     os.makedirs(out_dir, exist_ok=True)
 
     print(f'out_dir: {out_dir}')
+
+    abs_out_dir = os.path.abspath(out_dir)
+
+    import pyperclip
+    pyperclip.copy(abs_out_dir)
 
     if params.csv_mode:
         if params.iw:
@@ -383,9 +407,11 @@ def main():
             for metric_id, metric in enumerate(params.csv_metrics):
                 # axis_0_txt += f'\n{metric}\n'
                 all_models_dfs = [metrics_dict[model][metric_id] for model in models]
-                n_cols = [all_models_df.shape[1] for all_models_df in all_models_dfs]
+                n_rows, n_cols = zip(*[all_models_df.shape for all_models_df in all_models_dfs])
                 header_list = [model + '\t' * (n_col - 1) for n_col, model in zip(n_cols, models)]
                 header2 = '\t'.join(header_list)
+
+                assert len(set(n_rows)) == 1, "non-matching n_rows found"
 
                 all_models_dfs_cc = pd.concat(all_models_dfs, axis=1)
 
@@ -394,7 +420,9 @@ def main():
                 title = f'{metric}'
 
                 if in_name:
-                    title = f'{in_name}-{title}'
+                    title = f'{in_name}_{title}'
+
+                title = remove_repeated_substr(title)
 
                 header1 = title + '\t' * (all_models_dfs_cc.shape[1] - 1)
 
@@ -423,7 +451,7 @@ def main():
                     max_df_txt_tr = all_max_rows_df_labeled.transpose().to_csv(sep='\t', index=True, header=False,
                                                                                line_terminator='\n')
 
-                    max_title = f'{title}-max-{params.max_by}'
+                    max_title = f'{title}_max_{params.max_by}'
 
                     max_out_txt = max_title + '\n' + models_header + '\n' + max_df_txt + f'\n'
                     max_out_txt_tr = max_title + '\n' + metrics_header + '\n' + max_df_txt_tr + f'\n'

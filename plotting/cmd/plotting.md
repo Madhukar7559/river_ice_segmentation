@@ -1,6 +1,6 @@
 # mAP plotting pipeline
 1. coco_to_xml to convert json to mAP compatible csv format with optional nms sweeping
-2. mAP to generate results summsry again with optional nms sweeping
+2. mAP to generate results summary again with optional nms sweeping
     C:\Datasets\mAP
     Z:\UofA\Acamp\acamp_code\mAP\log\seg
     Y:\UofA\617\Project\617_proj_code\plotting\log\seg
