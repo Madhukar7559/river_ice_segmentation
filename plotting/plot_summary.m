@@ -269,7 +269,7 @@ end
 if bar_plot
     rec_prec_mode=0;
 	y_label_override='metric';
-	enable_x_label=0;
+	% enable_x_label=0;
 end
 
 
@@ -583,13 +583,15 @@ end
 %     line_cols
 %     line_styles
 % n_lines
+plot_title
+metric
 
-if not contains(plot_title, metric, IgnoreCase=true)
+if ~contains(plot_title, metric, IgnoreCase=true)
 	plot_title = sprintf('%s-%s', plot_title, metric);   
 end  
 
-figure_handle = figure;
-propertyeditor(figure_handle,'on');
+fig_h = figure;
+propertyeditor(fig_h,'on');
 
 if bar_plot
 	if adjust_y & exist('y_limits', 'var')
@@ -885,13 +887,21 @@ out_name = strrep(plot_title,'-','_');
 
 % out_path=sprintf('%s/%s.png', out_dir, plot_title)
 if paper
-	fprintf('export_fig %s/%s.eps\n', out_dir, out_name);
 	set(gcf,'color','w');
 else	
-	fprintf('export_fig %s/%s.png -transparent\n', out_dir, out_name);
-	fprintf('export_fig %s/%s.png -transparent -painters\n', out_dir, out_name);
+	% out_img = sprintf('%s/%s.png', out_dir, out_name);
+	% fprintf('save_img(fig_h, "%s", "%s", "%s", 1)\n', out_dir, out_name, "png");
+	% fprintf('export_fig %s -transparent -painters\n', out_img);
 	set(gcf,'color','k');
 end
+
+fprintf('save_img("%s", "%s", "%s", %d)\n', out_dir, out_name, "pdf", paper);
+
+% out_fig = sprintf('export_fig %s/%s.fig', out_dir, out_name);
+% exportgraphics(fig_h, out_fig);
+
+% fprintf('exportgraphics(fig_h, "%s");\n', out_img);
+% fprintf('savefig("%s");\n', out_img);
 
 
 

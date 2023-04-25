@@ -146,7 +146,7 @@ def main():
         in_dirs = [k.strip() for k in in_dirs if k.strip() and not k.startswith('#')]
 
         in_name = os.path.splitext(os.path.basename(list_path))[0]
-        if params.cfg:
+        if params.cfg and params.cfg not in in_name:
             in_name = f'{in_name}_{params.cfg}'
 
         out_name = f'{out_name}_{in_name}'
