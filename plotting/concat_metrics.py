@@ -14,15 +14,21 @@ class Params:
     def __init__(self):
         """1-based ID of files within "in_dir" in lexical order"""
         self.list_from_cb = 1
-        self.list_path_id = 21
 
-        self.cfg = 'tp_fp_rec_prec'
+        # self.cfg = 'tp_fp_rec_prec'
         # self.cfg = 'tp_fp'
         # self.cfg = 'roc_auc'
+
         # self.cfg = 'rec_prec'
-        # self.cfg = 'fpr_tpr'
         # self.cfg = 'roc_auc_iw'
         # self.cfg = 'auc_iw'
+
+        # self.cfg = 'auc_ap'
+        # self.cfg = 'fpr_fnr'
+        # self.cfg = 'auc_ap_fpr_fnr'
+        # self.cfg = 'ap_fpr_fnr'
+        # self.cfg = 'ap_fpr_tpr_fp_tp'
+        self.cfg = 'auc_partial'
 
         # self.cfg = 'cls_summary:all'
         # self.cfg = 'cls_summary:all-count'
@@ -41,6 +47,7 @@ class Params:
         # self.in_dir = 'cmd/concat/mj'
         self.list_ext = 'list'
 
+        self.list_path_id = 21
         self.list_path = 'inv-swi-inc-nms'
         # self.list_path = 'inv_all'
         # self.list_path = 'inv_all_seg'
@@ -68,10 +75,12 @@ class Params:
 
         self.json_name = 'eval_dict.json'
         self.json_metrics = ['FNR_DET', 'FN_DET', 'FPR_DET', 'FP_DET']
+        self.json_metric_names = []
         """
         axis=0 --> one metric in each row / one metric for all models concatenated horizontally
         axis=1 --> one metric in each column / all metrics for each model concatenated horizontally
         """
+        self.to_clipboard = 0
         self.axis = 0
 
         self.csv_metrics = [
@@ -181,6 +190,13 @@ def main():
     max_rows_dict = {
         model: {} for model in models
     }
+    if not params.csv_mode:
+        if params.json_metric_names:
+            assert len(params.json_metric_names) == len(params.json_metrics), \
+                "mismatch between json_metric_names and json_metrics"
+        else:
+            params.json_metric_names = params.json_metrics[:]
+
     for in_dir, model, filter_info in zip(in_dirs, models, filter_info_list):
         assert os.path.exists(in_dir), f"in_dir does not exist: {in_dir}"
 
@@ -262,10 +278,10 @@ def main():
             if params.class_name:
                 json_data = json_data[params.class_name]
 
-            for metric in params.json_metrics:
+            for metric_name, metric in zip(params.json_metric_names, params.json_metrics):
                 metric_val = json_data[metric]
 
-                metrics_dict[model][metric] = metric_val
+                metrics_dict[model][metric_name] = metric_val
 
     if not params.csv_mode:
         out_name = f'{out_name}_json'
@@ -502,14 +518,22 @@ def main():
         metrics_df = pd.DataFrame.from_dict(metrics_dict)
         metrics_df_t = metrics_df.transpose()
 
-        if params.axis == 0:
-            metrics_df.to_clipboard(sep='\t', index_label='metric')
+        if params.to_clipboard:
+            if params.axis == 0:
+                metrics_df.to_clipboard(sep='\t', index_label='metric')
+            else:
+                metrics_df_t.to_clipboard(sep='\t', index_label='model')
+
+        metrics_header = '/'.join(params.json_metric_names)
+
+        if params.cfg:
+            out_csv_name = f'{params.cfg}.csv'
+            out_csv_name_t = f'{params.cfg}_t.csv'
         else:
-            metrics_df_t.to_clipboard(sep='\t', index_label='model')
+            out_csv_name = 'metrics_df.csv'
+            out_csv_name_t = 'metrics_df_t.csv'
 
-        metrics_header = '/'.join(params.json_metrics)
-
-        with open(linux_path(out_dir, 'metrics_df.csv'), 'w', newline='') as fid:
+        with open(linux_path(out_dir, out_csv_name), 'w', newline='') as fid:
             title = ''
             if in_name:
                 title = in_name
@@ -524,7 +548,7 @@ def main():
             fid.write(metrics_header + '\n')
             metrics_df.to_csv(fid, sep='\t', index_label='metric')
 
-        with open(linux_path(out_dir, 'metrics_df_t.csv'), 'w', newline='') as fid:
+        with open(linux_path(out_dir, out_csv_name_t), 'w', newline='') as fid:
             fid.write(metrics_header + '\n')
             if in_name:
                 fid.write(in_name + '\n')

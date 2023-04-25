@@ -39,12 +39,21 @@ end
 
 %Get input filename from clipboard
 cb = 1;
-paper = 0;
-metric='rec_prec';
-% metric='tp_fp_uex'
+paper = 1;
+
+% metric='rec_prec';
+% metric='tp_fp_uex';
+% metric='roc_auc_uex';
+
+% metric='auc_ap'
+% metric='fpr_tpr'
+% metric='auc_ap_fpr_tpr'
+metric='auc_partial'
 
 rec_prec_mode = 2;
 thresh_mode = 3;
+bar_plot = 0;
+
 % 1: normalize by max_x 2: normalize by norm_factor
 enable_auc = 2;
 norm_factor = 100;
@@ -52,7 +61,6 @@ norm_factor = 100;
 adjust_y = 1;
 sort_x = 1;
 
-bar_plot = 0;
 bar_vals = 1;
 bar_vals_font_size=12;
 
@@ -77,6 +85,19 @@ title_interpreter = 'none';
 hide_grid = 1;
 
 colRGBDefs;
+
+is_bar = contains(metric, 'auc', IgnoreCase=true) || contains(metric, 'fpr', IgnoreCase=true) || contains(metric, 'fnr', IgnoreCase=true);
+
+is_tp_fp = contains(metric, 'tp_fp', IgnoreCase=true);
+is_roc_auc = contains(metric, 'roc_auc', IgnoreCase=true);
+
+if is_roc_auc
+	thresh_mode=0;
+elseif is_bar
+	bar_plot=1;
+elseif is_tp_fp
+	rec_prec_mode = 1
+end
 
 fname = 'combined_summary.txt';
 
@@ -295,7 +316,7 @@ if rec_prec_mode
     plot_legend = cell(n_lines, 1);
 
 	if enable_auc
-		auc_out_path = sprintf('%s.auc%d', fname, enable_auc)
+		auc_out_path = sprintf('%s.auc%d', fname, enable_auc);
 		auc_out_fid = fopen(auc_out_path,'w');
 	end
 
@@ -562,6 +583,10 @@ end
 %     line_cols
 %     line_styles
 % n_lines
+
+if not contains(plot_title, metric, IgnoreCase=true)
+	plot_title = sprintf('%s-%s', plot_title, metric);   
+end  
 
 figure_handle = figure;
 propertyeditor(figure_handle,'on');
@@ -855,13 +880,16 @@ end
 if hide_grid
     grid off;
 end
+
+out_name = strrep(plot_title,'-','_');
+
 % out_path=sprintf('%s/%s.png', out_dir, plot_title)
 if paper
-	fprintf('export_fig %s/%s.png\n', out_dir, plot_title);
+	fprintf('export_fig %s/%s.eps\n', out_dir, out_name);
 	set(gcf,'color','w');
 else	
-	fprintf('export_fig %s/%s.png -transparent\n', out_dir, plot_title);
-	fprintf('export_fig %s/%s.png -transparent -painters\n', out_dir, plot_title);
+	fprintf('export_fig %s/%s.png -transparent\n', out_dir, out_name);
+	fprintf('export_fig %s/%s.png -transparent -painters\n', out_dir, out_name);
 	set(gcf,'color','k');
 end
 
