@@ -12,23 +12,28 @@ import paramparse
 class Params:
 
     def __init__(self):
-        """1-based ID of files within "in_dir" in lexical order"""
         self.list_from_cb = 1
 
         # self.cfg = 'tp_fp_rec_prec'
         # self.cfg = 'tp_fp'
         # self.cfg = 'roc_auc'
 
-        # self.cfg = 'rec_prec'
+        self.cfg = 'rec_prec'
+
         # self.cfg = 'roc_auc_iw'
         # self.cfg = 'auc_iw'
 
+        # self.cfg = 'auc_roc'
+        # self.cfg = 'auc'
         # self.cfg = 'auc_ap'
+        # self.cfg = 'rp_auc_ap'
         # self.cfg = 'fpr_fnr'
+        # self.cfg = 'fpr_fnr_sub'
+        # self.cfg = 'fnr'
         # self.cfg = 'auc_ap_fpr_fnr'
         # self.cfg = 'ap_fpr_fnr'
         # self.cfg = 'ap_fpr_tpr_fp_tp'
-        self.cfg = 'auc_partial'
+        # self.cfg = 'auc_partial'
 
         # self.cfg = 'cls_summary:all'
         # self.cfg = 'cls_summary:all-count'
@@ -47,6 +52,7 @@ class Params:
         # self.in_dir = 'cmd/concat/mj'
         self.list_ext = 'list'
 
+        """1-based ID of files within "in_dir" in lexical order"""
         self.list_path_id = 21
         self.list_path = 'inv-swi-inc-nms'
         # self.list_path = 'inv_all'
@@ -299,8 +305,9 @@ def main():
 
     abs_out_dir = os.path.abspath(out_dir)
 
-    import pyperclip
-    pyperclip.copy(abs_out_dir)
+    if not params.iw:
+        import pyperclip
+        pyperclip.copy(abs_out_dir)
 
     if params.csv_mode:
         if params.iw:
@@ -353,9 +360,9 @@ def main():
                     # xaxis_title=['Image_ID', ]*n_models,
                     # yaxis_title=['FP_threshold', ]*n_models,
                     # zaxis_title=['AUC', ]*n_models,
-                    xaxis_title='Image_ID',
-                    yaxis_title='FP_threshold',
-                    zaxis_title='AUC'
+                    xaxis_title='Frame (146 - 162)',
+                    yaxis_title='FP_threshold (%)',
+                    zaxis_title='ROC-AUC (%)'
                 )
 
                 layout_dict = {}
@@ -390,10 +397,13 @@ def main():
                     fig2 = go.Figure(data=[
                         go.Surface(x=cols, y=rows, z=surf_df.values, showscale=False)])
                     fig2.update_layout(
-                        title='FP-thresholded ROC-AUC',
+                        # title='FP-thresholded ROC-AUC',
+                        title=dict(text=model,
+                                   # font=dict(size=50)
+                                   ),
                         autosize=False,
                         width=1000, height=1000,
-                        margin=dict(l=0, r=0, b=0, t=0),
+                        margin=dict(l=40, r=40, b=40, t=40),
                         paper_bgcolor='rgb(200,200,200)',
                         scene=fig_scenes
                     )
@@ -402,10 +412,10 @@ def main():
 
                 layout_dict.update(
                     dict(
-                        title='FP-thresholded ROC-AUC',
+                        # title='FP-thresholded ROC-AUC',
                         autosize=False,
                         width=1000, height=1000,
-                        margin=dict(l=0, r=0, b=0, t=0),
+                        margin=dict(l=40, r=40, b=40, t=40),
                         paper_bgcolor='rgb(200,200,200)',
                         # plot_bgcolor='rgb(0,0,0)'
                     )
@@ -415,7 +425,7 @@ def main():
                 # fig.update_xaxes(automargin=True)
 
                 fig.show()
-                fig.write_html(linux_path(out_dir, f'{metric}.html'), auto_open=False)
+                fig.write_html(linux_path(out_dir, f'{metric}-ALL.html'), auto_open=False)
         else:
             # axis_0_txt = ''
 
@@ -543,6 +553,7 @@ def main():
                 title = f'{title}-{cfg_name}'
 
             if title:
+                title = remove_repeated_substr(title)
                 fid.write(title + '\n')
 
             fid.write(metrics_header + '\n')
@@ -552,7 +563,6 @@ def main():
             fid.write(metrics_header + '\n')
             if in_name:
                 fid.write(in_name + '\n')
-            metrics_df.to_csv(fid, sep='\t', index_label='metric')
             metrics_df_t.to_csv(fid, sep='\t', index_label='model')
 
 

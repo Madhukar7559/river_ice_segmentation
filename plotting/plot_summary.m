@@ -1,78 +1,56 @@
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%{
-export_fig 'C:\UofA\PhD\Reports\221121_ipsc_paper\swin.png' -transparent
-export_fig 'C:\UofA\PhD\Reports\221121_ipsc_paper\idol.png' -transparent
-
-rec_prec_mode = 0: plot each column as one line
-    first line: plot title
-    second line: x-label
-    y_label is the concatenation of legend entries
-
-rec_prec_mode > 0 and thresh_mode > 0: plot triplets of columns
-    conf_thresh: column 1, rec: column 2, prec: column 3
-
-    thresh_mode = 3
-		rec_prec_mode = 1
-			rec on y axis and prec on x axis
-			first line: plot title + legend for each line separated by spaces
-						or
-			first line: plot title
-			second line: legend for each line separated by spaces / tabs
-
-		rec_prec_mode = 2
-			rec on x axis and prec on y axis
-
-    	plot_title_override and y_label_override for custom values
-
-    thresh_mode 1: thresh vs rec
-    thresh_mode 2: thresh vs prec
-
-thresh_mode = 0: 
-	rec_prec_mode = 2	
-		plot pairs of columns - first col on x axis, second on y axis
-%}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 if ~exist('no_clear', 'var')
     clearvars -except prev_fname;
 end
 
 %Get input filename from clipboard
 cb = 1;
-paper = 1;
 
-% metric='rec_prec';
+metric='rec_prec';
+
 % metric='tp_fp_uex';
 % metric='roc_auc_uex';
 
-% metric='auc_ap'
-% metric='fpr_tpr'
-% metric='auc_ap_fpr_tpr'
-metric='auc_partial'
+% metric='auc_roc';
+% metric='auc';
+% metric='auc_ap';
+% metric='fpr_fnr';
+% metric='fpr_fnr_sub';
+% metric='fnr';
+% metric='auc_ap_fpr_fnr';
+
+% metric='auc_partial';
+% metric='auc_uex-iw';
 
 rec_prec_mode = 2;
 thresh_mode = 3;
 bar_plot = 0;
 
-% 1: normalize by max_x 2: normalize by norm_factor
-enable_auc = 2;
+% 1: normalize by max_x 
+% 2: normalize by norm_factor, 
+% 3: extend in both directions using the max X and Y and discarding annoying anomalous outlier values
+enable_auc = 3;
+
 norm_factor = 100;
 
-adjust_y = 1;
+% remove last row corresponding to conf 1.0 that can sometimes distort plots
+remove_last_row = 1;
+adjust_y = 0;
 sort_x = 1;
 
 bar_vals = 1;
 bar_vals_font_size=12;
 
-y_limits = [0, 100];
 enable_y_label = 1;
 enable_x_label = 1;
 vertcal_x_label = 0;
 colored_x_label = 0;
 add_ylabel_to_title = 0;
 
+paper = 0;
+
 transparent_bkg = 1;
 transparent_legend = 1;
+colored_legend = 1;
 white_text = 1;
 grey_text = 0;
 
@@ -85,13 +63,26 @@ title_interpreter = 'none';
 hide_grid = 1;
 
 colRGBDefs;
+lineSpecs;
 
-is_bar = contains(metric, 'auc', IgnoreCase=true) || contains(metric, 'fpr', IgnoreCase=true) || contains(metric, 'fnr', IgnoreCase=true);
+if exist('contains', 'builtin')      
+	is_bar = contains(metric, 'auc', 'IgnoreCase', true) || contains(metric, 'fpr', 'IgnoreCase', true) || contains(metric, 'fnr', 'IgnoreCase', true);
+	is_iw = contains(metric, '-iw', 'IgnoreCase', true);
+	is_tp_fp = contains(metric, 'tp_fp', 'IgnoreCase', true);
+	is_roc_auc = contains(metric, 'roc_auc', 'IgnoreCase', true);
+else
+	is_bar=0;
+	is_iw=0;
+	is_tp_fp=0;
+	is_roc_auc=0;
+end
 
-is_tp_fp = contains(metric, 'tp_fp', IgnoreCase=true);
-is_roc_auc = contains(metric, 'roc_auc', IgnoreCase=true);
 
-if is_roc_auc
+if is_iw
+	thresh_mode=0;
+	enable_auc = 0;
+	adjust_y = 0;
+elseif is_roc_auc
 	thresh_mode=0;
 elseif is_bar
 	bar_plot=1;
@@ -99,14 +90,18 @@ elseif is_tp_fp
 	rec_prec_mode = 1
 end
 
-fname = 'combined_summary.txt';
+if ~is_iw
+	y_limits = [0, 100];
+end
 
+fname = 'combined_summary.txt';
+prev_fname = 'combined_summary.txt';
 if cb
 	fname = clipboard('paste')
 	if isdir(fname)
 		fname = sprintf('%s/%s.csv', fname, metric);
 		prev_fname = fname;
-	elseif isfile(fname)
+	elseif exist('isfile', 'builtin')  && isfile(fname)
 		prev_fname = fname;
 	else
 		fname = prev_fname
@@ -114,9 +109,6 @@ if cb
 end
 
 out_dir='C:/UofA/PhD/Reports/plots';
-line_width = 3;
-enable_markers = 0;
-
 enable_ap = 0;
 
 if paper
@@ -126,145 +118,6 @@ if paper
 	grey_text=0;
 end
 
-mode = 0;
-if mode == 0
-    line_cols = {'cyan', 'forest_green', 'red', 'purple', 'magenta', 'blue',...
-        'green', 'maroon', 'peach_puff', 'white'};
-    % line_styles = {':', ':', ':', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
-    % line_styles = {'-.', '-.', '-.', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
-    % line_styles = {'--', '--', '--', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
-    line_styles = {'-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-', '-'};
-    % markers = {'o', '+', '*', 'x', 'p', 'd', 'o','+', '*', 'x'};
-
-elseif mode == 1
-%     line_cols = {'blue', 'forest_green', 'blue', 'forest_green'};
-    line_cols = {'blue', 'purple', 'blue', 'purple'};
-    line_styles = {'-', '-', '-', ':', ':', ':'};
-    markers = {'o', '+','o', '+'};
-    % valid_columns = [1, 3];
-elseif mode == 2
-    line_cols = {'blue', 'purple', 'blue', 'purple'};
-    line_styles = {'-', '-', ':', ':', ':'};
-    markers = {'o', '+', 'o', '+'};
-elseif mode == 3
-%         line_cols = {'blue', 'blue', 'forest_green', 'forest_green',...
-%             'magenta', 'magenta', 'red', 'red',...
-%             'cyan', 'cyan', 'purple', 'purple'};
-        
-%         line_cols = {'blue', 'red', 'forest_green', 'cyan','purple','green',...
-%             'blue', 'forest_green', 'green','red', 'cyan','purple'};
-        
-        line_cols = {'blue', 'blue', 'blue',...
-            'red','red','red',...
-            'forest_green',...
-            'forest_green', 'forest_green',...
-            'purple', 'purple','purple'};
-        
-        
-        line_styles = {
-            '-', '-', '-', '-',...
-            '-', '-', '-', '-',...
-            '-', '-','-', '-'...
-            '-', '-', '-', '-'};
-        markers = {
-            'o', 'o','o', 'o',...
-            'o', 'o','o', 'o',...
-            'o', 'o','o', 'o',...
-            'o', 'o','o', 'o',...
-            };
-        
-elseif mode == 4
-%         line_cols = {'blue', 'blue', 'forest_green', 'forest_green',...
-%             'magenta', 'magenta', 'red', 'red',...
-%             'cyan', 'cyan', 'purple', 'purple'};
-        
-%         line_cols = {'blue', 'red', 'forest_green', 'cyan','purple','green',...
-%             'blue', 'forest_green', 'green','red', 'cyan','purple'};
-        
-        line_cols = {'blue', 'blue', 'blue', 'blue',...
-            'red','red','red','red',...
-            'forest_green',...
-            'forest_green', 'forest_green', 'forest_green',...
-            'purple', 'purple','purple','purple'};
-        
-        
-        line_styles = {
-            '-', '-', '-', '-',...
-            '-', '-', '-', '-',...
-            '-', '-','-', '-'...
-            '-', '-', '-', '-'};
-        markers = {
-            'o', 'o','o', 'o',...
-            'o', 'o','o', 'o',...
-            'o', 'o','o', 'o',...
-            'o', 'o','o', 'o',...
-            };
-end
-% line_styles = {'-', '-', '-', '--', '--', '--'};
-
-% line_styles = {'--', '-', '-', '-', '-'};
-% line_styles = {'-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':', '-', ':'};
-% line_styles = {'-', '--', '-', '--', ':', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--', '-', '--'};
-
-% line_styles = {'-', '-', '--', '--', '--'};
-% line_styles = {'-', '-', '--', '-'};
-
-% line_styles = {'-o', '-+', '-*', '-x', '-s', '-p'};
-
-
-% line_specs = {'-og', '-+r'};
-% line_specs = {'--or', '-+g', '--xm', '-xm'};
-
-% line_specs = {'-or', '-+g', '-*b', '--xm'};
-
-% line_specs = {'-or', ':+r', '-*b', ':xb'};
-% line_specs = {'-or', '--+r', '-*b', '--xb'};
-
-% line_specs = {'-or', '-+g', '--*b', '--xm'};
-% line_specs = {'--or', '-+b', '-*g', '-xm'};
-
-% line_specs = {'--or', '-+g', '-*b', '-xm', '-sc', '-pk'};
-
-% line_specs = {'-or', '-+g', '-*b',...
-%     '--or', '--+g', '--*b'};
-
-% line_specs = {'-+g', '-*b', '-xm',...
-%     '--+g', '--*b', '--xm'};
-
-% line_specs = {'-or', '-+g', '-*b', '-xm',...
-%     '--or', '--+g', '--*b', '--xm'};
-
-% line_specs = {'-or', '-+g', '-*b', '-xm', '-sc',...
-%     '--or', '--+g', '--*b', '--xm', '--sc'};
-
-% line_specs = {'-or', '--*r', '-+g', '--xg'};
-% line_specs = {'-or', '-+g', '--*r', '-+g', '--xg'};
-
-% set(0,'DefaultAxesFontName', 'Times New Roman');
-% k=importdata('radon.txt');
-
-% plot_title_override='UNet';
-% k=importdata('unet_summary.txt');
-
-% plot_title_override='SegNet';
-% k=importdata('segnet_summary.txt');
-
-% plot_title_override='Deeplab';
-% k=importdata('deeplab_summary.txt');
-
-% plot_title_override='DenseNet';
-% k=importdata('densenet_summary.txt');
-
-% plot_title_override='Comparing models';
-% plot_title_override='Selective Training';
-
-% plot_title_override='Recall rates using 5000 video images for training';
-% plot_title_override='Recall rates on 20K 3-class test set without static images';
-
-% y_label_override = 'Recall (%)';
-% y_label_override = 'pixel accuracy';
-% y_label_override = 'acc/IOU';
-% y_label_override = 'Recall / Precision (%)';
 
 if bar_plot
     rec_prec_mode=0;
@@ -321,10 +174,10 @@ if rec_prec_mode
 	end
 
     for line_id = 1:n_lines
-        plot_legend{line_id} = fscanf(fileID,'%s', 1);
-        
+        plot_legend{line_id} = fscanf(fileID,'%s', 1);        
         if thresh_mode
             thresh_data = k.data(:, 3*(line_id-1)+1);
+
             rec_data = k.data(:, 3*(line_id-1)+2);
             prec_data = k.data(:, 3*(line_id-1)+3);
 
@@ -367,7 +220,7 @@ if rec_prec_mode
 			max_x = max(X);
 			min_x = min(X);
 
-		
+	
             if enable_auc==1
                 [unique_X, unique_X_idx] = unique(X, 'stable');
                 [unique_Y, unique_Y_idx] = unique(Y, 'stable');
@@ -408,6 +261,43 @@ if rec_prec_mode
                 norm_auc = auc / norm_factor;
 			elseif enable_auc==2
 				auc = trapz(X,Y);
+				range_x = max_x - min_x;
+                norm_auc = auc / range_x;
+			elseif enable_auc==3			
+				auc_X = X;
+				auc_Y = Y;
+				
+				% find the row where recall becomes maximum and copy this role into any rows before it while making the precision 0 and leaving the recall be
+				[max_x, max_x_ind] = max(auc_X);
+				if max_x_ind == 1		
+					auc_X = [max_x; auc_X];
+					auc_Y = [0; auc_Y];
+				else
+					for i__ = 1:max_x_ind
+						auc_X(i__) = max_x;
+						auc_Y(i__) = 0;
+					end
+
+				end
+
+				% find the row where the precision becomes maximum and copy this row into any rows after it while making the recall zero and leaving the position be
+				[max_y, max_y_ind] = max(auc_Y);	
+
+				n_data = length(auc_Y);
+
+				if max_y_ind == n_data
+					auc_Y = [auc_Y; max_y];
+					auc_X = [auc_X; 0];
+				else
+					for i__ = max_y_ind:n_data
+						auc_Y(i__) = max_y;
+						auc_X(i__) = 0;
+					end
+				end
+
+				auc = trapz(auc_X,auc_Y);
+                max_x = max(auc_X);
+                min_x = min(auc_X);
 				range_x = max_x - min_x;
                 norm_auc = auc / range_x;
 			else
@@ -509,8 +399,10 @@ else
         plot_title = k.textdata{1, 1};
         x_label = k.textdata{2, 1};
         xtick_labels = k.textdata(4:end, 1);
-        x_ticks = 1:n_items;
-        xlim([1, n_items]);
+        if n_items > 1
+            x_ticks = 1:n_items;
+            xlim([1, n_items]);
+        end
         
         if exist('valid_columns', 'var')
             x_data = x_data(:, valid_columns);
@@ -583,12 +475,14 @@ end
 %     line_cols
 %     line_styles
 % n_lines
-plot_title
-metric
+% plot_title
+% metric
 
-if ~contains(plot_title, metric, IgnoreCase=true)
-	plot_title = sprintf('%s-%s', plot_title, metric);   
-end  
+if exist('contains', 'builtin')         
+	if ~contains(plot_title, metric, 'IgnoreCase', true)
+		plot_title = sprintf('%s-%s', plot_title, metric);   
+	end  
+end
 
 fig_h = figure;
 propertyeditor(fig_h,'on');
@@ -597,16 +491,24 @@ if bar_plot
 	if adjust_y & exist('y_limits', 'var')
 		n_groups = size(k.data, 1);
 		n_bars = size(k.data, 2);
+		all_max_datum = 0;
 		for k1 = 1:n_groups
 			datum = k.data(k1, :);
 			max_datum = max(datum);
 			max_y_lim = y_limits(2);
-			if max_datum > max_y_lim;
+			if max_datum - max_y_lim > 5;
 				mult_ratio = max_datum / max_y_lim;
 				mult_ratio_int = ceil(mult_ratio/10)*10;
 				k.data(k1, :) = datum / mult_ratio_int;
+				max_datum = max(k.data(k1, :))
 				xtick_labels{k1} = sprintf('%s (/%d)', xtick_labels{k1}, mult_ratio_int);
 			end
+			if all_max_datum < max_datum
+				all_max_datum = max_datum;
+			end
+		end
+		if max_y_lim - all_max_datum < 5
+			y_limits(2) = y_limits(2) + 5;
 		end
 	end
 
@@ -641,10 +543,19 @@ end
 %     end
 % end
 
+if remove_last_row
+	x_data(end,:) = [];
+	y_data(end,:) = [];
+end
+
+
 bar_cols = [];
 
 final_legend = {};
 for i = 1:n_lines
+
+
+
     y_datum = y_data(:, i);
     x_datum = x_data(:, i);
 
@@ -670,6 +581,7 @@ for i = 1:n_lines
 	end		
 
     line_col = line_cols{i};
+
     line_style = line_styles{i};
     if enable_markers && exist('markers', 'var')            
         marker = markers{i};
@@ -721,8 +633,18 @@ hold off
 %     set(bar_child2, 'CData', k.data);
 %     colormap(bar_cols);
 % end
+if colored_legend
+	for line_id = 1:n_lines
+		line_col_rgb = col_rgb{strcmp(col_names,line_cols{line_id})};
+		final_legend{line_id} = sprintf('\\color[rgb]{%f,%f,%f}%s',...
+		line_col_rgb(1),...
+		line_col_rgb(2),...
+		line_col_rgb(3),...			
+		final_legend{line_id});
+	end
+end
 
-h_legend=legend(final_legend, 'Interpreter','none');
+h_legend=legend(final_legend, 'Interpreter','tex');
 set(h_legend,'FontSize', legend_font_size);
 set(h_legend,'FontWeight','bold');
 set(h_legend,'LineWidth', 1.0);
@@ -895,7 +817,9 @@ else
 	set(gcf,'color','k');
 end
 
-fprintf('save_img("%s", "%s", "%s", %d)\n', out_dir, out_name, "pdf", paper);
+fprintf('save_img("%s", "%s", "%s", %d)\n', out_dir, out_name, 'pdf', paper);
+fprintf('save_img("%s", "%s", "%s", %d)\n', out_dir, out_name, 'png', paper);
+
 
 % out_fig = sprintf('export_fig %s/%s.fig', out_dir, out_name);
 % exportgraphics(fig_h, out_fig);
